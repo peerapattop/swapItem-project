@@ -18,6 +18,75 @@ class _ProfileState extends State<Profile> {
   final user = FirebaseAuth.instance.currentUser!;
 
   bool isTextFieldEnabled = false;
+  void signOut() async {
+    await FirebaseAuth.instance.signOut();
+  }
+  Future<void> _showSignOutConfirmationDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          title: Text(
+            'ยืนยันการออกจากระบบ',
+            style: TextStyle(
+              color: Colors.blue,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                'คุณต้องการที่จะออกจากระบบหรือไม่?',
+                style: TextStyle(color: Colors.black),
+              ),
+              SizedBox(height: 20.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'ยกเลิก',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      signOut();
+                    },
+                    child: Text(
+                      'ยืนยัน',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -292,7 +361,7 @@ class _ProfileState extends State<Profile> {
                                 child: ElevatedButton.icon(
                                   icon: const Icon(Icons.arrow_back),
                                   onPressed: () {
-                                    FirebaseAuth.instance.signOut();
+                                    _showSignOutConfirmationDialog();
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red,
