@@ -150,8 +150,19 @@ class _LoginState extends State<Login> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Container(
-                          width: 150,
+                        _loading
+                    ? Container(
+                        width: 150,
+                        height: 40,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: FittedBox(
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                      )
+                        : Container(
+                          width: 140,
                           height: 40,
                           child: ElevatedButton.icon(
                             onPressed: () {
