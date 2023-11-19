@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:swapitem/_login_page.dart';
 import 'package:image_picker/image_picker.dart';
@@ -128,7 +127,15 @@ class _RegisPageState extends State<RegisPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('สมัครสมาชิกสำเร็จ'),
+          title: Row(
+            children: [
+              Icon(
+                Icons.check,
+                color: Colors.green,
+              ),
+              Text('สมัครสมาชิกสำเร็จ'),
+            ],
+          ),
           content: Text('คุณได้ทำการสมัครสมาชิกเรียบร้อยแล้ว'),
           actions: [
             ElevatedButton(
