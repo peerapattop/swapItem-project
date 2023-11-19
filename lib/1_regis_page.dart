@@ -21,35 +21,86 @@ class _RegisPageState extends State<RegisPage> {
   final _genderController = TextEditingController();
   final _birthdayController = TextEditingController();
   final _usernameController = TextEditingController();
-  
+
   XFile? _imageFile;
 
-  //final ImagePicker _picker = ImagePicker();
-  registerNewUser() async {
-    final User? userFirebae = (await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    )
-            .catchError((errorMsg) {
-      print(errorMsg.toString());
-    }))
-        .user;
-    Navigator.pop(context);
+  registerNewUser(BuildContext context) async {
+    //หน้าโชว์กำลังโหลด
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16), // Add some spacing
+              Text('กำลังสมัครสมาชิก...'),
+            ],
+          ),
+        );
+      },
+      barrierDismissible: false,
+    );
 
-    DatabaseReference userRef =
-        FirebaseDatabase.instance.ref().child('users').child(userFirebae!.uid);
-    
-    Map userDataMap = {
-      "id" : userFirebae.uid,
-      "firstname" : _firstnameController.text.trim(),
-      "lastname" : _lastnameController.text.trim(),
-      "gender" : _genderController.text.trim(),
-      "username" : _usernameController.text.trim(),
-      "email" : _emailController.text.trim(),
-    };
-    userRef.set(userDataMap);
-    Navigator.push(context, MaterialPageRoute(builder: (c)=> Login()));
+    try {
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      DatabaseReference userRef = FirebaseDatabase.instance
+          .ref()
+          .child('users')
+          .child(userCredential.user!.uid);
+
+      Map userDataMap = {
+        "id": userCredential.user!.uid,
+        "firstname": _firstnameController.text.trim(),
+        "lastname": _lastnameController.text.trim(),
+        "gender": _genderController.text.trim(),
+        "username": _usernameController.text.trim(),
+        "email": _emailController.text.trim(),
+      };
+
+      await userRef.set(userDataMap);
+
+      // Close the loading dialog
+      Navigator.pop(context);
+
+      // Show a success dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('สมัครสมาชิกสำเร็จ'),
+            content: Text('คุณได้ทำการสมัครสมาชิกเรียบร้อยแล้ว'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  // ปิดหน้าต่างสมัครสำเร็จ
+                  Navigator.pop(context);
+
+                  // ปิดหน้าต่างการสมัคร
+                  Navigator.pop(context);
+
+                  // ไปที่หน้า Login
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (c) => Login()));
+                },
+                child: Text('ยืนยัน'),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (error) {
+
+      Navigator.pop(context);
+
+      print(error.toString());
+    }
   }
 
   @override
@@ -77,14 +128,14 @@ class _RegisPageState extends State<RegisPage> {
                   height: 15,
                 ),
                 imgPost(),
-                textField('ชื่อ', Icons.person,_firstnameController),
-                textField('นามสกุล', Icons.person,_lastnameController),
-                textField('เพศ', Icons.male,_genderController),
-                textField('วันเกิด', Icons.date_range,_birthdayController),
-                textField('ชื่อผู้ใช้', Icons.person,_usernameController),
-                textField('อีเมล', Icons.email,_emailController),
-                textField('รหัสผ่าน', Icons.key,_passwordController),
-                textField('ยืนยันรหัสผ่าน', Icons.key,_passwordController),
+                textField('ชื่อ', Icons.person, _firstnameController),
+                textField('นามสกุล', Icons.person, _lastnameController),
+                textField('เพศ', Icons.male, _genderController),
+                textField('วันเกิด', Icons.date_range, _birthdayController),
+                textField('ชื่อผู้ใช้', Icons.person, _usernameController),
+                textField('อีเมล', Icons.email, _emailController),
+                textField('รหัสผ่าน', Icons.key, _passwordController),
+                textField('ยืนยันรหัสผ่าน', Icons.key, _passwordController),
                 SizedBox(
                   height: 10,
                 ),
@@ -99,10 +150,10 @@ class _RegisPageState extends State<RegisPage> {
                     ),
                     child: TextButton(
                       onPressed: () {
-                        registerNewUser();
+                        registerNewUser(context);
                       },
                       child: const Text(
-                        'ยืนยันการลงทะเบียน',
+                        'ลงทะเบียน',
                         style: TextStyle(
                           color: Colors.white, // Change text color as needed
                           fontSize: 18, // Change font size as needed
@@ -119,7 +170,8 @@ class _RegisPageState extends State<RegisPage> {
     );
   }
 
-  Widget textField(String labelText, IconData icon,TextEditingController controller) {
+  Widget textField(
+      String labelText, IconData icon, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 15),
       child: TextFormField(
