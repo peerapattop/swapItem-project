@@ -20,6 +20,7 @@ class _ProfileState extends State<Profile> {
   void signOut() async {
     await FirebaseAuth.instance.signOut();
   }
+
   Future<void> _showSignOutConfirmationDialog() async {
     return showDialog<void>(
       context: context,
@@ -29,7 +30,7 @@ class _ProfileState extends State<Profile> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
-          title: Text(
+          title: const Text(
             'ยืนยันการออกจากระบบ',
             style: TextStyle(
               color: Colors.blue,
@@ -39,17 +40,17 @@ class _ProfileState extends State<Profile> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(
+              const Text(
                 'คุณต้องการที่จะออกจากระบบหรือไม่?',
                 style: TextStyle(color: Colors.black),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.red,
+                      backgroundColor: Colors.red,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
                       ),
@@ -57,14 +58,14 @@ class _ProfileState extends State<Profile> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text(
+                    child: const Text(
                       'ยกเลิก',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.green,
+                      backgroundColor: Colors.green,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
                       ),
@@ -92,11 +93,11 @@ class _ProfileState extends State<Profile> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("ข้อมูลของฉัน"),
+          title: const Text("ข้อมูลของฉัน"),
           toolbarHeight: 40,
           centerTitle: true,
           flexibleSpace: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/images/image 40.png'),
                 fit: BoxFit.fill,
@@ -113,7 +114,7 @@ class _ProfileState extends State<Profile> {
                   alignment: Alignment.topCenter,
                   child: Image.asset("assets/images/pramepree.png"),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Container(
@@ -123,7 +124,7 @@ class _ProfileState extends State<Profile> {
                     children: [
                       TextField(
                         controller: TextEditingController(text: "0001"),
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             label: Text(
                               "หมายเลขผู้ใช้งาน",
                               style: TextStyle(fontSize: 20),
@@ -132,12 +133,12 @@ class _ProfileState extends State<Profile> {
                             enabled: false,
                             prefixIcon: Icon(Icons.tag)),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
                       TextField(
                         controller: TextEditingController(text: "เปรมปรี"),
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             label: Text(
                               "ชื่อ",
                               style: TextStyle(fontSize: 20),
@@ -145,7 +146,7 @@ class _ProfileState extends State<Profile> {
                             border: OutlineInputBorder(),
                             prefixIcon: Icon(Icons.person)),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
                       TextField(
@@ -203,8 +204,7 @@ class _ProfileState extends State<Profile> {
                         height: 10,
                       ),
                       TextField(
-                        controller:
-                            TextEditingController(text: user.email!),
+                        controller: TextEditingController(text: user.email!),
                         decoration: InputDecoration(
                             label: Text(
                               'อีเมล',
@@ -241,23 +241,30 @@ class _ProfileState extends State<Profile> {
                                 width: 250,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    showSaveSuccessDialog(context); // แสดงหน้าต่างบันทึกสำเร็จ
-
+                                    showSaveSuccessDialog(
+                                        context); // แสดงหน้าต่างบันทึกสำเร็จ
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    primary: const Color.fromARGB(255, 1, 135, 6),
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 1, 135, 6),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize
                                         .min, // กำหนดให้ Row มีขนาดเท่ากับเนื้อหา
                                     children: [
-                                      Icon(Icons.save), // ไอคอน "บันทึก"
+                                      Icon(
+                                        Icons.save,
+                                        color: Colors.white,
+                                      ), // ไอคอน "บันทึก"
                                       SizedBox(
                                           width:
                                               8), // ระยะห่างระหว่างไอคอนและข้อความ
                                       Text(
                                         'บันทึกการแก้ไข',
-                                        style: TextStyle(fontSize: 18),
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -277,11 +284,14 @@ class _ProfileState extends State<Profile> {
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    primary: Colors.green,
+                                    backgroundColor: Colors.green,
                                   ),
                                   child: Text(
                                     'ข้อเสนอที่เข้ามา',
-                                    style: TextStyle(fontSize: 18),
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -303,7 +313,10 @@ class _ProfileState extends State<Profile> {
                                   ),
                                   child: Text(
                                     'ประวัติการโพสต์',
-                                    style: TextStyle(fontSize: 18),
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -311,7 +324,7 @@ class _ProfileState extends State<Profile> {
                                 height: 14,
                               ),
                               Container(
-                                width: 250,
+                                width: 500,
                                 child: ElevatedButton(
                                   onPressed: () {
                                     Navigator.of(context).push(
@@ -322,11 +335,22 @@ class _ProfileState extends State<Profile> {
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    primary: Colors.green,
+                                    backgroundColor: Colors.green,
                                   ),
-                                  child: Text(
-                                    'ประวัติการยื่นข้อเสนอ',
-                                    style: TextStyle(fontSize: 18),
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'ประวัติการยื่นข้อเสนอ',
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -348,7 +372,7 @@ class _ProfileState extends State<Profile> {
                                   ),
                                   child: Text(
                                     'ประวัติการชำระเงิน',
-                                    style: TextStyle(fontSize: 18),
+                                    style: TextStyle(fontSize: 18,color: Colors.white,),
                                   ),
                                 ),
                               ),
@@ -358,16 +382,17 @@ class _ProfileState extends State<Profile> {
                               Container(
                                 width: 250,
                                 child: ElevatedButton.icon(
-                                  icon: const Icon(Icons.arrow_back),
+                                  icon: const Icon(Icons.logout,color: Colors.white,),
                                   onPressed: () {
                                     _showSignOutConfirmationDialog();
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red,
+                                    
                                   ),
                                   label: Text(
                                     'ออกจากระบบ',
-                                    style: TextStyle(fontSize: 18),
+                                    style: TextStyle(fontSize: 18,color: Colors.white,),
                                   ),
                                 ),
                               ),
@@ -385,13 +410,18 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-   void showSaveSuccessDialog(BuildContext context) {
+
+  void showSaveSuccessDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Center(child: Text('บันทึกสำเร็จ')),
-          content: Image.asset('assets/images/checked.png',width: 50,height: 100,),
+          content: Image.asset(
+            'assets/images/checked.png',
+            width: 50,
+            height: 100,
+          ),
           actions: [
             TextButton(
               onPressed: () {

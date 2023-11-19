@@ -10,7 +10,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _loading = false;
@@ -151,38 +150,40 @@ class _LoginState extends State<Login> {
                           height: 10,
                         ),
                         _loading
-                    ? Container(
-                        width: 150,
-                        height: 40,
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: FittedBox(
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
-                      )
-                        : Container(
-                          width: 140,
-                          height: 40,
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              signIn();
-                            },
-                            icon: const Icon(Icons.login),
-                            label: const Text(
-                              'เข้าสู่ระบบ',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                            ),
-                          ),
-                        ),
+                            ? Container(
+                                width: 150,
+                                height: 40,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: FittedBox(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                width: 160,
+                                height: 40,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    signIn();
+                                  },
+                                  icon: const Icon(Icons.login,color: Colors.white,),
+                                  label: const Text(
+                                    'เข้าสู่ระบบ',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green,
+                                  ),
+                                ),
+                              ),
                         const SizedBox(
                           height: 15,
                         ),
                         Container(
-                          width: 150,
+                          width: 160,
                           height: 40,
                           child: ElevatedButton.icon(
                             onPressed: () {
@@ -190,10 +191,12 @@ class _LoginState extends State<Login> {
                                 builder: (context) => RegisPage(),
                               ));
                             },
-                            icon: const Icon(Icons.add),
+                            icon: const Icon(Icons.add,color: Colors.white,),
                             label: const Text(
                               'สมัครสมาชิก',
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
                             ),
                             style: ElevatedButton.styleFrom(
                                 backgroundColor:
