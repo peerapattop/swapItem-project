@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:swapitem/0_btnnt.dart';
-import 'package:swapitem/2_home_page.dart';
 import 'package:swapitem/_login_page.dart';
 import 'package:swapitem/firebase_options.dart';
 

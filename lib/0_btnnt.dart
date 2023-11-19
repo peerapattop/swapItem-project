@@ -1,6 +1,6 @@
 import 'package:swapitem/10_chat.dart';
 
-import '9_my_pro.dart';
+import '9_my_profile.dart';
 import '2_home_page.dart';
 import 'package:flutter/material.dart';
 

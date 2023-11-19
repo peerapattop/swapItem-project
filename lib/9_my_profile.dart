@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swapitem/14_HistroryMakeOffer.dart';
 import 'package:swapitem/18_HistoryPayment.dart';
-import 'package:swapitem/_login_page.dart';
 
 import '5_his_post.dart';
 import '7_first_offer.dart';
