@@ -28,7 +28,7 @@ class _LoginState extends State<Login> {
       // Add any additional logic after successful login if needed.
     } catch (e) {
       // Handle errors
-      String errorMessage = "เกิดข้อผิดพลาด"; // ข้อความที่คุณต้องการแสดง
+      String errorMessage = "โปรดกรอกอีเมล และรหัสผ่าน"; // ข้อความที่คุณต้องการแสดง
 
       if (e is FirebaseAuthException) {
         if (e.code == 'user-not-found') {

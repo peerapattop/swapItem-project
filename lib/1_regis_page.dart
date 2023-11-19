@@ -25,83 +25,123 @@ class _RegisPageState extends State<RegisPage> {
   XFile? _imageFile;
 
   registerNewUser(BuildContext context) async {
-    //หน้าโชว์กำลังโหลด
+  // Check if all required fields are filled
+  if (_firstnameController.text.trim().isEmpty ||
+      _lastnameController.text.trim().isEmpty ||
+      _genderController.text.trim().isEmpty ||
+      _usernameController.text.trim().isEmpty ||
+      _emailController.text.trim().isEmpty ||
+      _passwordController.text.trim().isEmpty) {
+    // Show an error dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
+          title: Row(
             children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 16), // Add some spacing
-              Text('กำลังสมัครสมาชิก...'),
+              Icon(Icons.error,
+              color: Colors.red,),
+              SizedBox(height: 39,),
+              Text('ข้อมูลไม่ครบถ้วน',style: TextStyle(fontSize: 20),),
             ],
           ),
+          content: Text('โปรดกรอกข้อมูลให้ครบทุกช่อง'),
+          actions: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('รับทราบ',style: TextStyle(color: Colors.white),),
+            ),
+          ],
         );
       },
-      barrierDismissible: false,
+    );
+    return; 
+  }
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16), // Add some spacing
+            Text('กำลังสมัครสมาชิก...',style: TextStyle(fontWeight: FontWeight.bold),),
+          ],
+        ),
+      );
+    },
+    barrierDismissible: false,
+  );
+
+  try {
+    final UserCredential userCredential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
     );
 
-    try {
-      final UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .ref()
+        .child('users')
+        .child(userCredential.user!.uid);
 
-      DatabaseReference userRef = FirebaseDatabase.instance
-          .ref()
-          .child('users')
-          .child(userCredential.user!.uid);
+    Map userDataMap = {
+      "id": userCredential.user!.uid,
+      "firstname": _firstnameController.text.trim(),
+      "lastname": _lastnameController.text.trim(),
+      "gender": _genderController.text.trim(),
+      "username": _usernameController.text.trim(),
+      "email": _emailController.text.trim(),
+    };
 
-      Map userDataMap = {
-        "id": userCredential.user!.uid,
-        "firstname": _firstnameController.text.trim(),
-        "lastname": _lastnameController.text.trim(),
-        "gender": _genderController.text.trim(),
-        "username": _usernameController.text.trim(),
-        "email": _emailController.text.trim(),
-      };
+    await userRef.set(userDataMap);
 
-      await userRef.set(userDataMap);
+    Navigator.pop(context);
 
-      // Close the loading dialog
-      Navigator.pop(context);
-
-      // Show a success dialog
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('สมัครสมาชิกสำเร็จ'),
-            content: Text('คุณได้ทำการสมัครสมาชิกเรียบร้อยแล้ว'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  // ปิดหน้าต่างสมัครสำเร็จ
-                  Navigator.pop(context);
-
-                  // ปิดหน้าต่างการสมัคร
-                  Navigator.pop(context);
-
-                  // ไปที่หน้า Login
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (c) => Login()));
-                },
-                child: Text('ยืนยัน'),
+    // Show a success dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('สมัครสมาชิกสำเร็จ'),
+          content: Text('คุณได้ทำการสมัครสมาชิกเรียบร้อยแล้ว'),
+          actions: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
               ),
-            ],
-          );
-        },
-      );
-    } catch (error) {
+              onPressed: () {
+                // Close the success dialog
+                Navigator.pop(context);
 
-      Navigator.pop(context);
+                // Close registration screen
+                Navigator.pop(context);
 
-      print(error.toString());
-    }
+                // Navigate to the login screen or any other screen
+                Navigator.push(context, MaterialPageRoute(builder: (c) => Login()));
+              },
+              child: Text('ยืนยัน',style: TextStyle(color: Colors.white),),
+            ),
+          ],
+        );
+      },
+    );
+  } catch (error) {
+    // Close the loading dialog
+    Navigator.pop(context);
+
+    print(error.toString());
+    // Handle error (show a message, etc.)
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
