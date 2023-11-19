@@ -1,7 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:swapitem/_login_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:firebase_database/firebase_database.dart';
+
 class RegisPage extends StatefulWidget {
   const RegisPage({Key? key}) : super(key: key);
 
@@ -10,8 +14,44 @@ class RegisPage extends StatefulWidget {
 }
 
 class _RegisPageState extends State<RegisPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _firstnameController = TextEditingController();
+  final _lastnameController = TextEditingController();
+  final _genderController = TextEditingController();
+  final _birthdayController = TextEditingController();
+  final _usernameController = TextEditingController();
+  
   XFile? _imageFile;
+
   //final ImagePicker _picker = ImagePicker();
+  registerNewUser() async {
+    final User? userFirebae = (await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    )
+            .catchError((errorMsg) {
+      print(errorMsg.toString());
+    }))
+        .user;
+    Navigator.pop(context);
+
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.ref().child('users').child(userFirebae!.uid);
+    
+    Map userDataMap = {
+      "id" : userFirebae.uid,
+      "firstname" : _firstnameController.text.trim(),
+      "lastname" : _lastnameController.text.trim(),
+      "gender" : _genderController.text.trim(),
+      "username" : _usernameController.text.trim(),
+      "email" : _emailController.text.trim(),
+    };
+    userRef.set(userDataMap);
+    Navigator.push(context, MaterialPageRoute(builder: (c)=> Login()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -33,17 +73,21 @@ class _RegisPageState extends State<RegisPage> {
           child: Center(
             child: Column(
               children: [
-                SizedBox(height: 15,),
+                SizedBox(
+                  height: 15,
+                ),
                 imgPost(),
-                textField('ชื่อ', Icons.person),
-                textField('สกุล', Icons.person),
-                textField('เพศ', Icons.male),
-                textField('วันเกิด', Icons.date_range),
-                textField('ชื่อผู้ใช้', Icons.person),
-                textField('อีเมล', Icons.email),
-                textField('รหัสผ่าน', Icons.password),
-                textField('ยืนยันรหัสผ่าน', Icons.password),
-                SizedBox(height: 10,),
+                textField('ชื่อ', Icons.person,_firstnameController),
+                textField('นามสกุล', Icons.person,_lastnameController),
+                textField('เพศ', Icons.male,_genderController),
+                textField('วันเกิด', Icons.date_range,_birthdayController),
+                textField('ชื่อผู้ใช้', Icons.person,_usernameController),
+                textField('อีเมล', Icons.email,_emailController),
+                textField('รหัสผ่าน', Icons.key,_passwordController),
+                textField('ยืนยันรหัสผ่าน', Icons.key,_passwordController),
+                SizedBox(
+                  height: 10,
+                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -55,9 +99,7 @@ class _RegisPageState extends State<RegisPage> {
                     ),
                     child: TextButton(
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => (Login()),
-                        ));
+                        registerNewUser();
                       },
                       child: const Text(
                         'ยืนยันการลงทะเบียน',
@@ -77,10 +119,11 @@ class _RegisPageState extends State<RegisPage> {
     );
   }
 
-  Widget textField(String labelText, IconData icon) {
+  Widget textField(String labelText, IconData icon,TextEditingController controller) {
     return Padding(
-      padding: const EdgeInsets.only(left: 16,right: 16,top: 15),
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 15),
       child: TextFormField(
+        controller: controller,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
           labelText: '$labelText',
@@ -90,19 +133,20 @@ class _RegisPageState extends State<RegisPage> {
       ),
     );
   }
+
   void takePhoto(ImageSource source) async {
     final dynamic pickedFile = await ImagePicker().pickImage(
       source: source,
     );
 
     if (pickedFile != null) {
-    setState(() {
-      _imageFile = pickedFile;
-    });
+      setState(() {
+        _imageFile = pickedFile;
+      });
 
-    // Close the file selection window
-    Navigator.pop(context);
-  }
+      // Close the file selection window
+      Navigator.pop(context);
+    }
   }
 
   Widget imgPost() {
@@ -111,9 +155,9 @@ class _RegisPageState extends State<RegisPage> {
         CircleAvatar(
           radius: 60.0,
           backgroundImage: _imageFile != null
-        ? FileImage(File(_imageFile!.path))
-        : AssetImage('assets/images/profile_defalt.jpg') as ImageProvider<Object>,
-
+              ? FileImage(File(_imageFile!.path))
+              : AssetImage('assets/images/profile_defalt.jpg')
+                  as ImageProvider<Object>,
         ),
         Positioned(
           bottom: 10.0,
