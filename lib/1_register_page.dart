@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:swapitem/_login_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class _RegisPageState extends State<RegisPage> {
   final _usernameController = TextEditingController();
 
   XFile? _imageFile;
+  String? imageUrl;
 
   registerNewUser(BuildContext context) async {
   // Check if all required fields are filled
@@ -86,6 +88,21 @@ class _RegisPageState extends State<RegisPage> {
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     );
+       // Upload image to Firebase Storage
+    if (_imageFile != null) {
+      Reference storageReference = FirebaseStorage.instance
+          .ref()
+          .child('user_images/${userCredential.user!.uid}.jpg');
+      await storageReference.putFile(File(_imageFile!.path));
+      String imageUrl = await storageReference.getDownloadURL();
+      
+      // Store the image URL in the Realtime Database
+      DatabaseReference userRef = FirebaseDatabase.instance
+          .ref()
+          .child('users')
+          .child(userCredential.user!.uid);
+      await userRef.child('image_url').set(imageUrl);
+    }
 
     DatabaseReference userRef = FirebaseDatabase.instance
         .ref()
@@ -93,6 +110,7 @@ class _RegisPageState extends State<RegisPage> {
         .child(userCredential.user!.uid);
 
     Map userDataMap = {
+      'image_url': imageUrl?.toString(),
       "id": userCredential.user!.uid,
       "firstname": _firstnameController.text.trim(),
       "lastname": _lastnameController.text.trim(),

@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:swapitem/1_regis_page.dart';
+import 'package:swapitem/1_register_page.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
