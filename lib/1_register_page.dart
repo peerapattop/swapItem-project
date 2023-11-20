@@ -122,14 +122,14 @@ class _RegisPageState extends State<RegisPage> {
             .ref()
             .child('user_images/${userCredential.user!.uid}.jpg');
         await storageReference.putFile(File(_imageFile!.path));
-        String imageUrl = await storageReference.getDownloadURL();
+        imageUrl = await storageReference.getDownloadURL();
 
-        // Store the image URL in the Realtime Database
+        // เพิ่ม URL ของรูปภาพลง Realtimedatabase
         DatabaseReference userRef = FirebaseDatabase.instance
             .ref()
             .child('users')
             .child(userCredential.user!.uid);
-        await userRef.child('image_url').set(imageUrl);
+        await userRef.child('image_user').set(imageUrl);
       }
 
       DatabaseReference userRef = FirebaseDatabase.instance
@@ -138,14 +138,14 @@ class _RegisPageState extends State<RegisPage> {
           .child(userCredential.user!.uid);
 
       Map userDataMap = {
-        'image_url': imageUrl?.toString(),
+        'image_user': imageUrl,
         "id": userCredential.user!.uid,
         "firstname": _firstnameController.text.trim(),
         "lastname": _lastnameController.text.trim(),
         "gender": selectedGender,
         "username": _usernameController.text.trim(),
         "email": _emailController.text.trim(),
-        "birthday" : _birthdayController.text.trim(),
+        "birthday": _birthdayController.text.trim(),
       };
 
       await userRef.set(userDataMap);
@@ -173,13 +173,8 @@ class _RegisPageState extends State<RegisPage> {
                   backgroundColor: Colors.green,
                 ),
                 onPressed: () {
-                  // Close the success dialog
                   Navigator.pop(context);
-
-                  // Close registration screen
                   Navigator.pop(context);
-
-                  // Navigate to the login screen or any other screen
                   Navigator.push(
                       context, MaterialPageRoute(builder: (c) => Login()));
                 },
@@ -401,7 +396,6 @@ class _RegisPageState extends State<RegisPage> {
             onChanged: (value) {
               setState(() {
                 selectedGender = value.toString();
-                
               });
             },
           ),
