@@ -18,155 +18,188 @@ class _RegisPageState extends State<RegisPage> {
   final _passwordController = TextEditingController();
   final _firstnameController = TextEditingController();
   final _lastnameController = TextEditingController();
-  final _genderController = TextEditingController();
+  String selectedGender = '';
   final _birthdayController = TextEditingController();
   final _usernameController = TextEditingController();
 
   XFile? _imageFile;
   String? imageUrl;
+  DateTime selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        _birthdayController.text = "${selectedDate.toLocal()}".split(' ')[0];
+      });
+    }
+  }
 
   registerNewUser(BuildContext context) async {
-  // Check if all required fields are filled
-  if (_firstnameController.text.trim().isEmpty ||
-      _lastnameController.text.trim().isEmpty ||
-      _genderController.text.trim().isEmpty ||
-      _usernameController.text.trim().isEmpty ||
-      _emailController.text.trim().isEmpty ||
-      _passwordController.text.trim().isEmpty) {
-    // Show an error dialog
+    if (_firstnameController.text.trim().isEmpty ||
+        _lastnameController.text.trim().isEmpty ||
+        selectedGender.isEmpty ||
+        _usernameController.text.trim().isEmpty ||
+        _emailController.text.trim().isEmpty ||
+        _passwordController.text.trim().isEmpty) {
+      // Show an error dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Row(
+              children: [
+                Icon(
+                  Icons.error,
+                  color: Colors.red,
+                ),
+                SizedBox(
+                  height: 39,
+                ),
+                Text(
+                  'ข้อมูลไม่ครบถ้วน',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ],
+            ),
+            content: Text('โปรดกรอกข้อมูลให้ครบทุกช่อง'),
+            actions: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'รับทราบ',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Row(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.error,
-              color: Colors.red,),
-              SizedBox(height: 39,),
-              Text('ข้อมูลไม่ครบถ้วน',style: TextStyle(fontSize: 20),),
+              CircularProgressIndicator(),
+              SizedBox(height: 16), // Add some spacing
+              Text(
+                'กำลังสมัครสมาชิก...',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ],
           ),
-          content: Text('โปรดกรอกข้อมูลให้ครบทุกช่อง'),
-          actions: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('รับทราบ',style: TextStyle(color: Colors.white),),
-            ),
-          ],
         );
       },
+      barrierDismissible: false,
     );
-    return; 
-  }
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16), // Add some spacing
-            Text('กำลังสมัครสมาชิก...',style: TextStyle(fontWeight: FontWeight.bold),),
-          ],
-        ),
+    try {
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
       );
-    },
-    barrierDismissible: false,
-  );
+      // Upload image to Firebase Storage
+      if (_imageFile != null) {
+        Reference storageReference = FirebaseStorage.instance
+            .ref()
+            .child('user_images/${userCredential.user!.uid}.jpg');
+        await storageReference.putFile(File(_imageFile!.path));
+        String imageUrl = await storageReference.getDownloadURL();
 
-  try {
-    final UserCredential userCredential = await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
-       // Upload image to Firebase Storage
-    if (_imageFile != null) {
-      Reference storageReference = FirebaseStorage.instance
-          .ref()
-          .child('user_images/${userCredential.user!.uid}.jpg');
-      await storageReference.putFile(File(_imageFile!.path));
-      String imageUrl = await storageReference.getDownloadURL();
-      
-      // Store the image URL in the Realtime Database
+        // Store the image URL in the Realtime Database
+        DatabaseReference userRef = FirebaseDatabase.instance
+            .ref()
+            .child('users')
+            .child(userCredential.user!.uid);
+        await userRef.child('image_url').set(imageUrl);
+      }
+
       DatabaseReference userRef = FirebaseDatabase.instance
           .ref()
           .child('users')
           .child(userCredential.user!.uid);
-      await userRef.child('image_url').set(imageUrl);
-    }
 
-    DatabaseReference userRef = FirebaseDatabase.instance
-        .ref()
-        .child('users')
-        .child(userCredential.user!.uid);
+      Map userDataMap = {
+        'image_url': imageUrl?.toString(),
+        "id": userCredential.user!.uid,
+        "firstname": _firstnameController.text.trim(),
+        "lastname": _lastnameController.text.trim(),
+        "gender": selectedGender,
+        "username": _usernameController.text.trim(),
+        "email": _emailController.text.trim(),
+        "birthday" : _birthdayController.text.trim(),
+      };
 
-    Map userDataMap = {
-      'image_url': imageUrl?.toString(),
-      "id": userCredential.user!.uid,
-      "firstname": _firstnameController.text.trim(),
-      "lastname": _lastnameController.text.trim(),
-      "gender": _genderController.text.trim(),
-      "username": _usernameController.text.trim(),
-      "email": _emailController.text.trim(),
-    };
+      await userRef.set(userDataMap);
 
-    await userRef.set(userDataMap);
+      Navigator.pop(context);
 
-    Navigator.pop(context);
-
-    // Show a success dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              Icon(
-                Icons.check,
-                color: Colors.green,
-              ),
-              Text('สมัครสมาชิกสำเร็จ'),
-            ],
-          ),
-          content: Text('คุณได้ทำการสมัครสมาชิกเรียบร้อยแล้ว'),
-          actions: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-              ),
-              onPressed: () {
-                // Close the success dialog
-                Navigator.pop(context);
-
-                // Close registration screen
-                Navigator.pop(context);
-
-                // Navigate to the login screen or any other screen
-                Navigator.push(context, MaterialPageRoute(builder: (c) => Login()));
-              },
-              child: Text('ยืนยัน',style: TextStyle(color: Colors.white),),
+      // Show a success dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Row(
+              children: [
+                Icon(
+                  Icons.check,
+                  color: Colors.green,
+                ),
+                Text('สมัครสมาชิกสำเร็จ'),
+              ],
             ),
-          ],
-        );
-      },
-    );
-  } catch (error) {
-    // Close the loading dialog
-    Navigator.pop(context);
+            content: Text('คุณได้ทำการสมัครสมาชิกเรียบร้อยแล้ว'),
+            actions: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                ),
+                onPressed: () {
+                  // Close the success dialog
+                  Navigator.pop(context);
 
-    print(error.toString());
-    // Handle error (show a message, etc.)
+                  // Close registration screen
+                  Navigator.pop(context);
+
+                  // Navigate to the login screen or any other screen
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (c) => Login()));
+                },
+                child: Text(
+                  'ยืนยัน',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (error) {
+      // Close the loading dialog
+      Navigator.pop(context);
+
+      print(error.toString());
+      // Handle error (show a message, etc.)
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -195,8 +228,8 @@ class _RegisPageState extends State<RegisPage> {
                 imgPost(),
                 textField('ชื่อ', Icons.person, _firstnameController),
                 textField('นามสกุล', Icons.person, _lastnameController),
-                textField('เพศ', Icons.male, _genderController),
-                textField('วันเกิด', Icons.date_range, _birthdayController),
+                choseGender(),
+                choseBirthDay(Icons.date_range, _birthdayController),
                 textField('ชื่อผู้ใช้', Icons.person, _usernameController),
                 textField('อีเมล', Icons.email, _emailController),
                 textField('รหัสผ่าน', Icons.key, _passwordController),
@@ -334,6 +367,93 @@ class _RegisPageState extends State<RegisPage> {
             ],
           )
         ],
+      ),
+    );
+  }
+
+  Widget choseGender() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 15),
+      child: Row(
+        children: <Widget>[
+          Row(
+            children: [
+              Image.asset(
+                'assets/icons/gender.png',
+                width: 35,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                'เพศ',
+                style: TextStyle(fontSize: 22),
+              ),
+            ],
+          ),
+          const SizedBox(
+            width: 15,
+          ),
+          Radio(
+            activeColor: Colors.green,
+            value: "ชาย",
+            groupValue: selectedGender,
+            onChanged: (value) {
+              setState(() {
+                selectedGender = value.toString();
+                
+              });
+            },
+          ),
+          const Text("ชาย", style: TextStyle(fontSize: 18)),
+          const SizedBox(width: 20),
+          Radio(
+            activeColor: Colors.green,
+            value: "หญิง",
+            groupValue: selectedGender,
+            onChanged: (value) {
+              setState(() {
+                selectedGender = value.toString();
+              });
+            },
+          ),
+          const Text("หญิง", style: TextStyle(fontSize: 18)),
+          Radio(
+            activeColor: Colors.green,
+            value: "อื่น ๆ",
+            groupValue: selectedGender,
+            onChanged: (value) {
+              setState(() {
+                selectedGender = value.toString();
+              });
+            },
+          ),
+          const Text("อื่น ๆ", style: TextStyle(fontSize: 18)),
+        ],
+      ),
+    );
+  }
+
+  Widget choseBirthDay(IconData icon, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
+      child: TextField(
+        controller: controller,
+        readOnly: true,
+        onTap: () => _selectDate(context),
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: 'วันเกิด',
+          labelStyle: const TextStyle(
+            fontSize: 20,
+          ),
+          hintStyle: const TextStyle(
+            fontStyle: FontStyle.italic,
+          ),
+          fillColor: Colors.white,
+          filled: true,
+          prefixIcon: Icon(icon),
+        ),
       ),
     );
   }
