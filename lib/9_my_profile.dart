@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:swapitem/14_HistroryMakeOffer.dart';
 import 'package:swapitem/18_HistoryPayment.dart';
 
@@ -282,7 +281,7 @@ class _ProfileState extends State<Profile> {
                                                   Text(
                                                     'บันทึกการแก้ไข',
                                                     style: TextStyle(
-                                                      fontSize: 18,
+                                                      fontSize: 15,
                                                       color: Colors.white,
                                                     ),
                                                   ),
@@ -369,7 +368,7 @@ class _ProfileState extends State<Profile> {
                                                     Text(
                                                       'ประวัติการยื่นข้อเสนอ',
                                                       style: TextStyle(
-                                                          fontSize: 18,
+                                                          fontSize: 15,
                                                           color: Colors.white),
                                                     ),
                                                   ],
@@ -397,7 +396,7 @@ class _ProfileState extends State<Profile> {
                                               child: Text(
                                                 'ประวัติการชำระเงิน',
                                                 style: TextStyle(
-                                                  fontSize: 18,
+                                                  fontSize: 15,
                                                   color: Colors.white,
                                                 ),
                                               ),
