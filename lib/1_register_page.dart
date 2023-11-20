@@ -152,7 +152,6 @@ class _RegisPageState extends State<RegisPage> {
 
       Navigator.pop(context);
 
-      // Show a success dialog
       showDialog(
         context: context,
         builder: (BuildContext context) {

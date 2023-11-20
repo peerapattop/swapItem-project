@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:swapitem/14_HistroryMakeOffer.dart';
 import 'package:swapitem/18_HistoryPayment.dart';
 
@@ -14,9 +16,17 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  final user = FirebaseAuth.instance.currentUser!;
+  late User _user;
+  late DatabaseReference _userRef;
 
   bool isTextFieldEnabled = false;
+  @override
+  void initState() {
+    super.initState();
+    _user = FirebaseAuth.instance.currentUser!;
+    _userRef = FirebaseDatabase.instance.ref().child('users').child(_user.uid);
+  }
+
   void signOut() async {
     await FirebaseAuth.instance.signOut();
   }
@@ -105,307 +115,333 @@ class _ProfileState extends State<Profile> {
             ),
           ),
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-                Container(
-                  alignment: Alignment.topCenter,
-                  child: Image.asset("assets/images/pramepree.png"),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextField(
-                        controller: TextEditingController(text: "0001"),
-                        decoration: const InputDecoration(
-                            label: Text(
-                              "หมายเลขผู้ใช้งาน",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            border: OutlineInputBorder(),
-                            enabled: false,
-                            prefixIcon: Icon(Icons.tag)),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      TextField(
-                        controller: TextEditingController(text: "เปรมปรี"),
-                        decoration: const InputDecoration(
-                            label: Text(
-                              "ชื่อ",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            border: OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.person)),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      TextField(
-                        controller: TextEditingController(text: "เวินไธสง"),
-                        decoration: InputDecoration(
-                            label: Text(
-                              "นามสกุล",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            border: OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.person)),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      TextField(
-                        controller: TextEditingController(text: "ชาย"),
-                        decoration: InputDecoration(
-                            label: Text(
-                              "เพศ",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            border: OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.male)),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      TextField(
-                        controller:
-                            TextEditingController(text: "14 กันยายน 2566"),
-                        decoration: InputDecoration(
-                            label: Text(
-                              "วันเกิด",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            border: OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.date_range)),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      TextField(
-                        controller: TextEditingController(text: "Pramepree"),
-                        decoration: InputDecoration(
-                            label: Text(
-                              "ชื่อผู้ใช้",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            border: OutlineInputBorder(),
-                            enabled: false,
-                            prefixIcon: Icon(Icons.person)),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      TextField(
-                        controller: TextEditingController(text: user.email!),
-                        decoration: InputDecoration(
-                            label: Text(
-                              'อีเมล',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            border: OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.email)),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      TextField(
-                        controller: TextEditingController(text: "+5fsdfdsf*-0"),
-                        decoration: InputDecoration(
-                            label: Text(
-                              "รหัสผ่าน",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            border: OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.password)),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Center(
-                        child: Container(
-                          width: 200,
-                          child: Column(
-                            children: [
-                              const SizedBox(
-                                height: 14,
+        body: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: StreamBuilder(
+                    stream: _userRef.onValue,
+                    builder: (context, AsyncSnapshot snapshot) {
+                      DataSnapshot dataSnapshot = snapshot.data!.snapshot;
+                      Map DataUser = dataSnapshot.value as Map;
+                      return Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              alignment: Alignment.topCenter,
+                              child: ClipOval(
+                                child: Image.network(
+                                  DataUser['image_user'],
+                                  width: 130,
+                                  height: 130,
+                                  fit: BoxFit
+                                      .cover, // ให้รูปภาพปรับตามขนาดของ Container
+                                ),
                               ),
-                              Container(
-                                width: 250,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    showSaveSuccessDialog(
-                                        context); // แสดงหน้าต่างบันทึกสำเร็จ
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 1, 135, 6),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize
-                                        .min, // กำหนดให้ Row มีขนาดเท่ากับเนื้อหา
-                                    children: [
-                                      Icon(
-                                        Icons.save,
-                                        color: Colors.white,
-                                      ), // ไอคอน "บันทึก"
-                                      SizedBox(
-                                          width:
-                                              8), // ระยะห่างระหว่างไอคอนและข้อความ
-                                      Text(
-                                        'บันทึกการแก้ไข',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.white,
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextField(
+                                    controller: TextEditingController(
+                                        text: DataUser['id'].toString()),
+                                    decoration: const InputDecoration(
+                                        label: Text(
+                                          "หมายเลขผู้ใช้งาน",
+                                          style: TextStyle(fontSize: 20),
                                         ),
-                                      ),
-                                    ],
+                                        border: OutlineInputBorder(),
+                                        enabled: false,
+                                        prefixIcon: Icon(Icons.tag)),
                                   ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 14,
-                              ),
-                              Container(
-                                width: 250,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => OfferRequest(),
-                                      ),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
+                                  const SizedBox(
+                                    height: 15,
                                   ),
-                                  child: Text(
-                                    'ข้อเสนอที่เข้ามา',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 14,
-                              ),
-                              Container(
-                                width: 250,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => HistoryPost(),
-                                      ),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Colors.green,
-                                  ),
-                                  child: Text(
-                                    'ประวัติการโพสต์',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 14,
-                              ),
-                              Container(
-                                width: 500,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            HistoryMakeOffer(),
-                                      ),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
-                                  ),
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          'ประวัติการยื่นข้อเสนอ',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.white),
+                                  TextField(
+                                    controller: TextEditingController(
+                                        text: DataUser['firstname'].toString()),
+                                    decoration: const InputDecoration(
+                                        label: Text(
+                                          "ชื่อ",
+                                          style: TextStyle(fontSize: 20),
                                         ),
-                                      ],
+                                        border: OutlineInputBorder(),
+                                        prefixIcon: Icon(Icons.person)),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  TextField(
+                                    controller: TextEditingController(
+                                        text: DataUser['lastname'].toString()),
+                                    decoration: InputDecoration(
+                                        label: Text(
+                                          "นามสกุล",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                        border: OutlineInputBorder(),
+                                        prefixIcon: Icon(Icons.person)),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  TextField(
+                                    controller: TextEditingController(
+                                        text: DataUser['gender'].toString()),
+                                    decoration: InputDecoration(
+                                        label: Text(
+                                          "เพศ",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                        border: OutlineInputBorder(),
+                                        prefixIcon: Icon(Icons.male)),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  TextField(
+                                    controller: TextEditingController(
+                                        text: DataUser['birthday'].toString()),
+                                    decoration: InputDecoration(
+                                        label: Text(
+                                          "วันเกิด",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                        border: OutlineInputBorder(),
+                                        prefixIcon: Icon(Icons.date_range)),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  TextField(
+                                    controller: TextEditingController(
+                                        text: DataUser['username'].toString()),
+                                    decoration: InputDecoration(
+                                        label: Text(
+                                          "ชื่อผู้ใช้",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                        border: OutlineInputBorder(),
+                                        enabled: false,
+                                        prefixIcon: Icon(Icons.person)),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  TextField(
+                                    controller: TextEditingController(
+                                        text: _user.email!),
+                                    decoration: InputDecoration(
+                                        label: Text(
+                                          'อีเมล',
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                        border: OutlineInputBorder(),
+                                        prefixIcon: Icon(Icons.email)),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Center(
+                                    child: Container(
+                                      width: 200,
+                                      child: Column(
+                                        children: [
+                                          const SizedBox(
+                                            height: 14,
+                                          ),
+                                          Container(
+                                            width: 250,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                showSaveSuccessDialog(
+                                                    context); // แสดงหน้าต่างบันทึกสำเร็จ
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    const Color.fromARGB(
+                                                        255, 1, 135, 6),
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize
+                                                    .min, // กำหนดให้ Row มีขนาดเท่ากับเนื้อหา
+                                                children: [
+                                                  Icon(
+                                                    Icons.save,
+                                                    color: Colors.white,
+                                                  ), // ไอคอน "บันทึก"
+                                                  SizedBox(
+                                                      width:
+                                                          8), // ระยะห่างระหว่างไอคอนและข้อความ
+                                                  Text(
+                                                    'บันทึกการแก้ไข',
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 14,
+                                          ),
+                                          Container(
+                                            width: 250,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        OfferRequest(),
+                                                  ),
+                                                );
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.green,
+                                              ),
+                                              child: Text(
+                                                'ข้อเสนอที่เข้ามา',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 14,
+                                          ),
+                                          Container(
+                                            width: 250,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        HistoryPost(),
+                                                  ),
+                                                );
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                primary: Colors.green,
+                                              ),
+                                              child: Text(
+                                                'ประวัติการโพสต์',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 14,
+                                          ),
+                                          Container(
+                                            width: 500,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        HistoryMakeOffer(),
+                                                  ),
+                                                );
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.green,
+                                              ),
+                                              child: SingleChildScrollView(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      'ประวัติการยื่นข้อเสนอ',
+                                                      style: TextStyle(
+                                                          fontSize: 18,
+                                                          color: Colors.white),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 14,
+                                          ),
+                                          Container(
+                                            width: 250,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        HistoryPayment(),
+                                                  ),
+                                                );
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.green,
+                                              ),
+                                              child: Text(
+                                                'ประวัติการชำระเงิน',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 14,
+                                          ),
+                                          Container(
+                                            width: 250,
+                                            child: ElevatedButton.icon(
+                                              icon: const Icon(
+                                                Icons.logout,
+                                                color: Colors.white,
+                                              ),
+                                              onPressed: () {
+                                                _showSignOutConfirmationDialog();
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.red,
+                                              ),
+                                              label: Text(
+                                                'ออกจากระบบ',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
-                              SizedBox(
-                                height: 14,
-                              ),
-                              Container(
-                                width: 250,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => HistoryPayment(),
-                                      ),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Colors.green,
-                                  ),
-                                  child: Text(
-                                    'ประวัติการชำระเงิน',
-                                    style: TextStyle(fontSize: 18,color: Colors.white,),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 14,
-                              ),
-                              Container(
-                                width: 250,
-                                child: ElevatedButton.icon(
-                                  icon: const Icon(Icons.logout,color: Colors.white,),
-                                  onPressed: () {
-                                    _showSignOutConfirmationDialog();
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
-                                    
-                                  ),
-                                  label: Text(
-                                    'ออกจากระบบ',
-                                    style: TextStyle(fontSize: 18,color: Colors.white,),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                            )
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                      );
+                    }),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
