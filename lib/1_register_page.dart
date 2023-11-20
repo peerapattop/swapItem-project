@@ -187,11 +187,10 @@ class _RegisPageState extends State<RegisPage> {
         },
       );
     } catch (error) {
-      // Close the loading dialog
       Navigator.pop(context);
 
       print(error.toString());
-      // Handle error (show a message, etc.)
+
     }
   }
 
@@ -374,7 +373,7 @@ class _RegisPageState extends State<RegisPage> {
             children: [
               Image.asset(
                 'assets/icons/gender.png',
-                width: 35,
+                width: 29,
               ),
               SizedBox(
                 width: 10,
