@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
           stream: _userRef.onValue,
           builder: (context, AsyncSnapshot snapshot) {
             DataSnapshot dataSnapshot = snapshot.data!.snapshot;
-            Map DataUser = dataSnapshot.value as Map;
+            Map dataUser = dataSnapshot.value as Map;
             return Column(
               children: [
                 Padding(
@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
                             alignment: Alignment.topCenter,
                             child: ClipOval(
                               child: Image.network(
-                                DataUser['image_user'],
+                                dataUser['image_user'],
                                 width: 120,
                                 height: 120,
                                 fit: BoxFit.cover,
@@ -119,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           const SizedBox(height: 5,),
-                          Text(DataUser['username'],style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),)
+                          Text(dataUser['username'],style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),)
                         ],
                       ),
                     ],
