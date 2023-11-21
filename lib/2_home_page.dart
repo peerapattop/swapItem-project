@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:swapitem/16_Payment.dart';
 import 'package:swapitem/3_build_post.dart';
+import 'package:swapitem/notification_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key});
@@ -30,11 +31,12 @@ class _HomePageState extends State<HomePage> {
           actions: <Widget>[
             IconButton(
               icon: Icon(
-                Icons.notification_important,
+                Icons.notifications,
                 color: Colors.white,
               ),
               onPressed: () {
-                // do something
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => NotificationD()));
               },
             )
           ],
@@ -57,7 +59,9 @@ class _HomePageState extends State<HomePage> {
                 return const Center(
                   child: Column(
                     children: [
-                      SizedBox(height: 350,),
+                      SizedBox(
+                        height: 350,
+                      ),
                       CircularProgressIndicator(),
                       Text('กำลังโหลดข้อมูล...')
                     ],
