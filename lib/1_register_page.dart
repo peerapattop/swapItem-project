@@ -299,7 +299,7 @@ class _RegisPageState extends State<RegisPage> {
           radius: 60.0,
           backgroundImage: _imageFile != null
               ? FileImage(File(_imageFile!.path))
-              : AssetImage('assets/images/profile_defalt.jpg')
+              : AssetImage('assets/icons/Person-icon.jpg')
                   as ImageProvider<Object>,
         ),
         Positioned(
