@@ -1,3 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+
 import '16_Payment.dart';
 import '3_build_post.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +12,16 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-//gg
 class _HomePageState extends State<HomePage> {
+  late User _user;
+  late DatabaseReference _userRef;
+  @override
+  void initState() {
+    super.initState();
+    _user = FirebaseAuth.instance.currentUser!;
+    _userRef = FirebaseDatabase.instance.ref().child('users').child(_user.uid);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -39,68 +50,142 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            profile(context),
-            Padding(
-              padding: EdgeInsets.only(top: 6.0),
-              child: ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(12.0), // ปรับค่าตามความต้องการ
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => (NewPost()),
-                    ));
-                  },
-                  child: Text('สร้างโพสต์'),
+        child: StreamBuilder(
+          stream: _userRef.onValue,
+          builder: (context, AsyncSnapshot snapshot) {
+            DataSnapshot dataSnapshot = snapshot.data!.snapshot;
+            Map DataUser = dataSnapshot.value as Map;
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 6.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                  12.0), // ปรับค่าตามความต้องการ
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                child: Text('โควตาการแลก 5/5 เดือน'),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 6.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                  12.0), // ปรับค่าตามความต้องการ
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                child: Text('โควตาการแลก 5/5 เดือน'),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 6.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                  12.0), // ปรับค่าตามความต้องการ
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => (Payment()),
+                                  ));
+                                },
+                                child: Text('เติม VIP'),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+                      Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.topCenter,
+                            child: ClipOval(
+                              child: Image.network(
+                                DataUser['image_user'],
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 5,),
+                          Text(DataUser['username'],style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),)
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ),
-            Container(
-              height: 600,
-              width: double.infinity,
-              child: GridView.count(
-                primary: false,
-                padding: const EdgeInsets.all(20),
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                crossAxisCount: 2,
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    color: Colors.teal[100],
-                    child: const Text("He'd have you all unravel at the"),
+                Padding(
+                  padding: EdgeInsets.only(top: 6.0),
+                  child: ClipRRect(
+                    borderRadius:
+                        BorderRadius.circular(12.0), // ปรับค่าตามความต้องการ
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => (NewPost()),
+                        ));
+                      },
+                      child: Text('สร้างโพสต์'),
+                    ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    color: Colors.teal[200],
-                    child: const Text('Heed not the rabble'),
+                ),
+                Container(
+                  height: 600,
+                  width: double.infinity,
+                  child: GridView.count(
+                    primary: false,
+                    padding: const EdgeInsets.all(20),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 2,
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        color: Colors.teal[100],
+                        child: const Text("He'd have you all unravel at the"),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        color: Colors.teal[200],
+                        child: const Text('Heed not the rabble'),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        color: Colors.teal[300],
+                        child: const Text('Sound of screams but the'),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        color: Colors.teal[400],
+                        child: const Text('Who scream'),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        color: Colors.teal[500],
+                        child: const Text('Revolution is coming...'),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        color: Colors.teal[600],
+                        child: const Text('Revolution, they...'),
+                      ),
+                    ],
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    color: Colors.teal[300],
-                    child: const Text('Sound of screams but the'),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    color: Colors.teal[400],
-                    child: const Text('Who scream'),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    color: Colors.teal[500],
-                    child: const Text('Revolution is coming...'),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    color: Colors.teal[600],
-                    child: const Text('Revolution, they...'),
-                  ),
-                ],
-              ),
-            ),
-          ],
+                ),
+              ],
+            );
+          },
         ),
       ),
     ));
@@ -109,7 +194,6 @@ class _HomePageState extends State<HomePage> {
 
 Widget gh(BuildContext context) => Column(
       children: [
-        profile(context),
         Padding(
           padding: EdgeInsets.only(top: 10.0),
           child: ClipRRect(
@@ -167,72 +251,4 @@ Widget gide() => Expanded(
           ),
         ],
       ),
-    );
-Widget profile(BuildContext context) => Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 6.0),
-                    child: ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(12.0), // ปรับค่าตามความต้องการ
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: Text('โควตาการแลก 5/5 เดือน'),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 6.0),
-                    child: ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(12.0), // ปรับค่าตามความต้องการ
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: Text('โควตาการแลก 5/5 เดือน'),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 6.0),
-                    child: ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(12.0), // ปรับค่าตามความต้องการ
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => (Payment()),
-                          ));
-                        },
-                        child: Text('เติม VIP'),
-                      ),
-                    ),
-                  ),
-                ],
-              )),
-              Padding(
-                padding: const EdgeInsets.only(right: 25, top: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.asset('assets/images/profileprame.png'),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text('Pramepree')
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ],
     );
