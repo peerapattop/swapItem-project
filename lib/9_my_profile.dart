@@ -119,10 +119,27 @@ class _ProfileState extends State<Profile> {
             Expanded(
               child: SingleChildScrollView(
                 child: StreamBuilder(
-                    stream: _userRef.onValue,
-                    builder: (context, AsyncSnapshot snapshot) {
+                  stream: _userRef.onValue,
+                  builder: (context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 350,
+                            ),
+                            CircularProgressIndicator(),
+                            Text('กำลังโหลดข้อมูล...')
+                          ],
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    } else {
                       DataSnapshot dataSnapshot = snapshot.data!.snapshot;
-                      Map DataUser = dataSnapshot.value as Map;
+                      Map dataUser = dataSnapshot.value as Map;
                       return Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
@@ -131,7 +148,7 @@ class _ProfileState extends State<Profile> {
                               alignment: Alignment.topCenter,
                               child: ClipOval(
                                 child: Image.network(
-                                  DataUser['image_user'],
+                                  dataUser['image_user'],
                                   width: 130,
                                   height: 130,
                                   fit: BoxFit
@@ -149,7 +166,7 @@ class _ProfileState extends State<Profile> {
                                 children: [
                                   TextField(
                                     controller: TextEditingController(
-                                        text: DataUser['id'].toString()),
+                                        text: dataUser['id'].toString()),
                                     decoration: const InputDecoration(
                                         label: Text(
                                           "หมายเลขผู้ใช้งาน",
@@ -164,7 +181,7 @@ class _ProfileState extends State<Profile> {
                                   ),
                                   TextField(
                                     controller: TextEditingController(
-                                        text: DataUser['firstname'].toString()),
+                                        text: dataUser['firstname'].toString()),
                                     decoration: const InputDecoration(
                                         label: Text(
                                           "ชื่อ",
@@ -178,7 +195,7 @@ class _ProfileState extends State<Profile> {
                                   ),
                                   TextField(
                                     controller: TextEditingController(
-                                        text: DataUser['lastname'].toString()),
+                                        text: dataUser['lastname'].toString()),
                                     decoration: InputDecoration(
                                         label: Text(
                                           "นามสกุล",
@@ -192,7 +209,7 @@ class _ProfileState extends State<Profile> {
                                   ),
                                   TextField(
                                     controller: TextEditingController(
-                                        text: DataUser['gender'].toString()),
+                                        text: dataUser['gender'].toString()),
                                     decoration: InputDecoration(
                                         label: Text(
                                           "เพศ",
@@ -206,7 +223,7 @@ class _ProfileState extends State<Profile> {
                                   ),
                                   TextField(
                                     controller: TextEditingController(
-                                        text: DataUser['birthday'].toString()),
+                                        text: dataUser['birthday'].toString()),
                                     decoration: InputDecoration(
                                         label: Text(
                                           "วันเกิด",
@@ -220,7 +237,7 @@ class _ProfileState extends State<Profile> {
                                   ),
                                   TextField(
                                     controller: TextEditingController(
-                                        text: DataUser['username'].toString()),
+                                        text: dataUser['username'].toString()),
                                     decoration: InputDecoration(
                                         label: Text(
                                           "ชื่อผู้ใช้",
@@ -437,7 +454,9 @@ class _ProfileState extends State<Profile> {
                           ],
                         ),
                       );
-                    }),
+                    }
+                  },
+                ),
               ),
             ),
           ],
