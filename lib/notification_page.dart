@@ -42,7 +42,7 @@ class _NotificationDState extends State<NotificationD> {
                       color: Colors.black,
                       width: 1.0,
                     ),
-                    color: Color.fromARGB(255, 255, 181, 181)              ),
+                    color: Color.fromARGB(255, 246, 225, 225)              ),
                   child: Column(
                     children: [
                       Row(
