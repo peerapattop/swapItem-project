@@ -40,6 +40,7 @@ class _NotificationDState extends State<NotificationD> {
                   return Text('ไม่มีการแจ้งเตือน.');
                 } else {
                   return ListView.builder(
+                    shrinkWrap: true,
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) => Column(
                       children: [
@@ -48,7 +49,7 @@ class _NotificationDState extends State<NotificationD> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
-                              top: 5, right: 10, left: 10),
+                              top: 5, right: 10, left: 10,bottom: 10),
                           child: Container(
                             width: 400,
                             height: 150,
@@ -72,7 +73,7 @@ class _NotificationDState extends State<NotificationD> {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
-                                        'จากผู้ดูระบบ',
+                                        'จากผู้ดูแลระบบ',
                                         style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.black,
