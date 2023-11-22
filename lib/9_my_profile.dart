@@ -247,6 +247,7 @@ class _ProfileState extends State<Profile> {
                                     height: 15,
                                   ),
                                   TextField(
+                                    readOnly: true,
                                     controller: _genderController,
                                     decoration: InputDecoration(
                                         label: Text(
@@ -574,4 +575,5 @@ class _ProfileState extends State<Profile> {
       },
     );
   }
+  
 }
