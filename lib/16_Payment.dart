@@ -10,6 +10,20 @@ class Payment extends StatefulWidget {
 }
 
 class _PaymentState extends State<Payment> {
+  late List<String> package;
+  late String dropdownValue;
+
+  @override
+  void initState() {
+    super.initState();
+    package = [
+      'แพ็คเก็จ 1 เดือน : 50 บาท',
+      'แพ็คเก็จ 2 เดือน : 100 บาท',
+      'แพ็คเก็จ 3 เดือน : 150 บาท',
+    ];
+    dropdownValue = package.first;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -32,31 +46,59 @@ class _PaymentState extends State<Payment> {
             Center(
               child: Container(
                   child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
                 child: Image.asset(
                   "assets/images/qrcodepromptpay.jpeg",
-                  width: 350,
-                  height: 350,
+                  width: 225,
+                  height: 225,
                 ),
               )),
             ),
             Text(
-              "แพ็คเกจ : 1 เดือน 50 บาท",
-              style: TextStyle(fontSize: 20),
+              'บริษัท แลกเปลี่ยนสิ่งของจำกัด มหาชน',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            DropdownMenu<String>(
+              width: 260,
+              initialSelection: package.first,
+              onSelected: (String? value) {
+                setState(() {
+                  dropdownValue = value!;
+                });
+              },
+              dropdownMenuEntries:
+                  package.map<DropdownMenuEntry<String>>((String value) {
+                return DropdownMenuEntry<String>(value: value, label: value);
+              }).toList(),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Container(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(border: Border.all()),
+              child: Center(
+                child: Image.asset(
+                  'assets/images/add_slip.png',
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.contain, // Adjust the fit as needed
+                ),
+              ),
             ),
             SizedBox(
               height: 20,
             ),
-            Container(
-              child: Image.asset("assets/images/addimage.png"),
-            ),
             SizedBox(
-              height: 20,
-            ),
-            Container(
                 height: 50,
                 width: 250,
                 child: ElevatedButton(
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
@@ -65,7 +107,7 @@ class _PaymentState extends State<Payment> {
                     },
                     child: Text(
                       "ชำระเงิน",
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 20, color: Colors.white),
                     )))
           ],
         ),
