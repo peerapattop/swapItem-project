@@ -37,7 +37,7 @@ class _NotificationDState extends State<NotificationD> {
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Text('No notifications available.');
+                  return Text('ไม่มีการแจ้งเตือน.');
                 } else {
                   return ListView.builder(
                     itemCount: snapshot.data!.docs.length,
