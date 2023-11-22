@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:swapitem/14_HistroryMakeOffer.dart';
 import 'package:swapitem/18_HistoryPayment.dart';
+import 'package:intl/intl.dart';
 
 import '5_his_post.dart';
 import '7_first_offer.dart';
@@ -22,6 +23,7 @@ class _ProfileState extends State<Profile> {
   Map dataUser = {};
   late User _user;
   late DatabaseReference _userRef;
+  DateTime? selectedDate ;
 
   bool isTextFieldEnabled = false;
   @override
@@ -37,6 +39,25 @@ class _ProfileState extends State<Profile> {
         TextEditingController(text: dataUser['gender'].toString());
     _birthdayController =
         TextEditingController(text: dataUser['birthday'].toString());
+  }
+
+   Future<void> _selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (pickedDate != null && pickedDate != selectedDate) {
+      setState(() {
+        selectedDate = pickedDate;
+        _birthdayController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+
+        // Save the updated birthday data to the database
+        _userRef.update({'birthday': _birthdayController.text});
+      });
+    }
   }
 
   void signOut() async {
@@ -240,13 +261,21 @@ class _ProfileState extends State<Profile> {
                                   ),
                                   TextField(
                                     controller: _birthdayController,
+                                    onTap: () => _selectDate(context),
                                     decoration: InputDecoration(
-                                        label: Text(
-                                          "วันเกิด",
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                        border: OutlineInputBorder(),
-                                        prefixIcon: Icon(Icons.date_range)),
+                                      border: OutlineInputBorder(),
+                                      labelText: 'วันเกิด',
+                                      labelStyle: const TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                      hintStyle: const TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                      fillColor: Colors.white,
+                                      filled: true,
+                                      prefixIcon: Icon(Icons.date_range),
+                                      suffixIcon: Icon(Icons.arrow_drop_down),
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 15,
@@ -312,15 +341,23 @@ class _ProfileState extends State<Profile> {
                                                             'บันทึกข้อมูลสำเร็จ'),
                                                         actions: [
                                                           ElevatedButton(
-                                                            style: ElevatedButton.styleFrom(
-                                                              backgroundColor: Colors.green,
+                                                            style:
+                                                                ElevatedButton
+                                                                    .styleFrom(
+                                                              backgroundColor:
+                                                                  Colors.green,
                                                             ),
                                                             onPressed: () {
                                                               Navigator.of(
                                                                       context)
                                                                   .pop(); // ปิด AlertDialog
                                                             },
-                                                            child: Text('ตกลง',style: TextStyle(color: Colors.white),),
+                                                            child: Text(
+                                                              'ตกลง',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white),
+                                                            ),
                                                           ),
                                                         ],
                                                       );
