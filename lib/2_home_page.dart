@@ -89,36 +89,77 @@ class _HomePageState extends State<HomePage> {
                                 Padding(
                                   padding: EdgeInsets.only(top: 6.0),
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    child: ElevatedButton(
-                                      onPressed: () {},
-                                      child: Text('โควตาการแลก 5/5 เดือน'),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        border: Border.all(
+                                            width: 1.0,
+                                            color: Colors.black), // เส้นขอบ
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text('โควตาการโพสต์ 5/5 เดือน',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                      ),
                                     ),
                                   ),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(top: 6.0),
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    child: ElevatedButton(
-                                      onPressed: () {},
-                                      child: Text('โควตาการแลก 5/5 เดือน'),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        border: Border.all(
+                                            width: 1.0,
+                                            color: Colors.black), // เส้นขอบ
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                            'โควตาการยื่นข้อเสนอ 5/5 เดือน',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                      ),
                                     ),
                                   ),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(top: 6.0),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) => Payment(),
-                                          ),
-                                        );
-                                      },
-                                      child: Text('เติม VIP'),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => Payment(),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        border: Border.all(
+                                            width: 1.0, color: Colors.black),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Wrap(
+                                          spacing:
+                                              5.0, // ระยะห่างระหว่างไอคอนและข้อความ
+                                          children: [
+                                            Image.asset(
+                                                'assets/images/vip.png'),
+                                            Text(
+                                              'เติม VIP',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -157,7 +198,11 @@ class _HomePageState extends State<HomePage> {
                       padding: EdgeInsets.only(top: 6.0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12.0),
-                        child: ElevatedButton(
+                        child: ElevatedButton.icon(
+                          icon: Icon(
+                            Icons.create,
+                            color: Colors.white,
+                          ),
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -165,7 +210,20 @@ class _HomePageState extends State<HomePage> {
                               ),
                             );
                           },
-                          child: Text('สร้างโพสต์'),
+                          style: ElevatedButton.styleFrom(
+                            side: BorderSide(
+                                width: 1.0, color: Colors.black), // เส้นขอบ
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10.0,
+                                horizontal: 20.0), // ระยะห่างภายในปุ่ม
+                            backgroundColor: Colors.red, // สีข้างใน
+                          ),
+                          label: Text(
+                            'สร้างโพสต์',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     ),
@@ -235,53 +293,11 @@ Widget gh(BuildContext context) => Column(
               onPressed: () {},
               child: Column(
                 children: [
-                  Text('สร้างโพสต์เพื่อแลกของ'),
+                  Text('สร้างโพสต์'),
                 ],
               ),
             ),
           ),
         ),
       ],
-    );
-
-Widget gide() => Expanded(
-      child: GridView.count(
-        primary: false,
-        padding: const EdgeInsets.all(20),
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        crossAxisCount: 2,
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.teal[100],
-            child: const Text("He'd have you all unravel at the"),
-          ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.teal[200],
-            child: const Text('Heed not the rabble'),
-          ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.teal[300],
-            child: const Text('Sound of screams but the'),
-          ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.teal[400],
-            child: const Text('Who scream'),
-          ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.teal[500],
-            child: const Text('Revolution is coming...'),
-          ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.teal[600],
-            child: const Text('Revolution, they...'),
-          ),
-        ],
-      ),
     );
