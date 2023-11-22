@@ -165,6 +165,7 @@ class _ProfileState extends State<Profile> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   TextField(
+                                    readOnly: true,
                                     controller: TextEditingController(
                                         text: dataUser['id'].toString()),
                                     decoration: const InputDecoration(
@@ -173,7 +174,6 @@ class _ProfileState extends State<Profile> {
                                           style: TextStyle(fontSize: 20),
                                         ),
                                         border: OutlineInputBorder(),
-                                        enabled: false,
                                         prefixIcon: Icon(Icons.tag)),
                                   ),
                                   const SizedBox(
@@ -236,6 +236,7 @@ class _ProfileState extends State<Profile> {
                                     height: 15,
                                   ),
                                   TextField(
+                                    readOnly: true,
                                     controller: TextEditingController(
                                         text: dataUser['username'].toString()),
                                     decoration: InputDecoration(
@@ -244,13 +245,13 @@ class _ProfileState extends State<Profile> {
                                           style: TextStyle(fontSize: 20),
                                         ),
                                         border: OutlineInputBorder(),
-                                        enabled: false,
                                         prefixIcon: Icon(Icons.person)),
                                   ),
                                   SizedBox(
                                     height: 10,
                                   ),
                                   TextField(
+                                    readOnly: true,
                                     controller: TextEditingController(
                                         text: _user.email!),
                                     decoration: InputDecoration(
