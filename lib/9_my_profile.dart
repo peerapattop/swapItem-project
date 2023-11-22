@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:swapitem/14_HistroryMakeOffer.dart';
 import 'package:swapitem/18_HistoryPayment.dart';
 import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '5_his_post.dart';
 import '7_first_offer.dart';
@@ -16,6 +19,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  XFile? _imageFile;
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
   late TextEditingController _genderController;
@@ -23,7 +27,7 @@ class _ProfileState extends State<Profile> {
   Map dataUser = {};
   late User _user;
   late DatabaseReference _userRef;
-  DateTime? selectedDate ;
+  DateTime? selectedDate;
 
   bool isTextFieldEnabled = false;
   @override
@@ -41,7 +45,7 @@ class _ProfileState extends State<Profile> {
         TextEditingController(text: dataUser['birthday'].toString());
   }
 
-   Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -187,15 +191,7 @@ class _ProfileState extends State<Profile> {
                           children: [
                             Container(
                               alignment: Alignment.topCenter,
-                              child: ClipOval(
-                                child: Image.network(
-                                  dataUser['image_user'],
-                                  width: 130,
-                                  height: 130,
-                                  fit: BoxFit
-                                      .cover, // ให้รูปภาพปรับตามขนาดของ Container
-                                ),
-                              ),
+                              child: imgPost(),
                             ),
                             const SizedBox(
                               height: 20,
@@ -575,5 +571,106 @@ class _ProfileState extends State<Profile> {
       },
     );
   }
-  
+
+  void takePhoto(ImageSource source) async {
+    final dynamic pickedFile = await ImagePicker().pickImage(
+      source: source,
+    );
+
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = pickedFile;
+      });
+
+      // Close the file selection window
+      Navigator.pop(context);
+    }
+  }
+
+  Widget imgPost() {
+    return StreamBuilder(
+      stream: _userRef.child('image_user').onValue,
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          String? imageUrl = snapshot.data.snapshot.value;
+
+          return Stack(
+            children: <Widget>[
+              CircleAvatar(
+                radius: 60.0,
+                backgroundImage: imageUrl != null
+                    ? NetworkImage(imageUrl)
+                    : AssetImage('assets/icons/Person-icon.jpg')
+                        as ImageProvider<Object>,
+              ),
+              Positioned(
+                bottom: 10.0,
+                right: 10.0,
+                child: InkWell(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) => bottomSheet(),
+                    );
+                  },
+                  child: const Icon(
+                    Icons.camera_alt,
+                    color: Color.fromARGB(255, 52, 0, 150),
+                    size: 28,
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+      },
+    );
+  }
+
+  Widget bottomSheet() {
+    return Container(
+      height: 100.0,
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 20,
+      ),
+      child: Column(
+        children: <Widget>[
+          Text(
+            "เลือกรูปภาพของคุณ",
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextButton.icon(
+                onPressed: () {
+                  takePhoto(ImageSource.camera);
+                },
+                icon: Icon(Icons.camera),
+                label: Text('กล้อง'),
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  takePhoto(ImageSource.gallery);
+                },
+                icon: Icon(Icons.camera),
+                label: Text('แกลลอรี่'),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
 }
