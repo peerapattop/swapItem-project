@@ -238,7 +238,7 @@ class _NewPostState extends State<NewPost> {
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.green),
                         ),
-                        child: Text("สร้างโพสต์"),
+                        child: Text("สร้างโพสต์",style: TextStyle(color: Colors.white),),
                       ),
                     )
                   ],
