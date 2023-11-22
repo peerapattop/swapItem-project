@@ -15,6 +15,11 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  late TextEditingController _firstNameController;
+  late TextEditingController _lastNameController;
+  late TextEditingController _genderController;
+  late TextEditingController _birthdayController;
+  Map dataUser = {};
   late User _user;
   late DatabaseReference _userRef;
 
@@ -24,6 +29,14 @@ class _ProfileState extends State<Profile> {
     super.initState();
     _user = FirebaseAuth.instance.currentUser!;
     _userRef = FirebaseDatabase.instance.ref().child('users').child(_user.uid);
+    _firstNameController =
+        TextEditingController(text: dataUser['firstname'].toString());
+    _lastNameController =
+        TextEditingController(text: dataUser['lastname'].toString());
+    _genderController =
+        TextEditingController(text: dataUser['gender'].toString());
+    _birthdayController =
+        TextEditingController(text: dataUser['birthday'].toString());
   }
 
   void signOut() async {
@@ -140,6 +153,13 @@ class _ProfileState extends State<Profile> {
                     } else {
                       DataSnapshot dataSnapshot = snapshot.data!.snapshot;
                       Map dataUser = dataSnapshot.value as Map;
+                      _firstNameController.text =
+                          dataUser['firstname'].toString();
+                      _lastNameController.text =
+                          dataUser['lastname'].toString();
+                      _genderController.text = dataUser['gender'].toString();
+                      _birthdayController.text =
+                          dataUser['birthday'].toString();
                       return Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
@@ -180,8 +200,7 @@ class _ProfileState extends State<Profile> {
                                     height: 15,
                                   ),
                                   TextField(
-                                    controller: TextEditingController(
-                                        text: dataUser['firstname'].toString()),
+                                    controller: _firstNameController,
                                     decoration: const InputDecoration(
                                         label: Text(
                                           "ชื่อ",
@@ -194,8 +213,7 @@ class _ProfileState extends State<Profile> {
                                     height: 15,
                                   ),
                                   TextField(
-                                    controller: TextEditingController(
-                                        text: dataUser['lastname'].toString()),
+                                    controller: _lastNameController,
                                     decoration: InputDecoration(
                                         label: Text(
                                           "นามสกุล",
@@ -208,8 +226,7 @@ class _ProfileState extends State<Profile> {
                                     height: 15,
                                   ),
                                   TextField(
-                                    controller: TextEditingController(
-                                        text: dataUser['gender'].toString()),
+                                    controller: _genderController,
                                     decoration: InputDecoration(
                                         label: Text(
                                           "เพศ",
@@ -222,8 +239,7 @@ class _ProfileState extends State<Profile> {
                                     height: 15,
                                   ),
                                   TextField(
-                                    controller: TextEditingController(
-                                        text: dataUser['birthday'].toString()),
+                                    controller: _birthdayController,
                                     decoration: InputDecoration(
                                         label: Text(
                                           "วันเกิด",
@@ -277,8 +293,40 @@ class _ProfileState extends State<Profile> {
                                             width: 250,
                                             child: ElevatedButton(
                                               onPressed: () {
-                                                showSaveSuccessDialog(
-                                                    context); // แสดงหน้าต่างบันทึกสำเร็จ
+                                                _userRef.update({
+                                                  'firstname':
+                                                      _firstNameController.text,
+                                                  'lastname':
+                                                      _lastNameController.text,
+                                                  'gender':
+                                                      _genderController.text,
+                                                  'birthday':
+                                                      _birthdayController.text,
+                                                }).then((value) {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: Text(
+                                                            'บันทึกข้อมูลสำเร็จ'),
+                                                        actions: [
+                                                          ElevatedButton(
+                                                            style: ElevatedButton.styleFrom(
+                                                              backgroundColor: Colors.green,
+                                                            ),
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop(); // ปิด AlertDialog
+                                                            },
+                                                            child: Text('ตกลง',style: TextStyle(color: Colors.white),),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                });
                                               },
                                               style: ElevatedButton.styleFrom(
                                                 backgroundColor:
@@ -292,7 +340,7 @@ class _ProfileState extends State<Profile> {
                                                   Icon(
                                                     Icons.save,
                                                     color: Colors.white,
-                                                  ), // ไอคอน "บันทึก"
+                                                  ),
                                                   SizedBox(
                                                       width:
                                                           8), // ระยะห่างระหว่างไอคอนและข้อความ
@@ -348,7 +396,7 @@ class _ProfileState extends State<Profile> {
                                                 );
                                               },
                                               style: ElevatedButton.styleFrom(
-                                                primary: Colors.green,
+                                                backgroundColor: Colors.green,
                                               ),
                                               child: Text(
                                                 'ประวัติการโพสต์',
