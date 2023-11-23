@@ -19,6 +19,76 @@ class _PaymentState extends State<Payment> {
   late List<String> package;
   late String dropdownValue;
 
+  Future<void> _showPaymentConfirmationDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          title: const Text(
+            'ยืนยันการชำระเงิน',
+            style: TextStyle(
+              color: Colors.blue,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text(
+                'คุณต้องการที่จะชำระเงินหรือไม่?',
+                style: TextStyle(color: Colors.black),
+              ),
+              const SizedBox(height: 20.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text(
+                      'ยกเลิก',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => PaymentSuccess()),
+                      );
+                    },
+                    child: const Text(
+                      'ยืนยัน',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -88,21 +158,19 @@ class _PaymentState extends State<Payment> {
               height: 20,
             ),
             SizedBox(
-                height: 50,
-                width: 250,
-                child: ElevatedButton(
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => PaymentSuccess()),
-                      );
-                    },
-                    child: Text(
-                      "ชำระเงิน",
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    )))
+              height: 50,
+              width: 250,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                onPressed: () {
+                  _showPaymentConfirmationDialog();
+                },
+                child: Text(
+                  "ชำระเงิน",
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -138,8 +206,7 @@ class _PaymentState extends State<Payment> {
             child: Center(
               child: _imageFile != null
                   ? Image.file(
-                      File(_imageFile?.path ??
-                          ''), 
+                      File(_imageFile?.path ?? ''),
                       width: 350,
                       height: 350,
                       fit: BoxFit.contain,
