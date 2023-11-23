@@ -580,7 +580,6 @@ class _ProfileState extends State<Profile> {
         _imageFile = pickedFile;
       });
 
-      // Close the file selection window
       Navigator.pop(context);
     }
   }

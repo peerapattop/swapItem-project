@@ -1,6 +1,11 @@
+import 'dart:io';
+
+import 'package:firebase_core/firebase_core.dart';
+
 import '17_PaymentSuccess.dart';
 import 'package:flutter/material.dart';
-//หน้า16
+import 'package:image_picker/image_picker.dart';
+//หน้าแนปสลิปการโอนเงิน
 
 class Payment extends StatefulWidget {
   const Payment({super.key});
@@ -10,6 +15,7 @@ class Payment extends StatefulWidget {
 }
 
 class _PaymentState extends State<Payment> {
+  XFile? _imageFile;
   late List<String> package;
   late String dropdownValue;
 
@@ -55,14 +61,14 @@ class _PaymentState extends State<Payment> {
               )),
             ),
             Text(
-              'บริษัท แลกเปลี่ยนสิ่งของจำกัด มหาชน',
+              'บริษัท ????????????? จำกัด',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             SizedBox(
               height: 10,
             ),
             DropdownMenu<String>(
-              width: 260,
+              width: 280,
               initialSelection: package.first,
               onSelected: (String? value) {
                 setState(() {
@@ -77,19 +83,7 @@ class _PaymentState extends State<Payment> {
             const SizedBox(
               height: 15,
             ),
-            Container(
-              width: 200,
-              height: 200,
-              decoration: BoxDecoration(border: Border.all()),
-              child: Center(
-                child: Image.asset(
-                  'assets/images/add_slip.png',
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.contain, // Adjust the fit as needed
-                ),
-              ),
-            ),
+            imgPayment(),
             SizedBox(
               height: 20,
             ),
@@ -111,6 +105,97 @@ class _PaymentState extends State<Payment> {
                     )))
           ],
         ),
+      ),
+    );
+  }
+
+  void takePhoto(ImageSource source) async {
+    final XFile? pickedFile = await ImagePicker().pickImage(
+      source: source,
+    );
+
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = pickedFile;
+      });
+
+      Navigator.pop(context);
+    }
+  }
+
+  Widget imgPayment() {
+    return Stack(
+      children: <Widget>[
+        GestureDetector(
+          onTap: () {
+            showModalBottomSheet(
+                context: context, builder: ((Builder) => bottomSheet()));
+          },
+          child: Container(
+            width: 350,
+            height: 350,
+            decoration: BoxDecoration(border: Border.all()),
+            child: Center(
+              child: _imageFile != null
+                  ? Image.file(
+                      File(_imageFile?.path ??
+                          ''), 
+                      width: 350,
+                      height: 350,
+                      fit: BoxFit.contain,
+                    )
+                  : Image.asset(
+                      'assets/images/add_slip.png',
+                      width: 70,
+                      height: 70,
+                      fit: BoxFit.contain,
+                    ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget bottomSheet() {
+    return Container(
+      height: 100.0,
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 20,
+      ),
+      child: Column(
+        children: <Widget>[
+          Text(
+            "เลือกรูปภาพของคุณ",
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextButton.icon(
+                onPressed: () {
+                  takePhoto(ImageSource.camera);
+                },
+                icon: Icon(Icons.camera),
+                label: Text('กล้อง'),
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  takePhoto(ImageSource.gallery);
+                },
+                icon: Icon(Icons.camera),
+                label: Text('แกลลอรี่'),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
