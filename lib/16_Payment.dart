@@ -18,16 +18,17 @@ class _PaymentState extends State<Payment> {
   XFile? _imageFile;
   late List<String> package;
   late String dropdownValue;
-
+  int currentPaymentNumber = 0;
   void createRequestVip() async {
     // ดึง UID ของผู้ใช้ที่ล็อกอินอยู่
     String uid = FirebaseAuth.instance.currentUser!.uid;
+    DateTime now = DateTime.now();
 
     // ดึงข้อมูลผู้ใช้จาก Realtime Database
     DatabaseReference userRef =
         FirebaseDatabase.instance.ref().child('users').child(uid);
     DatabaseEvent userDataSnapshot = await userRef.once();
-
+    currentPaymentNumber++;
     //ตรวจสอบว่ามีข้อมูลผู้ใช้หรือไม่
     if (userDataSnapshot.snapshot.value != null) {
       Map<dynamic, dynamic> Datamap =
@@ -38,24 +39,33 @@ class _PaymentState extends State<Payment> {
       String? username = Datamap['username'];
 
       Map<String, dynamic> requestData = {
+        'PaymentNumber': currentPaymentNumber,
         'id': uid,
         'firstname': firstname,
         'lastname': lastname,
         'username': username,
         'email': email,
+        "date": now.year.toString() +
+            "-" +
+            now.month.toString().padLeft(2, '0') +
+            "-" +
+            now.day.toString().padLeft(2, '0'),
+        "time": now.hour.toString().padLeft(2, '0') +
+            ":" +
+            now.minute.toString().padLeft(2, '0') +
+            ":" +
+            now.second.toString().padLeft(2, '0'),
       };
-
       // ทำการส่งข้อมูลไปยัง "requestvip" ใน Realtime Database
       DatabaseReference requestVipRef =
           FirebaseDatabase.instance.ref().child('requestvip');
       await requestVipRef.push().set(requestData);
-      print('add');
     } else {
       print('ไม่พบข้อมูลชื่อผู้ใช้');
     }
   }
 
-  Future<void> _showPaymentConfirmationDialog() async {
+  Future<void> _showPaymentConfirmationDialog(BuildContext context) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -106,10 +116,7 @@ class _PaymentState extends State<Payment> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => PaymentSuccess()),
-                      );
+                      createRequestVip();
                     },
                     child: const Text(
                       'ยืนยัน',
@@ -199,7 +206,7 @@ class _PaymentState extends State<Payment> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 onPressed: () {
-                  createRequestVip();
+                  _showPaymentConfirmationDialog(context);
                 },
                 child: Text(
                   "ชำระเงิน",
