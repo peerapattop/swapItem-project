@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+
 import '17_PaymentSuccess.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,6 +18,42 @@ class _PaymentState extends State<Payment> {
   XFile? _imageFile;
   late List<String> package;
   late String dropdownValue;
+
+  void createRequestVip() async {
+    // ดึง UID ของผู้ใช้ที่ล็อกอินอยู่
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+
+    // ดึงข้อมูลผู้ใช้จาก Realtime Database
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.ref().child('users').child(uid);
+    DatabaseEvent userDataSnapshot = await userRef.once();
+
+    //ตรวจสอบว่ามีข้อมูลผู้ใช้หรือไม่
+    if (userDataSnapshot.snapshot.value != null) {
+      Map<dynamic, dynamic> Datamap =
+          userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
+      String? firstname = Datamap['firstname'];
+      String? lastname = Datamap['lastname'];
+      String? email = Datamap['email'];
+      String? username = Datamap['username'];
+
+      Map<String, dynamic> requestData = {
+        'id': uid,
+        'firstname': firstname,
+        'lastname': lastname,
+        'username': username,
+        'email': email,
+      };
+
+      // ทำการส่งข้อมูลไปยัง "requestvip" ใน Realtime Database
+      DatabaseReference requestVipRef =
+          FirebaseDatabase.instance.ref().child('requestvip');
+      await requestVipRef.push().set(requestData);
+      print('add');
+    } else {
+      print('ไม่พบข้อมูลชื่อผู้ใช้');
+    }
+  }
 
   Future<void> _showPaymentConfirmationDialog() async {
     return showDialog<void>(
@@ -160,7 +199,7 @@ class _PaymentState extends State<Payment> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 onPressed: () {
-                  _showPaymentConfirmationDialog();
+                  createRequestVip();
                 },
                 child: Text(
                   "ชำระเงิน",
