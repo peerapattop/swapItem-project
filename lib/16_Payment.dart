@@ -41,6 +41,7 @@ class _PaymentState extends State<Payment> {
       String? lastname = Datamap['lastname'];
       String? email = Datamap['email'];
       String? username = Datamap['username'];
+      String? uid = Datamap['id'];
 
       // (เลือกแพ็คเก็จ)
       String selectedPackage = package.first;
