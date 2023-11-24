@@ -4,6 +4,7 @@ import '18_HistoryPayment.dart';
 import 'package:flutter/material.dart';
 //ชำระเงินสำเร็จ
 
+// ignore: must_be_immutable
 class PaymentSuccess extends StatelessWidget {
   DateTime date;
   DateTime time;

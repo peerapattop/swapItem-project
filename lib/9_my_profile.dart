@@ -17,7 +17,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  XFile? _imageFile;
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
   late TextEditingController _genderController;
@@ -577,7 +576,6 @@ class _ProfileState extends State<Profile> {
 
     if (pickedFile != null) {
       setState(() {
-        _imageFile = pickedFile;
       });
 
       Navigator.pop(context);

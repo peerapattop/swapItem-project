@@ -47,10 +47,8 @@ class _PaymentState extends State<Payment> {
       String selectedPackage = package.first;
 
       // ตรวจสอบว่า dropdownValue ไม่ใช่ null
-      if (dropdownValue != null) {
-        selectedPackage = dropdownValue;
-      }
-      String fileName = 'payment_${DateTime.now().millisecondsSinceEpoch}.png';
+      selectedPackage = dropdownValue;
+          String fileName = 'payment_${DateTime.now().millisecondsSinceEpoch}.png';
       // อัปโหลดรูปภาพไปยัง Firebase Storage
       final storageRef = FirebaseStorage.instance
           .ref()
