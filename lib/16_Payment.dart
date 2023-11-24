@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import '17_PaymentSuccess.dart';
 import 'package:flutter/material.dart';
@@ -15,10 +16,12 @@ class Payment extends StatefulWidget {
 }
 
 class _PaymentState extends State<Payment> {
+  String? imageUrl;
   XFile? _imageFile;
   late List<String> package;
   late String dropdownValue;
   int currentPaymentNumber = 0;
+  String status = 'รอการตรวจสอบ';
   void createRequestVip() async {
     // ดึง UID ของผู้ใช้ที่ล็อกอินอยู่
     String uid = FirebaseAuth.instance.currentUser!.uid;
@@ -29,6 +32,7 @@ class _PaymentState extends State<Payment> {
         FirebaseDatabase.instance.ref().child('users').child(uid);
     DatabaseEvent userDataSnapshot = await userRef.once();
     currentPaymentNumber++;
+    
     //ตรวจสอบว่ามีข้อมูลผู้ใช้หรือไม่
     if (userDataSnapshot.snapshot.value != null) {
       Map<dynamic, dynamic> Datamap =
@@ -39,14 +43,26 @@ class _PaymentState extends State<Payment> {
       String? username = Datamap['username'];
 
       // (เลือกแพ็คเก็จ)
-      String selectedPackage = package.first; 
+      String selectedPackage = package.first;
 
       // ตรวจสอบว่า dropdownValue ไม่ใช่ null
       if (dropdownValue != null) {
         selectedPackage = dropdownValue;
       }
+      String fileName = 'payment_${DateTime.now().millisecondsSinceEpoch}.png';
+      // อัปโหลดรูปภาพไปยัง Firebase Storage
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('payment_images')
+          .child(fileName);
+      await storageRef.putFile(File(_imageFile?.path ?? ''));
+
+      // ดึง URL ของรูปภาพที่อัปโหลด
+      String imageUrl = await storageRef.getDownloadURL();
 
       Map<String, dynamic> requestData = {
+        'status': status,
+        'image_payment': imageUrl,
         'packed': selectedPackage,
         'PaymentNumber': currentPaymentNumber,
         'id': uid,
@@ -126,6 +142,10 @@ class _PaymentState extends State<Payment> {
                     onPressed: () {
                       Navigator.of(context).pop();
                       createRequestVip();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PaymentSuccess()));
                     },
                     child: const Text(
                       'ยืนยัน',
