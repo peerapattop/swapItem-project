@@ -119,7 +119,7 @@ class _RegisPageState extends State<RegisPage> {
         password: _passwordController.text.trim(),
       );
 
-      //สุ่มไอดี
+      //สุ่มไอดีผู้ใช้งาน
       String generateRandomId() {
         Random random = Random();
         int randomNumber =
