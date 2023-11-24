@@ -1,16 +1,23 @@
+import 'package:intl/intl.dart';
+
 import '18_HistoryPayment.dart';
 import 'package:flutter/material.dart';
-//หน้า17
+//ชำระเงินสำเร็จ
 
 class PaymentSuccess extends StatelessWidget {
-  const PaymentSuccess({super.key});
+  DateTime date;
+  DateTime time;
+  int paymentNumber;
+
+  PaymentSuccess(
+      {required this.date, required this.time, required this.paymentNumber});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("ชำระเงินสำเร็จ"),
+          title: const Text("ชำระเงินสำเร็จ"),
           toolbarHeight: 40,
           centerTitle: true,
           flexibleSpace: Container(
@@ -51,18 +58,18 @@ class PaymentSuccess extends StatelessWidget {
                 height: 20,
               ),
               Text(
-                "หมายเลขการชำระเงิน #0001",
+                'หมายเลขการชำระเงิน' + ' $paymentNumber',
                 style: TextStyle(fontSize: 20),
               ),
               SizedBox(
                 height: 20,
               ),
               Text(
-                "วันที่ 9 พฤษภาคม 2566",
+                DateFormat('วันที่ dd  MMMM yyyy', 'th').format(date),
                 style: TextStyle(fontSize: 20),
               ),
               Text(
-                "เวลา 19:00 น.",
+                DateFormat('เวลา HH:mm น.', 'th').format(time),
                 style: TextStyle(fontSize: 20),
               ),
               SizedBox(

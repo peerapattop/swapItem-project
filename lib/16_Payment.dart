@@ -20,7 +20,7 @@ class _PaymentState extends State<Payment> {
   XFile? _imageFile;
   late List<String> package;
   late String dropdownValue;
-  int currentPaymentNumber = 0;
+  int currentPaymentNumber = 1;
   String status = 'รอการตรวจสอบ';
   void createRequestVip() async {
     // ดึง UID ของผู้ใช้ที่ล็อกอินอยู่
@@ -32,7 +32,7 @@ class _PaymentState extends State<Payment> {
         FirebaseDatabase.instance.ref().child('users').child(uid);
     DatabaseEvent userDataSnapshot = await userRef.once();
     currentPaymentNumber++;
-    
+
     //ตรวจสอบว่ามีข้อมูลผู้ใช้หรือไม่
     if (userDataSnapshot.snapshot.value != null) {
       Map<dynamic, dynamic> Datamap =
@@ -145,7 +145,11 @@ class _PaymentState extends State<Payment> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => PaymentSuccess()));
+                              builder: (context) => PaymentSuccess(
+                                 date: DateTime.now(),
+                                 time: DateTime.now(),
+                                paymentNumber: currentPaymentNumber,
+                              )));
                     },
                     child: const Text(
                       'ยืนยัน',
