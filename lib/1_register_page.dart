@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:swapitem/_login_page.dart';
@@ -116,6 +118,49 @@ class _RegisPageState extends State<RegisPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+
+      //สุ่มไอดี
+      String generateRandomId() {
+        Random random = Random();
+        int randomNumber =
+            random.nextInt(90000) + 10000; // สร้างตัวเลขสุ่ม 5 ตัว
+        return randomNumber.toString();
+      }
+
+      Future<bool> checkIfIdExists(String userId) async {
+        try {
+          // สร้าง reference ไปยังโหนดข้อมูลของผู้ใช้ใน Firebase Realtime Database
+          DatabaseReference reference =
+              FirebaseDatabase.instance.ref().child('users');
+
+          // ดึงข้อมูลจาก Firebase Realtime Database
+          DatabaseEvent snapshot = await reference.child(userId).once();
+
+          // ตรวจสอบว่าข้อมูลที่ได้มีค่าหรือไม่
+          return snapshot.snapshot.value != null;
+        } catch (error) {
+          print("เกิดข้อผิดพลาดในการตรวจสอบ ID: $error");
+          return false; // หรือตอบ false ในกรณีที่เกิดข้อผิดพลาด
+        }
+      }
+
+      Future<String> generateUniqueRandomId() async {
+        String userId = generateRandomId();
+
+        // ตรวจสอบว่า ID ที่สร้างไม่ซ้ำกับที่มีอยู่ในระบบแล้ว
+        bool isDuplicate = await checkIfIdExists(userId);
+
+        // ถ้า ID ซ้ำให้ทำการสร้างใหม่
+        while (isDuplicate) {
+          userId = generateRandomId();
+          isDuplicate = await checkIfIdExists(userId);
+        }
+
+        return userId;
+      }
+
+      String userId = await generateUniqueRandomId();
+
       // Upload image to Firebase Storage
       if (_imageFile != null) {
         Reference storageReference = FirebaseStorage.instance
@@ -139,7 +184,7 @@ class _RegisPageState extends State<RegisPage> {
 
       Map userDataMap = {
         'image_user': imageUrl,
-        "id": userCredential.user!.uid,
+        "id": userId,
         "firstname": _firstnameController.text.trim(),
         "lastname": _lastnameController.text.trim(),
         "gender": selectedGender,
@@ -190,7 +235,6 @@ class _RegisPageState extends State<RegisPage> {
       Navigator.pop(context);
 
       print(error.toString());
-
     }
   }
 
