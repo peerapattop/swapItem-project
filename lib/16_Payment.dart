@@ -38,7 +38,16 @@ class _PaymentState extends State<Payment> {
       String? email = Datamap['email'];
       String? username = Datamap['username'];
 
+      // (เลือกแพ็คเก็จ)
+      String selectedPackage = package.first; 
+
+      // ตรวจสอบว่า dropdownValue ไม่ใช่ null
+      if (dropdownValue != null) {
+        selectedPackage = dropdownValue;
+      }
+
       Map<String, dynamic> requestData = {
+        'packed': selectedPackage,
         'PaymentNumber': currentPaymentNumber,
         'id': uid,
         'firstname': firstname,
@@ -160,61 +169,62 @@ class _PaymentState extends State<Payment> {
             ),
           ),
         ),
-        body: Column(
-          children: [
-            Center(
-              child: Container(
-                  child: Padding(
-                padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-                child: Image.asset(
-                  "assets/images/qrcodepromptpay.jpeg",
-                  width: 225,
-                  height: 225,
-                ),
-              )),
-            ),
-            Text(
-              'บริษัท ????????????? จำกัด',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            DropdownMenu<String>(
-              width: 280,
-              initialSelection: package.first,
-              onSelected: (String? value) {
-                setState(() {
-                  dropdownValue = value!;
-                });
-              },
-              dropdownMenuEntries:
-                  package.map<DropdownMenuEntry<String>>((String value) {
-                return DropdownMenuEntry<String>(value: value, label: value);
-              }).toList(),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            imgPayment(),
-            SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-              height: 50,
-              width: 250,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                onPressed: () {
-                  _showPaymentConfirmationDialog(context);
-                },
-                child: Text(
-                  "ชำระเงิน",
-                  style: TextStyle(fontSize: 20, color: Colors.white),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+                  child: Image.asset(
+                    "assets/images/qrcodepromptpay.jpeg",
+                    width: 225,
+                    height: 225,
+                  ),
                 ),
               ),
-            ),
-          ],
+              Text(
+                'บริษัท ????????????? จำกัด',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              DropdownMenu<String>(
+                width: 280,
+                initialSelection: package.first,
+                onSelected: (String? value) {
+                  setState(() {
+                    dropdownValue = value!;
+                  });
+                },
+                dropdownMenuEntries:
+                    package.map<DropdownMenuEntry<String>>((String value) {
+                  return DropdownMenuEntry<String>(value: value, label: value);
+                }).toList(),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              imgPayment(),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 50,
+                width: 250,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                  onPressed: () {
+                    _showPaymentConfirmationDialog(context);
+                  },
+                  child: Text(
+                    "ชำระเงิน",
+                    style: TextStyle(fontSize: 20, color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
