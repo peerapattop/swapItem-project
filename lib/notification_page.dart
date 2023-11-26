@@ -40,7 +40,6 @@ class _NotificationDState extends State<NotificationD> {
                   return Text('ไม่มีการแจ้งเตือน.');
                 } else {
                   return ListView.builder(
-                    shrinkWrap: true,
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) => Column(
                       children: [
