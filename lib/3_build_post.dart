@@ -1,6 +1,8 @@
+import 'dart:io';
 import '4_post_finis.dart';
 import 'package:flutter/material.dart';
 import 'package:swapitem/11_detail.dart';
+import 'package:image_picker/image_picker.dart';
 
 List<String> category = <String>[
   'เสื้อผ้า',
@@ -28,6 +30,7 @@ class _NewPostState extends State<NewPost> {
   final brand1 = TextEditingController();
   final model1 = TextEditingController();
   final details1 = TextEditingController();
+  XFile? _imageFile;
 
   @override
   Widget build(BuildContext context) {
@@ -49,17 +52,7 @@ class _NewPostState extends State<NewPost> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 200,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
+            imgPost(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Align(
@@ -273,5 +266,92 @@ class _NewPostState extends State<NewPost> {
         ),
       ),
     ));
+  }
+
+  void takePhoto(ImageSource source) async {
+    final dynamic pickedFile = await ImagePicker().pickImage(
+      source: source,
+    );
+
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = pickedFile;
+      });
+
+      // Close the file selection window
+      Navigator.pop(context);
+    }
+  }
+
+  Widget imgPost() {
+    return Stack(
+      children: <Widget>[
+        CircleAvatar(
+          radius: 60.0,
+          backgroundImage: _imageFile != null
+              ? FileImage(File(_imageFile!.path))
+              : AssetImage('assets/icons/Person-icon.jpg')
+                  as ImageProvider<Object>,
+        ),
+        Positioned(
+          bottom: 10.0,
+          right: 10.0,
+          child: InkWell(
+            onTap: () {
+              showModalBottomSheet(
+                  context: context, builder: ((Builder) => bottomSheet()));
+            },
+            child: const Icon(
+              Icons.camera_alt,
+              color: const Color.fromARGB(255, 52, 0, 150),
+              size: 28,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget bottomSheet() {
+    return Container(
+      height: 100.0,
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 20,
+      ),
+      child: Column(
+        children: <Widget>[
+          Text(
+            "เลือกรูปภาพของคุณ",
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextButton.icon(
+                onPressed: () {
+                  takePhoto(ImageSource.camera);
+                },
+                icon: Icon(Icons.camera),
+                label: Text('กล้อง'),
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  takePhoto(ImageSource.gallery);
+                },
+                icon: Icon(Icons.camera),
+                label: Text('แกลลอรี่'),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
