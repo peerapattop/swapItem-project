@@ -1,5 +1,6 @@
 import '4_post_finis.dart';
 import 'package:flutter/material.dart';
+import 'package:swapitem/11_detail.dart';
 
 List<String> category = <String>[
   'เสื้อผ้า',
@@ -17,6 +18,17 @@ class NewPost extends StatefulWidget {
 }
 
 class _NewPostState extends State<NewPost> {
+  final item_name = TextEditingController();
+  final brand = TextEditingController();
+  final model = TextEditingController();
+  final details = TextEditingController();
+  final exchange_location = TextEditingController();
+
+  final item_name1 = TextEditingController();
+  final brand1 = TextEditingController();
+  final model1 = TextEditingController();
+  final details1 = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -106,7 +118,8 @@ class _NewPostState extends State<NewPost> {
                     const SizedBox(
                       height: 10,
                     ),
-                    const TextField(
+                    TextField(
+                      controller: item_name,
                       decoration: InputDecoration(
                         labelText: "ชื่อสิ่งของ",
                         labelStyle: TextStyle(fontSize: 20),
@@ -118,7 +131,8 @@ class _NewPostState extends State<NewPost> {
                     const SizedBox(
                       height: 15,
                     ),
-                    const TextField(
+                    TextField(
+                      controller: brand,
                       decoration: InputDecoration(
                         label: Text(
                           "ยี่ห้อ",
@@ -131,7 +145,8 @@ class _NewPostState extends State<NewPost> {
                     const SizedBox(
                       height: 15,
                     ),
-                    const TextField(
+                    TextField(
+                      controller: model,
                       decoration: InputDecoration(
                           label: Text(
                             "รุ่น",
@@ -143,7 +158,8 @@ class _NewPostState extends State<NewPost> {
                     const SizedBox(
                       height: 15,
                     ),
-                    const TextField(
+                    TextField(
+                      controller: details,
                       decoration: InputDecoration(
                           label: Text(
                             "รายละเอียด",
@@ -155,7 +171,8 @@ class _NewPostState extends State<NewPost> {
                     const SizedBox(
                       height: 15,
                     ),
-                    const TextField(
+                    TextField(
+                      controller: exchange_location,
                       decoration: InputDecoration(
                           label: Text(
                             "สถานที่แลกเปลี่ยน",
@@ -171,7 +188,8 @@ class _NewPostState extends State<NewPost> {
                     const SizedBox(
                       height: 10,
                     ),
-                    const TextField(
+                    TextField(
+                      controller: item_name1,
                       decoration: InputDecoration(
                           label: Text(
                             "ชื่อสิ่งของ",
@@ -185,7 +203,8 @@ class _NewPostState extends State<NewPost> {
                     const SizedBox(
                       height: 15,
                     ),
-                    const TextField(
+                    TextField(
+                      controller: brand1,
                       decoration: InputDecoration(
                           label: Text(
                             "ยี่ห้อ",
@@ -200,6 +219,7 @@ class _NewPostState extends State<NewPost> {
                       height: 15,
                     ),
                     TextField(
+                      controller: model1,
                       decoration: InputDecoration(
                           label: Text(
                             "รุ่น",
@@ -214,6 +234,7 @@ class _NewPostState extends State<NewPost> {
                       height: 15,
                     ),
                     TextField(
+                      controller: details1,
                       decoration: InputDecoration(
                           label: Text(
                             "รายละเอียด",
@@ -238,7 +259,10 @@ class _NewPostState extends State<NewPost> {
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.green),
                         ),
-                        child: Text("สร้างโพสต์",style: TextStyle(color: Colors.white),),
+                        child: Text(
+                          "สร้างโพสต์",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     )
                   ],
