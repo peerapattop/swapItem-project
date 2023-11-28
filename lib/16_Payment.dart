@@ -63,7 +63,7 @@ class _PaymentState extends State<Payment> {
         'status': status,
         'image_payment': imageUrl,
         'packed': selectedPackage,
-        'PaymentNumber': currentPaymentNumber,
+        'PaymentNumber': currentPaymentNumber.toString(),
         'id': uid,
         'firstname': firstname,
         'lastname': lastname,
