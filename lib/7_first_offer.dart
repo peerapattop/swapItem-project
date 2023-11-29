@@ -23,39 +23,24 @@ class _OfferRequestState extends State<OfferRequest> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          appBar: AppBar(
-            title: Text("ข้อเสนอที่เข้ามา"),
-            toolbarHeight: 40,
-            centerTitle: true,
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/image 40.png'),
-                  fit: BoxFit.fill,
-                ),
+        appBar: AppBar(
+          title: Text("ข้อเสนอที่เข้ามา"),
+          toolbarHeight: 40,
+          centerTitle: true,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/image 40.png'),
+                fit: BoxFit.fill,
               ),
             ),
           ),
-          body: SingleChildScrollView(
-              child: Column(
+        ),
+        body: SingleChildScrollView(
+          child: Column(
             children: [
               Row(
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start, // ตั้งค่าให้ชิดซ้าย
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: Text(
-                            "หมายเลขการโพสต์ /0001",
-                            style: MyTextStyle(),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
                   Expanded(
                     child: Column(
                       crossAxisAlignment:
@@ -72,8 +57,14 @@ class _OfferRequestState extends State<OfferRequest> {
                                   builder: (context) => (DeletePost()),
                                 ));
                               },
-                              icon: Icon(Icons.delete),
-                              label: Text("ลบโพสต์")),
+                              icon: Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                              label: Text(
+                                "ลบโพสต์",
+                                style: TextStyle(color: Colors.white),
+                              )),
                         )
                       ],
                     ),
@@ -93,58 +84,219 @@ class _OfferRequestState extends State<OfferRequest> {
                           height: 200,
                         ),
                       ],
-                    ), //88
+                    ),
                   ),
                 ],
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.tag, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                          color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                        ),
+                        const SizedBox(
+                            width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
+                        Text(
+                          "หมายเลขโพสต์ #0001",
+                          style: MyTextStyle(),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.person, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                          color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                        ),
+                        const SizedBox(
+                            width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
+                        Text(
+                          "ชื่อผู้โพสต์ : Pramepree",
+                          style: MyTextStyle(),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.date_range, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                          color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                        ),
+                        const SizedBox(
+                            width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
+                        Text(
+                          "วันที่ 9/8/2999",
+                          style: MyTextStyle(),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                          color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                        ),
+                        const SizedBox(
+                            width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
+                        Text(
+                          "เวลา 13:00 น.",
+                          style: MyTextStyle(),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 170, 170, 169),
+                        borderRadius: BorderRadius.circular(
+                            12.0), // ทำให้ Container โค้งมน
+                      ),
+                      padding:
+                          EdgeInsets.all(16), // ระยะห่างของเนื้อหาจาก Container
                       child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start, // ตั้งค่าให้ชิดซ้าย
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "ชื่อสิ่งของ :  รองเท้า",
+                            "ชื่อสิ่งของ : รองเท้า",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          Text(
+                            "ยี่ห้อ : adidas",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          Text(
+                            "รุ่น : superstar",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          Text(
+                            "รายละเอียด : รองเท้าไซร์ 40",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          Text(
+                            'สถานที่แลกเปลี่ยน : BTS สนามกีฬา',
+                            style: MyTextStyle(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                  ],
+                ),
+              ),
+              Image.asset(
+                'assets/images/swap.png',
+                width: 50,
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  buildCircularNumberButton(1),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  buildCircularNumberButton(2),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  buildCircularNumberButton(3),
+                  SizedBox(
+                    width: 10,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Center(child: Image.asset('assets/images/shirt.png')),
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.person, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                          color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                        ),
+                        SizedBox(width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
+                        Text(
+                          "ผู้ส่งคำขอเสนอแลกเปลี่ยน  : Prampree ",
+                          style: MyTextStyle(),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.date_range, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                          color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                        ),
+                        SizedBox(width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
+                        Text(
+                          "วันที่ 9/8/2566",
+                          style: MyTextStyle(),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                          color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                        ),
+                        Text(
+                          " เวลา 12:00 น.",
+                          style: MyTextStyle(),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 170, 170, 169),
+                        borderRadius: BorderRadius.circular(
+                            12.0), // ทำให้ Container โค้งมน
+                      ),
+                      padding:
+                          EdgeInsets.all(16), // ระยะห่างของเนื้อหาจาก Container
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "ชื่อสิ่งของ :  เสื้อ",
                             style: MyTextStyle(),
                           ),
                           Text(
-                            "หมวดหมู่ : รองเท้า",
+                            "หมวดหมู่ : เสื้อผ้า",
                             style: MyTextStyle(),
                           ),
                           Text(
-                            "ยี่ห้อ : Adidas",
+                            "ยี่ห้อ : ตะขาบ",
                             style: MyTextStyle(),
                           ),
                           Text(
-                            "รุ่น :  Superstar",
+                            "รุ่น :  T-Shire",
                             style: MyTextStyle(),
                           ),
                           Text(
-                            'รายละเอียด : ไซส์ 40 สภาพการใช้งาน 50%',
+                            'รายละเอียด :สภาพการใช้งาน 50%',
                             style: MyTextStyle(),
-                          ),
-                          Text(
-                            "ต้องการแลกเปลี่ยนกับ :  เสื้อ",
-                            style: MyTextStyle(),
-                          ),
-                          Text(
-                            'รายละเอียด : เสื้อไซส์ L ยี่ห้อ lacoste',
-                            style: MyTextStyle(),
-                          ),
-                          Text(
-                            "สถานที่แลกเปลี่ยน : รถไฟฟ้าสถานี่อโศก",
-                            style: MyTextStyle(),
-                          ),
-                          Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                "assets/images/66666.png",
-                              ),
-                            ),
                           ),
                         ],
                       ),
@@ -152,120 +304,50 @@ class _OfferRequestState extends State<OfferRequest> {
                   ],
                 ),
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start, // ตั้งค่าให้ชิดซ้าย
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: Container(
-                            width: 200,
-                            child: Column(
-                              children: [
-                                DropdownMenu<String>(
-                                  width: 170,
-                                  initialSelection: people.first,
-                                  onSelected: (String? value) {
-                                    setState(() {
-                                      dropdownValue = value!;
-                                    });
-                                  },
-                                  dropdownMenuEntries:
-                                      people.map<DropdownMenuEntry<String>>(
-                                    (String value) {
-                                      return DropdownMenuEntry<String>(
-                                        value: value,
-                                        label: value,
-                                      );
-                                    },
-                                  ).toList(),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Image.asset(
-                                  'assets/images/shirt.png',
-                                  width: 150,
-                                  fit: BoxFit.cover,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                      builder: (context) => (ChangeSuccess()),
-                                    ));
-                                  },
-                                  child: Text("ยืนยันการแลกเปลี่ยน"),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                      builder: (context) => (Chat()),
-                                    ));
-                                  },
-                                  child: Text("แชท"),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    SizedBox(width: 10,),
+                    ElevatedButton.icon(
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                      icon: Icon(Icons.chat, color: Colors.white),
+                      onPressed: () {},
+                      label: Text(
+                        'แชท',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start, // ตั้งค่าให้ชิดขวา
-                      children: [
-                        Text(
-                          "เลขที่ผู้ยื่นข้อเสนอ",
-                          style: MyTextStyle(),
-                        ),
-                        Text(
-                          "#01",
-                          style: MyTextStyle(),
-                        ),
-                        Text(
-                          "วันที่ 9/8/2999",
-                          style: MyTextStyle(),
-                        ),
-                        Text(
-                          "เวลา 13:00 น.",
-                          style: MyTextStyle(),
-                        ),
-                        Text(
-                          "ชื่อคนเสนอ : Simpson",
-                          style: MyTextStyle(),
-                        ),
-                        Text(
-                          "ชื่อสิ่งของที่จะแลก : เสื้อ",
-                          style: MyTextStyle(),
-                        ),
-                        Text(
-                          "รายละเอียด : เสื้อแบรนด์ตะขาบ",
-                          style: MyTextStyle(),
-                        ),
-                        Text(
-                          "คำอธิบายภาพ : สภาพ 70%",
-                          style: MyTextStyle(),
-                        ),
-                      ],
+                    SizedBox(width: 50,),
+                    ElevatedButton.icon(
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                      icon: Icon(Icons.check, color: Colors.white),
+                      onPressed: () {},
+                      label: Text(
+                        'ยืนยัน',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(width: 5,),
+                    ElevatedButton.icon(
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      icon: Icon(Icons.close, color: Colors.white),
+                      onPressed: () {},
+                      label: Text(
+                        'ปฎิเสธ',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
-          ))),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -273,7 +355,34 @@ class _OfferRequestState extends State<OfferRequest> {
 MyTextStyle() {
   return TextStyle(
     fontSize: 18,
-    fontWeight: FontWeight.bold,
     color: Colors.black,
+  );
+}
+
+Widget buildCircularNumberButton(int number) {
+  return InkWell(
+    onTap: () {
+      // โค้ดที่ต้องการให้ทำงานเมื่อปุ่มถูกกด
+    },
+    child: Container(
+      width: 40, // ปรับขนาดตามต้องการ
+      height: 40, // ปรับขนาดตามต้องการ
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: Colors.black, // สีขอบ
+          width: 2.0, // ความกว้างขอบ
+        ),
+      ),
+      child: Center(
+        child: Text(
+          '$number',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ),
   );
 }
