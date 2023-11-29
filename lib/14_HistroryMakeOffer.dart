@@ -65,21 +65,7 @@ class HistoryMakeOffer extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.tag, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                              color:
-                                  Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
-                            ),
-                            const SizedBox(
-                                width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
-                            Text(
-                              "หมายเลขการยื่นข้อเสนอ : 001",
-                              style: myTextStyle(),
-                            ),
-                          ],
-                        ),
+                        
                         Row(
                           children: [
                             const Icon(
@@ -105,11 +91,25 @@ class HistoryMakeOffer extends StatelessWidget {
                             const SizedBox(
                                 width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
                             Text(
-                              "วันที่ 9/8/2999 เวลา 13:00 น.",
+                              "วันที่ 9/8/2999",
                               style: myTextStyle(),
                             ),
                           ],
                         ),
+                        Row(
+                      children: [
+                        const Icon(
+                          Icons.punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                          color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                        ),
+                        const SizedBox(
+                            width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
+                        Text(
+                          "เวลา 13:00 น.",
+                          style: myTextStyle(),
+                        ),
+                      ],
+                    ),
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 2, right: 15, top: 10, bottom: 10),
@@ -186,20 +186,6 @@ class HistoryMakeOffer extends StatelessWidget {
                     Row(
                       children: [
                         const Icon(
-                          Icons.date_range, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                          color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
-                        ),
-                        const SizedBox(
-                            width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
-                        Text(
-                          "วันที่ 9/8/2999 เวลา 13:00 น.",
-                          style: myTextStyle(),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
                           Icons.person, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
                           color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
                         ),
@@ -211,6 +197,35 @@ class HistoryMakeOffer extends StatelessWidget {
                         ),
                       ],
                     ),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.date_range, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                          color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                        ),
+                        const SizedBox(
+                            width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
+                        Text(
+                          "วันที่ 9/8/2999",
+                          style: myTextStyle(),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                          color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                        ),
+                        const SizedBox(
+                            width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
+                        Text(
+                          "เวลา 13:00 น.",
+                          style: myTextStyle(),
+                        ),
+                      ],
+                    ),
+                    
                     Padding(
                       padding: const EdgeInsets.only(
                           left: 2, right: 15, top: 10, bottom: 10),
@@ -262,7 +277,7 @@ class HistoryMakeOffer extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(12.0),
                             child: ElevatedButton.icon(
-                              icon: Icon(Icons.chat),
+                              icon: Icon(Icons.chat,color: Colors.white),
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(
                                   padding: EdgeInsets.all(16),
@@ -270,7 +285,7 @@ class HistoryMakeOffer extends StatelessWidget {
                                       Color.fromARGB(255, 10, 41, 164)),
                               label: Text(
                                 "แชท",
-                                style: TextStyle(fontSize: 16),
+                                style: TextStyle(fontSize: 16,color: Colors.white),
                               ),
                             ),
                           ),
@@ -286,7 +301,7 @@ class HistoryMakeOffer extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(12.0),
                             child: ElevatedButton.icon(
-                              icon: const Icon(Icons.delete),
+                              icon: const Icon(Icons.delete,color: Colors.white),
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(
                                   padding: EdgeInsets.all(16),
@@ -294,7 +309,7 @@ class HistoryMakeOffer extends StatelessWidget {
                                       Color.fromARGB(255, 248, 1, 1)),
                               label: Text(
                                 "ลบ",
-                                style: TextStyle(fontSize: 16),
+                                style: TextStyle(fontSize: 16,color: Colors.white),
                               ),
                             ),
                           ),
