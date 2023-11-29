@@ -131,17 +131,10 @@ class _NewPostState extends State<NewPost> {
         "model": model.text.trim(),
         "detail": details.text.trim(),
         "exchange_location": exchange_location.text.trim(),
-<<<<<<< HEAD
-        "gender": selectedGender,
-        "username": _usernameController.text.trim(),
-        "email": _emailController.text.trim(),
-        "birthday": _birthdayController.text.trim(),
-=======
         "item_name1": item_name1.text.trim(),
         "brand1": brand1.text.trim(),
         "model1": model1.text.trim(),
         "details1": details1.text.trim(),
->>>>>>> 009478b058ceb707278fe0d190e375f5687051f1
       };
       await userRef.set(userDataMap);
 
