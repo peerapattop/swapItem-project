@@ -1,7 +1,6 @@
 import 'dart:io';
 import '4_post_finis.dart';
 import 'package:flutter/material.dart';
-import 'package:swapitem/11_detail.dart';
 import 'package:image_picker/image_picker.dart';
 
 List<String> category = <String>[
