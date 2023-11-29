@@ -34,13 +34,21 @@ class _HistoryPostState extends State<HistoryPost> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 buildCircularNumberButton(1),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 buildCircularNumberButton(2),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 buildCircularNumberButton(3),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 buildCircularNumberButton(4),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 buildCircularNumberButton(5),
                 // เพิ่ม CircularNumberButton อื่น ๆ ตามต้องการ
               ],
@@ -92,32 +100,31 @@ class _HistoryPostState extends State<HistoryPost> {
                         "วันที่ 8/8/2566",
                         style: MyTextStyle(),
                       ),
-                      
                     ],
                   ),
                   Row(
                     children: [
-                       Icon(
+                      Icon(
                         Icons.punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
                         color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
                       ),
                       Text(
-                            " เวลา 12:00 น.",
-                            style: MyTextStyle(),
-                          ),
+                        " เวลา 12:00 น.",
+                        style: MyTextStyle(),
+                      ),
                     ],
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   Padding(
-                     padding: const EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                         left: 2, right: 15, top: 10, bottom: 10),
                     child: Container(
                       decoration: BoxDecoration(
                         color: Color.fromARGB(255, 170, 170, 169),
-                        borderRadius:
-                            BorderRadius.circular(12.0), // ทำให้ Container โค้งมน
+                        borderRadius: BorderRadius.circular(
+                            12.0), // ทำให้ Container โค้งมน
                       ),
                       padding:
                           EdgeInsets.all(11), // ระยะห่างของเนื้อหาจาก Container
@@ -199,14 +206,14 @@ class _HistoryPostState extends State<HistoryPost> {
                   ),
                   Row(
                     children: [
-                       Icon(
+                      Icon(
                         Icons.punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
                         color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
                       ),
                       Text(
-                            " เวลา 12:00 น.",
-                            style: MyTextStyle(),
-                          ),
+                        " เวลา 12:00 น.",
+                        style: MyTextStyle(),
+                      ),
                     ],
                   ),
                   const SizedBox(
@@ -260,7 +267,10 @@ class _HistoryPostState extends State<HistoryPost> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12.0),
                           child: ElevatedButton.icon(
-                            icon: Icon(Icons.chat,color: Colors.white,),
+                            icon: Icon(
+                              Icons.chat,
+                              color: Colors.white,
+                            ),
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.all(16),
@@ -268,7 +278,8 @@ class _HistoryPostState extends State<HistoryPost> {
                             ),
                             label: Text(
                               "แชท",
-                              style: TextStyle(fontSize: 16,color: Colors.white),
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white),
                             ),
                           ),
                         ),
@@ -284,7 +295,7 @@ class _HistoryPostState extends State<HistoryPost> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12.0),
                           child: ElevatedButton.icon(
-                            icon: Icon(Icons.delete,color: Colors.white),
+                            icon: Icon(Icons.delete, color: Colors.white),
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.all(16),
@@ -292,7 +303,8 @@ class _HistoryPostState extends State<HistoryPost> {
                             ),
                             label: Text(
                               "ลบโพสต์",
-                              style: TextStyle(fontSize: 16,color: Colors.white),
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white),
                             ),
                           ),
                         ),
