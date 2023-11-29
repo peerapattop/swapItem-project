@@ -121,10 +121,14 @@ class _LoginState extends State<Login> {
                           padding: EdgeInsets.all(10.0),
                           child: TextField(
                             controller: _emailController,
-                            decoration: const InputDecoration(
-                              border:
-                                  OutlineInputBorder(), // Add a border around the TextField
+                            obscureText: false,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                    10.0), // Adjust the value as needed
+                              ),
                               labelText: 'อีเมล',
+                              prefixIcon: Icon(Icons.email),
                             ),
                           ),
                         ),
@@ -133,10 +137,13 @@ class _LoginState extends State<Login> {
                           child: TextField(
                             controller: _passwordController,
                             obscureText: true,
-                            decoration: const InputDecoration(
-                              border:
-                                  OutlineInputBorder(), // Add a border around the TextField
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                    10.0), // Adjust the value as needed
+                              ),
                               labelText: 'รหัสผ่าน',
+                              prefixIcon: Icon(Icons.key),
                             ),
                           ),
                         ),
