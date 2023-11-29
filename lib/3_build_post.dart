@@ -126,11 +126,11 @@ class _NewPostState extends State<NewPost> {
       }
 
       Map userDataMap = {
-        'item_name': item_name.text.trim(),,
-        'brand': brand.text.trim(),,
-        "model": model.text.trim(),,
-        "detail": details.text.trim(),,
-        "exchange_location": exchange_location.text.trim(),,
+        'item_name': item_name.text.trim(),
+        'brand': brand.text.trim(),
+        "model": model.text.trim(),
+        "detail": details.text.trim(),
+        "exchange_location": exchange_location.text.trim(),
         "gender": selectedGender,
         "username": _usernameController.text.trim(),
         "email": _emailController.text.trim(),
