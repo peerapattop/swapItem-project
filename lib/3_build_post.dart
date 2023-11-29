@@ -43,74 +43,14 @@ class _NewPostState extends State<NewPost> {
         item_name1.text.trim().isEmpty ||
         brand1.text.trim().isEmpty ||
         model1.text.trim().isEmpty ||
-        details1.text.trim().isEmpty) {
-      // Show an error dialog
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Row(
-              children: [
-                Icon(
-                  Icons.error,
-                  color: Colors.red,
-                ),
-                SizedBox(
-                  height: 39,
-                ),
-                Text(
-                  'ข้อมูลไม่ครบถ้วน',
-                  style: TextStyle(fontSize: 20),
-                ),
-              ],
-            ),
-            content: Text('โปรดกรอกข้อมูลให้ครบทุกช่อง'),
-            actions: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'รับทราบ',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          );
-        },
-      );
-      return;
-    }
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 16), // Add some spacing
-              Text(
-                'กำลังสมัครสมาชิก...',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        );
-      },
-      barrierDismissible: false,
-    );
+        details1.text.trim().isEmpty) ;
 
     try {
       Future<bool> checkIfIdExists(String userId) async {
         try {
           // สร้าง reference ไปยังโหนดข้อมูลของผู้ใช้ใน Firebase Realtime Database
           DatabaseReference reference =
-              FirebaseDatabase.instance.ref().child('users');
+              FirebaseDatabase.instance.ref().child('postitem');
 
           // ดึงข้อมูลจาก Firebase Realtime Database
           DatabaseEvent snapshot = await reference.child(userId).once();
@@ -123,7 +63,7 @@ class _NewPostState extends State<NewPost> {
         }
       }
 
-      DatabaseReference userRef =
+      DatabaseReference itemRef =
           FirebaseDatabase.instance.ref().child('postitem');
       Map userDataMap = {
         'item_name': item_name.text.trim(),
@@ -136,7 +76,7 @@ class _NewPostState extends State<NewPost> {
         "model1": model1.text.trim(),
         "details1": details1.text.trim(),
       };
-      await userRef.set(userDataMap);
+      await itemRef.set(userDataMap);
 
       Navigator.pop(context);
 
@@ -393,9 +333,7 @@ class _NewPostState extends State<NewPost> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => (buildPost(context)),
-                          ));
+                          buildPost(context);
                         },
                         style: ButtonStyle(
                           backgroundColor:
