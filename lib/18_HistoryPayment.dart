@@ -1,5 +1,7 @@
+//หน้าประวัติการชำระเงิน
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-//หน้า18
 
 class HistoryPayment extends StatefulWidget {
   const HistoryPayment({super.key});
@@ -9,6 +11,17 @@ class HistoryPayment extends StatefulWidget {
 }
 
 class _HistoryPaymentState extends State<HistoryPayment> {
+  late User _user;
+  late DatabaseReference _userRef;
+  late String paymentNumber;
+  @override
+  void initState() {
+    super.initState();
+    _user = FirebaseAuth.instance.currentUser!;
+    _userRef =
+        FirebaseDatabase.instance.ref().child('requestvip').child(_user.uid);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -26,139 +39,170 @@ class _HistoryPaymentState extends State<HistoryPayment> {
             ),
           ),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            buildCircularNumberButton(1),
-                            SizedBox(
-                              width: 10,
+        body: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                  child: StreamBuilder(
+                      stream: _userRef.onValue,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 350,
+                                ),
+                                CircularProgressIndicator(),
+                                Text('กำลังโหลดข้อมูล...')
+                              ],
                             ),
-                            buildCircularNumberButton(2),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            buildCircularNumberButton(3),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            buildCircularNumberButton(4),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            buildCircularNumberButton(5),
-                            // เพิ่ม CircularNumberButton อื่น ๆ ตามต้องการ
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black)),
-                              
-                          child: Center(
-                              child: Image.asset(
-                            "assets/images/slip.jpeg",
-                            width: 500,
-                            height: 500,
-                          )),
-                        ),
-                        SizedBox(height: 30,),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 217, 217, 216),
-                            borderRadius: BorderRadius.circular(
-                                12.0), // ทำให้ Container โค้งมน
-                          ),
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
+                          );
+                        } else if (snapshot.hasError) {
+                          return Center(
+                            child: Text('Error: ${snapshot.error}'),
+                          );
+                        } else {
+                          DataSnapshot dataSnapshot = snapshot.data!.snapshot;
+                          Map dataUser = dataSnapshot.value as Map;
+                          paymentNumber = dataUser['id'];
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.tag,
-                                    color: Colors.blue,
-                                  ), // เพิ่มไอคอนที่นี่
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        buildCircularNumberButton(1),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        buildCircularNumberButton(2),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        buildCircularNumberButton(3),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        buildCircularNumberButton(4),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        buildCircularNumberButton(5),
+                                        // เพิ่ม CircularNumberButton อื่น ๆ ตามต้องการ
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.black)),
+                                      child: Center(
+                                          child: Image.asset(
+                                        "assets/images/slip.jpeg",
+                                        width: 500,
+                                        height: 500,
+                                      )),
+                                    ),
+                                    SizedBox(
+                                      height: 30,
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color:
+                                            Color.fromARGB(255, 217, 217, 216),
+                                        borderRadius: BorderRadius.circular(
+                                            12.0), // ทำให้ Container โค้งมน
+                                      ),
+                                      padding: EdgeInsets.all(16.0),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.tag,
+                                                color: Colors.blue,
+                                              ), // เพิ่มไอคอนที่นี่
 
-                                  Text(
-                                    " หมายเลขการชำระเงิน : PAY-77",
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.date_range,
-                                    color: Colors.blue,
-                                  ), // เพิ่มไอคอนที่นี่
+                                              Text(
+                                                " หมายเลขการชำระเงิน : PAY-$paymentNumber",
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.date_range,
+                                                color: Colors.blue,
+                                              ), // เพิ่มไอคอนที่นี่
 
-                                  Text(
-                                    " วันที่ : 28/9/2566",
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.more_time,
-                                    color: Colors.blue,
-                                  ), // เพิ่มไอคอนที่นี่
+                                              Text(
+                                                " วันที่ : 28/9/2566",
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.more_time,
+                                                color: Colors.blue,
+                                              ), // เพิ่มไอคอนที่นี่
 
-                                  Text(
-                                    " เวลา : 08:38 น.",
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.menu,
-                                    color: Colors.blue,
-                                  ), // เพิ่มไอคอนที่นี่
+                                              Text(
+                                                " เวลา : 08:38 น.",
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.menu,
+                                                color: Colors.blue,
+                                              ), // เพิ่มไอคอนที่นี่
 
-                                  Text(
-                                    " แพ็กเกจ : 1 เดือน 50 บาท",
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.handyman,
-                                    color: Colors.blue,
-                                  ), // เพิ่มไอคอนที่นี่
+                                              Text(
+                                                " แพ็กเกจ : 1 เดือน 50 บาท",
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.handyman,
+                                                color: Colors.blue,
+                                              ), // เพิ่มไอคอนที่นี่
 
-                                  Text(
-                                    " สถานะ : รอการตรวจสอบ",
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                ],
+                                              Text(
+                                                " สถานะ : รอการตรวจสอบ",
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                          );
+                        }
+                      })),
+            ),
+          ],
         ),
       ),
     );
