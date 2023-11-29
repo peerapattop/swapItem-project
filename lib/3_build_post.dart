@@ -34,7 +34,7 @@ class _NewPostState extends State<NewPost> {
   final model1 = TextEditingController();
   final details1 = TextEditingController();
   XFile? _imageFile;
-  registerNewUser(BuildContext context) async {
+  buildPost(BuildContext context) async {
     if (item_name.text.trim().isEmpty ||
         brand.text.trim().isEmpty ||
         model.text.trim().isEmpty ||
@@ -106,8 +106,6 @@ class _NewPostState extends State<NewPost> {
     );
 
     try {
-      //สุ่มไอดีผู้ใช้งาน
-
       Future<bool> checkIfIdExists(String userId) async {
         try {
           // สร้าง reference ไปยังโหนดข้อมูลของผู้ใช้ใน Firebase Realtime Database
@@ -125,27 +123,19 @@ class _NewPostState extends State<NewPost> {
         }
       }
 
+      DatabaseReference userRef =
+          FirebaseDatabase.instance.ref().child('postitem');
       Map userDataMap = {
-        'item_name': item_name.text.trim(),,
-        'brand': brand.text.trim(),,
-        "model": model.text.trim(),,
-        "detail": details.text.trim(),,
-        "exchange_location": exchange_location.text.trim(),,
-        "gender": selectedGender,
-        "username": _usernameController.text.trim(),
-        "email": _emailController.text.trim(),
-        "birthday": _birthdayController.text.trim(),
+        'item_name': item_name.text.trim(),
+        'brand': brand.text.trim(),
+        "model": model.text.trim(),
+        "detail": details.text.trim(),
+        "exchange_location": exchange_location.text.trim(),
+        "item_name1": item_name1.text.trim(),
+        "brand1": brand1.text.trim(),
+        "model1": model1.text.trim(),
+        "details1": details1.text.trim(),
       };
-// final item_name = TextEditingController();
-//   final brand = TextEditingController();
-//   final model = TextEditingController();
-//   final details = TextEditingController();
-//   final exchange_location = TextEditingController();
-
-//   final item_name1 = TextEditingController();
-//   final brand1 = TextEditingController();
-//   final model1 = TextEditingController();
-//   final details1 = TextEditingController();
       await userRef.set(userDataMap);
 
       Navigator.pop(context);
@@ -404,7 +394,7 @@ class _NewPostState extends State<NewPost> {
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => (SuccessPost()),
+                            builder: (context) => (buildPost(context)),
                           ));
                         },
                         style: ButtonStyle(
