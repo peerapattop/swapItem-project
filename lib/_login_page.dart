@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:swapitem/1_register_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -28,7 +28,8 @@ class _LoginState extends State<Login> {
       // Add any additional logic after successful login if needed.
     } catch (e) {
       // Handle errors
-      String errorMessage = "โปรดกรอกอีเมล และรหัสผ่าน"; // ข้อความที่คุณต้องการแสดง
+      String errorMessage =
+          "โปรดกรอกอีเมล และรหัสผ่าน"; // ข้อความที่คุณต้องการแสดง
 
       if (e is FirebaseAuthException) {
         if (e.code == 'user-not-found') {
@@ -99,7 +100,7 @@ class _LoginState extends State<Login> {
                 children: [
                   Container(
                     width: 17,
-                    height: screenHight,
+                    height: screenHight - 27,
                     child: Image.asset(
                       'assets/images/llogin.png',
                       fit: BoxFit.cover,
@@ -167,7 +168,10 @@ class _LoginState extends State<Login> {
                                   onPressed: () {
                                     signIn();
                                   },
-                                  icon: const Icon(Icons.login,color: Colors.white,),
+                                  icon: const Icon(
+                                    Icons.login,
+                                    color: Colors.white,
+                                  ),
                                   label: const Text(
                                     'เข้าสู่ระบบ',
                                     style: TextStyle(
@@ -191,7 +195,10 @@ class _LoginState extends State<Login> {
                                 builder: (context) => RegisPage(),
                               ));
                             },
-                            icon: const Icon(Icons.add,color: Colors.white,),
+                            icon: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            ),
                             label: const Text(
                               'สมัครสมาชิก',
                               style: TextStyle(
@@ -208,7 +215,7 @@ class _LoginState extends State<Login> {
                   ),
                   Container(
                     width: 17,
-                    height: screenHight,
+                    height: screenHight - 27,
                     child: Image.asset(
                       'assets/images/llogin.png',
                       fit: BoxFit.cover,
