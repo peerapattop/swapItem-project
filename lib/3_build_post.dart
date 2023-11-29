@@ -1,8 +1,11 @@
 import 'dart:io';
-import '4_post_finis.dart';
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:swapitem/11_detail.dart';
+import 'package:swapitem/_login_page.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 List<String> category = <String>[
   'เสื้อผ้า',
@@ -31,6 +34,162 @@ class _NewPostState extends State<NewPost> {
   final model1 = TextEditingController();
   final details1 = TextEditingController();
   XFile? _imageFile;
+  registerNewUser(BuildContext context) async {
+    if (item_name.text.trim().isEmpty ||
+        brand.text.trim().isEmpty ||
+        model.text.trim().isEmpty ||
+        details.text.trim().isEmpty ||
+        exchange_location.text.trim().isEmpty ||
+        item_name1.text.trim().isEmpty ||
+        brand1.text.trim().isEmpty ||
+        model1.text.trim().isEmpty ||
+        details1.text.trim().isEmpty) {
+      // Show an error dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Row(
+              children: [
+                Icon(
+                  Icons.error,
+                  color: Colors.red,
+                ),
+                SizedBox(
+                  height: 39,
+                ),
+                Text(
+                  'ข้อมูลไม่ครบถ้วน',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ],
+            ),
+            content: Text('โปรดกรอกข้อมูลให้ครบทุกช่อง'),
+            actions: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'รับทราบ',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16), // Add some spacing
+              Text(
+                'กำลังสมัครสมาชิก...',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        );
+      },
+      barrierDismissible: false,
+    );
+
+    try {
+      //สุ่มไอดีผู้ใช้งาน
+
+      Future<bool> checkIfIdExists(String userId) async {
+        try {
+          // สร้าง reference ไปยังโหนดข้อมูลของผู้ใช้ใน Firebase Realtime Database
+          DatabaseReference reference =
+              FirebaseDatabase.instance.ref().child('users');
+
+          // ดึงข้อมูลจาก Firebase Realtime Database
+          DatabaseEvent snapshot = await reference.child(userId).once();
+
+          // ตรวจสอบว่าข้อมูลที่ได้มีค่าหรือไม่
+          return snapshot.snapshot.value != null;
+        } catch (error) {
+          print("เกิดข้อผิดพลาดในการตรวจสอบ ID: $error");
+          return false; // หรือตอบ false ในกรณีที่เกิดข้อผิดพลาด
+        }
+      }
+
+      Map userDataMap = {
+        'item_name': item_name.text.trim(),,
+        'brand': brand.text.trim(),,
+        "model": model.text.trim(),,
+        "detail": details.text.trim(),,
+        "exchange_location": exchange_location.text.trim(),,
+        "gender": selectedGender,
+        "username": _usernameController.text.trim(),
+        "email": _emailController.text.trim(),
+        "birthday": _birthdayController.text.trim(),
+      };
+// final item_name = TextEditingController();
+//   final brand = TextEditingController();
+//   final model = TextEditingController();
+//   final details = TextEditingController();
+//   final exchange_location = TextEditingController();
+
+//   final item_name1 = TextEditingController();
+//   final brand1 = TextEditingController();
+//   final model1 = TextEditingController();
+//   final details1 = TextEditingController();
+      await userRef.set(userDataMap);
+
+      Navigator.pop(context);
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Row(
+              children: [
+                Icon(
+                  Icons.check,
+                  color: Colors.green,
+                ),
+                Text('สมัครสมาชิกสำเร็จ'),
+              ],
+            ),
+            content: Text('คุณได้ทำการสมัครสมาชิกเรียบร้อยแล้ว'),
+            actions: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (c) => Login()));
+                },
+                child: Text(
+                  'ยืนยัน',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (error) {
+      Navigator.pop(context);
+
+      print(error.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
