@@ -21,6 +21,7 @@ class _ProfileState extends State<Profile> {
   late TextEditingController _lastNameController;
   late TextEditingController _genderController;
   late TextEditingController _birthdayController;
+  late String status_user;
   Map dataUser = {};
   late User _user;
   late DatabaseReference _userRef;
@@ -40,6 +41,7 @@ class _ProfileState extends State<Profile> {
         TextEditingController(text: dataUser['gender'].toString());
     _birthdayController =
         TextEditingController(text: dataUser['birthday'].toString());
+
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -182,13 +184,31 @@ class _ProfileState extends State<Profile> {
                       _genderController.text = dataUser['gender'].toString();
                       _birthdayController.text =
                           dataUser['birthday'].toString();
+                          status_user = dataUser['status_user'];
                       return Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
                           children: [
-                            Container(
-                              alignment: Alignment.topCenter,
-                              child: imgPost(),
+                            Row(
+                              children: [
+                                Container(
+                                  alignment: Alignment.topCenter,
+                                  child: imgPost(),
+                                ),
+                                SizedBox(width: 60,),
+                                Column(
+                                  children: [
+                                    Text(
+                                      'สถานะ : $status_user',
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    Text(
+                                      'หมดอายุ : -',
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                  ],
+                                )
+                              ],
                             ),
                             const SizedBox(
                               height: 20,
@@ -575,8 +595,7 @@ class _ProfileState extends State<Profile> {
     );
 
     if (pickedFile != null) {
-      setState(() {
-      });
+      setState(() {});
 
       Navigator.pop(context);
     }

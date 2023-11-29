@@ -183,6 +183,7 @@ class _RegisPageState extends State<RegisPage> {
           .child(userCredential.user!.uid);
 
       Map userDataMap = {
+        'status_user': 'ผู้ใช้ทั่วไป',
         'image_user': imageUrl,
         "id": userId,
         "firstname": _firstnameController.text.trim(),
