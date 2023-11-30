@@ -44,7 +44,6 @@ class _NewPostState extends State<NewPost> {
     currentpostNumber++;
     Map<dynamic, dynamic> Datamap =
         userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
-    String? postNumber = Datamap['postNumber'];
     String? username = Datamap['username'];
 
     try {
