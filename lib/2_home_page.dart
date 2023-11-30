@@ -74,6 +74,7 @@ class _HomePageState extends State<HomePage> {
               } else {
                 DataSnapshot dataSnapshot = snapshot.data!.snapshot;
                 Map dataUser = dataSnapshot.value as Map;
+                String postCount = dataUser['postCount'].toString();
 
                 return Column(
                   children: [
@@ -99,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: Text('โควตาการโพสต์ 5/5 เดือน',
+                                        child: Text('โควตาการโพสต์ ${postCount}/5 เดือน',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold)),
                                       ),

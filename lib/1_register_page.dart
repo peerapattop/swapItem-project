@@ -23,6 +23,7 @@ class _RegisPageState extends State<RegisPage> {
   String selectedGender = '';
   final _birthdayController = TextEditingController();
   final _usernameController = TextEditingController();
+  int monthlyPostLimit = 5;
 
   XFile? _imageFile;
   String? imageUrl;
@@ -183,6 +184,7 @@ class _RegisPageState extends State<RegisPage> {
           .child(userCredential.user!.uid);
 
       Map userDataMap = {
+        'postCount':monthlyPostLimit,
         'status_user': 'ผู้ใช้ทั่วไป',
         'image_user': imageUrl,
         "id": userId,
