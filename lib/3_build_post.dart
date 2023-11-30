@@ -33,31 +33,21 @@ class _NewPostState extends State<NewPost> {
   XFile? _imageFile;
   int currentpostNumber = 0;
   DateTime now = DateTime.now();
-  int monthlyPostLimit = 5;
-  DateTime lastPostTime = DateTime(2000);
 
-Future<void> buildPost(BuildContext context) async {
-  try {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-    DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(uid);
-    DatabaseEvent userDataSnapshot = await userRef.once();
-    Map<dynamic, dynamic> datamap = userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
-    String? username = datamap['username'];
-     int postCount = (datamap['postCount']);
+  Future<void> buildPost(BuildContext context) async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      DatabaseReference userRef =
+          FirebaseDatabase.instance.ref().child('users').child(uid);
+      DatabaseEvent userDataSnapshot = await userRef.once();
+      Map<dynamic, dynamic> datamap =
+          userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
+      String? username = datamap['username'];
 
-    DateTime now = DateTime.now();
-
-    // Check if a month has passed since the last post
-    if (now.month > lastPostTime.month || now.year > lastPostTime.year) {
-      // Reset the monthly post counter
-      monthlyPostLimit = 5;
-    }
-
-    if (monthlyPostLimit > 0) {
-      DatabaseReference itemRef = FirebaseDatabase.instance.ref().child('postitem').push();
+      DatabaseReference itemRef =
+          FirebaseDatabase.instance.ref().child('postitem').push();
 
       Map userDataMap = {
-        'postCount': postCount,
         'postNumber': currentpostNumber,
         'time': now.hour.toString().padLeft(2, '0') +
             ":" +
@@ -83,20 +73,41 @@ Future<void> buildPost(BuildContext context) async {
       await itemRef.set(userDataMap);
 
       currentpostNumber++;
-      monthlyPostLimit--;
 
-      // Update the last post time
-      lastPostTime = now;
+      // Show confirmation dialog
+      bool confirmed = await showConfirmationDialog(context);
 
-      // Other code you want to execute after a successful post
-    } else {
-      // Display a message to the user indicating that the monthly post limit has been reached
-      print('Monthly post limit reached');
+      if (confirmed) {
+        // User confirmed, navigate back
+        Navigator.pop(context);
+      }
+    } catch (error) {
+      Navigator.pop(context);
     }
-  } catch (error) {
-    Navigator.pop(context);
   }
-}
+
+  Future<bool> showConfirmationDialog(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('โพสต์สำเร็จ'),
+          content: Text('โพสต์ของคุณสร้างเรียบร้อย.'),
+          actions: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(true); // User confirmed
+              },
+              child: Text('ยืนยัน',style: TextStyle(color: Colors.white),),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
