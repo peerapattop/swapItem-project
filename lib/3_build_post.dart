@@ -43,7 +43,7 @@ Future<void> buildPost(BuildContext context) async {
     DatabaseEvent userDataSnapshot = await userRef.once();
     Map<dynamic, dynamic> datamap = userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
     String? username = datamap['username'];
-     int postCount = (datamap['postCount'] ?? 0) + 1;
+     int postCount = (datamap['postCount']);
 
     DateTime now = DateTime.now();
 
