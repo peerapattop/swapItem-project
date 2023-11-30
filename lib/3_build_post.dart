@@ -1,7 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:swapitem/2_home_page.dart';
-import 'package:swapitem/_login_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -35,21 +33,31 @@ class _NewPostState extends State<NewPost> {
   XFile? _imageFile;
   int currentpostNumber = 0;
   DateTime now = DateTime.now();
+  int monthlyPostLimit = 5;
+  DateTime lastPostTime = DateTime(2000);
 
-  buildPost(BuildContext context) async {
-    try {
-      String uid = FirebaseAuth.instance.currentUser!.uid;
-      DatabaseReference userRef =
-          FirebaseDatabase.instance.ref().child('users').child(uid);
-      DatabaseEvent userDataSnapshot = await userRef.once();
-      Map<dynamic, dynamic> Datamap =
-          userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
-      String? username = Datamap['username'];
+Future<void> buildPost(BuildContext context) async {
+  try {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(uid);
+    DatabaseEvent userDataSnapshot = await userRef.once();
+    Map<dynamic, dynamic> datamap = userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
+    String? username = datamap['username'];
+     int postCount = (datamap['postCount'] ?? 0) + 1;
 
-      DatabaseReference itemRef =
-          FirebaseDatabase.instance.ref().child('postitem').push();
+    DateTime now = DateTime.now();
+
+    // Check if a month has passed since the last post
+    if (now.month > lastPostTime.month || now.year > lastPostTime.year) {
+      // Reset the monthly post counter
+      monthlyPostLimit = 5;
+    }
+
+    if (monthlyPostLimit > 0) {
+      DatabaseReference itemRef = FirebaseDatabase.instance.ref().child('postitem').push();
 
       Map userDataMap = {
+        'postCount': postCount,
         'postNumber': currentpostNumber,
         'time': now.hour.toString().padLeft(2, '0') +
             ":" +
@@ -74,13 +82,21 @@ class _NewPostState extends State<NewPost> {
       };
       await itemRef.set(userDataMap);
 
-      currentpostNumber++; // เพิ่มตัวแปรนี้ในกรณีที่ต้องการเพิ่มค่า currentpostNumber
+      currentpostNumber++;
+      monthlyPostLimit--;
 
-      // โค้ดอื่น ๆ ที่คุณต้องการทำต่อไป
-    } catch (error) {
-      Navigator.pop(context);
+      // Update the last post time
+      lastPostTime = now;
+
+      // Other code you want to execute after a successful post
+    } else {
+      // Display a message to the user indicating that the monthly post limit has been reached
+      print('Monthly post limit reached');
     }
+  } catch (error) {
+    Navigator.pop(context);
   }
+}
 
   @override
   Widget build(BuildContext context) {
