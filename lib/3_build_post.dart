@@ -1,9 +1,9 @@
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:swapitem/2_home_page.dart';
 import 'package:swapitem/_login_page.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 List<String> category = <String>[
@@ -37,35 +37,18 @@ class _NewPostState extends State<NewPost> {
   DateTime now = DateTime.now();
 
   buildPost(BuildContext context) async {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-    DatabaseReference userRef =
-        FirebaseDatabase.instance.ref().child('users').child(uid);
-    DatabaseEvent userDataSnapshot = await userRef.once();
-    currentpostNumber++;
-    Map<dynamic, dynamic> Datamap =
-        userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
-    String? username = Datamap['username'];
-
     try {
-      Future<bool> checkIfIdExists(String userId) async {
-        try {
-          // สร้าง reference ไปยังโหนดข้อมูลของผู้ใช้ใน Firebase Realtime Database
-          DatabaseReference reference =
-              FirebaseDatabase.instance.ref().child('postItem');
-
-          // ดึงข้อมูลจาก Firebase Realtime Database
-          DatabaseEvent snapshot = await reference.child(userId).once();
-
-          // ตรวจสอบว่าข้อมูลที่ได้มีค่าหรือไม่
-          return snapshot.snapshot.value != null;
-        } catch (error) {
-          print("เกิดข้อผิดพลาดในการตรวจสอบ ID: $error");
-          return false; // หรือตอบ false ในกรณีที่เกิดข้อผิดพลาด
-        }
-      }
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      DatabaseReference userRef =
+          FirebaseDatabase.instance.ref().child('users').child(uid);
+      DatabaseEvent userDataSnapshot = await userRef.once();
+      Map<dynamic, dynamic> Datamap =
+          userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
+      String? username = Datamap['username'];
 
       DatabaseReference itemRef =
-          FirebaseDatabase.instance.ref().child('postitem');
+          FirebaseDatabase.instance.ref().child('postitem').push();
+
       Map userDataMap = {
         'postNumber': currentpostNumber,
         'time': now.hour.toString().padLeft(2, '0') +
@@ -91,42 +74,9 @@ class _NewPostState extends State<NewPost> {
       };
       await itemRef.set(userDataMap);
 
-      Navigator.pop(context);
+      currentpostNumber++; // เพิ่มตัวแปรนี้ในกรณีที่ต้องการเพิ่มค่า currentpostNumber
 
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Row(
-              children: [
-                Icon(
-                  Icons.check,
-                  color: Colors.green,
-                ),
-                Text('สร้างโพสต์สำเร็จ'),
-              ],
-            ),
-            content: Text('คุณได้ทำการสร้างโพสต์เรียบร้อยแล้ว'),
-            actions: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (c) => HomePage()));
-                },
-                child: Text(
-                  'ยืนยัน',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          );
-        },
-      );
+      // โค้ดอื่น ๆ ที่คุณต้องการทำต่อไป
     } catch (error) {
       Navigator.pop(context);
     }
