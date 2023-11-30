@@ -20,7 +20,7 @@ class _PaymentState extends State<Payment> {
   XFile? _imageFile;
   late List<String> package;
   late String dropdownValue;
-  int currentPaymentNumber = 1;
+  int currentPaymentNumber = 0;
   String status = 'รอการตรวจสอบ';
   void createRequestVip() async {
     // ดึง UID ของผู้ใช้ที่ล็อกอินอยู่

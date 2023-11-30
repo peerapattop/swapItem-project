@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:swapitem/2_home_page.dart';
 import 'package:swapitem/_login_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -31,23 +33,26 @@ class _NewPostState extends State<NewPost> {
   final model1 = TextEditingController();
   final details1 = TextEditingController();
   XFile? _imageFile;
+  int currentpostNumber = 0;
+  DateTime now = DateTime.now();
+
   buildPost(BuildContext context) async {
-    if (item_name.text.trim().isEmpty ||
-        brand.text.trim().isEmpty ||
-        model.text.trim().isEmpty ||
-        details.text.trim().isEmpty ||
-        exchange_location.text.trim().isEmpty ||
-        item_name1.text.trim().isEmpty ||
-        brand1.text.trim().isEmpty ||
-        model1.text.trim().isEmpty ||
-        details1.text.trim().isEmpty) ;
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.ref().child('users').child(uid);
+    DatabaseEvent userDataSnapshot = await userRef.once();
+    currentpostNumber++;
+    Map<dynamic, dynamic> Datamap =
+        userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
+    String? postNumber = Datamap['postNumber'];
+    String? username = Datamap['username'];
 
     try {
       Future<bool> checkIfIdExists(String userId) async {
         try {
           // สร้าง reference ไปยังโหนดข้อมูลของผู้ใช้ใน Firebase Realtime Database
           DatabaseReference reference =
-              FirebaseDatabase.instance.ref().child('postitem');
+              FirebaseDatabase.instance.ref().child('postItem');
 
           // ดึงข้อมูลจาก Firebase Realtime Database
           DatabaseEvent snapshot = await reference.child(userId).once();
@@ -63,6 +68,18 @@ class _NewPostState extends State<NewPost> {
       DatabaseReference itemRef =
           FirebaseDatabase.instance.ref().child('postitem');
       Map userDataMap = {
+        'postNumber': currentpostNumber,
+        'time': now.hour.toString().padLeft(2, '0') +
+            ":" +
+            now.minute.toString().padLeft(2, '0') +
+            ":" +
+            now.second.toString().padLeft(2, '0'),
+        'date': now.year.toString() +
+            "-" +
+            now.month.toString().padLeft(2, '0') +
+            "-" +
+            now.day.toString().padLeft(2, '0'),
+        'username': username,
         'item_name': item_name.text.trim(),
         'brand': brand.text.trim(),
         "model": model.text.trim(),
@@ -87,10 +104,10 @@ class _NewPostState extends State<NewPost> {
                   Icons.check,
                   color: Colors.green,
                 ),
-                Text('สมัครสมาชิกสำเร็จ'),
+                Text('สร้างโพสต์สำเร็จ'),
               ],
             ),
-            content: Text('คุณได้ทำการสมัครสมาชิกเรียบร้อยแล้ว'),
+            content: Text('คุณได้ทำการสร้างโพสต์เรียบร้อยแล้ว'),
             actions: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -100,7 +117,7 @@ class _NewPostState extends State<NewPost> {
                   Navigator.pop(context);
                   Navigator.pop(context);
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (c) => Login()));
+                      context, MaterialPageRoute(builder: (c) => HomePage()));
                 },
                 child: Text(
                   'ยืนยัน',
@@ -113,8 +130,6 @@ class _NewPostState extends State<NewPost> {
       );
     } catch (error) {
       Navigator.pop(context);
-
-      print(error.toString());
     }
   }
 
