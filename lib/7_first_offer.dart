@@ -1,6 +1,4 @@
-import '10_chat.dart';
 import '8_delete_post.dart';
-import '6_first_succ_swap.dart';
 import 'package:flutter/material.dart';
 
 const List<String> people = <String>[
