@@ -169,6 +169,20 @@ class HistoryMakeOffer extends StatelessWidget {
                     Center(
                       child: Image.asset("assets/images/shoes.png"),
                     ),
+                     Row(
+                      children: [
+                        const Icon(
+                          Icons.water_outlined, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                          color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                        ),
+                        const SizedBox(
+                            width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
+                        Text(
+                          "สถานะ : รอการยืนยัน",
+                          style: myTextStyle(),
+                        ),
+                      ],
+                    ),
                     Row(
                       children: [
                         const Icon(
@@ -180,7 +194,7 @@ class HistoryMakeOffer extends StatelessWidget {
                         Text(
                           "หมายเลขโพสต์ #0001",
                           style: myTextStyle(),
-                        ),
+                        ),  
                       ],
                     ),
                     Row(
