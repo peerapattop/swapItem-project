@@ -314,7 +314,6 @@ class _NewPostState extends State<NewPost> {
                               target: _center,
                               zoom: 11.0,
                             ),
-                            markers: markers,
                           ),
                           
                         ],
