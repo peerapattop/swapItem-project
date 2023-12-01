@@ -84,6 +84,8 @@ class _NewPostState extends State<NewPost> {
   DateTime now = DateTime.now();
 
   Future<void> buildPost(BuildContext context) async {
+    bool confirmed = await _showPostConfirmationDialog();
+
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
       DatabaseReference userRef =
@@ -97,7 +99,7 @@ class _NewPostState extends State<NewPost> {
           FirebaseDatabase.instance.ref().child('postitem').push();
 
       Map userDataMap = {
-        'type':dropdownValue,
+        'type': dropdownValue,
         'latitude': selectedLatitude,
         'longitude': selectedLongitude,
         'postNumber': currentpostNumber,
@@ -124,41 +126,82 @@ class _NewPostState extends State<NewPost> {
       await itemRef.set(userDataMap);
 
       currentpostNumber++;
-
-      // Show confirmation dialog
-      bool confirmed = await showConfirmationDialog(context);
-
-      if (confirmed) {
-        // User confirmed, navigate back
-        Navigator.pop(context);
-      }
     } catch (error) {
       Navigator.pop(context);
     }
   }
 
-  Future<bool> showConfirmationDialog(BuildContext context) async {
-    return await showDialog(
+  Future<bool> _showPostConfirmationDialog() async {
+    Completer<bool> completer = Completer<bool>();
+
+    showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('โพสต์สำเร็จ'),
-          content: Text('โพสต์ของคุณสร้างเรียบร้อย.'),
-          actions: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              onPressed: () {
-                Navigator.of(context).pop(true); // User confirmed
-              },
-              child: Text(
-                'ยืนยัน',
-                style: TextStyle(color: Colors.white),
-              ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          title: const Text(
+            'ยืนยันการโพสต์',
+            style: TextStyle(
+              color: Colors.blue,
+              fontWeight: FontWeight.bold,
             ),
-          ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text(
+                'คุณต้องการที่ยืนยันการโพสต์หรือไม่?',
+                style: TextStyle(color: Colors.black),
+              ),
+              const SizedBox(height: 20.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      completer.complete(false); // User canceled
+                    },
+                    child: const Text(
+                      'ยกเลิก',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      completer.complete(true);
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'ยืนยัน',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         );
       },
     );
+
+    return completer.future;
   }
 
   @override
