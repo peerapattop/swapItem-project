@@ -38,7 +38,6 @@ class _NewPostState extends State<NewPost> {
   double? longitude;
 
   final LatLng _center = const LatLng(13.819163422291014, 100.5142992540927);
-  Set<Marker> markers = {};
 
   @override
   void initState() {
@@ -307,19 +306,15 @@ class _NewPostState extends State<NewPost> {
                       width: double.infinity,
                       child: Stack(
                         children: [
-                          GestureDetector(
-                             onTap: (){},
-                            child: GoogleMap(
-                              myLocationButtonEnabled: true,
-                              myLocationEnabled: true,
-                              onMapCreated: _onMapCreated,
-                              initialCameraPosition: CameraPosition(
-                                target: _center,
-                                zoom: 11.0,
-                              ),
-                              markers: markers,
+                          GoogleMap(
+                            myLocationButtonEnabled: true,
+                            myLocationEnabled: true,
+                            onMapCreated: _onMapCreated,
+                            initialCameraPosition: CameraPosition(
+                              target: _center,
+                              zoom: 11.0,
                             ),
-                            
+                            markers: markers,
                           ),
                           
                         ],
@@ -503,25 +498,5 @@ class _NewPostState extends State<NewPost> {
       ),
     );
   }
-  void _handleMapTap(LatLng tapPosition) {
-    // เพิ่ม Marker ที่ตำแหน่งที่ผู้ใช้แตะ
-    addMarker(tapPosition, 'Selected Location', 'User selected this location');
-  }
-   void addMarker(LatLng position, String title, String snippet) {
-    final MarkerId markerId = MarkerId(position.toString());
-
-    // สร้าง Marker และเพิ่มลงในเซตของ markers
-    final Marker marker = Marker(
-      markerId: markerId,
-      position: position,
-      infoWindow: InfoWindow(
-        title: title,
-        snippet: snippet,
-      ),
-    );
-
-    setState(() {
-      markers.add(marker);
-    });
-  }
+  
 }
