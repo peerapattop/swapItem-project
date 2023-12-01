@@ -34,7 +34,8 @@ class _NewPostState extends State<NewPost> {
   final model1 = TextEditingController();
   final details1 = TextEditingController();
   late GoogleMapController mapController;
-  Set<Marker> _markers = {};
+  double? latitude;
+  double? longitude;
 
   final LatLng _center = const LatLng(37.42796133580664, -122.085749655962);
 
@@ -48,8 +49,15 @@ class _NewPostState extends State<NewPost> {
 
     try {
       locationData = await location.getLocation();
+      print('Location data: $locationData');
+
+      latitude = locationData.latitude!;
+      longitude = locationData.longitude!;
+
+      print('Latitude: $latitude');
+      print('Longitude: $longitude');
     } catch (e) {
-      print('Could not get the location: $e');
+      print('ไม้มีอะไรเลย $e');
       return;
     }
 
@@ -79,6 +87,8 @@ class _NewPostState extends State<NewPost> {
           FirebaseDatabase.instance.ref().child('postitem').push();
 
       Map userDataMap = {
+        'latitude': latitude,
+        'longitude': longitude,
         'postNumber': currentpostNumber,
         'time': now.hour.toString().padLeft(2, '0') +
             ":" +
@@ -281,31 +291,24 @@ class _NewPostState extends State<NewPost> {
                       height: 15,
                     ),
                     Container(
-                        decoration: BoxDecoration(border: Border.all()),
-                        height: 300, // กำหนดความสูงของกรอบ
-                        width: double
-                            .infinity, // กำหนดความกว้างของกรอบเท่ากับความกว้างทั้งหมดของหน้าจอ
-                        child: Stack(
-                          children: [
-                            GoogleMap(
-                              onMapCreated: _onMapCreated,
-                              initialCameraPosition: CameraPosition(
-                                target: _center,
-                                zoom: 11.0,
-                              ),
-                              markers: _markers,
+                      decoration: BoxDecoration(border: Border.all()),
+                      height: 300, // กำหนดความสูงของกรอบ
+                      width: double
+                          .infinity, // กำหนดความกว้างของกรอบเท่ากับความกว้างทั้งหมดของหน้าจอ
+                      child: Stack(
+                        children: [
+                          GoogleMap(
+                            myLocationButtonEnabled: true,
+                            myLocationEnabled: true,
+                            onMapCreated: _onMapCreated,
+                            initialCameraPosition: CameraPosition(
+                              target: _center,
+                              zoom: 11.0,
                             ),
-                            Positioned(
-                              bottom: 16.0,
-                              right: 16.0,
-                              child: FloatingActionButton(
-                                onPressed: _goToUserLocation,
-                                tooltip: 'My Location',
-                                child: Icon(Icons.my_location),
-                              ),
-                            ),
-                          ],
-                        )),
+                          ),
+                        ],
+                      ),
+                    ),
                     const SizedBox(
                       height: 10,
                     ),
@@ -376,6 +379,7 @@ class _NewPostState extends State<NewPost> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
+                          _goToUserLocation();
                           buildPost(context);
                         },
                         style: ButtonStyle(
