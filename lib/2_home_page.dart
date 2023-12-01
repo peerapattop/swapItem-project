@@ -75,6 +75,7 @@ class _HomePageState extends State<HomePage> {
                 DataSnapshot dataSnapshot = snapshot.data!.snapshot;
                 Map dataUser = dataSnapshot.value as Map;
                 String postCount = dataUser['postCount'].toString();
+                String makeofferCount = dataUser['makeofferCount'].toString();
 
                 return Column(
                   children: [
@@ -121,7 +122,7 @@ class _HomePageState extends State<HomePage> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                            'โควตาการยื่นข้อเสนอ 5/5 เดือน',
+                                            'โควตาการยื่นข้อเสนอ ${makeofferCount}/5 เดือน',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold)),
                                       ),
