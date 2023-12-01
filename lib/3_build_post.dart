@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:location/location.dart';
 
 List<String> category = <String>[
   'เสื้อผ้า',
@@ -33,11 +34,31 @@ class _NewPostState extends State<NewPost> {
   final model1 = TextEditingController();
   final details1 = TextEditingController();
   late GoogleMapController mapController;
+  Set<Marker> _markers = {};
 
-  final LatLng _center = const LatLng(45.521563, -122.677433);
+  final LatLng _center = const LatLng(37.42796133580664, -122.085749655962);
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+  }
+
+  Future<void> _goToUserLocation() async {
+    LocationData locationData;
+    var location = Location();
+
+    try {
+      locationData = await location.getLocation();
+    } catch (e) {
+      print('Could not get the location: $e');
+      return;
+    }
+
+    mapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        target: LatLng(locationData.latitude!, locationData.longitude!),
+        zoom: 15.0,
+      ),
+    ));
   }
 
   XFile? _imageFile;
@@ -252,23 +273,39 @@ class _NewPostState extends State<NewPost> {
                     const SizedBox(
                       height: 15,
                     ),
-                    Text('สถานที่แลกเปลี่ยนสิ่งของ',style: TextStyle(fontSize: 18),),
+                    Text(
+                      'สถานที่แลกเปลี่ยนสิ่งของ',
+                      style: TextStyle(fontSize: 18),
+                    ),
                     const SizedBox(
                       height: 15,
                     ),
                     Container(
-                      decoration: BoxDecoration(border: Border.all()),
-                      height: 300, // กำหนดความสูงของกรอบ
-                      width: double
-                          .infinity, // กำหนดความกว้างของกรอบเท่ากับความกว้างทั้งหมดของหน้าจอ
-                      child: GoogleMap(
-                        onMapCreated: _onMapCreated,
-                        initialCameraPosition: CameraPosition(
-                          target: _center,
-                          zoom: 11.0,
-                        ),
-                      ),
-                    ),
+                        decoration: BoxDecoration(border: Border.all()),
+                        height: 300, // กำหนดความสูงของกรอบ
+                        width: double
+                            .infinity, // กำหนดความกว้างของกรอบเท่ากับความกว้างทั้งหมดของหน้าจอ
+                        child: Stack(
+                          children: [
+                            GoogleMap(
+                              onMapCreated: _onMapCreated,
+                              initialCameraPosition: CameraPosition(
+                                target: _center,
+                                zoom: 11.0,
+                              ),
+                              markers: _markers,
+                            ),
+                            Positioned(
+                              bottom: 16.0,
+                              right: 16.0,
+                              child: FloatingActionButton(
+                                onPressed: _goToUserLocation,
+                                tooltip: 'My Location',
+                                child: Icon(Icons.my_location),
+                              ),
+                            ),
+                          ],
+                        )),
                     const SizedBox(
                       height: 10,
                     ),
