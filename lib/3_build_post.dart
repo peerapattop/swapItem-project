@@ -190,27 +190,21 @@ class _NewPostState extends State<NewPost> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Text(
-                      "โปรดกรอกรายละเอียด",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    Divider(),
                     const SizedBox(
                       height: 10,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          border: Border.all(
-                            color: Colors.grey,
-                            width: 1.0,
-                          ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 1.0,
                         ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
                         child: DropdownButton<String>(
                           value: dropdownValue,
                           onChanged: (String? newValue) {
