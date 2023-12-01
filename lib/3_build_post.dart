@@ -84,7 +84,6 @@ class _NewPostState extends State<NewPost> {
   DateTime now = DateTime.now();
 
   Future<void> buildPost(BuildContext context) async {
-    bool confirmed = await _showPostConfirmationDialog();
 
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
