@@ -11,7 +11,11 @@ List<String> category = <String>[
   'เสื้อผ้า',
   'รองเท้า',
   'ของใช้ทั่วไป',
-  'อุปกรณ์อิเล็กทรอนิกส์'
+  'อุปกรณ์อิเล็กทรอนิกส์',
+  'ของใช้ในบ้าน',
+  'อุปกรณ์กีฬา',
+  'เครื่องใช้ไฟฟ้า',
+  'ของเบ็ดเตล็ด',
 ];
 String dropdownValue = category.first;
 
@@ -93,6 +97,7 @@ class _NewPostState extends State<NewPost> {
           FirebaseDatabase.instance.ref().child('postitem').push();
 
       Map userDataMap = {
+        'type':dropdownValue,
         'latitude': selectedLatitude,
         'longitude': selectedLongitude,
         'postNumber': currentpostNumber,
