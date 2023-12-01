@@ -37,7 +37,7 @@ class _NewPostState extends State<NewPost> {
   double? latitude;
   double? longitude;
 
-  final LatLng _center = const LatLng(37.42796133580664, -122.085749655962);
+  final LatLng _center = const LatLng(13.819163422291014, 100.5142992540927);
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -184,7 +184,6 @@ class _NewPostState extends State<NewPost> {
                       "โปรดกรอกรายละเอียด",
                       style: TextStyle(
                         fontSize: 18,
-                        fontStyle: FontStyle.italic,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -283,18 +282,23 @@ class _NewPostState extends State<NewPost> {
                     const SizedBox(
                       height: 15,
                     ),
-                    Text(
-                      'สถานที่แลกเปลี่ยนสิ่งของ',
-                      style: TextStyle(fontSize: 18),
+                    Row(
+                      children: [
+                        Icon(Icons.location_pin),
+                        Text(
+                          'สถานที่แลกเปลี่ยนสิ่งของ',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ],
                     ),
                     const SizedBox(
                       height: 15,
                     ),
                     Container(
                       decoration: BoxDecoration(border: Border.all()),
-                      height: 300, // กำหนดความสูงของกรอบ
+                      height: 300, 
                       width: double
-                          .infinity, // กำหนดความกว้างของกรอบเท่ากับความกว้างทั้งหมดของหน้าจอ
+                          .infinity, 
                       child: Stack(
                         children: [
                           GoogleMap(
