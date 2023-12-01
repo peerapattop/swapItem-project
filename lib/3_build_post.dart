@@ -36,8 +36,8 @@ class _NewPostState extends State<NewPost> {
   late GoogleMapController mapController;
   double? latitude;
   double? longitude;
-
-  final LatLng _center = const LatLng(13.819163422291014, 100.5142992540927);
+  double? selectedLatitude;
+  double? selectedLongitude;
 
   @override
   void initState() {
@@ -93,8 +93,8 @@ class _NewPostState extends State<NewPost> {
           FirebaseDatabase.instance.ref().child('postitem').push();
 
       Map userDataMap = {
-        'latitude': latitude,
-        'longitude': longitude,
+        'latitude': selectedLatitude,
+        'longitude': selectedLongitude,
         'postNumber': currentpostNumber,
         'time': now.hour.toString().padLeft(2, '0') +
             ":" +
@@ -307,15 +307,41 @@ class _NewPostState extends State<NewPost> {
                       child: Stack(
                         children: [
                           GoogleMap(
-                            myLocationButtonEnabled: true,
                             myLocationEnabled: true,
-                            onMapCreated: _onMapCreated,
+                            onMapCreated: (controller) {
+                              mapController = controller;
+                            },
+                            onTap: (LatLng latLng) {
+                              setState(() {
+                                selectedLatitude = latLng.latitude;
+                                selectedLongitude = latLng.longitude;
+                              });
+                            },
+                            markers: selectedLatitude != null
+                                ? {
+                                    Marker(
+                                      markerId: MarkerId('selected-location'),
+                                      position: LatLng(selectedLatitude!,
+                                          selectedLongitude!),
+                                      infoWindow: InfoWindow(
+                                          title: 'Selected Location'),
+                                    ),
+                                  }
+                                : {},
                             initialCameraPosition: CameraPosition(
-                              target: _center,
-                              zoom: 11.0,
+                              target: LatLng(0, 0),
+                              zoom: 2,
                             ),
                           ),
-                          
+                          if (selectedLatitude != null)
+                            Positioned(
+                              top: 16,
+                              left: 16,
+                              child: Text(
+                                'Selected Location: ${selectedLatitude!}, ${selectedLongitude!}',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -497,5 +523,4 @@ class _NewPostState extends State<NewPost> {
       ),
     );
   }
-  
 }
