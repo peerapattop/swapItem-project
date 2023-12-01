@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -30,6 +32,14 @@ class _NewPostState extends State<NewPost> {
   final brand1 = TextEditingController();
   final model1 = TextEditingController();
   final details1 = TextEditingController();
+  late GoogleMapController mapController;
+
+  final LatLng _center = const LatLng(45.521563, -122.677433);
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
   XFile? _imageFile;
   int currentpostNumber = 0;
   DateTime now = DateTime.now();
@@ -95,13 +105,14 @@ class _NewPostState extends State<NewPost> {
           content: Text('โพสต์ของคุณสร้างเรียบร้อย.'),
           actions: [
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green
-              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               onPressed: () {
                 Navigator.of(context).pop(true); // User confirmed
               },
-              child: Text('ยืนยัน',style: TextStyle(color: Colors.white),),
+              child: Text(
+                'ยืนยัน',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         );
@@ -241,15 +252,22 @@ class _NewPostState extends State<NewPost> {
                     const SizedBox(
                       height: 15,
                     ),
-                    TextField(
-                      controller: exchange_location,
-                      decoration: InputDecoration(
-                          label: Text(
-                            "สถานที่แลกเปลี่ยน",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.location_city)),
+                    Text('สถานที่แลกเปลี่ยนสิ่งของ',style: TextStyle(fontSize: 18),),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(border: Border.all()),
+                      height: 300, // กำหนดความสูงของกรอบ
+                      width: double
+                          .infinity, // กำหนดความกว้างของกรอบเท่ากับความกว้างทั้งหมดของหน้าจอ
+                      child: GoogleMap(
+                        onMapCreated: _onMapCreated,
+                        initialCameraPosition: CameraPosition(
+                          target: _center,
+                          zoom: 11.0,
+                        ),
+                      ),
                     ),
                     const SizedBox(
                       height: 10,
