@@ -16,6 +16,7 @@ class _HistoryPostState extends State<HistoryPost> {
     "https://cdn.pixabay.com/photo/2016/07/22/09/59/fruits-1534494_640.jpg",
   ];
   int mySlideindex = 0;
+  int selectedButton = 1;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -416,6 +417,35 @@ class _HistoryPostState extends State<HistoryPost> {
         ),
       ),
     );
+  }
+
+  Widget buildCircularNumberButton(int number) {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          selectedButton = number;
+          // Add your logic to change content based on the selected button.
+          // For example, update a text or perform some action.
+          updateContent(number);
+        });
+      },
+      style: ElevatedButton.styleFrom(
+        primary: selectedButton == number ? Colors.blue : null,
+        shape: CircleBorder(),
+      ),
+      child: Text(
+        number.toString(),
+        style: TextStyle(
+          color: selectedButton == number ? Colors.white : Colors.black,
+        ),
+      ),
+    );
+  }
+
+  void updateContent(int number) {
+    // Implement your logic here to update content based on the selected button.
+    // For example, update a text or perform some action.
+    print('Button $number pressed');
   }
 }
 
