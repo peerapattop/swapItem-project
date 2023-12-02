@@ -53,7 +53,6 @@ class _RegisPageState extends State<RegisPage> {
         _usernameController.text.trim().isEmpty ||
         _emailController.text.trim().isEmpty ||
         _passwordController.text.trim().isEmpty) {
-
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -120,6 +119,7 @@ class _RegisPageState extends State<RegisPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+      String uid = userCredential.user!.uid;
 
       //สุ่มไอดีผู้ใช้งาน
       String generateRandomId() {
@@ -185,6 +185,7 @@ class _RegisPageState extends State<RegisPage> {
           .child(userCredential.user!.uid);
 
       Map userDataMap = {
+        'uid':uid,
         'makeofferCount': makeofferCount,
         'postCount': monthlyPostLimit,
         'status_user': 'ผู้ใช้ทั่วไป',
@@ -294,9 +295,8 @@ class _RegisPageState extends State<RegisPage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue
-                    ),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                     onPressed: () {
                       registerNewUser(context);
                     },
