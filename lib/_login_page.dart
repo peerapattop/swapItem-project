@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:swapitem/1_register_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'forgot_password.dart';
+
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
 
@@ -150,8 +152,20 @@ class _LoginState extends State<Login> {
                         Column(
                           children: [
                             TextButton(
-                                onPressed: () {},
-                                child: const Text('ลืมรหัสผ่าน?'))
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ForgotPassword(),
+                                    ),
+                                  );
+                                },
+                                child: const Text(
+                                  'ลืมรหัสผ่าน?',
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold),
+                                ))
                           ],
                         ),
                         const SizedBox(
