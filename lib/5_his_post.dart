@@ -223,10 +223,56 @@ class _HistoryPostState extends State<HistoryPost> {
                     height: 20,
                   ),
                   Center(child: Image.asset('assets/images/swap.png')),
-                  SizedBox(
-                    height: 20,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, top: 8, right: 8),
+                    child: SizedBox(
+                      height: 300,
+                      child: PageView.builder(
+                        onPageChanged: (value) {
+                          setState(() {
+                            mySlideindex = value;
+                          });
+                        },
+                        itemCount: foodList.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.network(
+                                  foodList[index],
+                                  fit: BoxFit.cover,
+                                )),
+                          );
+                        },
+                      ),
+                    ),
                   ),
-                  Center(child: Image.asset('assets/images/shirt.png')),
+                  Center(
+                    child: SizedBox(
+                      height: 60,
+                      width: 300,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: foodList.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Container(
+                              height: 20,
+                              width: 20,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: index == mySlideindex
+                                    ? Colors.deepPurple
+                                    : Colors.grey,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
                   SizedBox(
                     height: 10,
                   ),
