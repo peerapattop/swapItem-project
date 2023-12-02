@@ -1,4 +1,3 @@
-import '8_delete_post.dart';
 import 'package:flutter/material.dart';
 
 const List<String> people = <String>[

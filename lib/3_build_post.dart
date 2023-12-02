@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:swapitem/add_image.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:swapitem/widget/testwodget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -82,7 +81,6 @@ class _NewPostState extends State<NewPost> {
     ));
   }
 
-  XFile? _imageFile;
   int currentpostNumber = 0;
   DateTime now = DateTime.now();
 
@@ -518,17 +516,15 @@ class _NewPostState extends State<NewPost> {
 
     if (pickedFile != null) {
       setState(() {
-        _images.add(File(pickedFile.path!));
+        _images.add(File(pickedFile.path));
       });
     }
   }
 
   chooseImages() async {
     List<XFile> pickedFiles = await picker.pickMultiImage();
-    if (pickedFiles != null) {
-      setState(() {
-        _images.addAll(pickedFiles.map((pickedFile) => File(pickedFile.path!)));
-      });
+    setState(() {
+      _images.addAll(pickedFiles.map((pickedFile) => File(pickedFile.path)));
+    });
     }
-  }
 }

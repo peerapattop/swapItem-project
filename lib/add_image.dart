@@ -55,17 +55,15 @@ class _AddImageState extends State<AddImage> {
 
     if (pickedFile != null) {
       setState(() {
-        _images.add(File(pickedFile.path!));
+        _images.add(File(pickedFile.path));
       });
     }
   }
 
   chooseImages() async {
     List<XFile> pickedFiles = await picker.pickMultiImage();
-    if (pickedFiles != null) {
-      setState(() {
-        _images.addAll(pickedFiles.map((pickedFile) => File(pickedFile.path!)));
-      });
+    setState(() {
+      _images.addAll(pickedFiles.map((pickedFile) => File(pickedFile.path)));
+    });
     }
-  }
 }
