@@ -1,11 +1,13 @@
-import 'dart:async';
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
+import 'package:swapitem/add_image.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:swapitem/widget/testwodget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:location/location.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 List<String> category = <String>[
   'เสื้อผ้า',
@@ -42,7 +44,8 @@ class _NewPostState extends State<NewPost> {
   double? longitude;
   double? selectedLatitude;
   double? selectedLongitude;
-
+  List<File> _images = [];
+  final picker = ImagePicker();
   @override
   void initState() {
     super.initState();
@@ -84,7 +87,6 @@ class _NewPostState extends State<NewPost> {
   DateTime now = DateTime.now();
 
   Future<void> buildPost(BuildContext context) async {
-
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
       DatabaseReference userRef =
@@ -223,7 +225,39 @@ class _NewPostState extends State<NewPost> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            imgPost(),
+            Container(
+              width: 300,
+              height: 200,
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3),
+                itemBuilder: (context, index) {
+                  return index == 0
+                      ? Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.camera_alt),
+                                onPressed: () {
+                                  takePicture();
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.image),
+                                onPressed: () {
+                                  chooseImages();
+                                },
+                              ),
+                            ],
+                          ),
+                        )
+                      : Image.file(
+                          _images[index - 1]); // Display the selected images
+                },
+                itemCount: _images.length + 1,
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Align(
@@ -455,7 +489,9 @@ class _NewPostState extends State<NewPost> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          buildPost(context);
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (c) => AddImage()));
+                          //buildPost(context);
                         },
                         style: ButtonStyle(
                           backgroundColor:
@@ -477,90 +513,22 @@ class _NewPostState extends State<NewPost> {
     ));
   }
 
-  void takePhoto(ImageSource source) async {
-    final dynamic pickedFile = await ImagePicker().pickImage(
-      source: source,
-    );
+  takePicture() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
       setState(() {
-        _imageFile = pickedFile;
+        _images.add(File(pickedFile.path!));
       });
-
-      // Close the file selection window
-      Navigator.pop(context);
     }
   }
 
-  Widget imgPost() {
-    return Stack(
-      children: <Widget>[
-        CircleAvatar(
-          radius: 60.0,
-          backgroundImage: _imageFile != null
-              ? FileImage(File(_imageFile!.path))
-              : AssetImage('assets/icons/Person-icon.jpg')
-                  as ImageProvider<Object>,
-        ),
-        Positioned(
-          bottom: 10.0,
-          right: 10.0,
-          child: InkWell(
-            onTap: () {
-              showModalBottomSheet(
-                  context: context, builder: ((Builder) => bottomSheet()));
-            },
-            child: const Icon(
-              Icons.camera_alt,
-              color: const Color.fromARGB(255, 52, 0, 150),
-              size: 28,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget bottomSheet() {
-    return Container(
-      height: 100.0,
-      width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 20,
-      ),
-      child: Column(
-        children: <Widget>[
-          Text(
-            "เลือกรูปภาพของคุณ",
-            style: TextStyle(
-              fontSize: 20,
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextButton.icon(
-                onPressed: () {
-                  takePhoto(ImageSource.camera);
-                },
-                icon: Icon(Icons.camera),
-                label: Text('กล้อง'),
-              ),
-              TextButton.icon(
-                onPressed: () {
-                  takePhoto(ImageSource.gallery);
-                },
-                icon: Icon(Icons.camera),
-                label: Text('แกลลอรี่'),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
+  chooseImages() async {
+    List<XFile> pickedFiles = await picker.pickMultiImage();
+    if (pickedFiles != null) {
+      setState(() {
+        _images.addAll(pickedFiles.map((pickedFile) => File(pickedFile.path!)));
+      });
+    }
   }
 }
