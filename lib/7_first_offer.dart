@@ -17,6 +17,15 @@ class OfferRequest extends StatefulWidget {
 }
 
 class _OfferRequestState extends State<OfferRequest> {
+  List<String> foodList = [
+    "https://cdn.pixabay.com/photo/2010/12/13/10/05/berries-2277_1280.jpg",
+    "https://cdn.pixabay.com/photo/2015/12/09/17/11/vegetables-1085063_640.jpg",
+    "https://cdn.pixabay.com/photo/2017/01/20/15/06/oranges-1995056_640.jpg",
+    "https://cdn.pixabay.com/photo/2014/11/05/15/57/salmon-518032_640.jpg",
+    "https://cdn.pixabay.com/photo/2016/07/22/09/59/fruits-1534494_640.jpg",
+  ];
+  int mySlideindex = 0;
+  int selectedButton = 1;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -37,54 +46,80 @@ class _OfferRequestState extends State<OfferRequest> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.end, // ตั้งค่าให้ชิดขวา
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => (DeletePost()),
-                                ));
-                              },
-                              icon: Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                              ),
-                              label: Text(
-                                "ลบโพสต์",
-                                style: TextStyle(color: Colors.white),
-                              )),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
+              SizedBox(
+                height: 10,
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.center, // ตั้งค่าให้ชิดซ้าย
-                      children: [
-                        Image.asset(
-                          "assets/images/boots_post.png",
-                          width: 200,
-                          height: 200,
-                        ),
-                      ],
-                    ),
+                  buildCircularNumberButton(1),
+                  SizedBox(
+                    width: 10,
                   ),
+                  buildCircularNumberButton(2),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  buildCircularNumberButton(3),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  buildCircularNumberButton(4),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  buildCircularNumberButton(5),
+                  // เพิ่ม CircularNumberButton อื่น ๆ ตามต้องการ
                 ],
+              ),
+              Divider(),
+              Padding(
+                padding: const EdgeInsets.only(left: 8, top: 8, right: 8),
+                child: SizedBox(
+                  height: 300,
+                  child: PageView.builder(
+                    onPageChanged: (value) {
+                      setState(() {
+                        mySlideindex = value;
+                      });
+                    },
+                    itemCount: foodList.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.network(
+                              foodList[index],
+                              fit: BoxFit.cover,
+                            )),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 60,
+                width: 300,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: foodList.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Container(
+                        height: 20,
+                        width: 20,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: index == mySlideindex
+                              ? Colors.deepPurple
+                              : Colors.grey,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -215,9 +250,53 @@ class _OfferRequestState extends State<OfferRequest> {
               SizedBox(
                 height: 15,
               ),
-              Center(child: Image.asset('assets/images/shirt.png')),
+              Padding(
+                padding: const EdgeInsets.only(left: 8, top: 8, right: 8),
+                child: SizedBox(
+                  height: 300,
+                  child: PageView.builder(
+                    onPageChanged: (value) {
+                      setState(() {
+                        mySlideindex = value;
+                      });
+                    },
+                    itemCount: foodList.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.network(
+                              foodList[index],
+                              fit: BoxFit.cover,
+                            )),
+                      );
+                    },
+                  ),
+                ),
+              ),
               SizedBox(
-                height: 10,
+                height: 60,
+                width: 300,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: foodList.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Container(
+                        height: 20,
+                        width: 20,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: index == mySlideindex
+                              ? Colors.deepPurple
+                              : Colors.grey,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -306,10 +385,12 @@ class _OfferRequestState extends State<OfferRequest> {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    SizedBox(width: 10,),
+                    SizedBox(
+                      width: 10,
+                    ),
                     ElevatedButton.icon(
-                      style:
-                          ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue),
                       icon: Icon(Icons.chat, color: Colors.white),
                       onPressed: () {},
                       label: Text(
@@ -317,10 +398,12 @@ class _OfferRequestState extends State<OfferRequest> {
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    SizedBox(width: 50,),
+                    SizedBox(
+                      width: 50,
+                    ),
                     ElevatedButton.icon(
-                      style:
-                          ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green),
                       icon: Icon(Icons.check, color: Colors.white),
                       onPressed: () {},
                       label: Text(
@@ -328,7 +411,9 @@ class _OfferRequestState extends State<OfferRequest> {
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     ElevatedButton.icon(
                       style:
                           ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -347,6 +432,35 @@ class _OfferRequestState extends State<OfferRequest> {
         ),
       ),
     );
+  }
+
+  Widget buildCircularNumberButton(int number) {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          selectedButton = number;
+          // Add your logic to change content based on the selected button.
+          // For example, update a text or perform some action.
+          updateContent(number);
+        });
+      },
+      style: ElevatedButton.styleFrom(
+        primary: selectedButton == number ? Colors.blue : null,
+        shape: CircleBorder(),
+      ),
+      child: Text(
+        number.toString(),
+        style: TextStyle(
+          color: selectedButton == number ? Colors.white : Colors.black,
+        ),
+      ),
+    );
+  }
+
+  void updateContent(int number) {
+    // Implement your logic here to update content based on the selected button.
+    // For example, update a text or perform some action.
+    print('Button $number pressed');
   }
 }
 

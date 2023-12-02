@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
 //หน้า14
 
-class HistoryMakeOffer extends StatelessWidget {
+class HistoryMakeOffer extends StatefulWidget {
   const HistoryMakeOffer({Key? key});
 
+  @override
+  State<HistoryMakeOffer> createState() => _HistoryMakeOfferState();
+}
+
+class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
+  List<String> foodList = [
+    "https://cdn.pixabay.com/photo/2010/12/13/10/05/berries-2277_1280.jpg",
+    "https://cdn.pixabay.com/photo/2015/12/09/17/11/vegetables-1085063_640.jpg",
+    "https://cdn.pixabay.com/photo/2017/01/20/15/06/oranges-1995056_640.jpg",
+    "https://cdn.pixabay.com/photo/2014/11/05/15/57/salmon-518032_640.jpg",
+    "https://cdn.pixabay.com/photo/2016/07/22/09/59/fruits-1534494_640.jpg",
+  ];
+  int mySlideindex = 0;
+  int selectedButton = 1;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -59,13 +73,62 @@ class HistoryMakeOffer extends StatelessWidget {
                   const SizedBox(
                     height: 15,
                   ),
-                  Center(child: Image.asset("assets/images/shirt.png")),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, top: 8, right: 8),
+                    child: SizedBox(
+                      height: 300,
+                      child: PageView.builder(
+                        onPageChanged: (value) {
+                          setState(() {
+                            mySlideindex = value;
+                          });
+                        },
+                        itemCount: foodList.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.network(
+                                  foodList[index],
+                                  fit: BoxFit.cover,
+                                )),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: SizedBox(
+                      height: 60,
+                      width: 300,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: foodList.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Container(
+                              height: 20,
+                              width: 20,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: index == mySlideindex
+                                    ? Colors.deepPurple
+                                    : Colors.grey,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        
                         Row(
                           children: [
                             const Icon(
@@ -97,19 +160,21 @@ class HistoryMakeOffer extends StatelessWidget {
                           ],
                         ),
                         Row(
-                      children: [
-                        const Icon(
-                          Icons.punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                          color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                          children: [
+                            const Icon(
+                              Icons
+                                  .punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                              color:
+                                  Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                            ),
+                            const SizedBox(
+                                width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
+                            Text(
+                              "เวลา 13:00 น.",
+                              style: myTextStyle(),
+                            ),
+                          ],
                         ),
-                        const SizedBox(
-                            width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
-                        Text(
-                          "เวลา 13:00 น.",
-                          style: myTextStyle(),
-                        ),
-                      ],
-                    ),
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 2, right: 15, top: 10, bottom: 10),
@@ -166,10 +231,57 @@ class HistoryMakeOffer extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(
-                      child: Image.asset("assets/images/shoes.png"),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8, top: 8, right: 8),
+                      child: SizedBox(
+                        height: 300,
+                        child: PageView.builder(
+                          onPageChanged: (value) {
+                            setState(() {
+                              mySlideindex = value;
+                            });
+                          },
+                          itemCount: foodList.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Image.network(
+                                    foodList[index],
+                                    fit: BoxFit.cover,
+                                  )),
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                     Row(
+                    Center(
+                      child: SizedBox(
+                        height: 60,
+                        width: 300,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: foodList.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Container(
+                                height: 20,
+                                width: 20,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: index == mySlideindex
+                                      ? Colors.deepPurple
+                                      : Colors.grey,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    Row(
                       children: [
                         const Icon(
                           Icons.water_outlined, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
@@ -194,7 +306,7 @@ class HistoryMakeOffer extends StatelessWidget {
                         Text(
                           "หมายเลขโพสต์ #0001",
                           style: myTextStyle(),
-                        ),  
+                        ),
                       ],
                     ),
                     Row(
@@ -239,7 +351,6 @@ class HistoryMakeOffer extends StatelessWidget {
                         ),
                       ],
                     ),
-                    
                     Padding(
                       padding: const EdgeInsets.only(
                           left: 2, right: 15, top: 10, bottom: 10),
@@ -291,7 +402,7 @@ class HistoryMakeOffer extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(12.0),
                             child: ElevatedButton.icon(
-                              icon: Icon(Icons.chat,color: Colors.white),
+                              icon: Icon(Icons.chat, color: Colors.white),
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(
                                   padding: EdgeInsets.all(16),
@@ -299,7 +410,8 @@ class HistoryMakeOffer extends StatelessWidget {
                                       Color.fromARGB(255, 10, 41, 164)),
                               label: Text(
                                 "แชท",
-                                style: TextStyle(fontSize: 16,color: Colors.white),
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
                               ),
                             ),
                           ),
@@ -315,7 +427,8 @@ class HistoryMakeOffer extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(12.0),
                             child: ElevatedButton.icon(
-                              icon: const Icon(Icons.delete,color: Colors.white),
+                              icon:
+                                  const Icon(Icons.delete, color: Colors.white),
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(
                                   padding: EdgeInsets.all(16),
@@ -323,7 +436,8 @@ class HistoryMakeOffer extends StatelessWidget {
                                       Color.fromARGB(255, 248, 1, 1)),
                               label: Text(
                                 "ลบ",
-                                style: TextStyle(fontSize: 16,color: Colors.white),
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
                               ),
                             ),
                           ),
@@ -339,39 +453,40 @@ class HistoryMakeOffer extends StatelessWidget {
       ),
     );
   }
+
+  Widget buildCircularNumberButton(int number) {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          selectedButton = number;
+          // Add your logic to change content based on the selected button.
+          // For example, update a text or perform some action.
+          updateContent(number);
+        });
+      },
+      style: ElevatedButton.styleFrom(
+        primary: selectedButton == number ? Colors.blue : null,
+        shape: CircleBorder(),
+      ),
+      child: Text(
+        number.toString(),
+        style: TextStyle(
+          color: selectedButton == number ? Colors.white : Colors.black,
+        ),
+      ),
+    );
+  }
+
+  void updateContent(int number) {
+    // Implement your logic here to update content based on the selected button.
+    // For example, update a text or perform some action.
+    print('Button $number pressed');
+  }
 }
 
 myTextStyle() {
   return const TextStyle(
     fontSize: 20,
     color: Colors.black,
-  );
-}
-
-Widget buildCircularNumberButton(int number) {
-  return InkWell(
-    onTap: () {
-      // โค้ดที่ต้องการให้ทำงานเมื่อปุ่มถูกกด
-    },
-    child: Container(
-      width: 40, // ปรับขนาดตามต้องการ
-      height: 40, // ปรับขนาดตามต้องการ
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: Colors.black, // สีขอบ
-          width: 2.0, // ความกว้างขอบ
-        ),
-      ),
-      child: Center(
-        child: Text(
-          '$number',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    ),
   );
 }
