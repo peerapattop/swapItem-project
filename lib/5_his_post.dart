@@ -8,6 +8,14 @@ class HistoryPost extends StatefulWidget {
 }
 
 class _HistoryPostState extends State<HistoryPost> {
+  List<String> foodList = [
+    "https://cdn.pixabay.com/photo/2010/12/13/10/05/berries-2277_1280.jpg",
+    "https://cdn.pixabay.com/photo/2015/12/09/17/11/vegetables-1085063_640.jpg",
+    "https://cdn.pixabay.com/photo/2017/01/20/15/06/oranges-1995056_640.jpg",
+    "https://cdn.pixabay.com/photo/2014/11/05/15/57/salmon-518032_640.jpg",
+    "https://cdn.pixabay.com/photo/2016/07/22/09/59/fruits-1534494_640.jpg",
+  ];
+  int mySlideindex = 0;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -53,10 +61,54 @@ class _HistoryPostState extends State<HistoryPost> {
                 // เพิ่ม CircularNumberButton อื่น ๆ ตามต้องการ
               ],
             ),
-            Image.asset(
-              "assets/images/boots_post.png",
-              width: 200,
-              height: 200,
+            Divider(),
+            Padding(
+              padding: const EdgeInsets.only(left: 8, top: 8, right: 8),
+              child: SizedBox(
+                height: 300,
+                child: PageView.builder(
+                  onPageChanged: (value) {
+                    setState(() {
+                      mySlideindex = value;
+                    });
+                  },
+                  itemCount: foodList.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.network(
+                            foodList[index],
+                            fit: BoxFit.cover,
+                          )),
+                    );
+                  },
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 60,
+              width: 300,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: foodList.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Container(
+                      height: 20,
+                      width: 20,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: index == mySlideindex
+                            ? Colors.deepPurple
+                            : Colors.grey,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 15),
