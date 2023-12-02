@@ -24,7 +24,7 @@ class _RegisPageState extends State<RegisPage> {
   final _birthdayController = TextEditingController();
   final _usernameController = TextEditingController();
   int monthlyPostLimit = 5;
-  int makeofferCount=5;
+  int makeofferCount = 5;
 
   XFile? _imageFile;
   String? imageUrl;
@@ -53,7 +53,7 @@ class _RegisPageState extends State<RegisPage> {
         _usernameController.text.trim().isEmpty ||
         _emailController.text.trim().isEmpty ||
         _passwordController.text.trim().isEmpty) {
-      // Show an error dialog
+
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -185,8 +185,8 @@ class _RegisPageState extends State<RegisPage> {
           .child(userCredential.user!.uid);
 
       Map userDataMap = {
-        'makeofferCount':makeofferCount,
-        'postCount':monthlyPostLimit,
+        'makeofferCount': makeofferCount,
+        'postCount': monthlyPostLimit,
         'status_user': 'ผู้ใช้ทั่วไป',
         'image_user': imageUrl,
         "id": userId,
@@ -274,30 +274,37 @@ class _RegisPageState extends State<RegisPage> {
                 choseBirthDay(Icons.date_range, _birthdayController),
                 textField('ชื่อผู้ใช้', Icons.person, _usernameController),
                 textField('อีเมล', Icons.email, _emailController),
-                textField('รหัสผ่าน', Icons.key, _passwordController),
-                textField('ยืนยันรหัสผ่าน', Icons.key, _passwordController),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16, top: 15),
+                  child: TextFormField(
+                    obscureText: true,
+                    controller: _passwordController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'รหัสผ่าน',
+                      labelStyle: TextStyle(fontSize: 20),
+                      prefixIcon: Icon(
+                          Icons.password), // Use prefixIcon for adding an icon
+                    ),
+                  ),
+                ),
                 SizedBox(
                   height: 10,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    width: 219,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Color.fromARGB(255, 2, 173, 82),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue
                     ),
-                    child: TextButton(
-                      onPressed: () {
-                        registerNewUser(context);
-                      },
-                      child: const Text(
-                        'ลงทะเบียน',
-                        style: TextStyle(
-                          color: Colors.white, // Change text color as needed
-                          fontSize: 18, // Change font size as needed
-                        ),
+                    onPressed: () {
+                      registerNewUser(context);
+                    },
+                    child: const Text(
+                      'ลงทะเบียน',
+                      style: TextStyle(
+                        color: Colors.white, // Change text color as needed
+                        fontSize: 18, // Change font size as needed
                       ),
                     ),
                   ),
@@ -480,21 +487,20 @@ class _RegisPageState extends State<RegisPage> {
       padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
       child: TextField(
         controller: controller,
-        readOnly: true,
         onTap: () => _selectDate(context),
         decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'วันเกิด',
-          labelStyle: const TextStyle(
-            fontSize: 20,
-          ),
-          hintStyle: const TextStyle(
-            fontStyle: FontStyle.italic,
-          ),
-          fillColor: Colors.white,
-          filled: true,
-          prefixIcon: Icon(icon),
-        ),
+            border: OutlineInputBorder(),
+            labelText: 'วันเกิด',
+            labelStyle: const TextStyle(
+              fontSize: 20,
+            ),
+            hintStyle: const TextStyle(
+              fontStyle: FontStyle.italic,
+            ),
+            fillColor: Colors.white,
+            filled: true,
+            prefixIcon: Icon(icon),
+            suffixIcon: Icon(Icons.arrow_drop_down)),
       ),
     );
   }
