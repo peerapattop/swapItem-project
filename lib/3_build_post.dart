@@ -99,7 +99,8 @@ class _NewPostState extends State<NewPost> {
       DatabaseEvent userDataSnapshot = await userRef.once();
       Map<dynamic, dynamic> datamap =
           userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
-      String? username = datamap['username'];
+      String username = datamap['username'];
+      String email = datamap['email'];
 
       DatabaseReference itemRef =
           FirebaseDatabase.instance.ref().child('postitem').push();
@@ -109,6 +110,7 @@ class _NewPostState extends State<NewPost> {
       // Save image URLs along with other data in the database
 
       Map userDataMap = {
+        'email':email,
         'imageUrls': imageUrls,
         'type': dropdownValue,
         'latitude': selectedLatitude,
