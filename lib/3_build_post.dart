@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:swapitem/add_image.dart';
@@ -91,7 +92,7 @@ class _NewPostState extends State<NewPost> {
   int currentpostNumber = 0;
   DateTime now = DateTime.now();
 
-  Future<void> buildPost(BuildContext context) async {
+  Future<void> buildPost(BuildContext context, List<File> images) async {
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
       DatabaseReference userRef =
@@ -104,7 +105,12 @@ class _NewPostState extends State<NewPost> {
       DatabaseReference itemRef =
           FirebaseDatabase.instance.ref().child('postitem').push();
 
+      List<String> imageUrls = await uploadImages(images);
+
+      // Save image URLs along with other data in the database
+
       Map userDataMap = {
+        'imageUrls': imageUrls,
         'type': dropdownValue,
         'latitude': selectedLatitude,
         'longitude': selectedLongitude,
@@ -135,6 +141,34 @@ class _NewPostState extends State<NewPost> {
     } catch (error) {
       Navigator.pop(context);
     }
+  }
+
+  Future<List<String>> uploadImages(List<File> images) async {
+    List<String> imageUrls = [];
+
+    for (File image in images) {
+      try {
+        // Generate a unique ID for the image
+        String imageName = DateTime.now().millisecondsSinceEpoch.toString();
+
+        // Create a reference to the Firebase Storage path
+        Reference storageReference = FirebaseStorage.instance
+            .ref()
+            .child('post_images')
+            .child('$imageName.jpg');
+
+        // Upload the image to Firebase Storage
+        await storageReference.putFile(image);
+
+        // Get the download URL of the uploaded image
+        String imageUrl = await storageReference.getDownloadURL();
+        imageUrls.add(imageUrl);
+      } catch (error) {
+        print('Error uploading image: $error');
+      }
+    }
+
+    return imageUrls;
   }
 
   Future<bool> _showPostConfirmationDialog() async {
@@ -243,7 +277,8 @@ class _NewPostState extends State<NewPost> {
                   children: [
                     Expanded(
                       child: GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
                         ),
                         itemBuilder: (context, index) {
@@ -288,8 +323,7 @@ class _NewPostState extends State<NewPost> {
                     ),
                     Text(
                       '${_images.length}/5',
-                      style:
-                          TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 18),
                     ),
                   ],
                 ),
@@ -525,10 +559,11 @@ class _NewPostState extends State<NewPost> {
                       height: 50,
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (c) => AddImage()));
-                          //buildPost(context);
+                        onPressed: () async {
+                          bool confirmed = await _showPostConfirmationDialog();
+                          if (confirmed) {
+                            await buildPost(context, _images);
+                          }
                         },
                         style: ButtonStyle(
                           backgroundColor:
