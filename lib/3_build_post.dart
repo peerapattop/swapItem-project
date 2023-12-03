@@ -55,6 +55,13 @@ class _NewPostState extends State<NewPost> {
     mapController = controller;
   }
 
+  //ลบรูปภาพ
+  void removeImage(int index) {
+    setState(() {
+      _images.removeAt(index);
+    });
+  }
+
   Future<void> _goToUserLocation() async {
     LocationData locationData;
     var location = Location();
@@ -223,37 +230,69 @@ class _NewPostState extends State<NewPost> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              width: 300,
-              height: 200,
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3),
-                itemBuilder: (context, index) {
-                  return index == 0
-                      ? Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.camera_alt),
-                                onPressed: () {
-                                  takePicture();
-                                },
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.image),
-                                onPressed: () {
-                                  chooseImages();
-                                },
-                              ),
-                            ],
-                          ),
-                        )
-                      : Image.file(
-                          _images[index - 1]); // Display the selected images
-                },
-                itemCount: _images.length + 1,
+            Padding(
+              padding:
+                  const EdgeInsets.only(top: 10, right: 2, left: 2, bottom: 5),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                ),
+                width: 370,
+                height: 280,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: GridView.builder(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                        ),
+                        itemBuilder: (context, index) {
+                          return index == 0
+                              ? Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.camera_alt),
+                                        onPressed: _images.length < 5
+                                            ? takePicture
+                                            : null,
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.image),
+                                        onPressed: _images.length < 5
+                                            ? chooseImages
+                                            : null,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Stack(
+                                  children: [
+                                    Image.file(
+                                      _images[index - 1],
+                                    ),
+                                    Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child: IconButton(
+                                        icon: Icon(Icons.close),
+                                        onPressed: () => removeImage(index - 1),
+                                      ),
+                                    ),
+                                  ],
+                                ); // Display the selected images with delete button
+                        },
+                        itemCount: _images.length + 1,
+                      ),
+                    ),
+                    Text(
+                      '${_images.length}/5',
+                      style:
+                          TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
               ),
             ),
             Padding(
@@ -526,5 +565,5 @@ class _NewPostState extends State<NewPost> {
     setState(() {
       _images.addAll(pickedFiles.map((pickedFile) => File(pickedFile.path)));
     });
-    }
+  }
 }
