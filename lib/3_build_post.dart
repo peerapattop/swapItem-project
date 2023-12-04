@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:async';
+import 'dart:math';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
@@ -88,8 +89,22 @@ class _NewPostState extends State<NewPost> {
     ));
   }
 
-  int currentpostNumber = 0;
   DateTime now = DateTime.now();
+
+  String generateRandomPostNumber() {
+    // สร้างตัวเลขสุ่ม 3 ตัว
+    int randomNumbers =
+        Random().nextInt(1000); // สามารถปรับเปลี่ยนเลขตัวเลขตามที่คุณต้องการ
+
+    // สร้างตัวอักษรสุ่ม 2 ตัว
+    String randomChars = String.fromCharCodes(List.generate(
+        2, (index) => Random().nextInt(26) + 65)); // สร้างตัวอักษร A-Z
+
+    // รวมตัวเลขและตัวอักษรเข้าด้วยกัน
+    String postNumber = '$randomNumbers$randomChars';
+
+    return postNumber;
+  }
 
   Future<void> buildPost(BuildContext context, List<File> images) async {
     try {
@@ -110,12 +125,12 @@ class _NewPostState extends State<NewPost> {
       // Save image URLs along with other data in the database
 
       Map userDataMap = {
-        'email':email,
+        'email': email,
+        'postNumber': generateRandomPostNumber(),
         'imageUrls': imageUrls,
         'type': dropdownValue,
         'latitude': selectedLatitude.toString(),
         'longitude': selectedLongitude.toString(),
-        'postNumber': currentpostNumber,
         'time': now.hour.toString().padLeft(2, '0') +
             ":" +
             now.minute.toString().padLeft(2, '0') +
@@ -137,8 +152,6 @@ class _NewPostState extends State<NewPost> {
         "details1": details1.text.trim(),
       };
       await itemRef.set(userDataMap);
-
-      currentpostNumber++;
     } catch (error) {
       Navigator.pop(context);
     }
