@@ -151,6 +151,7 @@ class _NewPostState extends State<NewPost> {
         "model1": model1.text.trim(),
         "details1": details1.text.trim(),
       };
+      userDataMap['post_uid'] = itemRef.key;
       await itemRef.set(userDataMap);
     } catch (error) {
       Navigator.pop(context);
