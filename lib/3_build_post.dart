@@ -113,8 +113,8 @@ class _NewPostState extends State<NewPost> {
         'email':email,
         'imageUrls': imageUrls,
         'type': dropdownValue,
-        'latitude': selectedLatitude,
-        'longitude': selectedLongitude,
+        'latitude': selectedLatitude.toString(),
+        'longitude': selectedLongitude.toString(),
         'postNumber': currentpostNumber,
         'time': now.hour.toString().padLeft(2, '0') +
             ":" +
