@@ -41,14 +41,15 @@ class _PaymentState extends State<Payment> {
       String? lastname = Datamap['lastname'];
       String? email = Datamap['email'];
       String? username = Datamap['username'];
-      String? uid = Datamap['id'];
+      String? id = Datamap['id'];
 
       // (เลือกแพ็คเก็จ)
       String selectedPackage = package.first;
 
       // ตรวจสอบว่า dropdownValue ไม่ใช่ null
       selectedPackage = dropdownValue;
-          String fileName = 'payment_${DateTime.now().millisecondsSinceEpoch}.png';
+      String fileName = 'payment_${DateTime.now().millisecondsSinceEpoch}.png';
+
       // อัปโหลดรูปภาพไปยัง Firebase Storage
       final storageRef = FirebaseStorage.instance
           .ref()
@@ -56,19 +57,27 @@ class _PaymentState extends State<Payment> {
           .child(fileName);
       await storageRef.putFile(File(_imageFile?.path ?? ''));
 
+      // ดึง UID ของเอกสารที่สร้างขึ้น
+      DatabaseReference requestVipRef =
+          FirebaseDatabase.instance.ref().child('requestvip');
+      DatabaseReference newRequestRef = requestVipRef.push();
+      String? documentId = newRequestRef.key;
+
       // ดึง URL ของรูปภาพที่อัปโหลด
       String imageUrl = await storageRef.getDownloadURL();
 
       Map<String, dynamic> requestData = {
+        'user_uid': uid,
         'status': status,
         'image_payment': imageUrl,
         'packed': selectedPackage,
         'PaymentNumber': currentPaymentNumber.toString(),
-        'id': uid,
+        'id': id,
         'firstname': firstname,
         'lastname': lastname,
         'username': username,
         'email': email,
+        'vipuid':documentId,
         "date": now.year.toString() +
             "-" +
             now.month.toString().padLeft(2, '0') +
@@ -80,10 +89,11 @@ class _PaymentState extends State<Payment> {
             ":" +
             now.second.toString().padLeft(2, '0'),
       };
+
       // ทำการส่งข้อมูลไปยัง "requestvip" ใน Realtime Database
-      DatabaseReference requestVipRef =
-          FirebaseDatabase.instance.ref().child('requestvip');
-      await requestVipRef.push().set(requestData);
+      await newRequestRef.set(requestData);
+
+      print('UID ของเอกสารที่สร้าง: $documentId');
     } else {
       print('ไม่พบข้อมูลชื่อผู้ใช้');
     }
@@ -145,10 +155,10 @@ class _PaymentState extends State<Payment> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => PaymentSuccess(
-                                 date: DateTime.now(),
-                                 time: DateTime.now(),
-                                paymentNumber: currentPaymentNumber,
-                              )));
+                                    date: DateTime.now(),
+                                    time: DateTime.now(),
+                                    paymentNumber: currentPaymentNumber,
+                                  )));
                     },
                     child: const Text(
                       'ยืนยัน',
