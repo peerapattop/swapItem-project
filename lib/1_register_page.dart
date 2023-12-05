@@ -186,6 +186,7 @@ class _RegisPageState extends State<RegisPage> {
 
       Map userDataMap = {
         'uid':uid,
+        'lastPostDate':"",
         'makeofferCount': makeofferCount,
         'postCount': monthlyPostLimit,
         'status_user': 'ผู้ใช้ทั่วไป',

@@ -40,6 +40,7 @@ class _NewPostState extends State<NewPost> {
   final model1 = TextEditingController();
   final details1 = TextEditingController();
   late GoogleMapController mapController;
+
   double? latitude;
   double? longitude;
   double? selectedLatitude;
@@ -106,99 +107,123 @@ class _NewPostState extends State<NewPost> {
     return postNumber;
   }
 
-Future<void> buildPost(BuildContext context, List<File> images) async {
-  try {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-    DatabaseReference userRef =
-        FirebaseDatabase.instance.ref().child('users').child(uid);
-    DatabaseEvent userDataSnapshot = await userRef.once();
-    Map<dynamic, dynamic> datamap =
-        userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
-    int currentPostCount = datamap['postCount'] ?? 0;
+  Future<void> buildPost(BuildContext context, List<File> images) async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      DatabaseReference userRef =
+          FirebaseDatabase.instance.ref().child('users').child(uid);
+      DatabaseEvent userDataSnapshot = await userRef.once();
+      Map<dynamic, dynamic> datamap =
+          userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
+      int currentPostCount = datamap['postCount'] ?? 0;
 
-    // ตรวจสอบว่ายังมีโอกาสโพสต์หรือไม่
-    if (currentPostCount > 0) {
-      // ลดค่า postCount
-      await userRef.update({
-        'postCount': currentPostCount - 1,
-      });
+      // ตรวจสอบว่ายังมีโอกาสโพสต์หรือไม่
+      if (currentPostCount > 0 || canPostAfter30Days(userRef, datamap)) {
+        // ลดค่า postCount
+        if (currentPostCount > 0) {
+          await userRef.update({
+            'postCount': currentPostCount - 1,
+            'lastPostDate': DateTime.now().toString(),
+          });
+        }
 
-      // ... ส่วนที่เหลือของโค้ดสำหรับการโพสต์
-      String username = datamap['username'];
-      String email = datamap['email'];
-      DatabaseReference itemRef =
-          FirebaseDatabase.instance.ref().child('postitem').push();
-      List<String> imageUrls = await uploadImages(images);
+        // ... ส่วนที่เหลือของโค้ดสำหรับการโพสต์
+        String username = datamap['username'];
+        String email = datamap['email'];
+        DatabaseReference itemRef =
+            FirebaseDatabase.instance.ref().child('postitem').push();
+        List<String> imageUrls = await uploadImages(images);
 
-      // บันทึก URL รูปภาพพร้อมกับข้อมูลอื่น ๆ ในฐานข้อมูล
-      Map userDataMap = {
-        'email': email,
-        'postNumber': generateRandomPostNumber(),
-        'imageUrls': imageUrls,
-        'type': dropdownValue,
-        'latitude': selectedLatitude.toString(),
-        'longitude': selectedLongitude.toString(),
-        'time': now.hour.toString().padLeft(2, '0') +
-            ":" +
-            now.minute.toString().padLeft(2, '0') +
-            ":" +
-            now.second.toString().padLeft(2, '0'),
-        'date': now.year.toString() +
-            "-" +
-            now.month.toString().padLeft(2, '0') +
-            "-" +
-            now.day.toString().padLeft(2, '0'),
-        'username': username,
-        'item_name': item_name.text.trim(),
-        'brand': brand.text.trim(),
-        "model": model.text.trim(),
-        "detail": details.text.trim(),
-        "item_name1": item_name1.text.trim(),
-        "brand1": brand1.text.trim(),
-        "model1": model1.text.trim(),
-        "details1": details1.text.trim(),
-      };
-      await itemRef.set(userDataMap);
-    } else {
-      // แจ้งเตือนผู้ใช้ว่าไม่สามารถโพสต์ได้
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Row(
-              children: [
-                Image.network('https://cdn-icons-png.flaticon.com/128/9068/9068699.png',width: 50,),
-                Text('ไม่สามารถโพสต์ได้'),
-              ],
-            ),
-            content: Text('โพสต์ไม่สามารถดำเนินการได้ เนื่องจากครบจำนวนการโพสต์ 5 ครั้ง/เดือน กรุณาสมัคร VIP เพื่อสามารถโพสต์ได้ไม่จำกัด'),
-            actions: <Widget>[
-              ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-
-                    },
-                    child: Text(
-                      'ยืนยัน',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-            ],
-          );
-        },
-      );
+        // บันทึก URL รูปภาพพร้อมกับข้อมูลอื่น ๆ ในฐานข้อมูล
+        Map userDataMap = {
+          'email': email,
+          'postNumber': generateRandomPostNumber(),
+          'imageUrls': imageUrls,
+          'type': dropdownValue,
+          'latitude': selectedLatitude.toString(),
+          'longitude': selectedLongitude.toString(),
+          'time': now.hour.toString().padLeft(2, '0') +
+              ":" +
+              now.minute.toString().padLeft(2, '0') +
+              ":" +
+              now.second.toString().padLeft(2, '0'),
+          'date': now.year.toString() +
+              "-" +
+              now.month.toString().padLeft(2, '0') +
+              "-" +
+              now.day.toString().padLeft(2, '0'),
+          'username': username,
+          'item_name': item_name.text.trim(),
+          'brand': brand.text.trim(),
+          "model": model.text.trim(),
+          "detail": details.text.trim(),
+          "item_name1": item_name1.text.trim(),
+          "brand1": brand1.text.trim(),
+          "model1": model1.text.trim(),
+          "details1": details1.text.trim(),
+        };
+        await itemRef.set(userDataMap);
+      } 
+    } catch (error) {
+      Navigator.pop(context);
     }
-  } catch (error) {
-    Navigator.pop(context);
   }
-}
 
+  bool canPostAfter30Days(
+      DatabaseReference userRef, Map<dynamic, dynamic> userData) {
+    // Check if last post date is available
+    if (userData.containsKey('lastPostDate')) {
+      DateTime lastPostDate = DateTime.parse(userData['lastPostDate']);
+      DateTime currentDate = DateTime.now();
+
+      // Check if 30 days have passed since the last post
+      if (currentDate.difference(lastPostDate).inDays >= 30) {
+        // Reset post count and update last post date
+        userRef.set({
+          'postCount': 5,
+          'lastPostDate': currentDate.toString(),
+        });
+        return true;
+      } else {
+        Duration remainingTime =
+            lastPostDate.add(Duration(days: 30)).difference(currentDate);
+
+        // Extract days, hours, minutes, and seconds from the remaining time
+        int daysRemaining = remainingTime.inDays;
+        int hoursRemaining = remainingTime.inHours % 24;
+        int minutesRemaining = remainingTime.inMinutes % 60;
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Row(
+                children: [
+                  Image.network('https://cdn-icons-png.flaticon.com/128/9068/9068699.png',width: 40,),
+                  Text(' ไม่สามารถโพสต์ได้'),
+                ],
+              ),
+              content: Text(
+                  'เนื่องจากครบจำนวนการโพสต์ 5 ครั้ง/เดือน \nโปรดรอ : $daysRemaining วัน $hoursRemaining ชั่วโมง $minutesRemaining นาที\nหรือสมัคร VIP เพื่อโพสต์หรือยื่นข้อเสนอได้ไม่จำกัด'),
+              actions: <Widget>[
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('ยืนยัน',style: TextStyle(color: Colors.white),),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
+
+    return false;
+  }
 
   Future<List<String>> uploadImages(List<File> images) async {
     List<String> imageUrls = [];
