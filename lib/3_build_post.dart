@@ -106,24 +106,31 @@ class _NewPostState extends State<NewPost> {
     return postNumber;
   }
 
-  Future<void> buildPost(BuildContext context, List<File> images) async {
-    try {
-      String uid = FirebaseAuth.instance.currentUser!.uid;
-      DatabaseReference userRef =
-          FirebaseDatabase.instance.ref().child('users').child(uid);
-      DatabaseEvent userDataSnapshot = await userRef.once();
-      Map<dynamic, dynamic> datamap =
-          userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
+Future<void> buildPost(BuildContext context, List<File> images) async {
+  try {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.ref().child('users').child(uid);
+    DatabaseEvent userDataSnapshot = await userRef.once();
+    Map<dynamic, dynamic> datamap =
+        userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
+    int currentPostCount = datamap['postCount'] ?? 0;
+
+    // ตรวจสอบว่ายังมีโอกาสโพสต์หรือไม่
+    if (currentPostCount > 0) {
+      // ลดค่า postCount
+      await userRef.update({
+        'postCount': currentPostCount - 1,
+      });
+
+      // ... ส่วนที่เหลือของโค้ดสำหรับการโพสต์
       String username = datamap['username'];
       String email = datamap['email'];
-
       DatabaseReference itemRef =
           FirebaseDatabase.instance.ref().child('postitem').push();
-
       List<String> imageUrls = await uploadImages(images);
 
-      // Save image URLs along with other data in the database
-
+      // บันทึก URL รูปภาพพร้อมกับข้อมูลอื่น ๆ ในฐานข้อมูล
       Map userDataMap = {
         'email': email,
         'postNumber': generateRandomPostNumber(),
@@ -152,10 +159,46 @@ class _NewPostState extends State<NewPost> {
         "details1": details1.text.trim(),
       };
       await itemRef.set(userDataMap);
-    } catch (error) {
-      Navigator.pop(context);
+    } else {
+      // แจ้งเตือนผู้ใช้ว่าไม่สามารถโพสต์ได้
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Row(
+              children: [
+                Image.network('https://cdn-icons-png.flaticon.com/128/9068/9068699.png',width: 50,),
+                Text('ไม่สามารถโพสต์ได้'),
+              ],
+            ),
+            content: Text('โพสต์ไม่สามารถดำเนินการได้ เนื่องจากครบจำนวนการโพสต์ 5 ครั้ง/เดือน กรุณาสมัคร VIP เพื่อสามารถโพสต์ได้ไม่จำกัด'),
+            actions: <Widget>[
+              ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+
+                    },
+                    child: Text(
+                      'ยืนยัน',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+            ],
+          );
+        },
+      );
     }
+  } catch (error) {
+    Navigator.pop(context);
   }
+}
+
 
   Future<List<String>> uploadImages(List<File> images) async {
     List<String> imageUrls = [];
