@@ -108,66 +108,72 @@ class _NewPostState extends State<NewPost> {
   }
 
   Future<void> buildPost(BuildContext context, List<File> images) async {
-    try {
-      String uid = FirebaseAuth.instance.currentUser!.uid;
-      DatabaseReference userRef =
-          FirebaseDatabase.instance.ref().child('users').child(uid);
-      DatabaseEvent userDataSnapshot = await userRef.once();
-      Map<dynamic, dynamic> datamap =
-          userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
-      int currentPostCount = datamap['postCount'] ?? 0;
+  try {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.ref().child('users').child(uid);
+    DatabaseEvent userDataSnapshot = await userRef.once();
+    Map<dynamic, dynamic> datamap =
+        userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
+    int currentPostCount = datamap['postCount'] ?? 0;
 
-      // ตรวจสอบว่ายังมีโอกาสโพสต์หรือไม่
-      if (currentPostCount > 0 || canPostAfter30Days(userRef, datamap)) {
-        // ลดค่า postCount
-        if (currentPostCount > 0) {
-          await userRef.update({
-            'postCount': currentPostCount - 1,
-            'lastPostDate': DateTime.now().toString(),
-          });
-        }
+    // ตรวจสอบว่ายังมีโอกาสโพสต์หรือไม่
+    if (currentPostCount > 0 || canPostAfter30Days(userRef, datamap)) {
+      // ลดค่า postCount
+      if (currentPostCount > 0) {
+        await userRef.update({
+          'postCount': currentPostCount - 1,
+          'lastPostDate': DateTime.now().toString(),
+        });
+      }
 
-        // ... ส่วนที่เหลือของโค้ดสำหรับการโพสต์
-        String username = datamap['username'];
-        String email = datamap['email'];
-        DatabaseReference itemRef =
-            FirebaseDatabase.instance.ref().child('postitem').push();
-        List<String> imageUrls = await uploadImages(images);
+      // ... ส่วนที่เหลือของโค้ดสำหรับการโพสต์
+      String username = datamap['username'];
+      String email = datamap['email'];
+      DatabaseReference itemRef =
+          FirebaseDatabase.instance.ref().child('postitem').push();
+      List<String> imageUrls = await uploadImages(images);
 
-        // บันทึก URL รูปภาพพร้อมกับข้อมูลอื่น ๆ ในฐานข้อมูล
-        Map userDataMap = {
-          'email': email,
-          'postNumber': generateRandomPostNumber(),
-          'imageUrls': imageUrls,
-          'type': dropdownValue,
-          'latitude': selectedLatitude.toString(),
-          'longitude': selectedLongitude.toString(),
-          'time': now.hour.toString().padLeft(2, '0') +
-              ":" +
-              now.minute.toString().padLeft(2, '0') +
-              ":" +
-              now.second.toString().padLeft(2, '0'),
-          'date': now.year.toString() +
-              "-" +
-              now.month.toString().padLeft(2, '0') +
-              "-" +
-              now.day.toString().padLeft(2, '0'),
-          'username': username,
-          'item_name': item_name.text.trim(),
-          'brand': brand.text.trim(),
-          "model": model.text.trim(),
-          "detail": details.text.trim(),
-          "item_name1": item_name1.text.trim(),
-          "brand1": brand1.text.trim(),
-          "model1": model1.text.trim(),
-          "details1": details1.text.trim(),
-        };
-        await itemRef.set(userDataMap);
-      } 
-    } catch (error) {
-      Navigator.pop(context);
-    }
+      // Generate uid for the post
+      String? postUid = itemRef.key;
+
+      // บันทึก URL รูปภาพพร้อมกับข้อมูลอื่น ๆ ในฐานข้อมูล
+      Map userDataMap = {
+        'post_uid':postUid,
+        'email': email,
+        'postNumber': generateRandomPostNumber(),
+        'imageUrls': imageUrls,
+        'type': dropdownValue,
+        'latitude': selectedLatitude.toString(),
+        'longitude': selectedLongitude.toString(),
+        'time': now.hour.toString().padLeft(2, '0') +
+            ":" +
+            now.minute.toString().padLeft(2, '0') +
+            ":" +
+            now.second.toString().padLeft(2, '0'),
+        'date': now.year.toString() +
+            "-" +
+            now.month.toString().padLeft(2, '0') +
+            "-" +
+            now.day.toString().padLeft(2, '0'),
+        'username': username,
+        'item_name': item_name.text.trim(),
+        'brand': brand.text.trim(),
+        "model": model.text.trim(),
+        "detail": details.text.trim(),
+        "item_name1": item_name1.text.trim(),
+        "brand1": brand1.text.trim(),
+        "model1": model1.text.trim(),
+        "details1": details1.text.trim(),
+        'uid': postUid,  // นำ uid ของโพสต์มาเพิ่มในข้อมูล
+      };
+      await itemRef.set(userDataMap);
+    } 
+  } catch (error) {
+    Navigator.pop(context);
   }
+}
+
 
   bool canPostAfter30Days(
       DatabaseReference userRef, Map<dynamic, dynamic> userData) {
