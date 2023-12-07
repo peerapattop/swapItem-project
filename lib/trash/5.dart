@@ -1,69 +1,95 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
 
-/// Flutter code sample for [TextField].
-
-void main() => runApp(const TextFieldExampleApp());
-
-class TextFieldExampleApp extends StatelessWidget {
-  const TextFieldExampleApp({super.key});
+class ShowAllPostItem extends StatefulWidget {
+  const ShowAllPostItem({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: TextFieldExample(),
-    );
-  }
+  _ShowAllPostItemState createState() => _ShowAllPostItemState();
 }
 
-class TextFieldExample extends StatefulWidget {
-  const TextFieldExample({super.key});
-
-  @override
-  State<TextFieldExample> createState() => _TextFieldExampleState();
-}
-
-class _TextFieldExampleState extends State<TextFieldExample> {
-  late TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+class _ShowAllPostItemState extends State<ShowAllPostItem> {
+  TextEditingController searchController = TextEditingController();
+  final _postRef = FirebaseDatabase.instance.ref().child('postitem');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: TextField(
-          controller: _controller,
-          onSubmitted: (String value) async {
-            await showDialog<void>(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text('Thanks!'),
-                  content: Text(
-                      'You typed "$value", which has length ${value.characters.length}.'),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('OK'),
-                    ),
-                  ],
-                );
-              },
+      body: StreamBuilder(
+        stream: _postRef.onValue,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-          },
-        ),
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else if (!snapshot.hasData || snapshot.data == null) {
+            return const Center(
+              child: Text("ไม่มีข้อมูล"),
+            );
+          }
+          DataSnapshot dataSnapshot = snapshot.data!.snapshot;
+          Map<dynamic, dynamic>? dataMap = dataSnapshot.value as Map?;
+
+          if (dataMap == null || dataMap.isEmpty) {
+            return const Center(
+              child: Text("ไม่มีข้อมูล"),
+            );
+          }
+
+          return Column(
+            children: <Widget>[
+              // แสดงข้อมูลโพสต์ด้วย GridView
+              Expanded(
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 2,
+                  ),
+                  itemCount: dataMap.length,
+                  itemBuilder: (context, index) {
+                    dynamic userData = dataMap.values.elementAt(index);
+                    String item_name = userData['item_name'].toString();
+                    String item_name1 = userData['item_name1'].toString();
+                    List<String> imageUrls =
+                        List<String>.from(userData['imageUrls'] ?? []);
+
+                    return Container(
+                      width: double.infinity, // ทำให้มีความกว้างเต็มพื้นที่
+                      height: 600, // ความยาวของ Container
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 9,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (imageUrls.isNotEmpty)
+                            Image.network(
+                              imageUrls.first, // ใช้เฉพาะรูปแรก
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ),
+                          Text('gg'),
+                          Text('gg'),
+                          // นำเอาข้อมูลที่ต้องการแสดงใน Container นี้มาใส่ตรงนี้
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

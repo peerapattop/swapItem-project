@@ -1,9 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:swapitem/trash/5.dart';
 import 'package:swapitem/16_Payment.dart';
 import 'package:swapitem/3_build_post.dart';
 import 'package:swapitem/notification_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key});
@@ -191,8 +192,8 @@ class _HomePageState extends State<HomePage> {
                                             style: ElevatedButton.styleFrom(
                                               side: const BorderSide(
                                                   width: 1.0,
-                                                  color: Colors
-                                                      .black), // เส้นขอบ
+                                                  color:
+                                                      Colors.black), // เส้นขอบ
                                               padding: const EdgeInsets
                                                   .symmetric(
                                                   vertical: 10.0,
@@ -205,8 +206,7 @@ class _HomePageState extends State<HomePage> {
                                               'สร้างโพสต์',
                                               style: TextStyle(
                                                   color: Colors.white,
-                                                  fontWeight:
-                                                      FontWeight.bold),
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                           ),
                                         ),
@@ -279,60 +279,12 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    Container(
-                      height: 600,
-                      width: double.infinity,
-                      child: GridView.count(
-                        primary: false,
-                        padding: const EdgeInsets.all(20),
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        crossAxisCount: 2,
-                        children: <Widget>[
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            color: Colors.teal[100],
-                            child: const Text(
-                              "He'd have you all unravel at the",
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            color: Colors.teal[200],
-                            child: const Text('Heed not the rabble'),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            color: Colors.teal[300],
-                            child: const Text('Sound of screams but the'),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            color: Colors.teal[400],
-                            child: const Text('Who scream'),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            color: Colors.teal[500],
-                            child: const Text('Revolution is coming...'),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            color: Colors.teal[600],
-                            child: const Text('Revolution, they...'),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            color: Colors.teal[500],
-                            child: const Text('Revolution is coming...'),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            color: Colors.teal[500],
-                            child: const Text('Revolution is coming...'),
-                          ),
-                        ],
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                          height: 600,
+                          width: double.infinity,
+                          child: ShowAllPostItem()),
                     ),
                   ],
                 );
