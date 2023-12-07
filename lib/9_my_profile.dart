@@ -22,6 +22,7 @@ class _ProfileState extends State<Profile> {
   late TextEditingController _genderController;
   late TextEditingController _birthdayController;
   late String status_user;
+  late String remainingTime;
   Map dataUser = {};
   late User _user;
   late DatabaseReference _userRef;
@@ -185,6 +186,7 @@ class _ProfileState extends State<Profile> {
                       _birthdayController.text =
                           dataUser['birthday'].toString();
                           status_user = dataUser['status_user'];
+                          remainingTime = dataUser['remainingTime'];
                       return Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
@@ -203,7 +205,7 @@ class _ProfileState extends State<Profile> {
                                       style: TextStyle(fontSize: 18),
                                     ),
                                     Text(
-                                      'หมดอายุ : -',
+                                      'เหลือเวลา : $remainingTime',
                                       style: TextStyle(fontSize: 18),
                                     ),
                                   ],
