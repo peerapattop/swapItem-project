@@ -1,4 +1,6 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class ShowAllPostItem extends StatefulWidget {
@@ -11,9 +13,14 @@ class ShowAllPostItem extends StatefulWidget {
 class _ShowAllPostItemState extends State<ShowAllPostItem> {
   TextEditingController searchController = TextEditingController();
   final _postRef = FirebaseDatabase.instance.ref().child('postitem');
-
+  String? formattedDateTime;
   @override
   Widget build(BuildContext context) {
+    String locale = 'th_TH';
+    initializeDateFormatting(locale).then((_) {
+      DateTime dateTime = DateTime.now();
+      formattedDateTime = DateFormat.yMd(locale).add_jm().format(dateTime);
+    });
     return Scaffold(
       body: StreamBuilder(
         stream: _postRef.onValue,
@@ -42,6 +49,7 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
 
           return Column(
             children: <Widget>[
+              Text('Formatted Time: $formattedDateTime'),
               // แสดงข้อมูลโพสต์ด้วย GridView
               Expanded(
                 child: GridView.builder(
