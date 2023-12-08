@@ -15,6 +15,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
   late DatabaseReference _userRef;
   late DatabaseReference _requestVipRef;
   late String paymentNumber;
+  Map<dynamic, dynamic> dataUser = {};
 
   @override
   void initState() {
@@ -67,7 +68,10 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                     );
                   } else {
                     DataSnapshot dataSnapshot = snapshot.data!.snapshot;
-                      Map<dynamic, dynamic> dataUser = dataSnapshot.value as Map<dynamic, dynamic>;
+                    if (dataSnapshot.value != null &&
+                        dataSnapshot.value is Map) {
+                      dataUser = dataSnapshot.value as Map<dynamic, dynamic>;
+                    }
                     return StreamBuilder(
                         stream: _requestVipRef.onValue,
                         builder: (context, requestVipSnapshot) {
@@ -133,7 +137,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                                         child: Column(
                                           children: [
                                             buildInfoRow(Icons.tag,
-                                                " หมายเลขการชำระเงิน : PAY-${requestVipData['PaymentNumber']}"),
+                                                " หมายเลขการชำระเงิน : PAY-"),
                                             buildInfoRow(Icons.date_range,
                                                 dataUser['date']),
                                             buildInfoRow(Icons.more_time,
@@ -151,7 +155,8 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                               ],
                             );
                           }
-                        });
+                        }
+                        );
                   }
                 },
               )),

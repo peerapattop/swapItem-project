@@ -139,6 +139,18 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                               child: Center(child: Text('รายละเอียด')),
                             ),
                           ),
+                          SizedBox(
+                            height: 2,
+                          ),
+                          Text(item_name),
+                          Image.asset(
+                            'assets/images/swap.png',
+                            width: 15,
+                          ),
+                          Text(item_name1),
+                          SizedBox(
+                            height: 10,
+                          ),
                         ],
                       ),
                     );

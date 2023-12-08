@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 
 Widget gg() {
   List<File> _images = []; 
-  final picker = ImagePicker();
 
   return 
   Container(
