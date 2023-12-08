@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:swapitem/trash/5.dart';
 import 'package:swapitem/16_Payment.dart';
 import 'package:swapitem/3_build_post.dart';
+import 'package:swapitem/widget/grid_view.dart';
 import 'package:swapitem/notification_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';

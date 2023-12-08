@@ -86,8 +86,8 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                               height: 100,
                               fit: BoxFit.cover,
                             ),
-                          Text('gg'),
-                          Text('gg'),
+                          Text(item_name),
+                          Text(item_name1),
                           // นำเอาข้อมูลที่ต้องการแสดงใน Container นี้มาใส่ตรงนี้
                         ],
                       ),
