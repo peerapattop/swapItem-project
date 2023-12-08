@@ -22,6 +22,7 @@ class _ProfileState extends State<Profile> {
   late TextEditingController _genderController;
   late TextEditingController _birthdayController;
   late String status_user;
+  late String remainingTime;
   Map dataUser = {};
   late User _user;
   late DatabaseReference _userRef;
@@ -41,7 +42,6 @@ class _ProfileState extends State<Profile> {
         TextEditingController(text: dataUser['gender'].toString());
     _birthdayController =
         TextEditingController(text: dataUser['birthday'].toString());
-
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -184,7 +184,8 @@ class _ProfileState extends State<Profile> {
                       _genderController.text = dataUser['gender'].toString();
                       _birthdayController.text =
                           dataUser['birthday'].toString();
-                          status_user = dataUser['status_user'];
+                      status_user = dataUser['status_user'];
+                      remainingTime = dataUser['remainingTime'];
                       return Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
@@ -195,7 +196,9 @@ class _ProfileState extends State<Profile> {
                                   alignment: Alignment.topCenter,
                                   child: imgPost(),
                                 ),
-                                SizedBox(width: 60,),
+                                SizedBox(
+                                  width: 60,
+                                ),
                                 Column(
                                   children: [
                                     Text(
@@ -203,9 +206,9 @@ class _ProfileState extends State<Profile> {
                                       style: TextStyle(fontSize: 18),
                                     ),
                                     Text(
-                                      'หมดอายุ : -',
+                                     'ใช้ได้อีก : $remainingTime',
                                       style: TextStyle(fontSize: 18),
-                                    ),
+                                    )
                                   ],
                                 )
                               ],
