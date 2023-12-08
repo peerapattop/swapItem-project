@@ -185,8 +185,9 @@ class _RegisPageState extends State<RegisPage> {
           .child(userCredential.user!.uid);
 
       Map userDataMap = {
+        'remainingTime':'',
         'uid':uid,
-        'lastPostDate':"",
+        'lastPostDate':'',
         'makeofferCount': makeofferCount,
         'postCount': monthlyPostLimit,
         'status_user': 'ผู้ใช้ทั่วไป',
