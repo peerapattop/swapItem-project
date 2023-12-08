@@ -12,18 +12,20 @@ class HistoryPayment extends StatefulWidget {
 
 class _HistoryPaymentState extends State<HistoryPayment> {
   late User _user;
-  late DatabaseReference _userRef;
   late DatabaseReference _requestVipRef;
   late String paymentNumber;
-  Map<dynamic, dynamic> dataUser = {};
 
   @override
   void initState() {
     super.initState();
+    super.initState();
+    initializeUser();
+  }
+
+  void initializeUser() {
     _user = FirebaseAuth.instance.currentUser!;
-    _userRef = FirebaseDatabase.instance.ref().child('users').child(_user.uid);
-    _requestVipRef =
-        FirebaseDatabase.instance.ref().child('requestvip').child(_user.uid);
+
+    _requestVipRef = FirebaseDatabase.instance.ref().child('requestvip');
   }
 
   @override
@@ -48,7 +50,10 @@ class _HistoryPaymentState extends State<HistoryPayment> {
             Expanded(
               child: SingleChildScrollView(
                   child: StreamBuilder(
-                stream: _userRef.onValue,
+                stream: _requestVipRef
+                    .orderByChild('user_uid')
+                    .equalTo(_user.uid)
+                    .onValue,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
@@ -66,97 +71,81 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                     return Center(
                       child: Text('Error: ${snapshot.error}'),
                     );
+                  } else if (!snapshot.hasData ||
+                      snapshot.data!.snapshot.value == null) {
+                    return Center(child: Text('ไม่มีประวัติการชำระเงิน'));
                   } else {
-                    DataSnapshot dataSnapshot = snapshot.data!.snapshot;
-                    if (dataSnapshot.value != null &&
-                        dataSnapshot.value is Map) {
-                      dataUser = dataSnapshot.value as Map<dynamic, dynamic>;
-                    }
-                    return StreamBuilder(
-                        stream: _requestVipRef.onValue,
-                        builder: (context, requestVipSnapshot) {
-                          if (requestVipSnapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
-                          } else if (requestVipSnapshot.hasError) {
-                            return Center(
-                                child:
-                                    Text('Error: ${requestVipSnapshot.error}'));
-                          } else {
-                            DataSnapshot requestVipDataSnapshot =
-                                requestVipSnapshot.data!.snapshot;
-                            Map<dynamic, dynamic> requestVipData =
-                                requestVipDataSnapshot.value
-                                    as Map<dynamic, dynamic>;
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          buildCircularNumberButton(1),
-                                          SizedBox(width: 10),
-                                          buildCircularNumberButton(2),
-                                          SizedBox(width: 10),
-                                          buildCircularNumberButton(3),
-                                          SizedBox(width: 10),
-                                          buildCircularNumberButton(4),
-                                          SizedBox(width: 10),
-                                          buildCircularNumberButton(5),
-                                        ],
-                                      ),
-                                      SizedBox(height: 20),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: Colors.black)),
-                                        child: Center(
-                                          child: Image.asset(
-                                            "assets/images/slip.jpeg",
-                                            width: 500,
-                                            height: 500,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(height: 30),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: Color.fromARGB(
-                                              255, 217, 217, 216),
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                        ),
-                                        padding: EdgeInsets.all(16.0),
-                                        child: Column(
-                                          children: [
-                                            buildInfoRow(Icons.tag,
-                                                " หมายเลขการชำระเงิน : PAY-"),
-                                            buildInfoRow(Icons.date_range,
-                                                dataUser['date']),
-                                            buildInfoRow(Icons.more_time,
-                                                " เวลา : 08:38 น."),
-                                            buildInfoRow(Icons.menu,
-                                                " แพ็กเกจ : 1 เดือน 50 บาท"),
-                                            buildInfoRow(Icons.handyman,
-                                                " สถานะ : รอการตรวจสอบ"),
-                                          ],
-                                        ),
-                                      )
-                                    ],
+                    Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
+                        snapshot.data!.snapshot.value as Map);
+                    // ตัวอย่างนี้สมมติว่าเราเข้าถึง record แรกที่เจอ (แต่อาจมีหลาย records)
+                    Map<dynamic, dynamic> paymentData =
+                        data.values.firstWhere((v) => true, orElse: () => {});
+                    String username = paymentData['username'];
+                    String status = paymentData['status'];
+                    String paymentNumber = paymentData['PaymentNumber'];
+                    String time = paymentData['time'];
+                    String packed = paymentData['packed'];
+                    String image_payment = paymentData['image_payment'];
+                    String date = paymentData['date'];
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  buildCircularNumberButton(1),
+                                  SizedBox(width: 10),
+                                  buildCircularNumberButton(2),
+                                  SizedBox(width: 10),
+                                  buildCircularNumberButton(3),
+                                  SizedBox(width: 10),
+                                  buildCircularNumberButton(4),
+                                  SizedBox(width: 10),
+                                  buildCircularNumberButton(5),
+                                ],
+                              ),
+                              SizedBox(height: 20),
+                              Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.black)),
+                                child: Center(
+                                  child: Image.network(
+                                    image_payment,
+                                    width: 500,
+                                    height: 500,
                                   ),
                                 ),
-                              ],
-                            );
-                          }
-                        }
-                        );
+                              ),
+                              SizedBox(height: 30),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 217, 217, 216),
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                padding: EdgeInsets.all(16.0),
+                                child: Column(
+                                  children: [
+                                    buildInfoRow(Icons.tag,
+                                        " หมายเลขการชำระเงิน : PAY-$paymentNumber"),
+                                    buildInfoRow(Icons.date_range, ' วันที่ : $date'),
+                                    buildInfoRow(
+                                        Icons.more_time, " เวลา : $time น."),
+                                    buildInfoRow(Icons.menu, " $packed"),
+                                    buildInfoRow(
+                                        Icons.handyman, " สถานะ : $status"),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
                   }
                 },
               )),
