@@ -89,7 +89,7 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'ชื่อ: $item_name', // Replace with your item name
+                                'ชื่อสิ่งของ: $item_name', // Replace with your item name
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -102,8 +102,8 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                             Center(
                               child: Image.network(
                                 imageUrls.first, // ใช้เฉพาะรูปแรก
-                                width: 100,
-                                height: 100,
+                                width: 70,
+                                height: 70,
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -115,7 +115,7 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                                 const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Center(
                               child: Text(
-                                'ต้องการแลกกับ: $item_name1', // Replace with your item details
+                                'ต้องการแลกเปลี่ยนกับ: $item_name1', // Replace with your item details
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey[600],

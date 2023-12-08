@@ -207,7 +207,7 @@ class _ProfileState extends State<Profile> {
                                     ),
                                     Text(
                                      'ใช้ได้อีก : $remainingTime',
-                                      style: TextStyle(fontSize: 18),
+                                      style: TextStyle(fontSize: 7),
                                     )
                                   ],
                                 )
