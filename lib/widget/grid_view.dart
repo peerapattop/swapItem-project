@@ -49,46 +49,96 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
 
           return Column(
             children: <Widget>[
-              Text('Formatted Time: $formattedDateTime'),
               // แสดงข้อมูลโพสต์ด้วย GridView
               Expanded(
                 child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    crossAxisCount: 2,
+                  padding: const EdgeInsets.only(
+                    left: 3,
+                    right: 3,
+                    top: 3,
+                    bottom: 150, // เพิ่มค่านี้ให้มากพอที่จะมองเห็นปุ่ม
                   ),
-                  itemCount: dataMap.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // จำนวนคอลัมน์
+                    childAspectRatio: 3 / 4, // อัตราส่วนความกว้างต่อความสูง
+                    crossAxisSpacing: 3, // ระยะห่างระหว่างคอลัมน์
+                    mainAxisSpacing: 3, // ระยะห่างระหว่างแถว
+                  ),
+                  itemCount: dataMap.length, // หรือจำนวนของข้อมูลที่คุณมี
                   itemBuilder: (context, index) {
                     dynamic userData = dataMap.values.elementAt(index);
                     String item_name = userData['item_name'].toString();
                     String item_name1 = userData['item_name1'].toString();
                     List<String> imageUrls =
                         List<String>.from(userData['imageUrls'] ?? []);
-
-                    return Container(
-                      width: double.infinity, // ทำให้มีความกว้างเต็มพื้นที่
-                      height: 600, // ความยาวของ Container
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 9,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
+                    return Card(
+                      clipBehavior: Clip.antiAlias,
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(10), // รูปทรงของการ์ด
                       ),
+                      elevation: 5, // เงาของการ์ด
+                      margin: const EdgeInsets.all(10),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          if (imageUrls.isNotEmpty)
-                            Image.network(
-                              imageUrls.first, // ใช้เฉพาะรูปแรก
-                              width: 100,
-                              height: 100,
-                              fit: BoxFit.cover,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          // Assuming you have a method to get image URL for each item
+                          // Replace `getImageForItem(index)` with your own method or variable
+
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'ชื่อ: $item_name', // Replace with your item name
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          Text(item_name),
-                          Text(item_name1),
-                          // นำเอาข้อมูลที่ต้องการแสดงใน Container นี้มาใส่ตรงนี้
+                          ),
+
+                          if (imageUrls.isNotEmpty)
+                            Center(
+                              child: Image.network(
+                                imageUrls.first, // ใช้เฉพาะรูปแรก
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Center(
+                              child: Text(
+                                'ต้องการแลกกับ: $item_name1', // Replace with your item details
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Spacer(), // This will push the button to the end of the card
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Handle your button tap here
+                              },
+                              style: ElevatedButton.styleFrom(
+                                primary: Theme.of(context)
+                                    .primaryColor, // This is the background color of the button
+                                onPrimary: Colors
+                                    .white, // This is the foreground color of the button
+                              ),
+                              child: Center(child: Text('รายละเอียด')),
+                            ),
+                          ),
                         ],
                       ),
                     );
