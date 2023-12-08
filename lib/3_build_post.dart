@@ -115,14 +115,15 @@ class _NewPostState extends State<NewPost> {
     DatabaseEvent userDataSnapshot = await userRef.once();
     Map<dynamic, dynamic> datamap =
         userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
-    int currentPostCount = datamap['postCount'] ?? 0;
+    int currentPostCount = int.parse(datamap['postCount'] ?? '0');
+
 
     // ตรวจสอบว่ายังมีโอกาสโพสต์หรือไม่
     if (currentPostCount > 0 || canPostAfter30Days(userRef, datamap)) {
       // ลดค่า postCount
       if (currentPostCount > 0) {
         await userRef.update({
-          'postCount': currentPostCount - 1,
+          'postCount': (currentPostCount - 1).toString(),
           'lastPostDate': DateTime.now().toString(),
         });
       }
@@ -170,66 +171,69 @@ class _NewPostState extends State<NewPost> {
       await itemRef.set(userDataMap);
     } 
   } catch (error) {
+    print('Error in buildPost: $error');
     Navigator.pop(context);
   }
 }
 
 
   bool canPostAfter30Days(
-      DatabaseReference userRef, Map<dynamic, dynamic> userData) {
-    // Check if last post date is available
-    if (userData.containsKey('lastPostDate')) {
-      DateTime lastPostDate = DateTime.parse(userData['lastPostDate']);
-      DateTime currentDate = DateTime.now();
+  DatabaseReference userRef, Map<dynamic, dynamic> userData
+) {
+  // Check if last post date is available
+  if (userData.containsKey('lastPostDate')) {
+    DateTime lastPostDate = DateTime.parse(userData['lastPostDate'].toString());
+    DateTime currentDate = DateTime.now();
 
-      // Check if 30 days have passed since the last post
-      if (currentDate.difference(lastPostDate).inDays >= 30) {
-        // Reset post count and update last post date
-        userRef.set({
-          'postCount': 5,
-          'lastPostDate': currentDate.toString(),
-        });
-        return true;
-      } else {
-        Duration remainingTime =
-            lastPostDate.add(Duration(days: 30)).difference(currentDate);
+    // Check if 30 days have passed since the last post
+    if (currentDate.difference(lastPostDate).inDays >= 30) {
+      // Reset post count and update last post date
+      userRef.set({
+        'postCount': '5',
+        'lastPostDate': currentDate.toString(),
+      });
+      return true;
+    } else {
+      Duration remainingTime =
+          lastPostDate.add(Duration(days: 30)).difference(currentDate);
 
-        // Extract days, hours, minutes, and seconds from the remaining time
-        int daysRemaining = remainingTime.inDays;
-        int hoursRemaining = remainingTime.inHours % 24;
-        int minutesRemaining = remainingTime.inMinutes % 60;
+      // Extract days, hours, minutes, and seconds from the remaining time
+      int daysRemaining = remainingTime.inDays;
+      int hoursRemaining = remainingTime.inHours % 24;
+      int minutesRemaining = remainingTime.inMinutes % 60;
 
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Row(
-                children: [
-                  Image.network('https://cdn-icons-png.flaticon.com/128/9068/9068699.png',width: 40,),
-                  Text(' ไม่สามารถโพสต์ได้'),
-                ],
-              ),
-              content: Text(
-                  'เนื่องจากครบจำนวนการโพสต์ 5 ครั้ง/เดือน \nโปรดรอ : $daysRemaining วัน $hoursRemaining ชั่วโมง $minutesRemaining นาที\nหรือสมัคร VIP เพื่อโพสต์หรือยื่นข้อเสนอได้ไม่จำกัด'),
-              actions: <Widget>[
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('ยืนยัน',style: TextStyle(color: Colors.white),),
-                ),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Row(
+              children: [
+                Image.network('https://cdn-icons-png.flaticon.com/128/9068/9068699.png',width: 40,),
+                Text(' ไม่สามารถโพสต์ได้'),
               ],
-            );
-          },
-        );
-      }
+            ),
+            content: Text(
+                'เนื่องจากครบจำนวนการโพสต์ 5 ครั้ง/เดือน \nโปรดรอ : $daysRemaining วัน $hoursRemaining ชั่วโมง $minutesRemaining นาที\nหรือสมัคร VIP เพื่อโพสต์หรือยื่นข้อเสนอได้ไม่จำกัด'),
+            actions: <Widget>[
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('ยืนยัน',style: TextStyle(color: Colors.white),),
+              ),
+            ],
+          );
+        },
+      );
     }
-
-    return false;
   }
+
+  return false;
+}
+
 
   Future<List<String>> uploadImages(List<File> images) async {
     List<String> imageUrls = [];
@@ -315,6 +319,7 @@ class _NewPostState extends State<NewPost> {
                       Navigator.of(context).pop();
                       completer.complete(true);
                       Navigator.of(context).pop();
+                      
                     },
                     child: Text(
                       'ยืนยัน',
