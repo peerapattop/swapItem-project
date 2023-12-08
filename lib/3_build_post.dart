@@ -115,7 +115,7 @@ class _NewPostState extends State<NewPost> {
     DatabaseEvent userDataSnapshot = await userRef.once();
     Map<dynamic, dynamic> datamap =
         userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
-    int currentPostCount = int.parse(datamap['postCount'] ?? '0');
+    int currentPostCount = int.tryParse(datamap['postCount'].toString()) ?? 0;
 
 
     // ตรวจสอบว่ายังมีโอกาสโพสต์หรือไม่
@@ -123,7 +123,7 @@ class _NewPostState extends State<NewPost> {
       // ลดค่า postCount
       if (currentPostCount > 0) {
         await userRef.update({
-          'postCount': (currentPostCount - 1).toString(),
+          'postCount': currentPostCount - 1,
           'lastPostDate': DateTime.now().toString(),
         });
       }
@@ -189,8 +189,8 @@ class _NewPostState extends State<NewPost> {
     if (currentDate.difference(lastPostDate).inDays >= 30) {
       // Reset post count and update last post date
       userRef.set({
-        'postCount': '5',
-        'lastPostDate': currentDate.toString(),
+        'postCount': 5,
+        'lastPostDate': currentDate.toIso8601String(),
       });
       return true;
     } else {
