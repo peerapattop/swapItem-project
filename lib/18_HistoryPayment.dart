@@ -14,6 +14,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
   late User _user;
   late DatabaseReference _requestVipRef;
   List<Map<dynamic, dynamic>> paymentsList = [];
+  int _selectedIndex = -1;
   Map<dynamic, dynamic>?
       selectedPayment; // Variable to hold the selected payment data
 
@@ -86,10 +87,59 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                       ? Expanded(
                           child: ListView(
                             children: [
-                              Image.network(
-                                  selectedPayment!['image_payment'] ?? '',
-                                  fit: BoxFit.cover),
-                              // Display other details from selectedPayment
+                              Column(
+                                children: [
+                                  Image.network(
+                                    selectedPayment!['image_payment'],
+                                    fit: BoxFit.cover,
+                                    width: 300,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Color.fromARGB(255, 217, 217, 216),
+                                        borderRadius: BorderRadius.circular(12.0),
+                                      ),
+                                      padding: EdgeInsets.all(16.0),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(Icons.tag),
+                                              Text(' หมายเลขการชำระเงิน PAY-'+selectedPayment!['PaymentNumber'],style: TextStyle(fontSize: 18),)
+                                            ],
+                                          ),
+                                           Row(
+                                            children: [
+                                              Icon(Icons.date_range),
+                                              Text(' วันที่ : '+selectedPayment!['date'],style: TextStyle(fontSize: 18),)
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Icon(Icons.timelapse),
+                                              Text(' เวลา : ${selectedPayment!['time']} น.',style: TextStyle(fontSize: 18),)
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Icon(Icons.list),
+                                              Text(' แพ็กเกจ : '+selectedPayment!['packed'],style: TextStyle(fontSize: 18),)
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Icon(Icons.safety_check),
+                                              Text(' สถานะ : '+selectedPayment!['status'],style: TextStyle(fontSize: 18),)
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ],
                           ),
                         )
@@ -113,13 +163,18 @@ class _HistoryPaymentState extends State<HistoryPayment> {
   Widget buildCircularNumberButton(
       int index, Map<dynamic, dynamic> paymentData) {
     return InkWell(
-      onTap: () => selectPayment(paymentData),
+      onTap: () {
+        setState(() {
+          _selectedIndex = index; // Update the selected index
+          selectedPayment = paymentData; // Update the selected payment data
+        });
+      },
       child: Container(
         width: 40,
         height: 40,
         margin: EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: selectedPayment == paymentData
+          color: _selectedIndex == index
               ? Colors.blue
               : Colors.grey, // Highlight if selected
           shape: BoxShape.circle,
@@ -130,7 +185,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
         ),
         child: Center(
           child: Text(
-            '${index + 1}', // Display the button number
+            '${index + 1}',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
