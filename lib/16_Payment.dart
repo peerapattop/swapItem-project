@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -20,8 +21,14 @@ class _PaymentState extends State<Payment> {
   XFile? _imageFile;
   late List<String> package;
   late String dropdownValue;
-  int currentPaymentNumber = 0;
   String status = 'รอการตรวจสอบ';
+
+  String generateFourDigitNumber() {
+    var random = Random();
+    int number = random.nextInt(10000); // สุ่มตัวเลขระหว่าง 0 ถึง 9999
+    return number.toString().padLeft(4, '0'); // จัดรูปแบบให้เป็นสี่หลัก
+  }
+
   void createRequestVip() async {
     // ดึง UID ของผู้ใช้ที่ล็อกอินอยู่
     String uid = FirebaseAuth.instance.currentUser!.uid;
@@ -31,7 +38,6 @@ class _PaymentState extends State<Payment> {
     DatabaseReference userRef =
         FirebaseDatabase.instance.ref().child('users').child(uid);
     DatabaseEvent userDataSnapshot = await userRef.once();
-    currentPaymentNumber++;
 
     //ตรวจสอบว่ามีข้อมูลผู้ใช้หรือไม่
     if (userDataSnapshot.snapshot.value != null) {
@@ -71,13 +77,13 @@ class _PaymentState extends State<Payment> {
         'status': status,
         'image_payment': imageUrl,
         'packed': selectedPackage,
-        'PaymentNumber': currentPaymentNumber.toString(),
+        'PaymentNumber': generateFourDigitNumber.toString(),
         'id': id,
         'firstname': firstname,
         'lastname': lastname,
         'username': username,
         'email': email,
-        'vipuid':documentId,
+        'vipuid': documentId,
         "date": now.year.toString() +
             "-" +
             now.month.toString().padLeft(2, '0') +
@@ -157,7 +163,7 @@ class _PaymentState extends State<Payment> {
                               builder: (context) => PaymentSuccess(
                                     date: DateTime.now(),
                                     time: DateTime.now(),
-                                    paymentNumber: currentPaymentNumber,
+                                    paymentNumber: generateFourDigitNumber(),
                                   )));
                     },
                     child: const Text(

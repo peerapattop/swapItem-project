@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class PaymentSuccess extends StatelessWidget {
   DateTime date;
   DateTime time;
-  int paymentNumber;
+  String paymentNumber;
 
   PaymentSuccess(
       {required this.date, required this.time, required this.paymentNumber});
