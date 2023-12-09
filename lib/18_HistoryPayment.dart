@@ -80,7 +80,6 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                     // ตัวอย่างนี้สมมติว่าเราเข้าถึง record แรกที่เจอ (แต่อาจมีหลาย records)
                     Map<dynamic, dynamic> paymentData =
                         data.values.firstWhere((v) => true, orElse: () => {});
-                    String username = paymentData['username'];
                     String status = paymentData['status'];
                     String paymentNumber = paymentData['PaymentNumber'];
                     String time = paymentData['time'];
