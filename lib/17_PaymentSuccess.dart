@@ -8,10 +8,9 @@ import 'package:flutter/material.dart';
 class PaymentSuccess extends StatelessWidget {
   DateTime date;
   DateTime time;
-  String paymentNumber;
 
   PaymentSuccess(
-      {required this.date, required this.time, required this.paymentNumber});
+      {required this.date, required this.time,});
 
   @override
   Widget build(BuildContext context) {
@@ -58,15 +57,12 @@ class PaymentSuccess extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-              Text(
-                'หมายเลขการชำระเงิน' + ' $paymentNumber',
-                style: TextStyle(fontSize: 20),
-              ),
+              
               SizedBox(
                 height: 20,
               ),
               Text(
-                DateFormat('วันที่ dd  MMMM yyyy', 'th').format(date),
+                DateFormat('วันที่ d MMMM yyyy', 'th').format(date),
                 style: TextStyle(fontSize: 20),
               ),
               Text(

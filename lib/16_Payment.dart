@@ -22,6 +22,7 @@ class _PaymentState extends State<Payment> {
   late List<String> package;
   late String dropdownValue;
   String status = 'รอการตรวจสอบ';
+  String? paymentNumber;
 
   String generateFourDigitNumber() {
     var random = Random();
@@ -30,6 +31,7 @@ class _PaymentState extends State<Payment> {
   }
 
   void createRequestVip() async {
+    
     // ดึง UID ของผู้ใช้ที่ล็อกอินอยู่
     String uid = FirebaseAuth.instance.currentUser!.uid;
     DateTime now = DateTime.now();
@@ -71,13 +73,13 @@ class _PaymentState extends State<Payment> {
 
       // ดึง URL ของรูปภาพที่อัปโหลด
       String imageUrl = await storageRef.getDownloadURL();
-
+      String paymentNumber = generateFourDigitNumber();
       Map<String, dynamic> requestData = {
         'user_uid': uid,
         'status': status,
         'image_payment': imageUrl,
         'packed': selectedPackage,
-        'PaymentNumber': generateFourDigitNumber.toString(),
+        'PaymentNumber': paymentNumber,
         'id': id,
         'firstname': firstname,
         'lastname': lastname,
@@ -163,7 +165,7 @@ class _PaymentState extends State<Payment> {
                               builder: (context) => PaymentSuccess(
                                     date: DateTime.now(),
                                     time: DateTime.now(),
-                                    paymentNumber: generateFourDigitNumber(),
+                                    
                                   )));
                     },
                     child: const Text(
