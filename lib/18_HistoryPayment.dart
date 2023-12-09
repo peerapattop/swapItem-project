@@ -108,7 +108,9 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                                   buildCircularNumberButton(5),
                                 ],
                               ),
-                              SizedBox(height: 20),
+                              SizedBox(height: 5),
+                              Divider(),
+                              SizedBox(height: 5),
                               Container(
                                 decoration: BoxDecoration(
                                     border: Border.all(color: Colors.black)),
