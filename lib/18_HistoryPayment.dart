@@ -17,13 +17,38 @@ class _HistoryPaymentState extends State<HistoryPayment> {
   int _selectedIndex = -1;
   Map<dynamic, dynamic>? selectedPayment;
 
-  @override
-  void initState() {
-    super.initState();
-    _user = FirebaseAuth.instance.currentUser!;
-    _requestVipRef = FirebaseDatabase.instance.ref().child('requestvip');
-    selectedPayment = null;
-  }
+ @override
+void initState() {
+  super.initState();
+  _user = FirebaseAuth.instance.currentUser!;
+  _requestVipRef = FirebaseDatabase.instance.ref().child('requestvip');
+  selectedPayment = null;
+
+  _requestVipRef
+      .orderByChild('user_uid')
+      .equalTo(_user.uid)
+      .limitToLast(1)
+      .onValue
+      .listen((event) {
+    if (event.snapshot.value != null) {
+      Map<dynamic, dynamic> data =
+          Map<dynamic, dynamic>.from(event.snapshot.value as Map);
+      var lastKey = data.keys.last;
+      var lastPayment = Map<dynamic, dynamic>.from(data[lastKey]);
+
+      // Since we are listening to the last payment, we clear the list to ensure
+      // it only contains the latest payment and corresponds to the first button.
+      paymentsList.clear();
+
+      setState(() {
+        paymentsList.insert(0, lastPayment); // Insert at the start of the list
+        selectedPayment = lastPayment;
+        _selectedIndex = 0; // This ensures the first button is selected
+      });
+    }
+  });
+}
+
 
   void selectPayment(Map<dynamic, dynamic> paymentData) {
     setState(() {
@@ -64,24 +89,22 @@ class _HistoryPaymentState extends State<HistoryPayment> {
               });
 
               return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: 50, // Fixed height for the button container
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: paymentsList.length,
-                      itemBuilder: (context, index) {
+                    height: 50,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: paymentsList.asMap().entries.map((entry) {
+                        int idx = entry.key;
+                        Map<dynamic, dynamic> paymentData = entry.value;
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: buildCircularNumberButton(
-                              index, paymentsList[index]),
+                          child: buildCircularNumberButton(idx, paymentData),
                         );
-                      },
+                      }).toList(),
                     ),
                   ),
                   Divider(),
-                  // Check if selectedPayment is not null and then display its details
                   selectedPayment != null
                       ? Expanded(
                           child: ListView(
@@ -172,7 +195,19 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                 ],
               );
             } else {
-              return Center(child: Text('Loading or error state'));
+              return Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text('กำลังโหลด..'),
+                  ],
+                ),
+              );
             }
           },
         ),
