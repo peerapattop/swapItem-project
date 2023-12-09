@@ -15,15 +15,14 @@ class _HistoryPaymentState extends State<HistoryPayment> {
   late DatabaseReference _requestVipRef;
   List<Map<dynamic, dynamic>> paymentsList = [];
   int _selectedIndex = -1;
-  Map<dynamic, dynamic>?
-      selectedPayment; // Variable to hold the selected payment data
+  Map<dynamic, dynamic>? selectedPayment;
 
   @override
   void initState() {
     super.initState();
     _user = FirebaseAuth.instance.currentUser!;
     _requestVipRef = FirebaseDatabase.instance.ref().child('requestvip');
-    selectedPayment = null; // Initialize selectedPayment as null
+    selectedPayment = null;
   }
 
   void selectPayment(Map<dynamic, dynamic> paymentData) {
@@ -67,7 +66,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
+                  SizedBox(
                     height: 50, // Fixed height for the button container
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
@@ -98,8 +97,10 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        color: Color.fromARGB(255, 217, 217, 216),
-                                        borderRadius: BorderRadius.circular(12.0),
+                                        color:
+                                            Color.fromARGB(255, 217, 217, 216),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
                                       ),
                                       padding: EdgeInsets.all(16.0),
                                       child: Column(
@@ -107,31 +108,51 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                                           Row(
                                             children: [
                                               Icon(Icons.tag),
-                                              Text(' หมายเลขการชำระเงิน PAY-'+selectedPayment!['PaymentNumber'],style: TextStyle(fontSize: 18),)
+                                              Text(
+                                                ' หมายเลขการชำระเงิน PAY-' +
+                                                    selectedPayment![
+                                                        'PaymentNumber'],
+                                                style: TextStyle(fontSize: 18),
+                                              )
                                             ],
                                           ),
-                                           Row(
+                                          Row(
                                             children: [
                                               Icon(Icons.date_range),
-                                              Text(' วันที่ : '+selectedPayment!['date'],style: TextStyle(fontSize: 18),)
+                                              Text(
+                                                ' วันที่ : ' +
+                                                    selectedPayment!['date'],
+                                                style: TextStyle(fontSize: 18),
+                                              )
                                             ],
                                           ),
                                           Row(
                                             children: [
                                               Icon(Icons.timelapse),
-                                              Text(' เวลา : ${selectedPayment!['time']} น.',style: TextStyle(fontSize: 18),)
+                                              Text(
+                                                ' เวลา : ${selectedPayment!['time']} น.',
+                                                style: TextStyle(fontSize: 18),
+                                              )
                                             ],
                                           ),
                                           Row(
                                             children: [
                                               Icon(Icons.list),
-                                              Text(' แพ็กเกจ : '+selectedPayment!['packed'],style: TextStyle(fontSize: 18),)
+                                              Text(
+                                                ' แพ็กเกจ : ' +
+                                                    selectedPayment!['packed'],
+                                                style: TextStyle(fontSize: 18),
+                                              )
                                             ],
                                           ),
                                           Row(
                                             children: [
                                               Icon(Icons.safety_check),
-                                              Text(' สถานะ : '+selectedPayment!['status'],style: TextStyle(fontSize: 18),)
+                                              Text(
+                                                ' สถานะ : ' +
+                                                    selectedPayment!['status'],
+                                                style: TextStyle(fontSize: 18),
+                                              )
                                             ],
                                           ),
                                         ],
@@ -151,7 +172,6 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                 ],
               );
             } else {
-              // Return a loading or error widget
               return Center(child: Text('Loading or error state'));
             }
           },
@@ -180,7 +200,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
           shape: BoxShape.circle,
           border: Border.all(
             color: Colors.black,
-            width: 2.0,
+            width: 1.0,
           ),
         ),
         child: Center(
