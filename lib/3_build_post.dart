@@ -166,7 +166,7 @@ class _NewPostState extends State<NewPost> {
         "brand1": brand1.text.trim(),
         "model1": model1.text.trim(),
         "details1": details1.text.trim(),
-        'uid': postUid,  // นำ uid ของโพสต์มาเพิ่มในข้อมูล
+        'uid': uid,
       };
       await itemRef.set(userDataMap);
     } 
