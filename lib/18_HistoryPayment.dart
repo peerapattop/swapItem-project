@@ -13,19 +13,23 @@ class HistoryPayment extends StatefulWidget {
 class _HistoryPaymentState extends State<HistoryPayment> {
   late User _user;
   late DatabaseReference _requestVipRef;
-  late String paymentNumber;
+  List<Map<dynamic, dynamic>> paymentsList = [];
+  Map<dynamic, dynamic>?
+      selectedPayment; // Variable to hold the selected payment data
 
   @override
   void initState() {
     super.initState();
-    super.initState();
-    initializeUser();
+    _user = FirebaseAuth.instance.currentUser!;
+    _requestVipRef = FirebaseDatabase.instance.ref().child('requestvip');
+    selectedPayment = null; // Initialize selectedPayment as null
   }
 
-  void initializeUser() {
-    _user = FirebaseAuth.instance.currentUser!;
-
-    _requestVipRef = FirebaseDatabase.instance.ref().child('requestvip');
+  void selectPayment(Map<dynamic, dynamic> paymentData) {
+    setState(() {
+      selectedPayment =
+          paymentData; // Update selectedPayment with the chosen data
+    });
   }
 
   @override
@@ -45,127 +49,79 @@ class _HistoryPaymentState extends State<HistoryPayment> {
             ),
           ),
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                  child: StreamBuilder(
-                stream: _requestVipRef
-                    .orderByChild('user_uid')
-                    .equalTo(_user.uid)
-                    .onValue,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 350,
-                          ),
-                          CircularProgressIndicator(),
-                          Text('กำลังโหลดข้อมูล...')
-                        ],
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    );
-                  } else if (!snapshot.hasData ||
-                      snapshot.data!.snapshot.value == null) {
-                    return Center(child: Text('ไม่มีประวัติการชำระเงิน'));
-                  } else {
-                    Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
-                        snapshot.data!.snapshot.value as Map);
-                    // ตัวอย่างนี้สมมติว่าเราเข้าถึง record แรกที่เจอ (แต่อาจมีหลาย records)
-                    Map<dynamic, dynamic> paymentData =
-                        data.values.firstWhere((v) => true, orElse: () => {});
-                    String status = paymentData['status'];
-                    String paymentNumber = paymentData['PaymentNumber'];
-                    String time = paymentData['time'];
-                    String packed = paymentData['packed'];
-                    String image_payment = paymentData['image_payment'];
-                    String date = paymentData['date'];
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+        body: StreamBuilder(
+          stream: _requestVipRef
+              .orderByChild('user_uid')
+              .equalTo(_user.uid)
+              .onValue,
+          builder: (context, snapshot) {
+            if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
+              paymentsList.clear();
+              Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
+                  snapshot.data!.snapshot.value as Map);
+              data.forEach((key, value) {
+                paymentsList.add(Map<dynamic, dynamic>.from(value));
+              });
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 50, // Fixed height for the button container
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: paymentsList.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: buildCircularNumberButton(
+                              index, paymentsList[index]),
+                        );
+                      },
+                    ),
+                  ),
+                  Divider(),
+                  // Check if selectedPayment is not null and then display its details
+                  selectedPayment != null
+                      ? Expanded(
+                          child: ListView(
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  buildCircularNumberButton(1),
-                                  SizedBox(width: 10),
-                                  buildCircularNumberButton(2),
-                                  SizedBox(width: 10),
-                                  buildCircularNumberButton(3),
-                                  SizedBox(width: 10),
-                                  buildCircularNumberButton(4),
-                                  SizedBox(width: 10),
-                                  buildCircularNumberButton(5),
-                                ],
-                              ),
-                              SizedBox(height: 5),
-                              Divider(),
-                              SizedBox(height: 5),
-                              Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.black)),
-                                child: Center(
-                                  child: Image.network(
-                                    image_payment,
-                                    width: 500,
-                                    height: 500,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 30),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 217, 217, 216),
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                padding: EdgeInsets.all(16.0),
-                                child: Column(
-                                  children: [
-                                    buildInfoRow(Icons.tag,
-                                        " หมายเลขการชำระเงิน : PAY-$paymentNumber"),
-                                    buildInfoRow(Icons.date_range, ' วันที่ : $date'),
-                                    buildInfoRow(
-                                        Icons.more_time, " เวลา : $time น."),
-                                    buildInfoRow(Icons.menu, " $packed"),
-                                    buildInfoRow(
-                                        Icons.handyman, " สถานะ : $status"),
-                                  ],
-                                ),
-                              )
+                              Image.network(
+                                  selectedPayment!['image_payment'] ?? '',
+                                  fit: BoxFit.cover),
+                              // Display other details from selectedPayment
                             ],
                           ),
+                        )
+                      : Expanded(
+                          child: Center(
+                              child: Text(
+                                  'Please select a payment to view the details')),
                         ),
-                      ],
-                    );
-                  }
-                },
-              )),
-            ),
-          ],
+                ],
+              );
+            } else {
+              // Return a loading or error widget
+              return Center(child: Text('Loading or error state'));
+            }
+          },
         ),
       ),
     );
   }
 
-  Widget buildCircularNumberButton(int number) {
+  Widget buildCircularNumberButton(
+      int index, Map<dynamic, dynamic> paymentData) {
     return InkWell(
-      onTap: () {
-        // โค้ดที่ต้องการให้ทำงานเมื่อปุ่มถูกกด
-      },
+      onTap: () => selectPayment(paymentData),
       child: Container(
         width: 40,
         height: 40,
+        margin: EdgeInsets.all(4),
         decoration: BoxDecoration(
+          color: selectedPayment == paymentData
+              ? Colors.blue
+              : Colors.grey, // Highlight if selected
           shape: BoxShape.circle,
           border: Border.all(
             color: Colors.black,
@@ -174,23 +130,15 @@ class _HistoryPaymentState extends State<HistoryPayment> {
         ),
         child: Center(
           child: Text(
-            '$number',
+            '${index + 1}', // Display the button number
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget buildInfoRow(IconData icon, String text) {
-    return Row(
-      children: [
-        Icon(icon, color: Colors.blue),
-        Text(text, style: TextStyle(fontSize: 20)),
-      ],
     );
   }
 }
