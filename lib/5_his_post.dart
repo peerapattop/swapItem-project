@@ -343,11 +343,7 @@ class _HistoryPostState extends State<HistoryPost> {
                             ],
                           ),
                         )
-                      : Expanded(
-                          child: Center(
-                              child: Text(
-                                  'Please select a payment to view the details')),
-                        ),
+                      : Text('ไม่มีประวัติการโพสต์')
                 ],
               );
             } else {
