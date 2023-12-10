@@ -21,13 +21,7 @@ class _HistoryPostState extends State<HistoryPost> {
   Map<dynamic, dynamic>? selectedPost;
   late GoogleMapController mapController;
   int? mySlideindex;
-  List<String> foodList = [
-    "https://cdn.pixabay.com/photo/2010/12/13/10/05/berries-2277_1280.jpg",
-    "https://cdn.pixabay.com/photo/2015/12/09/17/11/vegetables-1085063_640.jpg",
-    "https://cdn.pixabay.com/photo/2017/01/20/15/06/oranges-1995056_640.jpg",
-    "https://cdn.pixabay.com/photo/2014/11/05/15/57/salmon-518032_640.jpg",
-    "https://cdn.pixabay.com/photo/2016/07/22/09/59/fruits-1534494_640.jpg",
-  ];
+  List<String> image_post = [];
 
   @override
   void initState() {
@@ -104,10 +98,12 @@ class _HistoryPostState extends State<HistoryPost> {
                       children: postsList.asMap().entries.map((entry) {
                         int idx = entry.key;
                         Map<dynamic, dynamic> postData = entry.value;
-                        latitude =
-                            double.tryParse(postData['latitude'].toString());
-                        longitude =
-                            double.tryParse(postData['longitude'].toString());
+                        image_post =
+                            List<String>.from(selectedPost!['imageUrls']);
+                        latitude = double.tryParse(
+                            selectedPost!['latitude'].toString());
+                        longitude = double.tryParse(
+                            selectedPost!['longitude'].toString());
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4.0),
                           child: buildCircularNumberButton(idx, postData),
@@ -137,7 +133,7 @@ class _HistoryPostState extends State<HistoryPost> {
                                                   mySlideindex = value;
                                                 });
                                               },
-                                              itemCount: foodList.length,
+                                              itemCount: image_post.length,
                                               itemBuilder: (context, index) {
                                                 return Padding(
                                                   padding: const EdgeInsets.all(
@@ -147,7 +143,7 @@ class _HistoryPostState extends State<HistoryPost> {
                                                           BorderRadius.circular(
                                                               20),
                                                       child: Image.network(
-                                                        foodList[index],
+                                                        image_post[index],
                                                         fit: BoxFit.cover,
                                                       )),
                                                 );
@@ -160,7 +156,7 @@ class _HistoryPostState extends State<HistoryPost> {
                                           width: 300,
                                           child: ListView.builder(
                                             scrollDirection: Axis.horizontal,
-                                            itemCount: foodList.length,
+                                            itemCount: image_post.length,
                                             itemBuilder: (context, index) {
                                               return Padding(
                                                 padding:
@@ -375,12 +371,17 @@ class _HistoryPostState extends State<HistoryPost> {
                                             },
                                           ),
                                         ),
-                                        SizedBox(height: 10,),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
                                         ElevatedButton.icon(
                                             style: ElevatedButton.styleFrom(
                                                 backgroundColor: Colors.red),
                                             onPressed: () {},
-                                            icon: Icon(Icons.delete,color: Colors.white,),
+                                            icon: Icon(
+                                              Icons.delete,
+                                              color: Colors.white,
+                                            ),
                                             label: Text(
                                               'ลบโพสต์',
                                               style: TextStyle(
