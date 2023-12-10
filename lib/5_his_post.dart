@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HistoryPost extends StatefulWidget {
   const HistoryPost({Key? key}) : super(key: key);
@@ -12,10 +13,13 @@ class HistoryPost extends StatefulWidget {
 
 class _HistoryPostState extends State<HistoryPost> {
   late User _user;
+  double? latitude;
+  double? longitude;
   late DatabaseReference _postRef;
   List<Map<dynamic, dynamic>> postsList = [];
   int _selectedIndex = -1;
   Map<dynamic, dynamic>? selectedPost;
+  late GoogleMapController mapController;
   int? mySlideindex;
   List<String> foodList = [
     "https://cdn.pixabay.com/photo/2010/12/13/10/05/berries-2277_1280.jpg",
@@ -100,7 +104,10 @@ class _HistoryPostState extends State<HistoryPost> {
                       children: postsList.asMap().entries.map((entry) {
                         int idx = entry.key;
                         Map<dynamic, dynamic> postData = entry.value;
-
+                        latitude =
+                            double.tryParse(postData['latitude'].toString());
+                        longitude =
+                            double.tryParse(postData['longitude'].toString());
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4.0),
                           child: buildCircularNumberButton(idx, postData),
@@ -253,7 +260,8 @@ class _HistoryPostState extends State<HistoryPost> {
                                               bottom: 10),
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              color: Color.fromARGB(255, 214, 214, 212),
+                                              color: Color.fromARGB(
+                                                  255, 214, 214, 212),
                                               borderRadius:
                                                   BorderRadius.circular(12.0),
                                             ),
@@ -261,7 +269,8 @@ class _HistoryPostState extends State<HistoryPost> {
                                               padding:
                                                   const EdgeInsets.all(11.0),
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
                                                     'ชื่อสิ่งของ : ' +
@@ -272,35 +281,39 @@ class _HistoryPostState extends State<HistoryPost> {
                                                   ),
                                                   Text(
                                                     'หมวดหมู่ : ' +
-                                                        selectedPost![
-                                                            'type'],
+                                                        selectedPost!['type'],
                                                     style:
                                                         TextStyle(fontSize: 18),
                                                   ),
                                                   Text(
                                                     'ยี่ห้อ : ' +
-                                                        selectedPost![
-                                                            'brand'],
+                                                        selectedPost!['brand'],
                                                     style:
                                                         TextStyle(fontSize: 18),
                                                   ),
                                                   Text(
                                                     'รุ่น : ' +
-                                                        selectedPost![
-                                                            'model'],
+                                                        selectedPost!['model'],
                                                     style:
                                                         TextStyle(fontSize: 18),
                                                   ),
                                                   Text(
                                                     'รายละเอียด : ' +
-                                                        selectedPost![
-                                                            'detail'],
+                                                        selectedPost!['detail'],
                                                     style:
                                                         TextStyle(fontSize: 18),
                                                   ),
-                                                  SizedBox(height: 10,),
-                                                  Center(child: Image.asset('assets/images/swap.png',width: 20,)),
-                                                  SizedBox(height: 10,),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Center(
+                                                      child: Image.asset(
+                                                    'assets/images/swap.png',
+                                                    width: 20,
+                                                  )),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
                                                   Text(
                                                     'ชื่อสิ่งของ : ' +
                                                         selectedPost![
@@ -308,18 +321,15 @@ class _HistoryPostState extends State<HistoryPost> {
                                                     style:
                                                         TextStyle(fontSize: 18),
                                                   ),
-                                                  
                                                   Text(
                                                     'ยี่ห้อ : ' +
-                                                        selectedPost![
-                                                            'brand1'],
+                                                        selectedPost!['brand1'],
                                                     style:
                                                         TextStyle(fontSize: 18),
                                                   ),
                                                   Text(
                                                     'รุ่น : ' +
-                                                        selectedPost![
-                                                            'model1'],
+                                                        selectedPost!['model1'],
                                                     style:
                                                         TextStyle(fontSize: 18),
                                                   ),
@@ -334,7 +344,48 @@ class _HistoryPostState extends State<HistoryPost> {
                                               ),
                                             ),
                                           ),
-                                        )
+                                        ),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              border: Border.all()),
+                                          height: 300,
+                                          width: 380,
+                                          child: GoogleMap(
+                                            onMapCreated: (GoogleMapController
+                                                controller) {
+                                              mapController = controller;
+                                            },
+                                            initialCameraPosition:
+                                                CameraPosition(
+                                              target:
+                                                  LatLng(latitude!, longitude!),
+                                              zoom: 12.0,
+                                            ),
+                                            markers: <Marker>{
+                                              Marker(
+                                                markerId:
+                                                    MarkerId('initialPosition'),
+                                                position: LatLng(
+                                                    latitude!, longitude!),
+                                                infoWindow: InfoWindow(
+                                                  title: 'Marker Title',
+                                                  snippet: 'Marker Snippet',
+                                                ),
+                                              ),
+                                            },
+                                          ),
+                                        ),
+                                        SizedBox(height: 10,),
+                                        ElevatedButton.icon(
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.red),
+                                            onPressed: () {},
+                                            icon: Icon(Icons.delete,color: Colors.white,),
+                                            label: Text(
+                                              'ลบโพสต์',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ))
                                       ],
                                     ),
                                   )
