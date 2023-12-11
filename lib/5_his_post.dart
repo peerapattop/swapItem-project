@@ -55,6 +55,56 @@ class _HistoryPostState extends State<HistoryPost> {
     });
   }
 
+  void deletePost(String postKey) {
+    // Delete the post from the database using the post key
+    _postRef.child(postKey).remove().then((_) {
+      print("Post deleted successfully!");
+      setState(() {
+        // Remove the post from the list to update the UI
+        postsList.removeWhere((post) => post['post_uid'] == postKey);
+        // Reset selectedPost if it's the one being deleted
+        if (selectedPost != null && selectedPost!['post_uid'] == postKey) {
+          selectedPost = null;
+        }
+      });
+    }).catchError((error) {
+      print("Failed to delete post: $error");
+    });
+  }
+
+  void showDeleteConfirmation(BuildContext context, String postKey) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('ยืนยันการลบ'),
+          content: Text('คุณแน่ใจหรือไม่ที่จะลบโพสต์นี้?'),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red
+              ),
+              child: Text('ยกเลิก',style: TextStyle(color: Colors.white),),
+              onPressed: () {
+                Navigator.of(context).pop(); // ปิดหน้าต่างโดยไม่ลบ
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green
+              ),
+              child: Text('ลบ',style: TextStyle(color: Colors.white),),
+              onPressed: () {
+                Navigator.of(context).pop(); // ปิดหน้าต่างและลบโพสต์
+                deletePost(postKey);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void selectPayment(Map<dynamic, dynamic> postData) {
     setState(() {
       selectedPost = postData; // Update selectedPost with the chosen data
@@ -375,18 +425,28 @@ class _HistoryPostState extends State<HistoryPost> {
                                           height: 10,
                                         ),
                                         ElevatedButton.icon(
-                                            style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.red),
-                                            onPressed: () {},
-                                            icon: Icon(
-                                              Icons.delete,
-                                              color: Colors.white,
-                                            ),
-                                            label: Text(
-                                              'ลบโพสต์',
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.red),
+                                          onPressed: () {
+                                            if (selectedPost != null &&
+                                                selectedPost!
+                                                    .containsKey('post_uid')) {
+                                              showDeleteConfirmation(context,
+                                                  selectedPost!['post_uid']);
+                                            } else {
+                                              print(
+                                                  'No post selected for deletion.');
+                                              // Debug: Print the current state of selectedPost
+                                              print(
+                                                  'Current selectedPost: $selectedPost');
+                                            }
+                                          },
+                                          icon: Icon(Icons.delete,
+                                              color: Colors.white),
+                                          label: Text('ลบโพสต์',
                                               style: TextStyle(
-                                                  color: Colors.white),
-                                            ))
+                                                  color: Colors.white)),
+                                        )
                                       ],
                                     ),
                                   )
