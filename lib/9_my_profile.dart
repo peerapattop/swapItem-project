@@ -206,7 +206,7 @@ class _ProfileState extends State<Profile> {
                                       style: TextStyle(fontSize: 18),
                                     ),
                                     Text(
-                                     'ใช้ได้อีก : $remainingTime',
+                                      'ใช้ได้อีก : $remainingTime',
                                       style: TextStyle(fontSize: 7),
                                     )
                                   ],
@@ -221,96 +221,128 @@ class _ProfileState extends State<Profile> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  TextField(
-                                    readOnly: true,
-                                    controller: TextEditingController(
-                                        text: dataUser['id'].toString()),
-                                    decoration: const InputDecoration(
-                                        label: Text(
-                                          "หมายเลขผู้ใช้งาน",
-                                          style: TextStyle(fontSize: 20),
+                                  Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: TextField(
+                                          readOnly: true,
+                                          controller: TextEditingController(
+                                              text: dataUser['id'].toString()),
+                                          decoration: const InputDecoration(
+                                            label: Text(
+                                              "หมายเลขผู้ใช้งาน",
+                                              style: TextStyle(fontSize: 17),
+                                            ),
+                                            border: OutlineInputBorder(),
+                                            prefixIcon: Icon(Icons.tag),
+                                          ),
                                         ),
-                                        border: OutlineInputBorder(),
-                                        prefixIcon: Icon(Icons.tag)),
+                                      ),
+                                      const SizedBox(
+                                          width:
+                                              15), // Adds space between the two TextFields
+                                      Expanded(
+                                        child: TextField(
+                                          readOnly: true,
+                                          controller: TextEditingController(
+                                              text: dataUser['username']
+                                                  .toString()),
+                                          decoration: InputDecoration(
+                                            label: Text(
+                                              "ชื่อผู้ใช้",
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                            border: OutlineInputBorder(),
+                                            prefixIcon: Icon(Icons.person),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   const SizedBox(
                                     height: 15,
                                   ),
-                                  TextField(
-                                    controller: _firstNameController,
-                                    decoration: const InputDecoration(
-                                        label: Text(
-                                          "ชื่อ",
-                                          style: TextStyle(fontSize: 20),
+                                  Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: TextField(
+                                          controller: _firstNameController,
+                                          decoration: const InputDecoration(
+                                            label: Text(
+                                              "ชื่อ",
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                            border: OutlineInputBorder(),
+                                            prefixIcon: Icon(Icons.person),
+                                          ),
                                         ),
-                                        border: OutlineInputBorder(),
-                                        prefixIcon: Icon(Icons.person)),
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  TextField(
-                                    controller: _lastNameController,
-                                    decoration: InputDecoration(
-                                        label: Text(
-                                          "นามสกุล",
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                        border: OutlineInputBorder(),
-                                        prefixIcon: Icon(Icons.person)),
-                                  ),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  TextField(
-                                    readOnly: true,
-                                    controller: _genderController,
-                                    decoration: InputDecoration(
-                                        label: Text(
-                                          "เพศ",
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                        border: OutlineInputBorder(),
-                                        prefixIcon: Icon(Icons.male)),
-                                  ),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  TextField(
-                                    controller: _birthdayController,
-                                    onTap: () => _selectDate(context),
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'วันเกิด',
-                                      labelStyle: const TextStyle(
-                                        fontSize: 20,
                                       ),
-                                      hintStyle: const TextStyle(
-                                        fontStyle: FontStyle.italic,
+                                      const SizedBox(
+                                          width:
+                                              15), // Space between the two TextFields
+                                      Expanded(
+                                        child: TextField(
+                                          controller: _lastNameController,
+                                          decoration: InputDecoration(
+                                            label: Text(
+                                              "นามสกุล",
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                            border: OutlineInputBorder(),
+                                            prefixIcon: Icon(Icons.person),
+                                          ),
+                                        ),
                                       ),
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                      prefixIcon: Icon(Icons.date_range),
-                                      suffixIcon: Icon(Icons.arrow_drop_down),
-                                    ),
+                                    ],
                                   ),
                                   SizedBox(
                                     height: 15,
                                   ),
-                                  TextField(
-                                    readOnly: true,
-                                    controller: TextEditingController(
-                                        text: dataUser['username'].toString()),
-                                    decoration: InputDecoration(
-                                        label: Text(
-                                          "ชื่อผู้ใช้",
-                                          style: TextStyle(fontSize: 20),
+                                  Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: TextField(
+                                          readOnly: true,
+                                          controller: _genderController,
+                                          decoration: InputDecoration(
+                                            label: Text(
+                                              "เพศ",
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                            border: OutlineInputBorder(),
+                                            prefixIcon: Icon(Icons.male),
+                                          ),
                                         ),
-                                        border: OutlineInputBorder(),
-                                        prefixIcon: Icon(Icons.person)),
+                                      ),
+                                      const SizedBox(
+                                          width:
+                                              15), // Space between the two TextFields
+                                      Expanded(
+                                        child: TextField(
+                                          controller: _birthdayController,
+                                          style: TextStyle(fontSize: 15),
+                                          onTap: () => _selectDate(context),
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: 'วันเกิด',
+                                            labelStyle: const TextStyle(
+                                              fontSize: 20,
+                                            ),
+                                            hintStyle: const TextStyle(
+                                              fontStyle: FontStyle.italic,
+                                            ),
+                                            fillColor: Colors.white,
+                                            filled: true,
+                                            prefixIcon: Icon(Icons.date_range),
+                                            suffixIcon:
+                                                Icon(Icons.arrow_drop_down),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   SizedBox(
-                                    height: 10,
+                                    height: 15,
                                   ),
                                   TextField(
                                     readOnly: true,
