@@ -1,11 +1,10 @@
+import 'dart:io';
 import 'dart:math';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:swapitem/_login_page.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter/material.dart';
-import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class RegisPage extends StatefulWidget {
@@ -185,9 +184,9 @@ class _RegisPageState extends State<RegisPage> {
           .child(userCredential.user!.uid);
 
       Map userDataMap = {
-        'remainingTime':'',
-        'uid':uid,
-        'lastPostDate':'',
+        'remainingTime': '',
+        'uid': uid,
+        'lastPostDate': '',
         'makeofferCount': makeofferCount,
         'postCount': monthlyPostLimit,
         'status_user': 'ผู้ใช้ทั่วไป',

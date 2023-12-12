@@ -1,5 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:swapitem/11_detail.dart';
+import 'package:swapitem/11_detail1.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -69,6 +71,7 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                     dynamic userData = dataMap.values.elementAt(index);
                     String item_name = userData['item_name'].toString();
                     String item_name1 = userData['item_name1'].toString();
+                    String post_uid = userData['post_uid'].toString();
                     List<String> imageUrls =
                         List<String>.from(userData['imageUrls'] ?? []);
                     return Card(
@@ -128,6 +131,15 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                             padding: const EdgeInsets.all(8.0),
                             child: ElevatedButton(
                               onPressed: () {
+                                // ตรวจสอบว่าตัวแปร item_name ถูกกำหนดค่าไว้แล้วในส่วนของโค้ดที่เหมาะสม
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => ShowDetailAll(
+                                      postUid: post_uid,
+                                    ), // Changed to positional argument
+                                  ),
+                                );
+
                                 // Handle your button tap here
                               },
                               style: ElevatedButton.styleFrom(

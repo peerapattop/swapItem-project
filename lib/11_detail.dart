@@ -1,16 +1,46 @@
-import '12_makeAnOffer.dart';
 import 'package:flutter/material.dart';
-//หน้า 11
+import 'package:firebase_database/firebase_database.dart';
 
-class DetailItem extends StatelessWidget {
-  const DetailItem({super.key});
+class ShowDetailAll extends StatefulWidget {
+  final String postUid;
+
+  ShowDetailAll({required this.postUid});
+
+  @override
+  _ShowDetailAllState createState() => _ShowDetailAllState();
+}
+
+class _ShowDetailAllState extends State<ShowDetailAll> {
+  Map postData = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPostData();
+  }
+
+  void _loadPostData() {
+    FirebaseDatabase.instance
+        .ref('postitem/${widget.postUid}')
+        .once()
+        .then((DatabaseEvent databaseEvent) {
+      if (databaseEvent.snapshot.value != null) {
+        setState(() {
+          postData =
+              Map<String, dynamic>.from(databaseEvent.snapshot.value as Map);
+        });
+      }
+    }).catchError((error) {
+      // Handle errors here
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("รายละเอียดสินค้า"),
+          title: Text('Brand: ${postData['brand']}'),
           toolbarHeight: 40,
           centerTitle: true,
           flexibleSpace: Container(
@@ -117,12 +147,7 @@ class DetailItem extends StatelessWidget {
                             primary: Color.fromARGB(255, 31, 240,
                                 35), // ตั้งค่าสีพื้นหลังเป็นสีเขียว
                           ),
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => MakeAnOffer()),
-                            );
-                          },
+                          onPressed: () {},
                           child: Text(
                             "ยื่นข้อเสนอ",
                             style: TextStyle(
@@ -141,5 +166,24 @@ class DetailItem extends StatelessWidget {
         ),
       ),
     );
+    // Scaffold(
+    //   appBar: AppBar(
+    //     title: Text('Post Details'),
+    //   ),
+    //   body: postData.isNotEmpty
+    //       ? SingleChildScrollView(
+    //           child: Column(
+    //             crossAxisAlignment: CrossAxisAlignment.start,
+    //             children: <Widget>[
+    //               Text('Brand: ${postData['brand']}'),
+    //               Text('Date: ${postData['date']}'),
+    //               Text('Detail: ${postData['detail']}'),
+    //               // Add more widgets for each piece of data you want to display
+    //               // You can also add an image using Image.network if 'imageUrls' is available
+    //             ],
+    //           ),
+    //         )
+    //       : Center(child: CircularProgressIndicator()),
+    // );
   }
 }

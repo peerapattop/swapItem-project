@@ -1,63 +1,44 @@
-// GridView.builder(
-//   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//     crossAxisCount: 2, // จำนวนคอลัมน์
-//     childAspectRatio: 3 / 4, // อัตราส่วนความกว้างต่อความสูง
-//     crossAxisSpacing: 10, // ระยะห่างระหว่างคอลัมน์
-//     mainAxisSpacing: 10, // ระยะห่างระหว่างแถว
-//   ),
-//   itemCount: 10, // หรือจำนวนของข้อมูลที่คุณมี
-//   itemBuilder: (context, index) {
-//     return Card(
-//       clipBehavior: Clip.antiAlias,
-//       shape: RoundedRectangleBorder(
-//         borderRadius: BorderRadius.circular(10), // รูปทรงของการ์ด
-//       ),
-//       elevation: 5, // เงาของการ์ด
-//       margin: const EdgeInsets.all(10),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: <Widget>[
-//           // Assuming you have a method to get image URL for each item
-//           // Replace `getImageForItem(index)` with your own method or variable
-//           Image.network(
-//             getImageForItem(index),
-//             fit: BoxFit.cover, // This is to ensure the image covers the card width
-//             height: 150, // Set a fixed height for the image
-//             width: double.infinity,
-//           ),
-//           Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: Text(
-//               'ชื่อ: ชื่อสินค้า', // Replace with your item name
-//               style: TextStyle(
-//                 fontSize: 16,
-//                 fontWeight: FontWeight.bold,
-//               ),
-//             ),
-//           ),
-//           Padding(
-//             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-//             child: Text(
-//               'ตัวเลือกสินค้า: รายละเอียด', // Replace with your item details
-//               style: TextStyle(
-//                 fontSize: 14,
-//                 color: Colors.grey[600],
-//               ),
-//             ),
-//           ),
-//           Spacer(), // This will push the button to the end of the card
-//           ElevatedButton(
-//             onPressed: () {
-//               // Handle your button tap here
-//             },
-//             style: ElevatedButton.styleFrom(
-//               primary: Theme.of(context).primaryColor, // This is the background color of the button
-//               onPrimary: Colors.white, // This is the foreground color of the button
-//             ),
-//             child: Text('รายละเอียด'),
-//           ),
-//         ],
-//       ),
-//     );
-//   },
-// );
+import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/firebase_database.dart';
+
+class DetailItem extends StatelessWidget {
+  final String postId;
+  final DatabaseReference _postRef =
+      FirebaseDatabase.instance.ref().child('postitem');
+
+  DetailItem({super.key, required this.postId});
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("รายละเอียดสินค้า"),
+          // ... ส่วนที่เหลือของ UI ...
+        ),
+        body: FutureBuilder<DatabaseEvent>(
+          future: _getPostData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError) {
+              return Center(child: Text("Error: ${snapshot.error}"));
+            }
+            if (snapshot.hasData) {
+              // ใช้ข้อมูลที่ดึงมาที่นี่
+              // ตัวอย่าง: แสดงข้อมูลของสินค้า
+              return Text("ข้อมูลสินค้า: ${snapshot.data!.snapshot.value}");
+            }
+            return Center(child: Text("ไม่พบข้อมูล"));
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<DatabaseEvent> _getPostData() async {
+    return await _postRef.orderByChild("postId").equalTo(postId).once();
+  }
+}
