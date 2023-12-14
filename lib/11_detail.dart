@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ShowDetailAll extends StatefulWidget {
   final String postUid;
@@ -11,6 +12,9 @@ class ShowDetailAll extends StatefulWidget {
 }
 
 class _ShowDetailAllState extends State<ShowDetailAll> {
+  double? latitude;
+  double? longitude;
+  late GoogleMapController mapController;
   Map postData = {};
   List<String> image_post = [];
   final PageController _pageController = PageController();
@@ -38,6 +42,8 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
   }
 
   Widget _buildImageSlider() {
+    latitude = double.tryParse(postData['latitude'].toString());
+    longitude = double.tryParse(postData['longitude'].toString());
     return image_post.isEmpty
         ? SizedBox.shrink()
         : Column(
@@ -120,7 +126,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'หมายเลขโพสต์ : ${postData['post_uid']}',
+                      'หมายเลขโพสต์ : ${postData['postNumber']}',
                       style: TextStyle(fontSize: 20),
                     ),
                     Text(
@@ -154,13 +160,28 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                               .start, // Align text to the left
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 10), // Add left padding to the text
-                              child: Text(
-                                "สถานที่แลกเปลี่ยน : BTS อโศก",
-                                style: TextStyle(fontSize: 20),
-                              ),
-                            ),
+                                padding: const EdgeInsets.only(
+                                    left: 10), // Add left padding to the text
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                          "ชื่อสิ่งของ : ${postData['item_name']}",
+                                          style: TextStyle(fontSize: 20)),
+                                      Text("หมวดหมู่ : ${postData['type']}",
+                                          style: TextStyle(fontSize: 20)),
+                                      Text("ยี่ห้อ : ${postData['brand']}",
+                                          style: TextStyle(fontSize: 20)),
+                                      Text("รุ่น : ${postData['model']}",
+                                          style: TextStyle(fontSize: 20)),
+                                      Text("รายละเอียด : ${postData['detail']}",
+                                          style: TextStyle(fontSize: 20)),
+                                    ],
+                                  ),
+                                )),
                           ],
                         ),
                       ),
@@ -185,27 +206,72 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset("assets/images/shirt.png"),
+                          Container(
+                            width: MediaQuery.of(context).size.width -
+                                17, // Subtract 17 to account for padding and margin
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 214, 214, 212),
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment
+                                  .start, // Align text to the left
+                              children: [
+                                Padding(
+                                    padding: const EdgeInsets.only(
+                                        left:
+                                            10), // Add left padding to the text
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                              "ชื่อสิ่งของ : ${postData['item_name1']}",
+                                              style: TextStyle(fontSize: 20)),
+                                          Text("ยี่ห้อ : ${postData['brand1']}",
+                                              style: TextStyle(fontSize: 20)),
+                                          Text("รุ่น : ${postData['model1']}",
+                                              style: TextStyle(fontSize: 20)),
+                                          Text(
+                                              "รายละเอียด : ${postData['details1']}",
+                                              style: TextStyle(fontSize: 20)),
+                                        ],
+                                      ),
+                                    )),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
                     SizedBox(
                       height: 15,
                     ),
-                    Text(
-                      "ชื่อสิ่งของ : เสื้อ",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      "รุ่น : ST-Shirt",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      "รายละเอียด : เสื้อมีรอยขาดที่ชายเสื้อ",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    SizedBox(
-                      height: 10,
+                    Container(
+                      decoration: BoxDecoration(border: Border.all()),
+                      height: 300,
+                      width: 380,
+                      child: GoogleMap(
+                        onMapCreated: (GoogleMapController controller) {
+                          mapController = controller;
+                        },
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(latitude!, longitude!),
+                          zoom: 12.0,
+                        ),
+                        markers: <Marker>{
+                          Marker(
+                            markerId: MarkerId('initialPosition'),
+                            position: LatLng(latitude!, longitude!),
+                            infoWindow: InfoWindow(
+                              title: 'Marker Title',
+                              snippet: 'Marker Snippet',
+                            ),
+                          ),
+                        },
+                      ),
                     ),
                     Center(
                       child: Container(
