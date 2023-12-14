@@ -1,5 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-
+import 'package:image_picker/image_picker.dart';
 //หน้า 12
 
 class MakeAnOffer extends StatefulWidget {
@@ -10,13 +11,8 @@ class MakeAnOffer extends StatefulWidget {
 }
 
 class _MakeAnOfferState extends State<MakeAnOffer> {
-  List<String> category = <String>[
-    'เสื้อผ้า',
-    'รองเท้า',
-    'ของใช้ทั่วไป',
-    'อุปกรณ์อิเล็กทรอนิกส์'
-  ];
-  String dropdownValue = 'เสื้อผ้า';
+  List<File> _images = [];
+  final picker = ImagePicker();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -49,42 +45,76 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                     SizedBox(
                       height: 10,
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.asset("assets/images/shirt.png"),
-                        ],
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 10, right: 2, left: 2, bottom: 5),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(),
+                        ),
+                        width: 370,
+                        height: 280,
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: GridView.builder(
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                ),
+                                itemBuilder: (context, index) {
+                                  return index == 0
+                                      ? Center(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              IconButton(
+                                                icon: Icon(Icons.camera_alt),
+                                                onPressed: _images.length < 5
+                                                    ? takePicture
+                                                    : null,
+                                              ),
+                                              IconButton(
+                                                icon: Icon(Icons.image),
+                                                onPressed: _images.length < 5
+                                                    ? chooseImages
+                                                    : null,
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : Stack(
+                                          children: [
+                                            Image.file(
+                                              _images[index - 1],
+                                            ),
+                                            Positioned(
+                                              top: 0,
+                                              right: 0,
+                                              child: IconButton(
+                                                icon: Icon(Icons.close),
+                                                onPressed: () =>
+                                                    removeImage(index - 1),
+                                              ),
+                                            ),
+                                          ],
+                                        ); // Display the selected images with delete button
+                                },
+                                itemCount: _images.length + 1,
+                              ),
+                            ),
+                            Text(
+                              '${_images.length}/5',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(
                       height: 15, //height
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: DropdownMenu<String>(
-                        initialSelection: category.first,
-                        onSelected: (String? value) {
-                          // This is called when the user selects an item.
-                          setState(() {
-                            dropdownValue = value!;
-                          });
-                        },
-                        dropdownMenuEntries: category
-                            .map<DropdownMenuEntry<String>>((String value) {
-                          return DropdownMenuEntry<String>(
-                              value: value, label: value);
-                        }).toList(),
-                      ),
-                    ),
-                    ShowDataOffer("ชื่อสิ่งของ"),
-                    ShowDataOffer("ยี่ห้อ"),
-                    ShowDataOffer("รุ่น"),
-                    ShowDataOffer("รายละเอียด"),
                     SizedBox(
                       height: 10,
                     ),
@@ -117,27 +147,27 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
       ),
     );
   }
-}
 
-Widget ShowDataOffer(String label) {
-  return Padding(
-    padding: const EdgeInsets.all(5.0),
-    child: TextField(
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        labelText: '$label',
-        labelStyle: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-        hintStyle: TextStyle(
-          fontStyle: FontStyle.italic,
-        ),
-        fillColor: Colors.grey[200],
-        filled: true,
-      ),
-    ),
-  );
+  chooseImages() async {
+    List<XFile> pickedFiles = await picker.pickMultiImage();
+    setState(() {
+      _images.addAll(pickedFiles.map((pickedFile) => File(pickedFile.path)));
+    });
+  }
+
+  takePicture() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      setState(() {
+        _images.add(File(pickedFile.path));
+      });
+    }
+  }
+
+  void removeImage(int index) {
+    setState(() {
+      _images.removeAt(index);
+    });
+  }
 }
