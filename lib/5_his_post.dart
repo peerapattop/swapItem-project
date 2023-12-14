@@ -81,19 +81,21 @@ class _HistoryPostState extends State<HistoryPost> {
           content: Text('คุณแน่ใจหรือไม่ที่จะลบโพสต์นี้?'),
           actions: <Widget>[
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: Text(
+                'ยกเลิก',
+                style: TextStyle(color: Colors.white),
               ),
-              child: Text('ยกเลิก',style: TextStyle(color: Colors.white),),
               onPressed: () {
                 Navigator.of(context).pop(); // ปิดหน้าต่างโดยไม่ลบ
               },
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: Text(
+                'ลบ',
+                style: TextStyle(color: Colors.white),
               ),
-              child: Text('ลบ',style: TextStyle(color: Colors.white),),
               onPressed: () {
                 Navigator.of(context).pop(); // ปิดหน้าต่างและลบโพสต์
                 deletePost(postKey);
@@ -239,24 +241,6 @@ class _HistoryPostState extends State<HistoryPost> {
                                             Text(
                                               'หมายเลขโพสต์ : ' +
                                                   selectedPost!['postNumber'],
-                                              style: TextStyle(fontSize: 18),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              Icons
-                                                  .person, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                              color: Colors
-                                                  .blue, // เปลี่ยนสีไอคอนตามความต้องการ
-                                            ),
-                                            SizedBox(
-                                                width:
-                                                    8), // ระยะห่างระหว่างไอคอนและข้อความ
-                                            Text(
-                                              "ชื่อผู้โพสต์ : " +
-                                                  selectedPost!['username'],
                                               style: TextStyle(fontSize: 18),
                                             ),
                                           ],
@@ -446,7 +430,8 @@ class _HistoryPostState extends State<HistoryPost> {
                                           label: Text('ลบโพสต์',
                                               style: TextStyle(
                                                   color: Colors.white)),
-                                        )
+                                        ),
+                                        Divider(),
                                       ],
                                     ),
                                   )
