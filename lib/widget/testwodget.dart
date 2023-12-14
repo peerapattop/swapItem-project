@@ -46,7 +46,7 @@ void takePicture(List<File> images) async {
   final pickedFile = await picker.pickImage(source: ImageSource.camera);
 
   if (pickedFile != null) {
-    images.add(File(pickedFile.path!));
+    images.add(File(pickedFile.path));
     // Call setState here if needed
   }
 }
@@ -54,8 +54,6 @@ void takePicture(List<File> images) async {
 void chooseImages(List<File> images) async {
   final picker = ImagePicker();
   List<XFile> pickedFiles = await picker.pickMultiImage();
-  if (pickedFiles != null) {
-    images.addAll(pickedFiles.map((pickedFile) => File(pickedFile.path!)));
-    // Call setState here if needed
-  }
+  images.addAll(pickedFiles.map((pickedFile) => File(pickedFile.path)));
+  // Call setState here if needed
 }
