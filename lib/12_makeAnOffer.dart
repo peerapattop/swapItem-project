@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-//หน้า 12
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class MakeAnOffer extends StatefulWidget {
   const MakeAnOffer({super.key});
@@ -10,11 +11,41 @@ class MakeAnOffer extends StatefulWidget {
   State<MakeAnOffer> createState() => _MakeAnOfferState();
 }
 
+Future<void> _MakeAnOfferState1(BuildContext context) async {
+  try {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    DatabaseReference itemRef =
+        FirebaseDatabase.instance.ref().child('offer').push();
+    await itemRef.set(uid);
+  } catch (error) {
+    print('Error in buildPost: $error');
+    Navigator.pop(context);
+  }
+}
+
+List<String> category = <String>[
+  'เสื้อผ้า',
+  'รองเท้า',
+  'ของใช้ทั่วไป',
+  'อุปกรณ์อิเล็กทรอนิกส์',
+  'ของใช้ในบ้าน',
+  'อุปกรณ์กีฬา',
+  'เครื่องใช้ไฟฟ้า',
+  'ของเบ็ดเตล็ด',
+];
+String dropdownValue = category.first;
+
 class _MakeAnOfferState extends State<MakeAnOffer> {
+  final nameitem1 = TextEditingController();
+  final brand1 = TextEditingController();
+  final model1 = TextEditingController();
+  final detail1 = TextEditingController();
   List<File> _images = [];
   final picker = ImagePicker();
+
   @override
   Widget build(BuildContext context) {
+    var item_name1;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -48,72 +79,173 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                     Padding(
                       padding: const EdgeInsets.only(
                           top: 10, right: 2, left: 2, bottom: 5),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(),
-                        ),
-                        width: 370,
-                        height: 280,
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: GridView.builder(
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                ),
-                                itemBuilder: (context, index) {
-                                  return index == 0
-                                      ? Center(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                      child: Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                          ),
+                          width: 370,
+                          height: 280,
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: GridView.builder(
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                  ),
+                                  itemBuilder: (context, index) {
+                                    return index == 0
+                                        ? Center(
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                IconButton(
+                                                  icon: Icon(Icons.camera_alt),
+                                                  onPressed: _images.length < 5
+                                                      ? takePicture
+                                                      : null,
+                                                ),
+                                                IconButton(
+                                                  icon: Icon(Icons.image),
+                                                  onPressed: _images.length < 5
+                                                      ? chooseImages
+                                                      : null,
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        : Stack(
                                             children: [
-                                              IconButton(
-                                                icon: Icon(Icons.camera_alt),
-                                                onPressed: _images.length < 5
-                                                    ? takePicture
-                                                    : null,
+                                              Image.file(
+                                                _images[index - 1],
                                               ),
-                                              IconButton(
-                                                icon: Icon(Icons.image),
-                                                onPressed: _images.length < 5
-                                                    ? chooseImages
-                                                    : null,
+                                              Positioned(
+                                                top: 0,
+                                                right: 0,
+                                                child: IconButton(
+                                                  icon: Icon(Icons.close),
+                                                  onPressed: () =>
+                                                      removeImage(index - 1),
+                                                ),
                                               ),
                                             ],
-                                          ),
-                                        )
-                                      : Stack(
-                                          children: [
-                                            Image.file(
-                                              _images[index - 1],
-                                            ),
-                                            Positioned(
-                                              top: 0,
-                                              right: 0,
-                                              child: IconButton(
-                                                icon: Icon(Icons.close),
-                                                onPressed: () =>
-                                                    removeImage(index - 1),
-                                              ),
-                                            ),
-                                          ],
-                                        ); // Display the selected images with delete button
-                                },
-                                itemCount: _images.length + 1,
+                                          ); // Display the selected images with delete button
+                                  },
+                                  itemCount: _images.length + 1,
+                                ),
                               ),
-                            ),
-                            Text(
-                              '${_images.length}/5',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
+                              Text(
+                                '${_images.length}/5',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(
                       height: 15, //height
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 1.0,
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: DropdownButton<String>(
+                          value: dropdownValue,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              dropdownValue = newValue!;
+                            });
+                          },
+                          underline:
+                              Container(), // Remove the default underline
+                          items: category
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 7,
+                    ),
+                    TextField(
+                      controller: item_name1,
+                      decoration: InputDecoration(
+                          label: Text(
+                            "ชื่อสิ่งของ",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(
+                            Icons.shopping_bag,
+                          )),
+                    ),
+                    SizedBox(
+                      height: 7,
+                    ),
+                    TextField(
+                      controller: brand1,
+                      decoration: InputDecoration(
+                          label: Text(
+                            "ยี่ห้อ",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(
+                            Icons.shopping_bag,
+                          )),
+                    ),
+                    SizedBox(
+                      height: 7,
+                    ),
+                    TextField(
+                      controller: model1,
+                      decoration: InputDecoration(
+                          label: Text(
+                            "รุ่น",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(
+                            Icons.shopping_bag,
+                          )),
+                    ),
+                    SizedBox(
+                      height: 7,
+                    ),
+                    TextField(
+                      controller: detail1,
+                      decoration: InputDecoration(
+                          label: Text(
+                            "รายละเอียด",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(
+                            Icons.shopping_bag,
+                          )),
                     ),
                     SizedBox(
                       height: 10,
@@ -127,7 +259,9 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                             primary: Color.fromARGB(255, 31, 240,
                                 35), // ตั้งค่าสีพื้นหลังเป็นสีเขียว
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            _MakeAnOfferState1(context);
+                          },
                           child: Text(
                             "ยื่นข้อเสนอ",
                             style: TextStyle(
