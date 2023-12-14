@@ -62,7 +62,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                       ),
                     ),
                     SizedBox(
-                      height: 15,
+                      height: 15, //height
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
