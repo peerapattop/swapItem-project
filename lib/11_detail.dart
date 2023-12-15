@@ -101,7 +101,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("ประวัติการโพสต์"),
+          title: Text("ยื่นข้อเสนอ"),
           toolbarHeight: 40,
           centerTitle: true,
           flexibleSpace: Container(
@@ -120,31 +120,86 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 _buildImageSlider(),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'หมายเลขโพสต์ : ${postData['postNumber']}',
-                      style: TextStyle(fontSize: 20),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.numbers,
+                          color: Colors.blue,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          'หมายเลขโพสต์ : ${postData['postNumber']}',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
                     ),
-                    Text(
-                      "ชื่อผู้โพสต์ :  ${postData['username']}",
-                      style: TextStyle(fontSize: 20),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.person,
+                          color: Colors.blue,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "ชื่อผู้โพสต์ :  ${postData['username']}",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
                     ),
-                    Text(
-                      "วันที่โพสต์ : ${postData['date']}",
-                      style: TextStyle(fontSize: 20),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.date_range,
+                          color: Colors.blue,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "วันที่ : ${postData['date']}",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
                     ),
-                    Text(
-                      "เวลาโพสต์ : ${postData['time']}",
-                      style: TextStyle(fontSize: 20),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.lock_clock,
+                          color: Colors.blue,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "เวลา : ${postData['time']}",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
                     ),
-                    Text(
-                      "รายละเอียด : ${postData['detail']}",
-                      style: TextStyle(fontSize: 20),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.list,
+                          color: Colors.blue,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "รายละเอียด : ${postData['detail']}",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
@@ -161,28 +216,27 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                               .start, // Align text to the left
                           children: [
                             Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 10), // Add left padding to the text
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          "ชื่อสิ่งของ : ${postData['item_name']}",
-                                          style: TextStyle(fontSize: 20)),
-                                      Text("หมวดหมู่ : ${postData['type']}",
-                                          style: TextStyle(fontSize: 20)),
-                                      Text("ยี่ห้อ : ${postData['brand']}",
-                                          style: TextStyle(fontSize: 20)),
-                                      Text("รุ่น : ${postData['model']}",
-                                          style: TextStyle(fontSize: 20)),
-                                      Text("รายละเอียด : ${postData['detail']}",
-                                          style: TextStyle(fontSize: 20)),
-                                    ],
-                                  ),
-                                )),
+                              padding: const EdgeInsets.all(15.0),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        "ชื่อสิ่งของ : ${postData['item_name']}",
+                                        style: TextStyle(fontSize: 20)),
+                                    Text("หมวดหมู่ : ${postData['type']}",
+                                        style: TextStyle(fontSize: 20)),
+                                    Text("ยี่ห้อ : ${postData['brand']}",
+                                        style: TextStyle(fontSize: 20)),
+                                    Text("รุ่น : ${postData['model']}",
+                                        style: TextStyle(fontSize: 20)),
+                                    Text("รายละเอียด : ${postData['detail']}",
+                                        style: TextStyle(fontSize: 20)),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -219,28 +273,27 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                                   .start, // Align text to the left
                               children: [
                                 Padding(
-                                    padding: const EdgeInsets.only(
-                                        left:
-                                            10), // Add left padding to the text
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                              "ชื่อสิ่งของ : ${postData['item_name1']}",
-                                              style: TextStyle(fontSize: 20)),
-                                          Text("ยี่ห้อ : ${postData['brand1']}",
-                                              style: TextStyle(fontSize: 20)),
-                                          Text("รุ่น : ${postData['model1']}",
-                                              style: TextStyle(fontSize: 20)),
-                                          Text(
-                                              "รายละเอียด : ${postData['details1']}",
-                                              style: TextStyle(fontSize: 20)),
-                                        ],
-                                      ),
-                                    )),
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            "ชื่อสิ่งของ : ${postData['item_name1']}",
+                                            style: TextStyle(fontSize: 20)),
+                                        Text("ยี่ห้อ : ${postData['brand1']}",
+                                            style: TextStyle(fontSize: 20)),
+                                        Text("รุ่น : ${postData['model1']}",
+                                            style: TextStyle(fontSize: 20)),
+                                        Text(
+                                            "รายละเอียด : ${postData['details1']}",
+                                            style: TextStyle(fontSize: 20)),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -274,16 +327,15 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                         },
                       ),
                     ),
-                    Center(
-                      child: Container(
-                        width: 140,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 31, 240,
-                                35), // ตั้งค่าสีพื้นหลังเป็นสีเขียว
+                            backgroundColor: Color.fromARGB(255, 15, 239,
+                                19), // ตั้งค่าสีพื้นหลังเป็นสีเขียว
                           ),
                           onPressed: () {
-                            
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                   builder: (context) => MakeAnOffer()),
@@ -292,9 +344,11 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                           child: Text(
                             "ยื่นข้อเสนอ",
                             style: TextStyle(
-                              color: Colors.white, // ตั้งค่าสีข้อความเป็นสีดำ
-                              fontSize: 18, // ตั้งค่าขนาดข้อความ
-                            ),
+                                color: Colors.white, // ตั้งค่าสีข้อความเป็นสีดำ
+                                fontSize: 18,
+                                fontWeight:
+                                    FontWeight.bold // ตั้งค่าขนาดข้อความ
+                                ),
                           ),
                         ),
                       ),
