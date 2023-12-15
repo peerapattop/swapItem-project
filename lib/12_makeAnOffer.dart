@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class MakeAnOffer extends StatefulWidget {
@@ -26,9 +29,16 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
   final _brand1 = TextEditingController();
   final _model1 = TextEditingController();
   final _detail1 = TextEditingController();
-
+  final picker = ImagePicker();
+  List<File> _images = [];
   @override
   Widget build(BuildContext context) {
+    void removeImage(int index) {
+      setState(() {
+        _images.removeAt(index);
+      });
+    }
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -54,6 +64,68 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                 // ... Other UI elements here
                 SizedBox(
                   height: 10,
+                ),
+                Container(
+                  height: 300, // Set a fixed height for the GridView
+                  child: Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.black,
+                          width: 1.0,
+                        ),
+                      ),
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                        ),
+                        itemBuilder: (context, index) {
+                          return index == 0
+                              ? Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.camera_alt),
+                                        onPressed: _images.length < 5
+                                            ? takePicture
+                                            : null,
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.image),
+                                        onPressed: _images.length < 5
+                                            ? chooseImages
+                                            : null,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Stack(
+                                  children: [
+                                    Image.file(
+                                      _images[index - 1],
+                                      fit: BoxFit
+                                          .cover, // Ensures the image covers the cell
+                                    ),
+                                    Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child: IconButton(
+                                        icon: Icon(Icons.close),
+                                        onPressed: () => removeImage(index - 1),
+                                      ),
+                                    ),
+                                  ],
+                                ); // Display the selected images with delete button
+                        },
+                        itemCount: _images.length + 1,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 17,
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 10.0),
@@ -138,6 +210,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                 SizedBox(
                   height: 17,
                 ),
+
                 SizedBox(
                   height: 7,
                 ),
@@ -153,7 +226,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                       child: Text(
                         "ยื่นข้อเสนอ",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: const Color.fromARGB(255, 24, 14, 14),
                           fontSize: 18,
                         ),
                       ),
@@ -168,19 +241,64 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     );
   }
 
+  takePicture() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      setState(() {
+        _images.add(File(pickedFile.path));
+      });
+    }
+  }
+
+  chooseImages() async {
+    List<XFile> pickedFiles = await picker.pickMultiImage();
+    setState(() {
+      _images.addAll(pickedFiles.map((pickedFile) => File(pickedFile.path)));
+    });
+  }
+
   Future<void> _submitOffer() async {
     String uid = FirebaseAuth.instance.currentUser!.uid;
     DatabaseReference itemRef =
         FirebaseDatabase.instance.ref().child('offer').push();
-    Map dataRef = {
+
+    // First, upload images and collect their URLs.
+    List<String> imageUrls = await _uploadImages();
+
+    // Then, set the data with image URLs in the Realtime Database.
+    Map<String, dynamic> dataRef = {
       'uid': uid,
       'type1': dropdownValue,
       'nameitem1': _nameItem1.text.trim(),
       'brand1': _brand1.text.trim(),
       'model1': _model1.text.trim(),
       'detail1': _detail1.text.trim(),
+      'imageUrls': imageUrls, // Add the image URLs here
     };
+
     await itemRef.set(dataRef);
-    // Consider adding some feedback to the user after successful submission
+
+    // Provide feedback to the user.
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Offer submitted successfully')));
+  }
+
+  // A helper method to upload images and get their URLs.
+  Future<List<String>> _uploadImages() async {
+    List<String> imageUrls = [];
+
+    for (File image in _images) {
+      String imageName =
+          DateTime.now().millisecondsSinceEpoch.toString() + '.jpg';
+      Reference storageRef =
+          FirebaseStorage.instance.ref().child('images/$imageName');
+
+      await storageRef.putFile(image);
+      String imageUrl = await storageRef.getDownloadURL();
+      imageUrls.add(imageUrl);
+    }
+
+    return imageUrls;
   }
 }
