@@ -17,38 +17,38 @@ class _HistoryPaymentState extends State<HistoryPayment> {
   int _selectedIndex = -1;
   Map<dynamic, dynamic>? selectedPayment;
 
- @override
-void initState() {
-  super.initState();
-  _user = FirebaseAuth.instance.currentUser!;
-  _requestVipRef = FirebaseDatabase.instance.ref().child('requestvip');
-  selectedPayment = null;
+  @override
+  void initState() {
+    super.initState();
+    _user = FirebaseAuth.instance.currentUser!;
+    _requestVipRef = FirebaseDatabase.instance.ref().child('requestvip');
+    selectedPayment = null;
 
-  _requestVipRef
-      .orderByChild('user_uid')
-      .equalTo(_user.uid)
-      .limitToLast(1)
-      .onValue
-      .listen((event) {
-    if (event.snapshot.value != null) {
-      Map<dynamic, dynamic> data =
-          Map<dynamic, dynamic>.from(event.snapshot.value as Map);
-      var lastKey = data.keys.last;
-      var lastPayment = Map<dynamic, dynamic>.from(data[lastKey]);
+    _requestVipRef
+        .orderByChild('user_uid')
+        .equalTo(_user.uid)
+        .limitToLast(1)
+        .onValue
+        .listen((event) {
+      if (event.snapshot.value != null) {
+        Map<dynamic, dynamic> data =
+            Map<dynamic, dynamic>.from(event.snapshot.value as Map);
+        var lastKey = data.keys.last;
+        var lastPayment = Map<dynamic, dynamic>.from(data[lastKey]);
 
-      // Since we are listening to the last payment, we clear the list to ensure
-      // it only contains the latest payment and corresponds to the first button.
-      paymentsList.clear();
+        // Since we are listening to the last payment, we clear the list to ensure
+        // it only contains the latest payment and corresponds to the first button.
+        paymentsList.clear();
 
-      setState(() {
-        paymentsList.insert(0, lastPayment); // Insert at the start of the list
-        selectedPayment = lastPayment;
-        _selectedIndex = 0; // This ensures the first button is selected
-      });
-    }
-  });
-}
-
+        setState(() {
+          paymentsList.insert(
+              0, lastPayment); // Insert at the start of the list
+          selectedPayment = lastPayment;
+          _selectedIndex = 0; // This ensures the first button is selected
+        });
+      }
+    });
+  }
 
   void selectPayment(Map<dynamic, dynamic> paymentData) {
     setState(() {
@@ -130,7 +130,13 @@ void initState() {
                                         children: [
                                           Row(
                                             children: [
-                                              Icon(Icons.tag),
+                                              Icon(
+                                                Icons.tag,
+                                                color: Colors.blue,
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
                                               Text(
                                                 ' หมายเลขการชำระเงิน PAY-' +
                                                     selectedPayment![
@@ -141,7 +147,13 @@ void initState() {
                                           ),
                                           Row(
                                             children: [
-                                              Icon(Icons.date_range),
+                                              Icon(
+                                                Icons.date_range,
+                                                color: Colors.blue,
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
                                               Text(
                                                 ' วันที่ : ' +
                                                     selectedPayment!['date'],
@@ -151,7 +163,13 @@ void initState() {
                                           ),
                                           Row(
                                             children: [
-                                              Icon(Icons.timelapse),
+                                              Icon(
+                                                Icons.access_time_outlined,
+                                                color: Colors.blue,
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
                                               Text(
                                                 ' เวลา : ${selectedPayment!['time']} น.',
                                                 style: TextStyle(fontSize: 18),
@@ -160,7 +178,13 @@ void initState() {
                                           ),
                                           Row(
                                             children: [
-                                              Icon(Icons.list),
+                                              Icon(
+                                                Icons.list,
+                                                color: Colors.blue,
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
                                               Text(
                                                 ' แพ็กเกจ : ' +
                                                     selectedPayment!['packed'],
@@ -170,7 +194,13 @@ void initState() {
                                           ),
                                           Row(
                                             children: [
-                                              Icon(Icons.safety_check),
+                                              Icon(
+                                                Icons.safety_check,
+                                                color: Colors.blue,
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
                                               Text(
                                                 ' สถานะ : ' +
                                                     selectedPayment!['status'],

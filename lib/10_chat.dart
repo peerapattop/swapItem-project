@@ -27,50 +27,57 @@ class _ChatState extends State<Chat> {
           ),
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Container(
-                  height: 80,
-                  decoration: BoxDecoration(
-                    border: Border.all(),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        Image.asset("assets/images/profilesimson.png"),
-                        SizedBox(
-                          width: 15,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: GestureDetector(
+              onTap: () {
+                // Navigate to the chat detail page when the row is tapped
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChatDetail()),
+                );
+              },
+              child: Column(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(60),
+                        child: Image.asset(
+                          'assets/images/pramepree.png',
+                          height: 70,
+                          width: 70,
+                          fit: BoxFit.cover,
                         ),
-                        Text(
-                          "Username",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: GestureDetector(
-                            onTap: () {
-                              // Navigate to the new screen here
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ChatDetail(),
-                                ),
-                              );
-                            },
-                            child: Icon(Icons.chat),
+                      ),
+                      SizedBox(width: 15),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 5,
                           ),
-                        ),
-                      ],
-                    ),
+                          Text(
+                            'Shivam Gupta',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text('Hello, What are you doing?',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black45))
+                        ],
+                      ),
+                      Spacer(),
+                      Text(
+                        '4:30 PM',
+                        style: TextStyle(color: Colors.black45),
+                      ),
+                    ],
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
