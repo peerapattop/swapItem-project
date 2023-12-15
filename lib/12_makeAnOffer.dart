@@ -7,10 +7,8 @@ import 'package:firebase_database/firebase_database.dart';
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 class MakeAnOffer extends StatefulWidget {
-  String post_uid;
-  MakeAnOffer({
-    required this.post_uid,
-  });
+  final String postUid; // Make this final to comply with immutability
+  const MakeAnOffer({Key? key, required this.postUid}) : super(key: key);
 
   @override
   State<MakeAnOffer> createState() => _MakeAnOfferState();
@@ -37,6 +35,11 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
 
   List<File> _images = [];
   @override
+  void initState() {
+    super.initState();
+    dropdownValue = category.first; // Initialize in initState
+  }
+
   Widget build(BuildContext context) {
     void removeImage(int index) {
       setState(() {
@@ -267,6 +270,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
   }
 
   Future<void> _submitOffer() async {
+    String postUid = widget.postUid;
     String uid = FirebaseAuth.instance.currentUser!.uid;
     DatabaseReference itemRef =
         FirebaseDatabase.instance.ref().child('offer').push();
@@ -283,7 +287,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
       'model1': _model1.text.trim(),
       'detail1': _detail1.text.trim(),
       'imageUrls': imageUrls,
-      'post_uid': this.post_uid, // Add the image URLs here
+      'post_uid': postUid, // Add the image URLs here
     };
 
     await itemRef.set(dataRef);

@@ -342,7 +342,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      MakeAnOffer(post_uid: send_uid)),
+                                      MakeAnOffer(postUid: send_uid)),
                             );
                           },
                           child: Text(
