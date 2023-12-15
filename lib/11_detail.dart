@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swapitem/12_makeAnOffer.dart';
+import 'package:swapitem/trash/2_createpost.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -283,7 +284,6 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                                 35), // ตั้งค่าสีพื้นหลังเป็นสีเขียว
                           ),
                           onPressed: () {
-                            
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                   builder: (context) => MakeAnOffer()),

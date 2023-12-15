@@ -1,26 +1,12 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class MakeAnOffer extends StatefulWidget {
-  const MakeAnOffer({super.key});
+  const MakeAnOffer({Key? key}) : super(key: key);
 
   @override
   State<MakeAnOffer> createState() => _MakeAnOfferState();
-}
-
-Future<void> _MakeAnOfferState1(BuildContext context) async {
-  try {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-    DatabaseReference itemRef =
-        FirebaseDatabase.instance.ref().child('offer').push();
-    await itemRef.set(uid);
-  } catch (error) {
-    print('Error in buildPost: $error');
-    Navigator.pop(context);
-  }
 }
 
 List<String> category = <String>[
@@ -36,16 +22,13 @@ List<String> category = <String>[
 String dropdownValue = category.first;
 
 class _MakeAnOfferState extends State<MakeAnOffer> {
-  final nameitem1 = TextEditingController();
-  final brand1 = TextEditingController();
-  final model1 = TextEditingController();
-  final detail1 = TextEditingController();
-  List<File> _images = [];
-  final picker = ImagePicker();
+  final _nameItem1 = TextEditingController();
+  final _brand1 = TextEditingController();
+  final _model1 = TextEditingController();
+  final _detail1 = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    var item_name1;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -65,214 +48,117 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
           child: Padding(
             padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: 10),
+                // ... Other UI elements here
                 SizedBox(
                   height: 10,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 10,
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5.0),
+                    border: Border.all(
+                      color: Colors.grey,
+                      style: BorderStyle.solid,
+                      width: 1.0,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 10, right: 2, left: 2, bottom: 5),
-                      child: Center(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(),
+                  ),
+                  child: DropdownButton<String>(
+                    value: dropdownValue,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                    },
+                    underline: Container(),
+                    items:
+                        category.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.black,
                           ),
-                          width: 370,
-                          height: 280,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: GridView.builder(
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3,
-                                  ),
-                                  itemBuilder: (context, index) {
-                                    return index == 0
-                                        ? Center(
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                IconButton(
-                                                  icon: Icon(Icons.camera_alt),
-                                                  onPressed: _images.length < 5
-                                                      ? takePicture
-                                                      : null,
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(Icons.image),
-                                                  onPressed: _images.length < 5
-                                                      ? chooseImages
-                                                      : null,
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        : Stack(
-                                            children: [
-                                              Image.file(
-                                                _images[index - 1],
-                                              ),
-                                              Positioned(
-                                                top: 0,
-                                                right: 0,
-                                                child: IconButton(
-                                                  icon: Icon(Icons.close),
-                                                  onPressed: () =>
-                                                      removeImage(index - 1),
-                                                ),
-                                              ),
-                                            ],
-                                          ); // Display the selected images with delete button
-                                  },
-                                  itemCount: _images.length + 1,
-                                ),
-                              ),
-                              Text(
-                                '${_images.length}/5',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                            ],
-                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                SizedBox(
+                  height: 17,
+                ),
+                TextField(
+                  controller: _nameItem1,
+                  decoration: InputDecoration(
+                    labelText: 'ชื่อสิ่งของ', // Label text
+                    border:
+                        OutlineInputBorder(), // Creates a rounded border around the TextField
+                    prefixIcon:
+                        Icon(Icons.shopping_bag), // Icon inside the TextField
+                  ),
+                ),
+                SizedBox(
+                  height: 17,
+                ),
+                TextField(
+                  controller: _brand1,
+                  decoration: InputDecoration(
+                    labelText: 'ยี่ห้อ', // Label text
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.branding_watermark),
+                  ),
+                ),
+                SizedBox(
+                  height: 17,
+                ),
+                TextField(
+                  controller: _model1,
+                  decoration: InputDecoration(
+                    labelText: 'รุ่น', // Label text
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.model_training),
+                  ),
+                ),
+                SizedBox(
+                  height: 17,
+                ),
+                TextField(
+                  controller: _detail1,
+                  decoration: InputDecoration(
+                    labelText: 'รายละเอียด', // Label text
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.details),
+                  ),
+                  maxLines: null, // Allows for multi-line input
+                ),
+                SizedBox(
+                  height: 17,
+                ),
+                SizedBox(
+                  height: 7,
+                ),
+                // ... Other text fields
+                Center(
+                  child: Container(
+                    width: 360,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        _submitOffer();
+                      },
+                      child: Text(
+                        "ยื่นข้อเสนอ",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 15, //height
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 1.0,
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: DropdownButton<String>(
-                          value: dropdownValue,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              dropdownValue = newValue!;
-                            });
-                          },
-                          underline:
-                              Container(), // Remove the default underline
-                          items: category
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(
-                                value,
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 7,
-                    ),
-                    TextField(
-                      controller: item_name1,
-                      decoration: InputDecoration(
-                          label: Text(
-                            "ชื่อสิ่งของ",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(
-                            Icons.shopping_bag,
-                          )),
-                    ),
-                    SizedBox(
-                      height: 7,
-                    ),
-                    TextField(
-                      controller: brand1,
-                      decoration: InputDecoration(
-                          label: Text(
-                            "ยี่ห้อ",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(
-                            Icons.shopping_bag,
-                          )),
-                    ),
-                    SizedBox(
-                      height: 7,
-                    ),
-                    TextField(
-                      controller: model1,
-                      decoration: InputDecoration(
-                          label: Text(
-                            "รุ่น",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(
-                            Icons.shopping_bag,
-                          )),
-                    ),
-                    SizedBox(
-                      height: 7,
-                    ),
-                    TextField(
-                      controller: detail1,
-                      decoration: InputDecoration(
-                          label: Text(
-                            "รายละเอียด",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(
-                            Icons.shopping_bag,
-                          )),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Center(
-                      child: Container(
-                        width: 360,
-                        height: 50,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 31, 240,
-                                35), // ตั้งค่าสีพื้นหลังเป็นสีเขียว
-                          ),
-                          onPressed: () {
-                            _MakeAnOfferState1(context);
-                          },
-                          child: Text(
-                            "ยื่นข้อเสนอ",
-                            style: TextStyle(
-                              color: Colors.white, // ตั้งค่าสีข้อความเป็นสีดำ
-                              fontSize: 18, // ตั้งค่าขนาดข้อความ
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ],
             ),
@@ -282,26 +168,19 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     );
   }
 
-  chooseImages() async {
-    List<XFile> pickedFiles = await picker.pickMultiImage();
-    setState(() {
-      _images.addAll(pickedFiles.map((pickedFile) => File(pickedFile.path)));
-    });
-  }
-
-  takePicture() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
-
-    if (pickedFile != null) {
-      setState(() {
-        _images.add(File(pickedFile.path));
-      });
-    }
-  }
-
-  void removeImage(int index) {
-    setState(() {
-      _images.removeAt(index);
-    });
+  Future<void> _submitOffer() async {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    DatabaseReference itemRef =
+        FirebaseDatabase.instance.ref().child('offer').push();
+    Map dataRef = {
+      'uid': uid,
+      'type1': dropdownValue,
+      'nameitem1': _nameItem1.text.trim(),
+      'brand1': _brand1.text.trim(),
+      'model1': _model1.text.trim(),
+      'detail1': _detail1.text.trim(),
+    };
+    await itemRef.set(dataRef);
+    // Consider adding some feedback to the user after successful submission
   }
 }

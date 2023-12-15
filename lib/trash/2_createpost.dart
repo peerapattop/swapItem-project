@@ -1,94 +1,89 @@
-// import '1.dart';
-// import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_database/firebase_database.dart';
 
-// /// Flutter code sample for [BottomNavigationBar].
+class testImage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Firebase Image Upload',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: ImageUploadPage(),
+    );
+  }
+}
 
-// void main() => runApp(const createpost());
+class ImageUploadPage extends StatefulWidget {
+  @override
+  _ImageUploadPageState createState() => _ImageUploadPageState();
+}
 
-// class createpost extends StatelessWidget {
-//   const createpost({super.key});
+class _ImageUploadPageState extends State<ImageUploadPage> {
+  final ImagePicker _picker = ImagePicker();
+  XFile? _image;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return const MaterialApp(
-//       home: create_post(),
-//     );
-//   }
-// }
+  Future<void> _pickImage() async {
+    final XFile? selectedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = selectedImage;
+    });
+  }
 
-// class create_post extends StatefulWidget {
-//   const create_post({super.key});
+  Future<void> _uploadImage() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    if (_image == null) return;
 
-//   @override
-//   State<create_post> createState() => _create_postState();
-// }
+    final File file = File(_image!.path);
+    final String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    final FirebaseStorage storage = FirebaseStorage.instance;
+    final Reference ref = storage.ref().child('images/$fileName');
 
-// List<String> textFieldValues = [];
-// Widget textField(String text) => Padding(
-//       padding: const EdgeInsets.all(8.0),
-//       child: Column(
-//         children: [
-//           TextField(
-//             obscureText: true,
-//             decoration: InputDecoration(
-//               border: OutlineInputBorder(),
-//               labelText: text,
-//             ),
-//             onChanged: (value) {
-//               // เมื่อผู้ใช้ป้อนข้อมูลใน TextField
-//               textFieldValues.add(value);
-//             },
-//           ),
-//         ],
-//       ),
-//     );
+    try {
+      await ref.putFile(file);
+      final String downloadUrl = await ref.getDownloadURL();
 
-// class _create_postState extends State<create_post> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return SafeArea(
-//       child: Scaffold(
-//         appBar: AppBar(
-//           actions: <Widget>[
-//             IconButton(
-//               icon: Icon(
-//                 Icons.notification_important,
-//                 color: Colors.white,
-//               ),
-//               onPressed: () {
-//                 // do something
-//               },
-//             )
-//           ],
-//           toolbarHeight: 40,
-//           title: Text('สร้างโพสต์'),
-//           centerTitle: true,
-//           flexibleSpace: Container(
-//             decoration: BoxDecoration(
-//               image: DecorationImage(
-//                 image: AssetImage('basic_image/image 40.png'),
-//                 fit: BoxFit.fill,
-//               ),
-//             ),
-//           ),
-//         ),
-//         body: Center(
-//           child: Column(
-//             children: [
-//               Padding(
-//                 padding: const EdgeInsets.all(8.0),
-//                 child: Text('gg'),
-//               ),
-//               textField('gg'),
-//               textField('gg'),
-//               textField('gg'),
-//               textField('gg'),
-//               textField('gg'),
-//               textField('gg'),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+      final DatabaseReference dbRef = FirebaseDatabase.instance.ref('offer');
+      await dbRef.push().set({'url': downloadUrl, 'name': fileName});
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Image uploaded successfully')));
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Error uploading image: $e')));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Firebase Image Upload'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _image != null
+                ? Image.file(File(_image!.path))
+                : Text('No image selected'),
+            ElevatedButton(
+              onPressed: _pickImage,
+              child: Text('Pick Image'),
+            ),
+            ElevatedButton(
+              onPressed: _uploadImage,
+              child: Text('Upload Image'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
