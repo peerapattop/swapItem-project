@@ -4,9 +4,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_database/firebase_database.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 
 class MakeAnOffer extends StatefulWidget {
-  const MakeAnOffer({Key? key}) : super(key: key);
+  String post_uid;
+  MakeAnOffer({
+    required this.post_uid,
+  });
 
   @override
   State<MakeAnOffer> createState() => _MakeAnOfferState();
@@ -30,6 +34,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
   final _model1 = TextEditingController();
   final _detail1 = TextEditingController();
   final picker = ImagePicker();
+
   List<File> _images = [];
   @override
   Widget build(BuildContext context) {
@@ -60,24 +65,71 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 10),
-                Container(
-                  height: 300, // Set a fixed height for the GridView
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 1.0,
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 10, right: 2, left: 2, bottom: 5),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(),
                     ),
-                  ),
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
+                    width: 370,
+                    height: 280,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                            ),
+                            itemBuilder: (context, index) {
+                              return index == 0
+                                  ? Center(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          IconButton(
+                                            icon: Icon(Icons.camera_alt),
+                                            onPressed: _images.length < 5
+                                                ? takePicture
+                                                : null,
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.image),
+                                            onPressed: _images.length < 5
+                                                ? chooseImages
+                                                : null,
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : Stack(
+                                      children: [
+                                        Image.file(
+                                          _images[index - 1],
+                                        ),
+                                        Positioned(
+                                          top: 0,
+                                          right: 0,
+                                          child: IconButton(
+                                            icon: Icon(Icons.close),
+                                            onPressed: () =>
+                                                removeImage(index - 1),
+                                          ),
+                                        ),
+                                      ],
+                                    ); // Display the selected images with delete button
+                            },
+                            itemCount: _images.length + 1,
+                          ),
+                        ),
+                        Text(
+                          '${_images.length}/5',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ],
                     ),
-                    itemBuilder: (context, index) {
-                      // Your itemBuilder code
-                    },
-                    itemCount: _images.length + 1,
                   ),
                 ),
                 SizedBox(
@@ -230,7 +282,8 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
       'brand1': _brand1.text.trim(),
       'model1': _model1.text.trim(),
       'detail1': _detail1.text.trim(),
-      'imageUrls': imageUrls, // Add the image URLs here
+      'imageUrls': imageUrls,
+      'post_uid': this.post_uid, // Add the image URLs here
     };
 
     await itemRef.set(dataRef);

@@ -46,6 +46,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
   Widget _buildImageSlider() {
     latitude = double.tryParse(postData['latitude'].toString());
     longitude = double.tryParse(postData['longitude'].toString());
+
     return image_post.isEmpty
         ? SizedBox.shrink()
         : Column(
@@ -337,9 +338,11 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                                 19), // ตั้งค่าสีพื้นหลังเป็นสีเขียว
                           ),
                           onPressed: () {
+                            String send_uid = postData['post_uid'];
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                  builder: (context) => MakeAnOffer()),
+                                  builder: (context) =>
+                                      MakeAnOffer(post_uid: send_uid)),
                             );
                           },
                           child: Text(
