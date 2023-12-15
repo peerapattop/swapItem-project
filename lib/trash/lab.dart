@@ -2,6 +2,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:image_picker/image_picker.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_storage/firebase_storage.dart';
 // import 'package:firebase_database/firebase_database.dart';
 
 // class MakeAnOffer extends StatefulWidget {
@@ -18,11 +19,6 @@
 //   final _detail1 = TextEditingController();
 //   final picker = ImagePicker();
 //   List<File> _images = [];
-//   void removeImage(int index) {
-//     setState(() {
-//       _images.removeAt(index);
-//     });
-//   }
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -43,63 +39,31 @@
 //         ),
 //         body: SingleChildScrollView(
 //           child: Padding(
-//             padding: const EdgeInsets.all(10),
+//             padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
 //             child: Column(
 //               crossAxisAlignment: CrossAxisAlignment.start,
 //               children: [
 //                 SizedBox(height: 10),
 //                 Container(
-//                   height: 200, // Set a fixed height for the GridView
-//                   child: Expanded(
-//                     child: GridView.builder(
-//                       gridDelegate:
-//                           const SliverGridDelegateWithFixedCrossAxisCount(
-//                         crossAxisCount: 3,
-//                       ),
-//                       itemBuilder: (context, index) {
-//                         return index == 0
-//                             ? Center(
-//                                 child: Row(
-//                                   mainAxisAlignment: MainAxisAlignment.center,
-//                                   children: [
-//                                     IconButton(
-//                                       icon: Icon(Icons.camera_alt),
-//                                       onPressed: _images.length < 5
-//                                           ? takePicture
-//                                           : null,
-//                                     ),
-//                                     IconButton(
-//                                       icon: Icon(Icons.image),
-//                                       onPressed: _images.length < 5
-//                                           ? chooseImages
-//                                           : null,
-//                                     ),
-//                                   ],
-//                                 ),
-//                               )
-//                             : Stack(
-//                                 children: [
-//                                   Image.file(
-//                                     _images[index - 1],
-//                                   ),
-//                                   Positioned(
-//                                     top: 0,
-//                                     right: 0,
-//                                     child: IconButton(
-//                                       icon: Icon(Icons.close),
-//                                       onPressed: () => removeImage(index - 1),
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ); // Display the selected images with delete button
-//                       },
-//                       itemCount: _images.length + 1,
+//                   height: 300, // Set a fixed height for the GridView
+//                   decoration: BoxDecoration(
+//                     border: Border.all(
+//                       color: Colors.black,
+//                       width: 1.0,
 //                     ),
 //                   ),
+//                   child: GridView.builder(
+//                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+//                       crossAxisCount: 3,
+//                     ),
+//                     itemBuilder: (context, index) {
+//                       // Your itemBuilder code
+//                     },
+//                     itemCount: _images.length + 1,
+//                   ),
 //                 ),
-//                 SizedBox(height: 17),
-//                 // Dropdown, TextFields, and other widgets...
-//                 // Rest of your UI code
+//                 // ... Other UI elements here
+//                 // TextFields, DropdownButton, ElevatedButton, etc.
 //               ],
 //             ),
 //           ),
@@ -108,22 +72,5 @@
 //     );
 //   }
 
-//   takePicture() async {
-//     final pickedFile = await picker.pickImage(source: ImageSource.camera);
-
-//     if (pickedFile != null) {
-//       setState(() {
-//         _images.add(File(pickedFile.path));
-//       });
-//     }
-//   }
-
-//   chooseImages() async {
-//     List<XFile> pickedFiles = await picker.pickMultiImage();
-//     setState(() {
-//       _images.addAll(pickedFiles.map((pickedFile) => File(pickedFile.path)));
-//     });
-//   }
-//   // Functions like removeImage, takePicture, chooseImages, and _submitOffer go here
-//   // ...
+//   // ... Other methods such as takePicture, chooseImages, _uploadImages, _submitOffer
 // }

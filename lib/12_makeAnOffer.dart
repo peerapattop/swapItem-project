@@ -61,67 +61,23 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 10),
-                // ... Other UI elements here
-                SizedBox(
-                  height: 10,
-                ),
                 Container(
                   height: 300, // Set a fixed height for the GridView
-                  child: Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.black,
-                          width: 1.0,
-                        ),
-                      ),
-                      child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                        ),
-                        itemBuilder: (context, index) {
-                          return index == 0
-                              ? Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      IconButton(
-                                        icon: Icon(Icons.camera_alt),
-                                        onPressed: _images.length < 5
-                                            ? takePicture
-                                            : null,
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.image),
-                                        onPressed: _images.length < 5
-                                            ? chooseImages
-                                            : null,
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : Stack(
-                                  children: [
-                                    Image.file(
-                                      _images[index - 1],
-                                      fit: BoxFit
-                                          .cover, // Ensures the image covers the cell
-                                    ),
-                                    Positioned(
-                                      top: 0,
-                                      right: 0,
-                                      child: IconButton(
-                                        icon: Icon(Icons.close),
-                                        onPressed: () => removeImage(index - 1),
-                                      ),
-                                    ),
-                                  ],
-                                ); // Display the selected images with delete button
-                        },
-                        itemCount: _images.length + 1,
-                      ),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 1.0,
                     ),
+                  ),
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                    ),
+                    itemBuilder: (context, index) {
+                      // Your itemBuilder code
+                    },
+                    itemCount: _images.length + 1,
                   ),
                 ),
                 SizedBox(
