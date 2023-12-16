@@ -511,6 +511,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
     "https://cdn.pixabay.com/photo/2016/07/22/09/59/fruits-1534494_640.jpg",
   ];
   int mySlideindex = 0;
+  List<String> imageOffer = [];
 
   @override
   void initState() {
@@ -587,6 +588,8 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: paymentsList.asMap().entries.map((entry) {
+                        imageOffer =
+                            List<String>.from(selectedOffer!['imageUrls']);
                         int idx = entry.key;
                         Map<dynamic, dynamic> offerData = entry.value;
                         return Padding(
@@ -614,7 +617,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                             mySlideindex = value;
                                           });
                                         },
-                                        itemCount: foodList.length,
+                                        itemCount: imageOffer.length,
                                         itemBuilder: (context, index) {
                                           return Padding(
                                             padding: const EdgeInsets.all(20.0),
@@ -622,7 +625,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                 borderRadius:
                                                     BorderRadius.circular(20),
                                                 child: Image.network(
-                                                  foodList[index],
+                                                  imageOffer[index],
                                                   fit: BoxFit.cover,
                                                 )),
                                           );
@@ -689,7 +692,8 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                 width:
                                                     8), // ระยะห่างระหว่างไอคอนและข้อความ
                                             Text(
-                                              "วันที่ : "+selectedOffer!['date'],
+                                              "วันที่ : " +
+                                                  selectedOffer!['date'],
                                               style: myTextStyle(),
                                             ),
                                           ],
@@ -706,7 +710,9 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                 width:
                                                     8), // ระยะห่างระหว่างไอคอนและข้อความ
                                             Text(
-                                              "เวลา : " +selectedOffer!['time']+' น.',
+                                              "เวลา : " +
+                                                  selectedOffer!['time'] +
+                                                  ' น.',
                                               style: myTextStyle(),
                                             ),
                                           ],
@@ -734,23 +740,29 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  "ชื่อสิ่งของ : "+selectedOffer!['nameitem1'],
+                                                  "ชื่อสิ่งของ : " +
+                                                      selectedOffer![
+                                                          'nameitem1'],
                                                   style: myTextStyle(),
                                                 ),
                                                 Text(
-                                                  "หมวดหมู่ : "+selectedOffer!['type1'],
+                                                  "หมวดหมู่ : " +
+                                                      selectedOffer!['type1'],
                                                   style: myTextStyle(),
                                                 ),
                                                 Text(
-                                                  "ยี่ห้อ : "+selectedOffer!['brand1'],
+                                                  "ยี่ห้อ : " +
+                                                      selectedOffer!['brand1'],
                                                   style: myTextStyle(),
                                                 ),
                                                 Text(
-                                                  "รุ่น : "+selectedOffer!['model1'],
+                                                  "รุ่น : " +
+                                                      selectedOffer!['model1'],
                                                   style: myTextStyle(),
                                                 ),
                                                 Text(
-                                                  'รายละเอียด : '+selectedOffer!['detail1'],
+                                                  'รายละเอียด : ' +
+                                                      selectedOffer!['detail1'],
                                                   style: myTextStyle(),
                                                 ),
                                               ],
