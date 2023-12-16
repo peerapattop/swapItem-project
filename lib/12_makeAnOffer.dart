@@ -33,8 +33,11 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
   final _model1 = TextEditingController();
   final _detail1 = TextEditingController();
   final picker = ImagePicker();
+  DateTime now = DateTime.now();
+
   bool _isSubmitting = false;
   List<File> _images = [];
+
   @override
   void initState() {
     super.initState();
@@ -48,6 +51,16 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
       });
     }
 
+    String date1 = now.year.toString() +
+        "-" +
+        now.month.toString().padLeft(2, '0') +
+        "-" +
+        now.day.toString().padLeft(2, '0');
+    String time1 = now.hour.toString().padLeft(2, '0') +
+        ":" +
+        now.minute.toString().padLeft(2, '0') +
+        ":" +
+        now.second.toString().padLeft(2, '0');
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -241,8 +254,11 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                                 String? offerId = await _submitOffer();
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        MakeAnOfferSuccess(offer_id: offerId!),
+                                    builder: (context) => MakeAnOfferSuccess(
+                                      offer_id: offerId!,
+                                      date: date1,
+                                      time: time1,
+                                    ),
                                   ),
                                 );
                               } catch (e) {
@@ -305,7 +321,17 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
       'model1': _model1.text.trim(),
       'detail1': _detail1.text.trim(),
       'imageUrls': imageUrls,
-      'post_uid': postUid, // Add the image URLs here
+      'post_uid': postUid,
+      "date": now.year.toString() +
+          "-" +
+          now.month.toString().padLeft(2, '0') +
+          "-" +
+          now.day.toString().padLeft(2, '0'),
+      "time": now.hour.toString().padLeft(2, '0') +
+          ":" +
+          now.minute.toString().padLeft(2, '0') +
+          ":" +
+          now.second.toString().padLeft(2, '0'),
     };
 
     await itemRef.set(dataRef);

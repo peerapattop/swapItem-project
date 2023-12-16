@@ -71,6 +71,8 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                     String item_name = userData['item_name'].toString();
                     String item_name1 = userData['item_name1'].toString();
                     String post_uid = userData['post_uid'].toString();
+                    String lati = userData['latitude'].toString();
+                    String longti = userData['longitude'].toString();
                     List<String> imageUrls =
                         List<String>.from(userData['imageUrls'] ?? []);
                     return Card(
@@ -131,13 +133,21 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                             child: ElevatedButton(
                               onPressed: () {
                                 // ตรวจสอบว่าตัวแปร item_name ถูกกำหนดค่าไว้แล้วในส่วนของโค้ดที่เหมาะสม
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => ShowDetailAll(
-                                      postUid: post_uid,
-                                    ), // Changed to positional argument
-                                  ),
-                                );
+
+                                // Add a delay using Future.delayed
+                                Future.delayed(Duration(seconds: 1), () {
+                                  // หน่วงเวลา 1 วินาที
+                                  // After the delay, navigate to the new screen
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => ShowDetailAll(
+                                          postUid: post_uid,
+                                          longti: longti,
+                                          lati:
+                                              lati), // Changed to positional argument
+                                    ),
+                                  );
+                                });
 
                                 // Handle your button tap here
                               },
