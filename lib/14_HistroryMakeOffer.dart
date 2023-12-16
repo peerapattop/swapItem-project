@@ -503,13 +503,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
   List<Map<dynamic, dynamic>> paymentsList = [];
   int _selectedIndex = -1;
   Map<dynamic, dynamic>? selectedOffer;
-  List<String> foodList = [
-    "https://cdn.pixabay.com/photo/2010/12/13/10/05/berries-2277_1280.jpg",
-    "https://cdn.pixabay.com/photo/2015/12/09/17/11/vegetables-1085063_640.jpg",
-    "https://cdn.pixabay.com/photo/2017/01/20/15/06/oranges-1995056_640.jpg",
-    "https://cdn.pixabay.com/photo/2014/11/05/15/57/salmon-518032_640.jpg",
-    "https://cdn.pixabay.com/photo/2016/07/22/09/59/fruits-1534494_640.jpg",
-  ];
+
   int mySlideindex = 0;
   List<String> imageOffer = [];
 
@@ -639,7 +633,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                       width: 300,
                                       child: ListView.builder(
                                         scrollDirection: Axis.horizontal,
-                                        itemCount: foodList.length,
+                                        itemCount: imageOffer.length,
                                         itemBuilder: (context, index) {
                                           return Padding(
                                             padding: const EdgeInsets.all(20.0),
