@@ -349,10 +349,11 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                           ),
                           onPressed: () {
                             String send_uid = postData['post_uid'];
+                            String username = postData['username'];
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      MakeAnOffer(postUid: send_uid)),
+                                      MakeAnOffer(postUid: send_uid,username: username,)),
                             );
                           },
                           child: Text(

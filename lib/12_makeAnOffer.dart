@@ -9,8 +9,9 @@ import 'package:firebase_database/firebase_database.dart';
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 class MakeAnOffer extends StatefulWidget {
-  final String postUid; // Make this final to comply with immutability
-  const MakeAnOffer({Key? key, required this.postUid}) : super(key: key);
+  final String postUid;
+  final String username;
+  const MakeAnOffer({Key? key, required this.postUid,required this.username}) : super(key: key);
 
   @override
   State<MakeAnOffer> createState() => _MakeAnOfferState();
@@ -35,6 +36,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
   final _detail1 = TextEditingController();
   final picker = ImagePicker();
   DateTime now = DateTime.now();
+  String? username;
 
   bool _isSubmitting = false;
   List<File> _images = [];
@@ -43,6 +45,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
   void initState() {
     super.initState();
     dropdownValue = category.first; // Initialize in initState
+    username = widget.username;
   }
 
   Widget build(BuildContext context) {
@@ -327,6 +330,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     List<String> imageUrls = await _uploadImages();
     // Then, set the data with image URLs in the Realtime Database.
     Map<String, dynamic> dataRef = {
+      'username': username,
       'offerNumber': generateRandomNumber(),
       'uid': uid,
       'type1': dropdownValue,

@@ -141,8 +141,12 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                 } else if (snapshot.hasData) {
                                   Map<dynamic, dynamic> postItemData =
                                       snapshot.data as Map<dynamic, dynamic>;
-                                      
-                                  String username = postItemData['username'] ?? 'wait';
+
+                                  String username =
+                                      postItemData['username'] != null
+                                          ? postItemData['username']
+                                          : 'Username not available';
+
                                   print(username);
 
                                   return ListView(
