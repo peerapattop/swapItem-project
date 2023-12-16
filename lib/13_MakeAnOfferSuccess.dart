@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 
 class MakeAnOfferSuccess extends StatelessWidget {
   final String offer_id;
-  const MakeAnOfferSuccess({required this.offer_id});
+  final String date;
+  final String time;
+  const MakeAnOfferSuccess(
+      {required this.offer_id, required this.date, required this.time});
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +53,11 @@ class MakeAnOfferSuccess extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  "วันที่ 9 พฤษภาคม 2566",
+                  "$date",
                   style: TextStyle(fontSize: 20),
                 ),
                 Text(
-                  "เวลา 19:00 น.",
+                  "$time",
                   style: TextStyle(fontSize: 20),
                 ),
                 SizedBox(

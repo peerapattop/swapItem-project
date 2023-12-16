@@ -6,8 +6,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ShowDetailAll extends StatefulWidget {
   final String postUid;
+  final String longti;
+  final String lati;
 
-  ShowDetailAll({required this.postUid});
+  ShowDetailAll(
+      {required this.postUid, required this.longti, required this.lati});
 
   @override
   _ShowDetailAllState createState() => _ShowDetailAllState();
@@ -22,8 +25,11 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
   final PageController _pageController = PageController();
   @override
   void initState() {
+    _buildImageSlider();
     super.initState();
     _loadPostData();
+    latitude = double.tryParse(widget.lati);
+    longitude = double.tryParse(widget.longti);
   }
 
   void _loadPostData() {
@@ -36,17 +42,21 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
           postData =
               Map<String, dynamic>.from(databaseEvent.snapshot.value as Map);
           image_post = List<String>.from(postData['imageUrls'] ?? []);
+
+          // Handle the case where latitude or longitude is null after parsing
+          if (latitude == null || longitude == null) {
+            print('Error: Unable to parse latitude or longitude');
+            // You could set default values or show an error message
+          }
         });
       }
     }).catchError((error) {
       // Handle errors here
+      print('An error occurred while loading post data: $error');
     });
   }
 
   Widget _buildImageSlider() {
-    latitude = double.tryParse(postData['latitude'].toString());
-    longitude = double.tryParse(postData['longitude'].toString());
-
     return image_post.isEmpty
         ? SizedBox.shrink()
         : Column(
@@ -124,7 +134,6 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                 SizedBox(
                   height: 20,
                 ),
-                _buildImageSlider(),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
