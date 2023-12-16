@@ -33,7 +33,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
   final _model1 = TextEditingController();
   final _detail1 = TextEditingController();
   final picker = ImagePicker();
-
+  bool _isSubmitting = false;
   List<File> _images = [];
   @override
   void initState() {
@@ -232,15 +232,27 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                     width: 360,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () async {
-                        String? offerId = await _submitOffer();
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                MakeAnOfferSuccess(offer_id: offerId!),
-                          ),
-                        );
-                      },
+                      onPressed: !_isSubmitting
+                          ? () async {
+                              setState(() {
+                                _isSubmitting = true; // กำลังดำเนินการ
+                              });
+                              try {
+                                String? offerId = await _submitOffer();
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        MakeAnOfferSuccess(offer_id: offerId!),
+                                  ),
+                                );
+                              } catch (e) {
+                                // จัดการข้อผิดพลาดที่นี่ หากมี
+                              }
+                              setState(() {
+                                _isSubmitting = false; // ดำเนินการเสร็จสิ้น
+                              });
+                            }
+                          : null, // ป้องกันการกดซ้ำหากกำลังดำเนินการ
                       child: Text(
                         "ยื่นข้อเสนอ",
                         style: TextStyle(
