@@ -230,7 +230,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                     Text(
                                                       'ชื่อผู้ใช้ : ' +
                                                           selectedOffer![
-                                                              'username'],
+                                                              'username'],//ต้องแก้เป็น username ของผู้ใช้ที่กำลัง login
                                                       style: TextStyle(
                                                           fontSize: 18),
                                                     )
