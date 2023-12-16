@@ -137,6 +137,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    _buildImageSlider(),
                     Row(
                       children: [
                         Icon(
