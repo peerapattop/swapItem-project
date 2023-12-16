@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '14_HistroryMakeOffer.dart';
 //หน้า13
 
 class MakeAnOfferSuccess extends StatelessWidget {
@@ -7,7 +9,10 @@ class MakeAnOfferSuccess extends StatelessWidget {
   final String time;
   final int offerNumber;
   const MakeAnOfferSuccess(
-      {required this.offer_id, required this.date, required this.time,required this.offerNumber});
+      {required this.offer_id,
+      required this.date,
+      required this.time,
+      required this.offerNumber});
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +73,13 @@ class MakeAnOfferSuccess extends StatelessWidget {
                   width: 240,
                   height: 50,
                   child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => HistoryMakeOffer(),
+                          ),
+                        );
+                      },
                       child: Text(
                         "ประวัติการยื่นข้อเสนอ",
                         style: TextStyle(fontSize: 20),
