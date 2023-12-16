@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 //หน้า13
 
 class MakeAnOfferSuccess extends StatelessWidget {
-  const MakeAnOfferSuccess({super.key});
+  final String offer_id;
+  const MakeAnOfferSuccess({required this.offer_id});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("ยื่นข้อเสนอสำเร็จ"),
+          title: Text(offer_id),
           toolbarHeight: 40,
           centerTitle: true,
           flexibleSpace: Container(

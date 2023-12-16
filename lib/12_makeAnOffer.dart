@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:swapitem/13_MakeAnOfferSuccess.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_database/firebase_database.dart';
 // ignore_for_file: public_member_api_docs, sort_constructors_first
@@ -232,7 +233,13 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () async {
-                        _submitOffer();
+                        String? offerId = await _submitOffer();
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MakeAnOfferSuccess(offer_id: offerId!),
+                          ),
+                        );
                       },
                       child: Text(
                         "ยื่นข้อเสนอ",
@@ -269,7 +276,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     });
   }
 
-  Future<void> _submitOffer() async {
+  Future<String?> _submitOffer() async {
     String postUid = widget.postUid;
     String uid = FirebaseAuth.instance.currentUser!.uid;
     DatabaseReference itemRef =
@@ -277,7 +284,6 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
 
     // First, upload images and collect their URLs.
     List<String> imageUrls = await _uploadImages();
-
     // Then, set the data with image URLs in the Realtime Database.
     Map<String, dynamic> dataRef = {
       'uid': uid,
@@ -295,6 +301,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     // Provide feedback to the user.
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text('Offer submitted successfully')));
+    return itemRef.key;
   }
 
   // A helper method to upload images and get their URLs.
