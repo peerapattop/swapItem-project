@@ -61,7 +61,7 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                   ),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2, // จำนวนคอลัมน์
-                    childAspectRatio: 3 / 4, // อัตราส่วนความกว้างต่อความสูง
+                    childAspectRatio: 3 / 5.5, // อัตราส่วนความกว้างต่อความสูง
                     crossAxisSpacing: 3, // ระยะห่างระหว่างคอลัมน์
                     mainAxisSpacing: 3, // ระยะห่างระหว่างแถว
                   ),
@@ -104,11 +104,13 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
 
                           if (imageUrls.isNotEmpty)
                             Center(
-                              child: Image.network(
-                                imageUrls.first, // ใช้เฉพาะรูปแรก
-                                width: 70,
-                                height: 70,
-                                fit: BoxFit.cover,
+                              child: AspectRatio(
+                                aspectRatio:
+                                    1 / 1, // Ensure the image is square
+                                child: Image.network(
+                                  imageUrls.first,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           SizedBox(
@@ -119,7 +121,19 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                                 const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Center(
                               child: Text(
-                                'ต้องการแลกเปลี่ยนกับ: $item_name1', // Replace with your item details
+                                'ต้องการแลกเปลี่ยนกับ', // Replace with your item details
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: const Color.fromARGB(255, 22, 22, 22),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 6),
+                            child: Center(
+                              child: Text(
+                                '$item_name1', // Replace with your item details
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey[600],
