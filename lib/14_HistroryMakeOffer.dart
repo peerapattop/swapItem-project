@@ -142,7 +142,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                   Map<dynamic, dynamic> postItemData =
                                       snapshot.data as Map<dynamic, dynamic>;
                                       
-                                  String username = postItemData['username'];
+                                  String username = postItemData['username'] ?? 'wait';
                                   print(username);
 
                                   return ListView(
