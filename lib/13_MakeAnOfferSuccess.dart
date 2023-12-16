@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
+
+import '14_HistroryMakeOffer.dart';
 //หน้า13
 
 class MakeAnOfferSuccess extends StatelessWidget {
   final String offer_id;
   final String date;
   final String time;
+  final int offerNumber;
   const MakeAnOfferSuccess(
-      {required this.offer_id, required this.date, required this.time});
+      {required this.offer_id,
+      required this.date,
+      required this.time,
+      required this.offerNumber});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(offer_id),
+          title: Text('ยื่นข้อเสนอสำเร็จ'),
           toolbarHeight: 40,
           centerTitle: true,
           flexibleSpace: Container(
@@ -46,18 +52,18 @@ class MakeAnOfferSuccess extends StatelessWidget {
                   height: 40,
                 ),
                 Text(
-                  "หมายเลขการยื่นข้อเสนอ /0001",
+                  "หมายเลขการยื่นข้อเสนอ : $offerNumber",
                   style: TextStyle(fontSize: 20),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Text(
-                  "$date",
+                  "วันที่ : $date",
                   style: TextStyle(fontSize: 20),
                 ),
                 Text(
-                  "$time",
+                  "เวลา : $time",
                   style: TextStyle(fontSize: 20),
                 ),
                 SizedBox(
@@ -67,7 +73,13 @@ class MakeAnOfferSuccess extends StatelessWidget {
                   width: 240,
                   height: 50,
                   child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => HistoryMakeOffer(),
+                          ),
+                        );
+                      },
                       child: Text(
                         "ประวัติการยื่นข้อเสนอ",
                         style: TextStyle(fontSize: 20),

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -258,6 +259,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                                       offer_id: offerId!,
                                       date: date1,
                                       time: time1,
+                                      offerNumber: generateRandomNumber(),
                                     ),
                                   ),
                                 );
@@ -304,6 +306,17 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     });
   }
 
+  int generateRandomNumber() {
+    Random random = Random();
+    String randomNumber = '';
+
+    for (int i = 0; i < 5; i++) {
+      randomNumber += random.nextInt(10).toString();
+    }
+
+    return int.parse(randomNumber);
+  }
+
   Future<String?> _submitOffer() async {
     String postUid = widget.postUid;
     String uid = FirebaseAuth.instance.currentUser!.uid;
@@ -314,6 +327,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     List<String> imageUrls = await _uploadImages();
     // Then, set the data with image URLs in the Realtime Database.
     Map<String, dynamic> dataRef = {
+      'offerNumber': generateRandomNumber(),
       'uid': uid,
       'type1': dropdownValue,
       'nameitem1': _nameItem1.text.trim(),
