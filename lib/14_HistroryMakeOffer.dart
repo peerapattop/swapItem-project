@@ -163,7 +163,19 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
-                                  return CircularProgressIndicator();
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'กำลังดาวน์โหลด',
+                                        style: TextStyle(fontSize: 19),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      CircularProgressIndicator(),
+                                    ],
+                                  );
                                 } else if (snapshot.hasError) {
                                   return Text('Error: ${snapshot.error}');
                                 } else if (snapshot.hasData) {
@@ -658,7 +670,11 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                     );
                                   } else {
                                     // Handle the case when no post item is found
-                                    return Text('No post item found');
+                                    return Column(
+                                      children: [
+                                        Text('ไม่มีประวัติการยื่นข้อเสนอ'),
+                                      ],
+                                    );
                                   }
                                 } else {
                                   // Handle the case when snapshot has no data

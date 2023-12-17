@@ -249,6 +249,8 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                     width: 360,
                     height: 50,
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green),
                       onPressed: !_isSubmitting
                           ? () async {
                               setState(() {
@@ -267,7 +269,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                                   ),
                                 );
                               } catch (e) {
-                                // จัดการข้อผิดพลาดที่นี่ หากมี
+                                print(e);
                               }
                               setState(() {
                                 _isSubmitting = false; // ดำเนินการเสร็จสิ้น
@@ -277,7 +279,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                       child: Text(
                         "ยื่นข้อเสนอ",
                         style: TextStyle(
-                          color: const Color.fromARGB(255, 24, 14, 14),
+                          color: Colors.white,
                           fontSize: 18,
                         ),
                       ),
