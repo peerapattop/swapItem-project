@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HistoryMakeOffer extends StatefulWidget {
   const HistoryMakeOffer({Key? key}) : super(key: key);
@@ -17,11 +18,14 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
 
   int _selectedIndex = -1;
   Map<dynamic, dynamic>? selectedOffer;
+  double? latitude;
+  double? longitude;
 
   int mySlideindex = 0;
   List<String> imageOffer = [];
   List<String> imagePost = [];
   final PageController _pageController = PageController();
+  late GoogleMapController mapController;
 
   @override
   void initState() {
@@ -155,6 +159,10 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
 
                                     imagePost = List<String>.from(
                                         postItemData['imageUrls']);
+                                    latitude = double.tryParse(
+                                        postItemData['latitude'].toString());
+                                    longitude = double.tryParse(
+                                        postItemData['longitude'].toString());
 
                                     return ListView(
                                       children: [
@@ -572,35 +580,58 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                border: Border.all()),
+                                            height: 300,
+                                            width: 380,
+                                            child: GoogleMap(
+                                              onMapCreated: (GoogleMapController
+                                                  controller) {
+                                                mapController = controller;
+                                              },
+                                              initialCameraPosition:
+                                                  CameraPosition(
+                                                target: LatLng(
+                                                    latitude!, longitude!),
+                                                zoom: 12.0,
+                                              ),
+                                              markers: <Marker>{
+                                                Marker(
+                                                  markerId: MarkerId(
+                                                      'initialPosition'),
+                                                  position: LatLng(
+                                                      latitude!, longitude!),
+                                                  infoWindow: InfoWindow(
+                                                    title: 'Marker Title',
+                                                    snippet: 'Marker Snippet',
+                                                  ),
+                                                ),
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
                                           child: Center(
                                             child: Container(
                                               padding:
                                                   EdgeInsets.only(right: 10),
                                               width: 350,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(12.0),
-                                                child: ElevatedButton.icon(
-                                                  icon: Icon(Icons.chat,
+                                              child: ElevatedButton.icon(
+                                                icon: Icon(Icons.chat,
+                                                    color: Colors.white),
+                                                onPressed: () {},
+                                                style: ElevatedButton.styleFrom(
+                                                    padding: EdgeInsets.all(16),
+                                                    backgroundColor:
+                                                        Color.fromARGB(
+                                                            255, 41, 77, 250)),
+                                                label: Text(
+                                                  "แชท",
+                                                  style: TextStyle(
+                                                      fontSize: 16,
                                                       color: Colors.white),
-                                                  onPressed: () {},
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  16),
-                                                          backgroundColor:
-                                                              Color.fromARGB(
-                                                                  255,
-                                                                  41,
-                                                                  77,
-                                                                  250)),
-                                                  label: Text(
-                                                    "แชท",
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.white),
-                                                  ),
                                                 ),
                                               ),
                                             ),
