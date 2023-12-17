@@ -151,11 +151,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                   if (postItemList.isNotEmpty) {
                                     Map<dynamic, dynamic> postItemData =
                                         postItemList.first;
-                                    String username = postItemData['username'];
-                                    String postNumber =
-                                        postItemData['postNumber'];
-                                    String date = postItemData['date'];
-                                    String time = postItemData['time'];
+
                                     imagePost = List<String>.from(
                                         selectedOffer!['imageUrls']);
 
