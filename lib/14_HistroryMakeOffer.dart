@@ -83,11 +83,28 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
     }
   }
 
-  void selectPayment(Map<dynamic, dynamic> selectedOffer) {
+  void selectMakeOffer(Map<dynamic, dynamic> selectedOffer) {
     setState(() {
-      selectedOffer =
-          selectedOffer; // Update selectedPayment with the chosen data
+      this.selectedOffer = selectedOffer; // อัปเดต selectedOffer
+      // อัปเดต latitude และ longitude
+      latitude = double.tryParse(selectedOffer['latitude'].toString());
+      longitude = double.tryParse(selectedOffer['longitude'].toString());
+      // อาจจะต้องอัปเดต Google Maps ที่นี่
+      updateGoogleMapLocation(latitude, longitude);
     });
+  }
+
+  void updateGoogleMapLocation(double? lat, double? lng) {
+    if (lat != null && lng != null) {
+      mapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(lat, lng),
+            zoom: 12.0,
+          ),
+        ),
+      );
+    }
   }
 
   @override
@@ -677,13 +694,13 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
     );
   }
 
-  Widget buildCircularNumberButton(
-      int index, Map<dynamic, dynamic> paymentData) {
+  Widget buildCircularNumberButton(int index, Map<dynamic, dynamic> offerData) {
     return InkWell(
       onTap: () {
+        selectMakeOffer(offerData);
         setState(() {
           _selectedIndex = index; // Update the selected index
-          selectedOffer = paymentData; // Update the selected payment data
+          selectedOffer = offerData; // Update the selected payment data
         });
       },
       child: Container(
