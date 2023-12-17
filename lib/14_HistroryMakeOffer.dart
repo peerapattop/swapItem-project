@@ -142,13 +142,6 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                   Map<dynamic, dynamic> postItemData =
                                       snapshot.data as Map<dynamic, dynamic>;
 
-                                  String username =
-                                      postItemData['username'] != null
-                                          ? postItemData['username']
-                                          : 'Username not available';
-
-                                  print(username);
-
                                   return ListView(
                                     children: [
                                       Column(
@@ -220,22 +213,22 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                   children: [
                                                     const Icon(
                                                       Icons
-                                                          .person, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                                                          .tag, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
                                                       color: Colors
                                                           .blue, // เปลี่ยนสีไอคอนตามความต้องการ
                                                     ),
                                                     const SizedBox(
                                                         width:
                                                             8), // ระยะห่างระหว่างไอคอนและข้อความ
-                                                    Text(
-                                                      'ชื่อผู้ใช้ : ' +
+                                                            Text(
+                                                      "หมายเลขการยื่นข้อเสนอ : " +
                                                           selectedOffer![
-                                                              'username'],//ต้องแก้เป็น username ของผู้ใช้ที่กำลัง login
-                                                      style: TextStyle(
-                                                          fontSize: 18),
-                                                    )
+                                                              'offerNumber'].toString(),
+                                                      style: myTextStyle(),
+                                                    ),
                                                   ],
                                                 ),
+                                                
                                                 Row(
                                                   children: [
                                                     const Icon(
