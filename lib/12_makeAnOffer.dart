@@ -332,6 +332,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     List<String> imageUrls = await _uploadImages();
     // Then, set the data with image URLs in the Realtime Database.
     Map<String, dynamic> dataRef = {
+      'status':'รอการยืนยัน',
       'offerNumber': generateRandomNumber(),
       'uid': uid,
       'type1': dropdownValue,

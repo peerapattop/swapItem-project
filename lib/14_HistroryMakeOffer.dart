@@ -265,11 +265,31 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                 ),
                                               ),
                                             ),
+                                            
                                             Padding(
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Column(
                                                 children: [
+                                                  Row(
+                                                    children: [
+                                                      const Icon(
+                                                        Icons
+                                                            .notifications_active, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                                                        color: Colors
+                                                            .blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                                                      ),
+                                                      const SizedBox(
+                                                          width:
+                                                              8), // ระยะห่างระหว่างไอคอนและข้อความ
+                                                      Text(
+                                                        "สถานะ : " +selectedOffer![
+                                                                    'status']
+                                                                .toString(),
+                                                        style: myTextStyle(),
+                                                      ),
+                                                    ],
+                                                  ),
                                                   Row(
                                                     children: [
                                                       const Icon(
