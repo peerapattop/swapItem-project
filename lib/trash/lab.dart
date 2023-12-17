@@ -1,76 +1,45 @@
-// import 'dart:io';
-// import 'package:flutter/material.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:firebase_storage/firebase_storage.dart';
-// import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
 
-// class MakeAnOffer extends StatefulWidget {
-//   const MakeAnOffer({Key? key}) : super(key: key);
-
-//   @override
-//   State<MakeAnOffer> createState() => _MakeAnOfferState();
-// }
-
-// class _MakeAnOfferState extends State<MakeAnOffer> {
-//   final _nameItem1 = TextEditingController();
-//   final _brand1 = TextEditingController();
-//   final _model1 = TextEditingController();
-//   final _detail1 = TextEditingController();
-//   final picker = ImagePicker();
-//   List<File> _images = [];
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return SafeArea(
-//       child: Scaffold(
-//         appBar: AppBar(
-//           title: Text("ยื่นข้อเสนอ"),
-//           toolbarHeight: 40,
-//           centerTitle: true,
-//           flexibleSpace: Container(
-//             decoration: BoxDecoration(
-//               image: DecorationImage(
-//                 image: AssetImage('assets/images/image 40.png'),
-//                 fit: BoxFit.fill,
-//               ),
-//             ),
-//           ),
-//         ),
-//         body: SingleChildScrollView(
-//           child: Padding(
-//             padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 SizedBox(height: 10),
-//                 Container(
-//                   height: 300, // Set a fixed height for the GridView
-//                   decoration: BoxDecoration(
-//                     border: Border.all(
-//                       color: Colors.black,
-//                       width: 1.0,
-//                     ),
-//                   ),
-//                   child: GridView.builder(
-//                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//                       crossAxisCount: 3,
-//                     ),
-//                     itemBuilder: (context, index) {
-//                       // Your itemBuilder code
-//                     },
-//                     itemCount: _images.length + 1,
-//                   ),
-//                 ),
-//                 // ... Other UI elements here
-//                 // TextFields, DropdownButton, ElevatedButton, etc.
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   // ... Other methods such as takePicture, chooseImages, _uploadImages, _submitOffer
-// }
+Widget lol(BuildContext context) {
+  return ElevatedButton(
+    onPressed: () {
+      // Your press event here.
+    },
+    style: ButtonStyle(
+      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+          side: BorderSide(color: Colors.blue, width: 2),
+        ),
+      ),
+      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+        (Set<MaterialState> states) {
+          if (states.contains(MaterialState.pressed)) {
+            return Theme.of(context).colorScheme.primary.withOpacity(0.5);
+          }
+          return Colors.blue; // Use the component's default.
+        },
+      ),
+      padding: MaterialStateProperty.all(EdgeInsets.all(20)),
+    ),
+    child: Ink(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.green, Colors.blue],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: Container(
+        constraints: BoxConstraints(
+            minWidth: 88.0, minHeight: 36.0), // min sizes for Material buttons
+        alignment: Alignment.center,
+        child: Text(
+          'Gradient Button with outline',
+          textAlign: TextAlign.center,
+        ),
+      ),
+    ),
+  );
+}

@@ -1,13 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:swapitem/14_HistroryMakeOffer.dart';
-import 'package:swapitem/18_HistoryPayment.dart';
-import 'package:intl/intl.dart';
-import 'package:image_picker/image_picker.dart';
-
 import '5_his_post.dart';
 import '7_first_offer.dart';
+import 'package:intl/intl.dart';
+import 'widget/profile_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:swapitem/18_HistoryPayment.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:swapitem/14_HistroryMakeOffer.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -359,233 +359,103 @@ class _ProfileState extends State<Profile> {
                                   SizedBox(
                                     height: 15,
                                   ),
-                                  Center(
-                                    child: Container(
-                                      width: 200,
-                                      child: Column(
-                                        children: [
-                                          const SizedBox(
-                                            height: 14,
-                                          ),
-                                          Container(
-                                            width: 250,
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                _userRef.update({
-                                                  'firstname':
-                                                      _firstNameController.text,
-                                                  'lastname':
-                                                      _lastNameController.text,
-                                                  'gender':
-                                                      _genderController.text,
-                                                  'birthday':
-                                                      _birthdayController.text,
-                                                }).then((value) {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return AlertDialog(
-                                                        title: Text(
-                                                            'บันทึกข้อมูลสำเร็จ'),
-                                                        actions: [
-                                                          ElevatedButton(
-                                                            style:
-                                                                ElevatedButton
-                                                                    .styleFrom(
-                                                              backgroundColor:
-                                                                  Colors.green,
-                                                            ),
-                                                            onPressed: () {
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop(); // ปิด AlertDialog
-                                                            },
-                                                            child: Text(
-                                                              'ตกลง',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .white),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      );
-                                                    },
-                                                  );
-                                                });
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    const Color.fromARGB(
-                                                        255, 1, 135, 6),
-                                              ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize
-                                                    .min, // กำหนดให้ Row มีขนาดเท่ากับเนื้อหา
-                                                children: [
-                                                  Icon(
-                                                    Icons.save,
-                                                    color: Colors.white,
-                                                  ),
-                                                  SizedBox(
-                                                      width:
-                                                          8), // ระยะห่างระหว่างไอคอนและข้อความ
-                                                  Text(
-                                                    'บันทึกการแก้ไข',
-                                                    style: TextStyle(
-                                                      fontSize: 15,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 14,
-                                          ),
-                                          Container(
-                                            width: 250,
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OfferRequest(),
-                                                  ),
-                                                );
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.green,
-                                              ),
-                                              child: Text(
-                                                'ข้อเสนอที่เข้ามา',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 14,
-                                          ),
-                                          Container(
-                                            width: 250,
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        HistoryPost(),
-                                                  ),
-                                                );
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.green,
-                                              ),
-                                              child: Text(
-                                                'ประวัติการโพสต์',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 14,
-                                          ),
-                                          Container(
-                                            width: 500,
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        HistoryMakeOffer(),
-                                                  ),
-                                                );
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.green,
-                                              ),
-                                              child: SingleChildScrollView(
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      'ประวัติการยื่นข้อเสนอ',
-                                                      style: TextStyle(
-                                                          fontSize: 15,
-                                                          color: Colors.white),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 14,
-                                          ),
-                                          Container(
-                                            width: 250,
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        HistoryPayment(),
-                                                  ),
-                                                );
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.green,
-                                              ),
-                                              child: Text(
-                                                'ประวัติการชำระเงิน',
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 14,
-                                          ),
-                                          Container(
-                                            width: 250,
-                                            child: ElevatedButton.icon(
-                                              icon: const Icon(
-                                                Icons.logout,
-                                                color: Colors.white,
-                                              ),
-                                              onPressed: () {
-                                                _showSignOutConfirmationDialog();
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.red,
-                                              ),
-                                              label: Text(
-                                                'ออกจากระบบ',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
                                 ],
                               ),
-                            )
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                GradientButton(
+                                  text: 'บันทึกการแก้ไข',
+                                  onPressed: () {
+                                    _userRef.update({
+                                      'firstname': _firstNameController.text,
+                                      'lastname': _lastNameController.text,
+                                      'gender': _genderController.text,
+                                      'birthday': _birthdayController.text,
+                                    }).then((value) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('บันทึกข้อมูลสำเร็จ'),
+                                            actions: [
+                                              ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.green,
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(); // ปิด AlertDialog
+                                                },
+                                                child: Text(
+                                                  'ตกลง',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    });
+                                  },
+                                ),
+                                GradientButton(
+                                    text: 'ช้อเสนอที่เข้ามา',
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => OfferRequest(),
+                                        ),
+                                      );
+                                    }),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                GradientButton(
+                                    text: 'ประวัติการโพสต์',
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => HistoryPost(),
+                                        ),
+                                      );
+                                    }),
+                                GradientButton(
+                                    text: 'ประวัติการยื่นข้อเสนอ',
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              HistoryMakeOffer(),
+                                        ),
+                                      );
+                                    }),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                GradientButton(
+                                    text: 'ประวัติการชำระเงิน',
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              HistoryPayment(),
+                                        ),
+                                      );
+                                    }),
+                                GradientButton(
+                                    text: 'ออกจากระบบ',
+                                    onPressed: () {
+                                      _showSignOutConfirmationDialog();
+                                    }),
+                              ],
+                            ),
                           ],
                         ),
                       );
