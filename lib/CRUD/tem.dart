@@ -1,45 +1,82 @@
-// import 'package:flutter/material.dart';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
 
-// //จากนั้น, ให้ทำการเริ่มต้น Firebase ในฟังก์ชัน main:
-// mains() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await Firebase.initializeApp();
-// }
+class GradientButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onPressed;
 
-// final databaseReference = FirebaseDatabase.instance.reference();
+  const GradientButton({
+    Key? key,
+    required this.text,
+    required this.onPressed,
+  }) : super(key: key);
 
-// class ggp {
-//   Map postData = {};
-//   void createRecord() {
-//     databaseReference
-//         .child("1")
-//         .set({'title': 'Hello World', 'description': 'Welcome to Flutter'});
-//   }
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(
+                0xFFf6a5c1), // Adjust to the light pink color from the gradient
+            Color(
+                0xFF5fadcf), // Adjust to the light blue color from the gradient
+          ],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        borderRadius:
+            BorderRadius.circular(30), // Adjust border color and width
+      ),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: Colors
+              .transparent, // Ensures the button background is transparent
+          onSurface: Colors.white,
+          shadowColor: Colors.transparent, // No shadow for the button
+          shape: RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.circular(30), // Same roundness as the container
+          ),
+          padding: EdgeInsets.zero, // No additional padding inside the button
+        ),
+        onPressed: onPressed, // The action to perform on button tap
+        child: Ink(
+          // Use Ink widget to apply the same gradient and border to the button
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(
+                    0xFFf6a5c1), // Adjust to the light pink color from the gradient
+                Color(
+                    0xFF5fadcf), // Adjust to the light blue color from the gradient
+              ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+            borderRadius:
+                BorderRadius.circular(30), // Adjust border color and width
+          ),
+          child: Container(
+            alignment: Alignment.center,
+            constraints: BoxConstraints(
+                minWidth: double.infinity,
+                minHeight: 50), // Set minimum width and height of the button
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Color.fromRGBO(0, 0, 0, 1),
+                  fontSize: 20,
+                  fontWeight: FontWeight
+                      .bold), // Adjust text style to ensure visibility
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
-//   void _loadPostData() {
-//     FirebaseDatabase.instance
-//         .ref('offer/')
-//         .once()
-//         .then((DatabaseEvent databaseEvent) {
-//       if (databaseEvent.snapshot.value != null) {
-//         setState(() {
-//           postData =
-//               Map<String, dynamic>.from(databaseEvent.snapshot.value as Map);
-//           image_post = List<String>.from(postData['imageUrls'] ?? []);
-//         });
-//       }
-//     }).catchError((error) {
-//       // Handle errors here
-//     });
-//   }
 
-//   void updateData() {
-//     databaseReference.child('1').update({'description': 'Flutter is Awesome'});
-//   }
-// }
-
-// void deleteData() {
-//   databaseReference.child('1').remove();
-// }
+// Usage example:
