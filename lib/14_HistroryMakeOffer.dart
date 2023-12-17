@@ -21,6 +21,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
   int mySlideindex = 0;
   List<String> imageOffer = [];
   List<String> imagePost = [];
+  final PageController _pageController = PageController();
 
   @override
   void initState() {
@@ -153,7 +154,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                         postItemList.first;
 
                                     imagePost = List<String>.from(
-                                        selectedOffer!['imageUrls']);
+                                        postItemData['imageUrls']);
 
                                     return ListView(
                                       children: [
@@ -379,7 +380,11 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                                           .all(
                                                                               16),
                                                                   backgroundColor:
-                                                                      Color.fromARGB( 255,248,1,1)),
+                                                                      Color.fromARGB(
+                                                                          255,
+                                                                          248,
+                                                                          1,
+                                                                          1)),
                                                           label: Text(
                                                             "ลบข้อเสนอ",
                                                             style: TextStyle(
@@ -407,35 +412,10 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                           'รายละเอียดโพสต์',
                                           style: TextStyle(fontSize: 20),
                                         )),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 8, top: 8, right: 8),
-                                          child: SizedBox(
-                                            height: 300,
-                                            child: PageView.builder(
-                                              onPageChanged: (value) {
-                                                setState(() {
-                                                  mySlideindex = value;
-                                                });
-                                              },
-                                              itemCount: imagePost.length,
-                                              itemBuilder: (context, index) {
-                                                return Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      20.0),
-                                                  child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
-                                                      child: Image.network(
-                                                        imagePost[index],
-                                                        fit: BoxFit.cover,
-                                                      )),
-                                                );
-                                              },
-                                            ),
-                                          ),
+                                        SizedBox(
+                                          height: 30,
                                         ),
+                                        _buildImageSlider(),
                                         Padding(
                                           padding: const EdgeInsets.all(10.0),
                                           child: Column(
@@ -701,6 +681,59 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
         ),
       ),
     );
+  }
+
+  Widget _buildImageSlider() {
+    return imagePost.isEmpty
+        ? SizedBox.shrink()
+        : Column(
+            children: [
+              SizedBox(
+                height: 200, // Set your desired height for the image area
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: imagePost.length,
+                  itemBuilder: (context, index) {
+                    return Image.network(
+                      imagePost[index],
+                      width: 200,
+                      height: 100,
+                    );
+                  },
+                ),
+              ),
+              SizedBox(
+                  height:
+                      5), // Adjust the size of this SizedBox as needed for spacing
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back_ios, size: 30),
+                    onPressed: () {
+                      if (_pageController.page! > 0) {
+                        _pageController.previousPage(
+                          duration: Duration(milliseconds: 200),
+                          curve: Curves.easeIn,
+                        );
+                      }
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.arrow_forward_ios, size: 30),
+                    onPressed: () {
+                      if (_pageController.page! < imagePost.length - 1) {
+                        _pageController.nextPage(
+                          duration: Duration(milliseconds: 200),
+                          curve: Curves.easeIn,
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ],
+          );
   }
 }
 
