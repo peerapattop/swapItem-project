@@ -784,11 +784,9 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text('กำลังโหลด..'),
+                    Image.network('https://cdn-icons-png.flaticon.com/256/7465/7465523.png',width: 100,),
+                    SizedBox(height: 20,),
+                    Text('ไม่มีประวัติการยื่นข้อเสนอของคุณ',style: TextStyle(fontSize: 25),),
                   ],
                 ),
               );
