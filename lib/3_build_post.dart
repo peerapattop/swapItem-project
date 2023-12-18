@@ -131,6 +131,7 @@ class _NewPostState extends State<NewPost> {
       // ... ส่วนที่เหลือของโค้ดสำหรับการโพสต์
       String username = datamap['username'];
       String email = datamap['email'];
+      String imageUser = datamap['image_user'];
       DatabaseReference itemRef =
           FirebaseDatabase.instance.ref().child('postitem').push();
       List<String> imageUrls = await uploadImages(images);
@@ -140,6 +141,7 @@ class _NewPostState extends State<NewPost> {
 
       // บันทึก URL รูปภาพพร้อมกับข้อมูลอื่น ๆ ในฐานข้อมูล
       Map userDataMap = {
+        'imageUser':imageUser,
         'post_uid':postUid,
         'email': email,
         'postNumber': generateRandomPostNumber(),

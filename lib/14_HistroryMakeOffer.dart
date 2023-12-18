@@ -4,6 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'widget/chat_detail.dart';
+
 class HistoryMakeOffer extends StatefulWidget {
   const HistoryMakeOffer({Key? key}) : super(key: key);
 
@@ -13,7 +15,9 @@ class HistoryMakeOffer extends StatefulWidget {
 
 class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
   late User _user;
+  late String imageUser;
   late DatabaseReference _offerRef;
+  late DatabaseReference _postRef;
   List<Map<dynamic, dynamic>> offerList = [];
 
   int _selectedIndex = -1;
@@ -566,6 +570,23 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                               ),
                                               Row(
                                                 children: [
+                                                  const Icon(
+                                                    Icons.person,
+                                                    color: Colors.blue,
+                                                  ),
+                                                  const SizedBox(
+                                                      width:
+                                                          2), // ระยะห่างระหว่างไอคอนและข้อความ
+                                                  Text(
+                                                    "ชื่อผู้ใช้ : " +
+                                                        postItemData['username']
+                                                            .toString(),
+                                                    style: myTextStyle(),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
                                                   Icon(
                                                     Icons
                                                         .date_range, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
@@ -739,7 +760,18 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                               child: ElevatedButton.icon(
                                                 icon: Icon(Icons.chat,
                                                     color: Colors.white),
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ChatDetail(
+                                                                username:
+                                                                    postItemData[
+                                                                        'username'],
+                                                               
+                                                              )));
+                                                },
                                                 style: ElevatedButton.styleFrom(
                                                     padding: EdgeInsets.all(16),
                                                     backgroundColor:
@@ -784,9 +816,17 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.network('https://cdn-icons-png.flaticon.com/256/7465/7465523.png',width: 100,),
-                    SizedBox(height: 20,),
-                    Text('ไม่มีประวัติการยื่นข้อเสนอของคุณ',style: TextStyle(fontSize: 25),),
+                    Image.network(
+                      'https://cdn-icons-png.flaticon.com/256/7465/7465523.png',
+                      width: 100,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'ไม่มีประวัติการยื่นข้อเสนอของคุณ',
+                      style: TextStyle(fontSize: 25),
+                    ),
                   ],
                 ),
               );
