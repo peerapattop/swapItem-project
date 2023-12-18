@@ -47,7 +47,6 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     super.initState();
     dropdownValue = category.first; // Initialize in initState
   }
-  
 
   Widget build(BuildContext context) {
     void removeImage(int index) {
@@ -322,49 +321,133 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
 
     return int.parse(randomNumber);
   }
-  
 
   Future<String?> _submitOffer() async {
-    String postUid = widget.postUid;
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-    DatabaseReference itemRef =
-        FirebaseDatabase.instance.ref().child('offer').push();
-    String? offerUid = itemRef.key;
-    // First, upload images and collect their URLs.
-    List<String> imageUrls = await _uploadImages();
-    // Then, set the data with image URLs in the Realtime Database.
-    Map<String, dynamic> dataRef = {
-      'status': 'รอการยืนยัน',
-      'offer_uid': offerUid,
-      'offerNumber': generateRandomNumber(),
-      'uid': uid,
-      'type1': dropdownValue,
-      'nameitem1': _nameItem1.text.trim(),
-      'brand1': _brand1.text.trim(),
-      'model1': _model1.text.trim(),
-      'detail1': _detail1.text.trim(),
-      'imageUrls': imageUrls,
-      'post_uid': postUid,
-      "date": now.year.toString() +
-          "-" +
-          now.month.toString().padLeft(2, '0') +
-          "-" +
-          now.day.toString().padLeft(2, '0'),
-      "time": now.hour.toString().padLeft(2, '0') +
-          ":" +
-          now.minute.toString().padLeft(2, '0') +
-          ":" +
-          now.second.toString().padLeft(2, '0'),
-    };
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      DatabaseReference userRef =
+          FirebaseDatabase.instance.ref().child('users').child(uid);
+      DatabaseEvent userDataSnapshot = await userRef.once();
+      Map<dynamic, dynamic> datamap =
+          userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
+      int currentOfferCount = datamap['makeofferCount'] as int? ?? 0;
 
-    await itemRef.set(dataRef);
+      if (currentOfferCount > 0 || canPostAfter30Days(userRef, datamap)) {
+        // ลดค่า postCount
+        if (currentOfferCount > 0) {
+          await userRef.update({
+            'makeofferCount': currentOfferCount - 1,
+            'lastOfferDate': DateTime.now().toString(),
+          });
+        }
+        String postUid = widget.postUid;
+        String uid = FirebaseAuth.instance.currentUser!.uid;
+        DatabaseReference itemRef =
+            FirebaseDatabase.instance.ref().child('offer').push();
+        String? offerUid = itemRef.key;
+        // First, upload images and collect their URLs.
+        List<String> imageUrls = await _uploadImages();
+        // Then, set the data with image URLs in the Realtime Database.
+        Map<String, dynamic> dataRef = {
+          'status': 'รอการยืนยัน',
+          'offer_uid': offerUid,
+          'offerNumber': generateRandomNumber(),
+          'uid': uid,
+          'type1': dropdownValue,
+          'nameitem1': _nameItem1.text.trim(),
+          'brand1': _brand1.text.trim(),
+          'model1': _model1.text.trim(),
+          'detail1': _detail1.text.trim(),
+          'imageUrls': imageUrls,
+          'post_uid': postUid,
+          "date": now.year.toString() +
+              "-" +
+              now.month.toString().padLeft(2, '0') +
+              "-" +
+              now.day.toString().padLeft(2, '0'),
+          "time": now.hour.toString().padLeft(2, '0') +
+              ":" +
+              now.minute.toString().padLeft(2, '0') +
+              ":" +
+              now.second.toString().padLeft(2, '0'),
+        };
 
-    // Provide feedback to the user.
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('Offer submitted successfully')));
-    return itemRef.key;
+        await itemRef.set(dataRef);
+        return itemRef.key;
+      }
+    } catch (error) {
+      
+      Navigator.pop(context);
+    }
+    return null;
   }
-  
+
+  bool canPostAfter30Days(
+      DatabaseReference userRef, Map<dynamic, dynamic> userData) {
+    // Check if last post date is available
+    if (userData.containsKey('lastOfferDate')) {
+      DateTime lastOfferDate =
+          DateTime.parse(userData['lastOfferDate'].toString());
+      DateTime currentDate = DateTime.now();
+
+      // Check if 30 days have passed since the last post
+      if (currentDate.difference(lastOfferDate).inDays >= 30) {
+        // Reset post count and update last post date
+        userRef.set({
+          'makeofferCount': 5,
+          'lastOfferDate': currentDate.toIso8601String(),
+        });
+        return true;
+      } else {
+        Duration remainingTime =
+            lastOfferDate.add(Duration(days: 30)).difference(currentDate);
+
+        // Extract days, hours, minutes, and seconds from the remaining time
+        int daysRemaining = remainingTime.inDays;
+        int hoursRemaining = remainingTime.inHours % 24;
+        int minutesRemaining = remainingTime.inMinutes % 60;
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Row(
+                children: [
+                  Image.network(
+                    'https://cdn-icons-png.flaticon.com/128/9068/9068699.png',
+                    width: 40,
+                  ),
+                  Text(
+                    ' ไม่สามารถยื่นข้อเสนอได้',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+              content: Text(
+                'เนื่องจากครบจำนวนการยื่นข้อเสนอ 5 ครั้ง/เดือน \nโปรดรอ : $daysRemaining วัน $hoursRemaining ชั่วโมง $minutesRemaining นาที\nหรือสมัคร VIP เพื่อโพสต์หรือยื่นข้อเสนอได้ไม่จำกัด',
+                style: TextStyle(fontSize: 18),
+              ),
+              actions: <Widget>[
+                ElevatedButton(
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'ยืนยัน',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
+
+    return false;
+  }
 
   // A helper method to upload images and get their URLs.
   Future<List<String>> _uploadImages() async {
