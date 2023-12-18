@@ -107,6 +107,58 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
     }
   }
 
+  void deleteOffer(String offerKey) {
+    // Delete the post from the database using the post key
+    _offerRef.child(offerKey).remove().then((_) {
+      print("Offer deleted successfully!");
+      setState(() {
+        // Remove the post from the list to update the UI
+        offerList.removeWhere((post) => post['offer_uid'] == offerKey);
+        // Reset selectedPost if it's the one being deleted
+        if (selectedOffer != null && selectedOffer!['offer_uid'] == offerKey) {
+          selectedOffer = null;
+        }
+      });
+    }).catchError((error) {
+      print("Failed to delete offer: $error");
+    });
+  }
+
+  void showDeleteConfirmation(BuildContext context, String offerKey) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('ยืนยันการลบ'),
+          content: Text('คุณแน่ใจหรือไม่ที่จะลบข้อเสนอนี้?'),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: Text(
+                'ยกเลิก',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // ปิดหน้าต่างโดยไม่ลบ
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: Text(
+                'ลบ',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // ปิดหน้าต่างและลบโพสต์
+                deleteOffer(offerKey);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -265,7 +317,6 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                 ),
                                               ),
                                             ),
-                                            
                                             Padding(
                                               padding:
                                                   const EdgeInsets.all(8.0),
@@ -283,7 +334,8 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                           width:
                                                               8), // ระยะห่างระหว่างไอคอนและข้อความ
                                                       Text(
-                                                        "สถานะ : " +selectedOffer![
+                                                        "สถานะ : " +
+                                                            selectedOffer![
                                                                     'status']
                                                                 .toString(),
                                                         style: myTextStyle(),
@@ -429,7 +481,24 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                               Icons.delete,
                                                               color:
                                                                   Colors.white),
-                                                          onPressed: () {},
+                                                          onPressed: () {
+                                                            if (selectedOffer !=
+                                                                    null &&
+                                                                selectedOffer!
+                                                                    .containsKey(
+                                                                        'offer_uid')) {
+                                                              showDeleteConfirmation(
+                                                                  context,
+                                                                  selectedOffer![
+                                                                      'offer_uid']);
+                                                            } else {
+                                                              print(
+                                                                  'No post selected for deletion.');
+                                                              // Debug: Print the current state of selectedPost
+                                                              print(
+                                                                  'Current selectedPost: $selectedOffer');
+                                                            }
+                                                          },
                                                           style: ElevatedButton
                                                               .styleFrom(
                                                                   padding:
