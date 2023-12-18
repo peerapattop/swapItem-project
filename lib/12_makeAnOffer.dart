@@ -47,6 +47,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     super.initState();
     dropdownValue = category.first; // Initialize in initState
   }
+  
 
   Widget build(BuildContext context) {
     void removeImage(int index) {
@@ -249,6 +250,8 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                     width: 360,
                     height: 50,
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green),
                       onPressed: !_isSubmitting
                           ? () async {
                               setState(() {
@@ -267,7 +270,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                                   ),
                                 );
                               } catch (e) {
-                                // จัดการข้อผิดพลาดที่นี่ หากมี
+                                print(e);
                               }
                               setState(() {
                                 _isSubmitting = false; // ดำเนินการเสร็จสิ้น
@@ -277,7 +280,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                       child: Text(
                         "ยื่นข้อเสนอ",
                         style: TextStyle(
-                          color: const Color.fromARGB(255, 24, 14, 14),
+                          color: Colors.white,
                           fontSize: 18,
                         ),
                       ),
@@ -319,17 +322,20 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
 
     return int.parse(randomNumber);
   }
+  
 
   Future<String?> _submitOffer() async {
     String postUid = widget.postUid;
     String uid = FirebaseAuth.instance.currentUser!.uid;
     DatabaseReference itemRef =
         FirebaseDatabase.instance.ref().child('offer').push();
-
+    String? offerUid = itemRef.key;
     // First, upload images and collect their URLs.
     List<String> imageUrls = await _uploadImages();
     // Then, set the data with image URLs in the Realtime Database.
     Map<String, dynamic> dataRef = {
+      'status': 'รอการยืนยัน',
+      'offer_uid': offerUid,
       'offerNumber': generateRandomNumber(),
       'uid': uid,
       'type1': dropdownValue,
@@ -358,6 +364,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
         .showSnackBar(SnackBar(content: Text('Offer submitted successfully')));
     return itemRef.key;
   }
+  
 
   // A helper method to upload images and get their URLs.
   Future<List<String>> _uploadImages() async {

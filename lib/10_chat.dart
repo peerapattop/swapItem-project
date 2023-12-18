@@ -33,10 +33,10 @@ class _ChatState extends State<Chat> {
             child: GestureDetector(
               onTap: () {
                 // Navigate to the chat detail page when the row is tapped
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ChatDetail()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => ChatDetail()),
+                // );
               },
               child: Column(
                 children: [
