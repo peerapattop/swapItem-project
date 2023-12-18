@@ -113,7 +113,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("ยื่นข้อเสนอ"),
+          title: Text("รายละเอียดสินค้า"),
           toolbarHeight: 40,
           centerTitle: true,
           flexibleSpace: Container(
@@ -352,8 +352,10 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                             String username = postData['username'];
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      MakeAnOffer(postUid: send_uid,username: username,)),
+                                  builder: (context) => MakeAnOffer(
+                                        postUid: send_uid,
+                                        username: username,
+                                      )),
                             );
                           },
                           child: Text(

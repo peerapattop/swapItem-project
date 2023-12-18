@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swapitem/api/offer_in.dart';
 import 'package:swapitem/widget/chat_detail.dart';
 
 class Chat extends StatefulWidget {

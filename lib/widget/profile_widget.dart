@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class GradientButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
+  final List<Color> colors; // Define colors as a list of Color objects
 
   const GradientButton({
     Key? key,
     required this.text,
     required this.onPressed,
+    required this.colors, // Expect a list of colors
   }) : super(key: key);
 
   @override
@@ -18,7 +20,7 @@ class GradientButton extends StatelessWidget {
           width: 180, height: 50), // Fixed width and height
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFFf6a5c1), Color(0xFF5fadcf)], // Gradient colors
+          colors: colors, // Gradient colors
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),

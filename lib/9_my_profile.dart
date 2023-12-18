@@ -366,6 +366,10 @@ class _ProfileState extends State<Profile> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
                                 GradientButton(
+                                  colors: [
+                                    Color.fromARGB(255, 188, 246, 165),
+                                    Color(0xFF5fadcf)
+                                  ],
                                   text: 'บันทึกการแก้ไข',
                                   onPressed: () {
                                     _userRef.update({
@@ -402,6 +406,10 @@ class _ProfileState extends State<Profile> {
                                   },
                                 ),
                                 GradientButton(
+                                    colors: [
+                                      Color(0xFFf6a5c1),
+                                      Color(0xFF5fadcf)
+                                    ],
                                     text: 'ช้อเสนอที่เข้ามา',
                                     onPressed: () {
                                       Navigator.of(context).push(
@@ -416,6 +424,10 @@ class _ProfileState extends State<Profile> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
                                 GradientButton(
+                                    colors: [
+                                      Color(0xFFf6a5c1),
+                                      Color(0xFF5fadcf)
+                                    ],
                                     text: 'ประวัติการโพสต์',
                                     onPressed: () {
                                       Navigator.of(context).push(
@@ -425,6 +437,10 @@ class _ProfileState extends State<Profile> {
                                       );
                                     }),
                                 GradientButton(
+                                    colors: [
+                                      Color(0xFFf6a5c1),
+                                      Color(0xFF5fadcf)
+                                    ],
                                     text: 'ประวัติการยื่นข้อเสนอ',
                                     onPressed: () {
                                       Navigator.of(context).push(
@@ -440,6 +456,10 @@ class _ProfileState extends State<Profile> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
                                 GradientButton(
+                                    colors: [
+                                      Color(0xFFf6a5c1),
+                                      Color(0xFF5fadcf)
+                                    ],
                                     text: 'ประวัติการชำระเงิน',
                                     onPressed: () {
                                       Navigator.of(context).push(
@@ -450,6 +470,10 @@ class _ProfileState extends State<Profile> {
                                       );
                                     }),
                                 GradientButton(
+                                    colors: [
+                                      Color.fromARGB(255, 212, 208, 143),
+                                      Color(0xFF5fadcf)
+                                    ],
                                     text: 'ออกจากระบบ',
                                     onPressed: () {
                                       _showSignOutConfirmationDialog();
