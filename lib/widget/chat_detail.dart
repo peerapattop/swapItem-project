@@ -94,7 +94,29 @@ class _ChatDetailState extends State<ChatDetail> {
                   String text = message['text'];
                   String sender = message['sender'];
 
-                  return Text(sender + ' ' + text);
+                  return Container(
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: sender == currentUserUsername
+                          ? MainAxisAlignment.end
+                          : MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: sender == currentUserUsername
+                                ? Colors.blue
+                                : Colors.green,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            text,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 },
               );
             }),
