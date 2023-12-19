@@ -52,8 +52,31 @@ class _ChatDetailState extends State<ChatDetail> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(username),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(70.0),
+          child: Padding(
+            padding: EdgeInsets.only(top: 1),
+            child: AppBar(
+              elevation: 20, // ปรับค่านี้ตามต้องการ
+              leadingWidth: 30,
+              title: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(35),
+                    child: Image.asset(
+                      'assets/images/pramepree.png',
+                      height: 45,
+                      width: 45,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(username),
+                ],
+              ),
+            ),
+          ),
         ),
         body: StreamBuilder(
           stream: userMessagesRef.child(username).onValue,
