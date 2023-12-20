@@ -21,7 +21,7 @@ class _btnntState extends State<btnnt> {
 
   static const List<Widget> _widgetOptions = <Widget>[
     HomePage(),
-    Chat(),
+    ChatHomePage(),
     Profile(),
   ];
   @override
