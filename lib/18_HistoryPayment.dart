@@ -230,11 +230,9 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text('กำลังโหลด..'),
+                   Image.network('https://cdn-icons-png.flaticon.com/256/7152/7152394.png',width: 100,),
+                   SizedBox(height: 20),
+                    Text('ไม่มีประวัติการชำระเงิน',style: TextStyle(fontSize: 20),),
                   ],
                 ),
               );

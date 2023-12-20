@@ -527,18 +527,22 @@ class _OfferRequestState extends State<OfferRequest> {
                                               ],
                                             ),
                                           ),
-                                          SizedBox(height: 10,),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
                                           Row(
                                             children: [
-                                              
                                               ElevatedButton.icon(
                                                 style: ElevatedButton.styleFrom(
-                                                    backgroundColor: Colors.blue),
-                                                icon: Icon(Icons.chat, color: Colors.white),
+                                                    backgroundColor:
+                                                        Colors.blue),
+                                                icon: Icon(Icons.chat,
+                                                    color: Colors.white),
                                                 onPressed: () {},
                                                 label: Text(
                                                   'แชท',
-                                                  style: TextStyle(color: Colors.white),
+                                                  style: TextStyle(
+                                                      color: Colors.white),
                                                 ),
                                               ),
                                               SizedBox(
@@ -546,25 +550,31 @@ class _OfferRequestState extends State<OfferRequest> {
                                               ),
                                               ElevatedButton.icon(
                                                 style: ElevatedButton.styleFrom(
-                                                    backgroundColor: Colors.green),
-                                                icon: Icon(Icons.check, color: Colors.white),
+                                                    backgroundColor:
+                                                        Colors.green),
+                                                icon: Icon(Icons.check,
+                                                    color: Colors.white),
                                                 onPressed: () {},
                                                 label: Text(
                                                   'ยืนยัน',
-                                                  style: TextStyle(color: Colors.white),
+                                                  style: TextStyle(
+                                                      color: Colors.white),
                                                 ),
                                               ),
                                               SizedBox(
                                                 width: 5,
                                               ),
                                               ElevatedButton.icon(
-                                                style:
-                                                    ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                                                icon: Icon(Icons.close, color: Colors.white),
+                                                style: ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        Colors.red),
+                                                icon: Icon(Icons.close,
+                                                    color: Colors.white),
                                                 onPressed: () {},
                                                 label: Text(
                                                   'ปฎิเสธ',
-                                                  style: TextStyle(color: Colors.white),
+                                                  style: TextStyle(
+                                                      color: Colors.white),
                                                 ),
                                               ),
                                             ],
@@ -587,11 +597,12 @@ class _OfferRequestState extends State<OfferRequest> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(),
-                    SizedBox(
-                      height: 10,
+                    Image.network(
+                      'https://cdn-icons-png.flaticon.com/256/11191/11191755.png',
+                      width: 100,
                     ),
-                    Text('กำลังโหลด..'),
+                    SizedBox(height: 20),
+                    Text('ไม่มีข้อเสนอที่เข้ามา',style: TextStyle(fontSize: 20),),
                   ],
                 ),
               );
