@@ -1,10 +1,10 @@
-//หน้าประวัติการยื่นข้อเสนอ
+import 'widget/chat_detail.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+//หน้าประวัติการยื่นข้อเสนอ
 
-import 'widget/chat_detail.dart';
 
 class HistoryMakeOffer extends StatefulWidget {
   const HistoryMakeOffer({Key? key}) : super(key: key);
@@ -125,7 +125,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
       });
     }).catchError((error) {
       print("Failed to delete offer: $error");
-    });
+    });//888
   }
 
   void showDeleteConfirmation(BuildContext context, String offerKey) {
