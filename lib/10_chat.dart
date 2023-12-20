@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'widget/chat_detail.dart';
+
 class ChatHomePage extends StatefulWidget {
   const ChatHomePage({Key? key}) : super(key: key);
   @override
@@ -26,7 +28,7 @@ class _ChatHomePageState extends State<ChatHomePage> {
       // User logged in, proceed to load chat data
       return Scaffold(
           appBar: AppBar(
-            title: Text("Chat"),
+            title: Text("แชท"),
           ),
           body: StreamBuilder(
             stream:
@@ -51,11 +53,10 @@ class _ChatHomePageState extends State<ChatHomePage> {
                       // Check if 'text' exists and is not null
                       if (messageData != null && messageData['text'] != null) {
                         String text = messageData['text'];
-                        String sender = messageData['sender'] ??
-                            'Unknown'; // Provide a default value for 'sender'
-                        // Create a widget for each message
-                        messageWidgets
-                            .add(MessageWidget(sender: sender, text: text));
+                        String receiver = messageData['recevier'];
+                        String time = messageData['time'];
+                        messageWidgets.add(MessageListItem(
+                            receiver: receiver, text: text, time: time));
                       } else {
                         // Handle the case where 'text' is not available
                         print(
@@ -78,41 +79,59 @@ class _ChatHomePageState extends State<ChatHomePage> {
   }
 }
 
-class MessageWidget extends StatelessWidget {
-  final String sender;
+class MessageListItem extends StatelessWidget {
+  final String receiver;
   final String text;
+  final String time;
 
-  const MessageWidget({
+  const MessageListItem({
     Key? key,
-    required this.sender,
+    required this.receiver,
     required this.text,
+    required this.time,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Row(
         children: <Widget>[
-          Text(
-            sender,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black54,
+          CircleAvatar(
+            backgroundImage: NetworkImage(''), // Load image from network
+            radius: 30, // Size of the avatar
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChatDetail(
+                      username: receiver,
+                    ),
+                  ),
+                );
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    receiver,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
+                  Text(
+                    text,
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
           ),
-          SizedBox(height: 2),
           Text(
-            text,
-            style: TextStyle(
-              color: Colors.black87,
-            ),
+            time,
+            style: TextStyle(color: Colors.grey, fontSize: 16),
           ),
         ],
       ),

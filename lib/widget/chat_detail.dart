@@ -170,6 +170,7 @@ class _ChatDetailState extends State<ChatDetail> {
   }
 
   void _sendMessage(String currentUserUsername) {
+    DateTime now = DateTime.now();
     String messageText = _controller.text.trim();
     if (messageText.isNotEmpty && currentUserUsername.isNotEmpty) {
       userMessagesRef
@@ -178,7 +179,10 @@ class _ChatDetailState extends State<ChatDetail> {
           .set({
             'text': messageText,
             'sender': currentUserUsername,
-            'timestamp': ServerValue.timestamp,
+            'recevier': username,
+            'time': now.hour.toString().padLeft(2, '0') +
+                ":" +
+                now.minute.toString().padLeft(2, '0')
           })
           .then((_) => _controller.clear())
           .catchError((error) {
