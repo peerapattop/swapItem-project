@@ -440,7 +440,12 @@ class _HistoryPostState extends State<HistoryPost> {
                             ],
                           ),
                         )
-                      : Text('ไม่มีประวัติการโพสต์')
+                      : Column(
+                          children: [
+                            CircularProgressIndicator(),
+                            Text('กำลังโหลด..'),
+                          ],
+                        ),
                 ],
               );
             } else {
@@ -449,11 +454,8 @@ class _HistoryPostState extends State<HistoryPost> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text('กำลังโหลด..'),
+                   Image.network(src),
+                    Text('ไม่มีประวัติการโพสต์'),
                   ],
                 ),
               );
