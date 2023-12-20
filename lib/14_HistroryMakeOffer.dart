@@ -769,7 +769,6 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                                 username:
                                                                     postItemData[
                                                                         'username'],
-                                                               
                                                               )));
                                                 },
                                                 style: ElevatedButton.styleFrom(
@@ -817,15 +816,13 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.network(
-                      'https://cdn-icons-png.flaticon.com/256/7465/7465523.png',
+                      'https://cdn-icons-png.flaticon.com/256/11191/11191755.png',
                       width: 100,
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 20),
                     Text(
                       'ไม่มีประวัติการยื่นข้อเสนอของคุณ',
-                      style: TextStyle(fontSize: 25),
+                      style: TextStyle(fontSize: 20),
                     ),
                   ],
                 ),
