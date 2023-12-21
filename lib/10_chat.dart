@@ -41,43 +41,31 @@ class _ChatHomePageState extends State<ChatHomePage> {
             ),
           ),
           body: StreamBuilder(
-            stream:
-                _database.child('users/${currentUser?.uid}/messages').onValue,
+            stream: _database.child('users/${currentUser?.uid}/messages').onValue,
             builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData &&
-                  !snapshot.hasError &&
-                  snapshot.data?.snapshot.value != null) {
-                // Extract your data from the snapshot
-                Map<dynamic, dynamic> messageGroups =
-                    snapshot.data!.snapshot.value;
-
-                // Debug print the message groups
-                print('Message groups data: $messageGroups');
-
-                // Convert the nested map to a list of message widgets
+              if (snapshot.hasData && !snapshot.hasError && snapshot.data?.snapshot.value != null) {
+                Map<dynamic, dynamic> messageGroups = snapshot.data!.snapshot.value;
                 List<Widget> messageWidgets = [];
+
                 messageGroups.forEach((groupKey, messages) {
-                  // Assuming 'messages' is a map, iterate over the messages
                   if (messages is Map) {
-                    messages.forEach((messageKey, messageData) {
-                      // Check if 'text' exists and is not null
-                      if (messageData != null && messageData['text'] != null) {
-                        String text = messageData['text'];
-                        String receiver = messageData['recevier'];
-                        String time = messageData['time'];
-                        String imageUser = messageData['imageUser'];
-                        messageWidgets.add(MessageListItem(
-                            receiver: receiver, text: text, time: time,imageUser: imageUser,));
-                      } else {
-                        // Handle the case where 'text' is not available
-                        print(
-                            'Warning: Message text is null for message key $messageKey in group $groupKey');
-                      }
-                    });
+                    // Sort the messages by time
+                    var sortedMessages = messages.values.toList()
+                      ..sort((a, b) => (b['time'] as String).compareTo(a['time'] as String));
+
+                    // Assuming the sorted list is not empty, take the last message which is the latest
+                    var latestMessage = sortedMessages.first;
+                    String text = latestMessage['text'];
+                    String receiver = latestMessage['recevier']; // Use 'receiver' instead of 'recevier'
+                    String time = latestMessage['time'];
+                    String imageUser = latestMessage['imageUser'];
+                    
+                    messageWidgets.add(MessageListItem(
+                      receiver: receiver, text: text, time: time, imageUser: imageUser,
+                    ));
                   }
                 });
 
-                // Display the list of messages
                 return ListView(children: messageWidgets);
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
@@ -89,6 +77,7 @@ class _ChatHomePageState extends State<ChatHomePage> {
     }
   }
 }
+
 
 class MessageListItem extends StatelessWidget {
   final String receiver;
@@ -123,7 +112,7 @@ class MessageListItem extends StatelessWidget {
         child: Row(
           children: <Widget>[
             CircleAvatar(
-              backgroundImage: NetworkImage(imageUser),
+              backgroundImage: NetworkImage(imageUser), // Load image from network
               radius: 30, // Size of the avatar
             ),
             SizedBox(width: 10),
