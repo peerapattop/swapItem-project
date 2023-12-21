@@ -41,27 +41,36 @@ class _ChatHomePageState extends State<ChatHomePage> {
             ),
           ),
           body: StreamBuilder(
-            stream: _database.child('users/${currentUser?.uid}/messages').onValue,
+            stream:
+                _database.child('users/${currentUser?.uid}/messages').onValue,
             builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData && !snapshot.hasError && snapshot.data?.snapshot.value != null) {
-                Map<dynamic, dynamic> messageGroups = snapshot.data!.snapshot.value;
+              if (snapshot.hasData &&
+                  !snapshot.hasError &&
+                  snapshot.data?.snapshot.value != null) {
+                Map<dynamic, dynamic> messageGroups =
+                    snapshot.data!.snapshot.value;
                 List<Widget> messageWidgets = [];
 
                 messageGroups.forEach((groupKey, messages) {
                   if (messages is Map) {
                     // Sort the messages by time
                     var sortedMessages = messages.values.toList()
-                      ..sort((a, b) => (b['time'] as String).compareTo(a['time'] as String));
+                      ..sort((a, b) =>
+                          (b['time'] as String).compareTo(a['time'] as String));
 
                     // Assuming the sorted list is not empty, take the last message which is the latest
                     var latestMessage = sortedMessages.first;
                     String text = latestMessage['text'];
-                    String receiver = latestMessage['recevier']; // Use 'receiver' instead of 'recevier'
+                    String receiver = latestMessage[
+                        'recevier']; // Use 'receiver' instead of 'recevier'
                     String time = latestMessage['time'];
                     String imageUser = latestMessage['imageUser'];
-                    
+
                     messageWidgets.add(MessageListItem(
-                      receiver: receiver, text: text, time: time, imageUser: imageUser,
+                      receiver: receiver,
+                      text: text,
+                      time: time,
+                      imageUser: imageUser,
                     ));
                   }
                 });
@@ -70,14 +79,26 @@ class _ChatHomePageState extends State<ChatHomePage> {
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
-                return Center(child: CircularProgressIndicator());
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.network(
+                          'https://cdn-icons-png.flaticon.com/256/6663/6663862.png'),
+                      SizedBox(height: 10),
+                      Text(
+                        'กรุณายื่นข้อเสนอหรือสร้างโพสต์เพื่อเริ่มแชท',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  ),
+                );
               }
             },
           ));
     }
   }
 }
-
 
 class MessageListItem extends StatelessWidget {
   final String receiver;
@@ -104,7 +125,7 @@ class MessageListItem extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => ChatDetail(
                 username: receiver,
-                imageUser: imageUser ,
+                imageUser: imageUser,
               ),
             ),
           );
@@ -112,7 +133,8 @@ class MessageListItem extends StatelessWidget {
         child: Row(
           children: <Widget>[
             CircleAvatar(
-              backgroundImage: NetworkImage(imageUser), // Load image from network
+              backgroundImage:
+                  NetworkImage(imageUser), // Load image from network
               radius: 30, // Size of the avatar
             ),
             SizedBox(width: 10),
