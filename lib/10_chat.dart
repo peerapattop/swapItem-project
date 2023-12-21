@@ -65,8 +65,9 @@ class _ChatHomePageState extends State<ChatHomePage> {
                         String text = messageData['text'];
                         String receiver = messageData['recevier'];
                         String time = messageData['time'];
+                        String imageUser = messageData['imageUser'];
                         messageWidgets.add(MessageListItem(
-                            receiver: receiver, text: text, time: time));
+                            receiver: receiver, text: text, time: time,imageUser: imageUser,));
                       } else {
                         // Handle the case where 'text' is not available
                         print(
@@ -93,12 +94,14 @@ class MessageListItem extends StatelessWidget {
   final String receiver;
   final String text;
   final String time;
+  final String imageUser;
 
   const MessageListItem({
     Key? key,
     required this.receiver,
     required this.text,
     required this.time,
+    required this.imageUser,
   }) : super(key: key);
 
   @override
@@ -112,6 +115,7 @@ class MessageListItem extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => ChatDetail(
                 username: receiver,
+                imageUser: imageUser ,
               ),
             ),
           );
@@ -119,7 +123,7 @@ class MessageListItem extends StatelessWidget {
         child: Row(
           children: <Widget>[
             CircleAvatar(
-              backgroundImage: NetworkImage(''), // Load image from network
+              backgroundImage: NetworkImage(imageUser),
               radius: 30, // Size of the avatar
             ),
             SizedBox(width: 10),

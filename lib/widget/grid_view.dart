@@ -73,6 +73,7 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                     String post_uid = userData['post_uid'].toString();
                     String lati = userData['latitude'].toString();
                     String longti = userData['longitude'].toString();
+                    String imageUser = userData['imageUser'];
                     List<String> imageUrls =
                         List<String>.from(userData['imageUrls'] ?? []);
                     return Card(
@@ -157,8 +158,8 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                                       builder: (context) => ShowDetailAll(
                                           postUid: post_uid,
                                           longti: longti,
-                                          lati:
-                                              lati), // Changed to positional argument
+                                          lati:lati,
+                                          imageUser:imageUser),
                                     ),
                                   );
                                 });

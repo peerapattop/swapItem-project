@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:swapitem/12_makeAnOffer.dart';
-import 'package:swapitem/trash/2_createpost.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -8,9 +7,10 @@ class ShowDetailAll extends StatefulWidget {
   final String postUid;
   final String longti;
   final String lati;
+  final String imageUser;
 
   ShowDetailAll(
-      {required this.postUid, required this.longti, required this.lati});
+      {required this.postUid, required this.longti, required this.lati,required this.imageUser});
 
   @override
   _ShowDetailAllState createState() => _ShowDetailAllState();
@@ -350,11 +350,13 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                           onPressed: () {
                             String send_uid = postData['post_uid'];
                             String username = postData['username'];
+                            String imageUser = postData['imageUser'];
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                   builder: (context) => MakeAnOffer(
                                         postUid: send_uid,
                                         username: username,
+                                        imageUser:imageUser,
                                       )),
                             );
                           },
