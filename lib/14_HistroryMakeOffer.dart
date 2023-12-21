@@ -248,6 +248,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                         postItemData['latitude'].toString());
                                     longitude = double.tryParse(
                                         postItemData['longitude'].toString());
+                                    imageUser = postItemData['imageUser'];
 
                                     return ListView(
                                       children: [
@@ -764,12 +765,13 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              ChatDetail(
-                                                                username:
-                                                                    postItemData[
-                                                                        'username'],
-                                                              )));
+                                                          builder: (context) => ChatDetail(
+                                                              username:
+                                                                  postItemData[
+                                                                      'username'],
+                                                              imageUser:
+                                                                  postItemData[
+                                                                      'imageUser'])));
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                     padding: EdgeInsets.all(16),

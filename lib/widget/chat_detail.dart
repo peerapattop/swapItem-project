@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 
 class ChatDetail extends StatefulWidget {
   final String username;
+  final String imageUser;
 
-  ChatDetail({Key? key, required this.username}) : super(key: key);
+  ChatDetail({Key? key, required this.username,required this.imageUser}) : super(key: key);
 
   @override
   State<ChatDetail> createState() => _ChatDetailState();
@@ -13,6 +14,7 @@ class ChatDetail extends StatefulWidget {
 
 class _ChatDetailState extends State<ChatDetail> {
   late String username;
+  late String imageUser;
   final TextEditingController _controller = TextEditingController();
   User? get currentUser => FirebaseAuth.instance.currentUser;
   String currentUserUsername = '';
@@ -31,6 +33,7 @@ class _ChatDetailState extends State<ChatDetail> {
   void initState() {
     super.initState();
     username = widget.username;
+    imageUser = widget.imageUser;
     getCurrentUsername();
   }
 
@@ -63,8 +66,8 @@ class _ChatDetailState extends State<ChatDetail> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(35),
-                    child: Image.asset(
-                      'assets/images/pramepree.png',
+                    child: Image.network(
+                      imageUser,
                       height: 45,
                       width: 45,
                     ),
@@ -162,14 +165,14 @@ class _ChatDetailState extends State<ChatDetail> {
           ),
           IconButton(
             icon: Icon(Icons.send, color: Color(0xFF113953), size: 30),
-            onPressed: () => _sendMessage(currentUserUsername),
+            onPressed: () => _sendMessage(currentUserUsername,imageUser),
           ),
         ],
       ),
     );
   }
 
-  void _sendMessage(String currentUserUsername) {
+  void _sendMessage(String currentUserUsername,String imageUser) {
     DateTime now = DateTime.now();
     String messageText = _controller.text.trim();
     if (messageText.isNotEmpty && currentUserUsername.isNotEmpty) {
@@ -177,6 +180,7 @@ class _ChatDetailState extends State<ChatDetail> {
           .child(username)
           .push()
           .set({
+            'imageUser':imageUser,
             'text': messageText,
             'sender': currentUserUsername,
             'recevier': username,

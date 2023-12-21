@@ -20,7 +20,7 @@ class _ChatHomePageState extends State<ChatHomePage> {
       // User not logged in
       return Scaffold(
         appBar: AppBar(
-          title: Text("Chat"),
+          title: Text("แชท"),
         ),
         body: Center(child: Text("Please log in to view chats")),
       );
@@ -28,7 +28,17 @@ class _ChatHomePageState extends State<ChatHomePage> {
       // User logged in, proceed to load chat data
       return Scaffold(
           appBar: AppBar(
-            title: Text("แชท"),
+            title: const Text("แชท"),
+            toolbarHeight: 40,
+            centerTitle: true,
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/image 40.png'),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
           ),
           body: StreamBuilder(
             stream:
@@ -55,8 +65,9 @@ class _ChatHomePageState extends State<ChatHomePage> {
                         String text = messageData['text'];
                         String receiver = messageData['recevier'];
                         String time = messageData['time'];
+                        String imageUser = messageData['imageUser'];
                         messageWidgets.add(MessageListItem(
-                            receiver: receiver, text: text, time: time));
+                            receiver: receiver, text: text, time: time,imageUser: imageUser,));
                       } else {
                         // Handle the case where 'text' is not available
                         print(
@@ -83,37 +94,40 @@ class MessageListItem extends StatelessWidget {
   final String receiver;
   final String text;
   final String time;
+  final String imageUser;
 
   const MessageListItem({
     Key? key,
     required this.receiver,
     required this.text,
     required this.time,
+    required this.imageUser,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(15.0),
-      child: Row(
-        children: <Widget>[
-          CircleAvatar(
-            backgroundImage: NetworkImage(''), // Load image from network
-            radius: 30, // Size of the avatar
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChatDetail(
-                      username: receiver,
-                    ),
-                  ),
-                );
-              },
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatDetail(
+                username: receiver,
+                imageUser: imageUser ,
+              ),
+            ),
+          );
+        },
+        child: Row(
+          children: <Widget>[
+            CircleAvatar(
+              backgroundImage: NetworkImage(imageUser),
+              radius: 30, // Size of the avatar
+            ),
+            SizedBox(width: 10),
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -128,12 +142,12 @@ class MessageListItem extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-          Text(
-            time,
-            style: TextStyle(color: Colors.grey, fontSize: 16),
-          ),
-        ],
+            Text(
+              time,
+              style: TextStyle(color: Colors.grey, fontSize: 16),
+            ),
+          ],
+        ),
       ),
     );
   }

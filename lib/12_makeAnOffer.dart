@@ -11,7 +11,8 @@ import 'package:firebase_database/firebase_database.dart';
 class MakeAnOffer extends StatefulWidget {
   final String postUid;
   final String username;
-  const MakeAnOffer({Key? key, required this.postUid, required this.username})
+  final String imageUser;
+  const MakeAnOffer({Key? key, required this.postUid, required this.username,required this.imageUser})
       : super(key: key);
 
   @override
@@ -341,6 +342,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
           });
         }
         String postUid = widget.postUid;
+        String imageUser = widget.imageUser;
         String uid = FirebaseAuth.instance.currentUser!.uid;
         DatabaseReference itemRef =
             FirebaseDatabase.instance.ref().child('offer').push();
@@ -349,6 +351,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
         List<String> imageUrls = await _uploadImages();
         // Then, set the data with image URLs in the Realtime Database.
         Map<String, dynamic> dataRef = {
+          'imageUser':imageUser,
           'status': 'รอการยืนยัน',
           'offer_uid': offerUid,
           'offerNumber': generateRandomNumber(),
