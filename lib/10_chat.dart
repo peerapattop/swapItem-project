@@ -27,95 +27,103 @@ class _ChatHomePageState extends State<ChatHomePage> {
     } else {
       // User logged in, proceed to load chat data
       return Scaffold(
-          appBar: AppBar(
-            title: const Text("แชท"),
-            toolbarHeight: 40,
-            centerTitle: true,
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/image 40.png'),
-                  fit: BoxFit.fill,
-                ),
+        appBar: AppBar(
+          title: const Text("แชท"),
+          toolbarHeight: 40,
+          centerTitle: true,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/image 40.png'),
+                fit: BoxFit.fill,
               ),
             ),
           ),
-          body: StreamBuilder(
-            stream:
-                _database.child('users/${currentUser?.uid}/messages').onValue,
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData &&
-                  !snapshot.hasError &&
-                  snapshot.data?.snapshot.value != null) {
-                Map<dynamic, dynamic> messageGroups =
-                    snapshot.data!.snapshot.value;
-                List<Widget> messageWidgets = [];
+        ),
+        body: StreamBuilder(
+          stream: _database.child('users/${currentUser?.uid}/messages').onValue,
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData &&
+                !snapshot.hasError &&
+                snapshot.data?.snapshot.value != null) {
+              Map<dynamic, dynamic> messageGroups =
+                  snapshot.data!.snapshot.value;
+              List<Widget> messageWidgets = [];
 
-                messageGroups.forEach((groupKey, messages) {
-                  if (messages is Map) {
-                    // Sort the messages by time
-                    var sortedMessages = messages.values.toList()
-                      ..sort((a, b) =>
-                          (b['time'] as String).compareTo(a['time'] as String));
+              messageGroups.forEach((groupKey, messages) {
+                if (messages is Map) {
+                  // Sort the messages by time
+                  var sortedMessages = messages.values.toList()
+                    ..sort((a, b) =>
+                        (b['time'] as String).compareTo(a['time'] as String));
 
-                    // Assuming the sorted list is not empty, take the last message which is the latest
-                    var latestMessage = sortedMessages.first;
-                    String text = latestMessage['text'];
-                    String receiver = latestMessage[
-                        'recevier']; // Use 'receiver' instead of 'recevier'
-                    String time = latestMessage['time'];
-                    String imageUser = latestMessage['imageUser'];
+                  // Assuming the sorted list is not empty, take the last message which is the latest
+                  var latestMessage = sortedMessages.first;
+                  String text = latestMessage['text'];
+                  String receiver = latestMessage['receiver'];
+                  String sender = latestMessage['sender']; // New property
+                  String time = latestMessage['time'];
+                  String imageUser = latestMessage['imageUser'];
 
-                    messageWidgets.add(MessageListItem(
-                      receiver: receiver,
-                      text: text,
-                      time: time,
-                      imageUser: imageUser,
-                    ));
-                  }
-                });
+                  messageWidgets.add(MessageListItem(
+                    sender: sender,
+                    receiver: receiver,
+                    text: text,
+                    time: time,
+                    imageUser: imageUser,
+                    currentUserUid: currentUser?.uid,
+                  ));
+                }
+              });
 
-                return ListView(children: messageWidgets);
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.network(
-                          'https://cdn-icons-png.flaticon.com/256/6663/6663862.png'),
-                      SizedBox(height: 10),
-                      Text(
-                        'กรุณายื่นข้อเสนอหรือสร้างโพสต์เพื่อเริ่มแชท',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ],
-                  ),
-                );
-              }
-            },
-          ));
+              return ListView(children: messageWidgets);
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.network(
+                        'https://cdn-icons-png.flaticon.com/256/6663/6663862.png'),
+                    SizedBox(height: 10),
+                    Text(
+                      'กรุณายื่นข้อเสนอหรือสร้างโพสต์เพื่อเริ่มแชท',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ],
+                ),
+              );
+            }
+          },
+        ),
+      );
     }
   }
 }
 
 class MessageListItem extends StatelessWidget {
+  final String sender;
   final String receiver;
   final String text;
   final String time;
   final String imageUser;
+  final String? currentUserUid;
 
   const MessageListItem({
     Key? key,
+    required this.sender,
     required this.receiver,
     required this.text,
     required this.time,
     required this.imageUser,
+    required this.currentUserUid,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    bool isCurrentUserSender = sender == currentUserUid;
+
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: GestureDetector(
@@ -124,7 +132,7 @@ class MessageListItem extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => ChatDetail(
-                username: receiver,
+                username: isCurrentUserSender ? receiver : sender,
                 imageUser: imageUser,
               ),
             ),
@@ -142,10 +150,15 @@ class MessageListItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    receiver,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  ),
+                 Text(
+  isCurrentUserSender ? sender : receiver,
+  style: TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 20,
+    color: isCurrentUserSender ? Colors.blue : Colors.black,
+  ),
+),
+
                   Text(
                     text,
                     style: TextStyle(color: Colors.grey),
