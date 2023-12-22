@@ -40,8 +40,8 @@ class _Offer_comeState extends State<Offer_come> {
     super.initState();
     _user = FirebaseAuth.instance.currentUser!;
     _postRef = FirebaseDatabase.instance.ref().child('postitem');
-    selectedPost = null;
 
+    // Load the latest post
     _postRef
         .orderByChild('uid')
         .equalTo(_user.uid)
@@ -52,22 +52,24 @@ class _Offer_comeState extends State<Offer_come> {
         Map<dynamic, dynamic> data =
             Map<dynamic, dynamic>.from(event.snapshot.value as Map);
         var lastKey = data.keys.last;
-        var lastPayment = Map<dynamic, dynamic>.from(data[lastKey]);
+        var lastPost = Map<dynamic, dynamic>.from(data[lastKey]);
 
-// Since we are listening to the last payment, we clear the list to ensure
-// it only contains the latest payment and corresponds to the first button.
-        postsList.clear();
-
+        // When you get the latest post, load its offers
+        _loadPostData1(lastPost[
+            'post_uid']); // This will load the offers for the latest post
         setState(() {
-          postsList.insert(0, lastPayment); // Insert at the start of the list
-          selectedPost = lastPayment;
-          _selectedIndex = 0; // This ensures the first button is selected
+          postsList.clear();
+          postsList.insert(0, lastPost);
+          selectedPost = lastPost;
+          _selectedIndex = 0;
         });
       }
     });
   }
+
+  Map<String, Map<dynamic, dynamic>> offersMap = {};
+
   void _loadPostData1(String postUid) {
-    print('Searching for offers with postUid: $postUid');
     FirebaseDatabase.instance
         .ref('offer')
         .orderByChild('post_uid')
@@ -75,17 +77,19 @@ class _Offer_comeState extends State<Offer_come> {
         .onValue
         .listen((databaseEvent1) {
       if (databaseEvent1.snapshot.value != null) {
-        postsList1.clear(); // Clear the list to accommodate new offers
-        Map<dynamic, dynamic> offers = Map<dynamic, dynamic>.from(databaseEvent1.snapshot.value as Map);
+        Map<dynamic, dynamic> offers =
+            Map<dynamic, dynamic>.from(databaseEvent1.snapshot.value as Map);
+        List<Map<dynamic, dynamic>> offersList = [];
         offers.forEach((key, value) {
-          var offerData = Map<dynamic, dynamic>.from(value);
-          postsList1.add(offerData); // Add each offer to the list
+          offersList.add(Map<dynamic, dynamic>.from(value));
         });
+        postsList1.clear();
         setState(() {
-          if (postsList1.isNotEmpty) {
-            selectedOffers1 = postsList1.first; // Set the first offer as selected by default
-            _selectedIndex1 = 0;
-            print(offers);
+          postsList1 = offersList;
+          if (offersList.isNotEmpty) {
+            print(postsList1);
+            _selectedIndex1 = 0; // Select the first offer by default
+            selectedOffers1 = offersList.first;
           }
         });
       } else {
@@ -93,37 +97,6 @@ class _Offer_comeState extends State<Offer_come> {
       }
     });
   }
-
-  // void _loadPostData1(String postUid) {
-  //   print('Searching for offers with postUid: $postUid');
-  //   FirebaseDatabase.instance
-  //       .ref('offer')
-  //       .orderByChild('post_uid')
-  //       .equalTo(postUid).limitToLast(1)
-  //       .onValue
-  //       .listen((databaseEvent1) {
-  //     if (databaseEvent1.snapshot.value != null) {
-  //       Map<dynamic, dynamic> offers = Map<dynamic, dynamic>.from(databaseEvent1.snapshot.value as Map);
-  //       databaseEvent1.snapshot.children.forEach((offerSnapshot) {
-  //         String? key = offerSnapshot.key;
-  //         if (key != null && offerSnapshot.value != null) {
-  //           offers[key] = Map<dynamic, dynamic>.from(offerSnapshot.value as Map);
-  //           var lastKey1 = offers.keys.last;
-  //           var lastPayment1 = Map<dynamic, dynamic>.from(offers[lastKey1]);
-  //           postsList1.clear();
-  //           print(offers);
-  //           setState(() {
-  //             postsList1.insert(0, lastPayment1); // Insert at the start of the list
-  //             selectedOffers1 = lastPayment1;
-  //             _selectedIndex1 = 0; // This ensures the first button is selected
-  //           });
-  //         }
-  //       });
-  //     } else {
-  //       print('No offers found for postUid: $postUid');
-  //     }
-  //   });
-  // }
 
   void selectPayment(Map<dynamic, dynamic> postData) {
     setState(() {
@@ -153,12 +126,10 @@ class _Offer_comeState extends State<Offer_come> {
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
               postsList.clear();
-              //postsList1.clear();
               Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
                   snapshot.data!.snapshot.value as Map);
               data.forEach((key, value) {
                 postsList.add(Map<dynamic, dynamic>.from(value));
-                //postsList1.add(Map<dynamic, dynamic>.from(value));
               });
 
               return Column(
@@ -177,7 +148,6 @@ class _Offer_comeState extends State<Offer_come> {
                             selectedPost!['latitude'].toString());
                         longitude = double.tryParse(
                             selectedPost!['longitude'].toString());
-                        _loadPostData1(selectedPost!['post_uid']);
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4.0),
                           child: buildCircularNumberButton(idx, postData),
@@ -427,7 +397,10 @@ class _Offer_comeState extends State<Offer_come> {
                                     SizedBox(height: 10),
                                     Divider(),
                                     SizedBox(height: 10),
-                                    Text('ข้อเสนอที่เข้ามา', style: TextStyle(fontSize: 20),),
+                                    Text(
+                                      'ข้อเสนอที่เข้ามา',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
                                     SizedBox(height: 10),
                                     SizedBox(
                                       height: 50,
@@ -435,29 +408,19 @@ class _Offer_comeState extends State<Offer_come> {
                                         scrollDirection: Axis.horizontal,
                                         itemCount: postsList1.length,
                                         itemBuilder: (context, index) {
+                                          Map<dynamic, dynamic> offerData =
+                                              postsList1[index];
+                                          // The following line renders the circular number button
                                           return Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                            child: buildCircularNumberButton1(index, postsList1[index]),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4.0),
+                                            child: buildCircularNumberButton1(
+                                                index, offerData),
                                           );
                                         },
                                       ),
                                     ),
-
-                                    // SizedBox(
-                                    //   height: 50,
-                                    //   child: Row(
-                                    //     mainAxisAlignment: MainAxisAlignment.center,
-                                    //     children: postsList1.asMap().entries.map((entry) {
-                                    //       int idx1 = entry.key;
-                                    //       Map<dynamic, dynamic> offersData1 = entry.value;
-                                    //       return Padding(
-                                    //         padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                    //         child: buildCircularNumberButton1(idx1, offersData1),
-                                    //       );
-                                    //     }).toList(),
-                                    //   ),
-                                    // ),
-
+                                    Text(selectedOffers1!['post_uid']),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
@@ -554,12 +517,13 @@ class _Offer_comeState extends State<Offer_come> {
     );
   }
 
-  Widget buildCircularNumberButton1(int index, Map<dynamic, dynamic> offerData) {
+  Widget buildCircularNumberButton1(
+      int index, Map<dynamic, dynamic> offerData) {
     return InkWell(
       onTap: () {
         setState(() {
-          _selectedIndex1 = index; // Update the selected index
-          selectedOffers1 = offerData; // Update the selected payment data
+          _selectedIndex1 = index; // อัปเดต index ที่เลือก
+          selectedOffers1 = offerData; // อัปเดตข้อมูล offer ที่เลือก
         });
       },
       child: Container(
@@ -593,10 +557,15 @@ class _Offer_comeState extends State<Offer_come> {
   Widget buildCircularNumberButton(int index, Map<dynamic, dynamic> postData) {
     return InkWell(
       onTap: () {
+        _loadPostData1(
+            postData['post_uid']); // Load offer data based on the post_uid
         setState(() {
-          _loadPostData1(selectedPost!['post_uid']);
           _selectedIndex = index; // Update the selected index
-          selectedPost = postData; // Update the selected payment data
+          selectedPost = postData; // Update the selected post data
+          // Clear the previously selected offers when a new post is selected
+          postsList1.clear(); // This will clear the offer list
+          selectedOffers1 = null; // Clear selected offer
+          _selectedIndex1 = -1; // Reset the selected index for offers
         });
       },
       child: Container(
