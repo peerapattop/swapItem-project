@@ -185,17 +185,36 @@ class _ChatDetailState extends State<ChatDetail> {
   }
 
   void _sendMessage(String currentUserUsername, String imageUser) {
-    DateTime now = DateTime.now();
-    String messageText = _controller.text.trim();
-    if (messageText.isNotEmpty && currentUserUsername.isNotEmpty) {
-      userMessagesRef
-          .child(username)
+  DateTime now = DateTime.now();
+  String messageText = _controller.text.trim();
+  if (messageText.isNotEmpty && currentUserUsername.isNotEmpty) {
+    var senderUid = currentUser?.uid;
+    var receiverUid = 'VGQvLhSkJRQwQzifFbOP5kP6S4j1'; // You need to replace this with the UID of the receiver.
+
+    if (senderUid != null) {
+      // Sender's message
+      userMessagesRef.child(username).push().set({
+        'imageUser': imageUser,
+        'text': messageText,
+        'sender': currentUserUsername,
+        'receiver': username,
+        'time': now.hour.toString().padLeft(2, '0') +
+            ":" +
+            now.minute.toString().padLeft(2, '0') +
+            ":" +
+            now.second.toString().padLeft(2, '0')
+      });
+
+      // Receiver's message
+      FirebaseDatabase.instance
+          .ref()
+          .child('users/$receiverUid/messages/$currentUserUsername')
           .push()
           .set({
             'imageUser': imageUser,
             'text': messageText,
             'sender': currentUserUsername,
-            'recevier': username,
+            'receiver': username,
             'time': now.hour.toString().padLeft(2, '0') +
                 ":" +
                 now.minute.toString().padLeft(2, '0') +
@@ -208,4 +227,6 @@ class _ChatDetailState extends State<ChatDetail> {
           });
     }
   }
+}
+
 }

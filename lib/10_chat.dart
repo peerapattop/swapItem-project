@@ -62,7 +62,7 @@ class _ChatHomePageState extends State<ChatHomePage> {
                     var latestMessage = sortedMessages.first;
                     String text = latestMessage['text'];
                     String receiver = latestMessage[
-                        'recevier']; // Use 'receiver' instead of 'recevier'
+                        'receiver']; // Use 'receiver' instead of 'recevier'
                     String time = latestMessage['time'];
                     String imageUser = latestMessage['imageUser'];
 
