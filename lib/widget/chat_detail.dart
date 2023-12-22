@@ -198,7 +198,9 @@ class _ChatDetailState extends State<ChatDetail> {
             'recevier': username,
             'time': now.hour.toString().padLeft(2, '0') +
                 ":" +
-                now.minute.toString().padLeft(2, '0')
+                now.minute.toString().padLeft(2, '0') +
+                ":" +
+                now.second.toString().padLeft(2, '0')
           })
           .then((_) => _controller.clear())
           .catchError((error) {
