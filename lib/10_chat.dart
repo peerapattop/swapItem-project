@@ -71,7 +71,6 @@ class _ChatHomePageState extends State<ChatHomePage> {
                     text: text,
                     time: time,
                     imageUser: imageUser,
-                    currentUserUid: currentUser?.uid,
                   ));
                 }
               });
@@ -108,7 +107,6 @@ class MessageListItem extends StatelessWidget {
   final String text;
   final String time;
   final String imageUser;
-  final String? currentUserUid;
 
   const MessageListItem({
     Key? key,
@@ -117,13 +115,10 @@ class MessageListItem extends StatelessWidget {
     required this.text,
     required this.time,
     required this.imageUser,
-    required this.currentUserUid,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    bool isCurrentUserSender = sender == currentUserUid;
-
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: GestureDetector(
@@ -132,7 +127,7 @@ class MessageListItem extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => ChatDetail(
-                username: isCurrentUserSender ? receiver : sender,
+                username: receiver,
                 imageUser: imageUser,
               ),
             ),
@@ -150,15 +145,14 @@ class MessageListItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                 Text(
-  isCurrentUserSender ? sender : receiver,
-  style: TextStyle(
-    fontWeight: FontWeight.bold,
-    fontSize: 20,
-    color: isCurrentUserSender ? Colors.blue : Colors.black,
-  ),
-),
-
+                  Text(
+                    receiver,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.black,
+                    ),
+                  ),
                   Text(
                     text,
                     style: TextStyle(color: Colors.grey),
