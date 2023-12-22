@@ -6,7 +6,8 @@ class ChatDetail extends StatefulWidget {
   final String username;
   final String imageUser;
 
-  ChatDetail({Key? key, required this.username,required this.imageUser}) : super(key: key);
+  ChatDetail({Key? key, required this.username, required this.imageUser})
+      : super(key: key);
 
   @override
   State<ChatDetail> createState() => _ChatDetailState();
@@ -93,11 +94,22 @@ class _ChatDetailState extends State<ChatDetail> {
             Map<dynamic, dynamic> messages =
                 snapshot.data!.snapshot.value ?? {};
 
+            // Convert the map to a list and sort it based on timestamp
+            List<dynamic> sortedMessages = messages.values.toList();
+            sortedMessages.sort((a, b) {
+              // Parse the time strings to DateTime objects
+              DateTime timeA = DateTime.parse("2000-01-01 " + a['time']);
+              DateTime timeB = DateTime.parse("2000-01-01 " + b['time']);
+
+              // Compare the DateTime objects
+              return timeA.compareTo(timeB);
+            });
+
             return ListView.builder(
               padding: EdgeInsets.all(20),
-              itemCount: messages.length,
+              itemCount: sortedMessages.length,
               itemBuilder: (context, index) {
-                var message = messages.values.elementAt(index);
+                var message = sortedMessages[index];
                 String text = message['text'];
                 String sender = message['sender'];
 
@@ -165,14 +177,14 @@ class _ChatDetailState extends State<ChatDetail> {
           ),
           IconButton(
             icon: Icon(Icons.send, color: Color(0xFF113953), size: 30),
-            onPressed: () => _sendMessage(currentUserUsername,imageUser),
+            onPressed: () => _sendMessage(currentUserUsername, imageUser),
           ),
         ],
       ),
     );
   }
 
-  void _sendMessage(String currentUserUsername,String imageUser) {
+  void _sendMessage(String currentUserUsername, String imageUser) {
     DateTime now = DateTime.now();
     String messageText = _controller.text.trim();
     if (messageText.isNotEmpty && currentUserUsername.isNotEmpty) {
@@ -180,7 +192,7 @@ class _ChatDetailState extends State<ChatDetail> {
           .child(username)
           .push()
           .set({
-            'imageUser':imageUser,
+            'imageUser': imageUser,
             'text': messageText,
             'sender': currentUserUsername,
             'recevier': username,
