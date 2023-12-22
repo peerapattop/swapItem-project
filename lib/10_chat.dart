@@ -61,9 +61,12 @@ class _ChatHomePageState extends State<ChatHomePage> {
                   var latestMessage = sortedMessages.first;
                   String text = latestMessage['text'];
                   String receiver = latestMessage['receiver'];
-                  String sender = latestMessage['sender']; // New property
+                  String sender = latestMessage['sender'];
                   String time = latestMessage['time'];
                   String imageUser = latestMessage['imageUser'];
+                  print('Sender: $sender');
+                  print('Receiver: $receiver');
+                  print('Current user ID: ${currentUser?.uid}');
 
                   messageWidgets.add(MessageListItem(
                     sender: sender,
@@ -71,6 +74,7 @@ class _ChatHomePageState extends State<ChatHomePage> {
                     text: text,
                     time: time,
                     imageUser: imageUser,
+                    currentUserId: currentUser?.uid ?? "", // ส่งตัวแปรนี้
                   ));
                 }
               });
@@ -107,6 +111,7 @@ class MessageListItem extends StatelessWidget {
   final String text;
   final String time;
   final String imageUser;
+  final String currentUserId;
 
   const MessageListItem({
     Key? key,
@@ -115,10 +120,17 @@ class MessageListItem extends StatelessWidget {
     required this.text,
     required this.time,
     required this.imageUser,
+    required this.currentUserId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    bool isCurrentUserSender = currentUserId == sender;
+
+    String displayedUsername = isCurrentUserSender ? receiver : sender;
+
+    print(displayedUsername);
+
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: GestureDetector(
@@ -127,7 +139,7 @@ class MessageListItem extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => ChatDetail(
-                username: receiver,
+                username: displayedUsername,
                 imageUser: imageUser,
               ),
             ),
@@ -136,9 +148,8 @@ class MessageListItem extends StatelessWidget {
         child: Row(
           children: <Widget>[
             CircleAvatar(
-              backgroundImage:
-                  NetworkImage(imageUser), // Load image from network
-              radius: 30, // Size of the avatar
+              backgroundImage: NetworkImage(imageUser),
+              radius: 30,
             ),
             SizedBox(width: 10),
             Expanded(
@@ -146,7 +157,7 @@ class MessageListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    receiver,
+                    displayedUsername,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
