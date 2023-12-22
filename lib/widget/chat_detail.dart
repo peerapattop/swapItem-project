@@ -16,6 +16,7 @@ class ChatDetail extends StatefulWidget {
 class _ChatDetailState extends State<ChatDetail> {
   late String username;
   late String imageUser;
+
   final TextEditingController _controller = TextEditingController();
   User? get currentUser => FirebaseAuth.instance.currentUser;
   String currentUserUsername = '';
@@ -35,6 +36,7 @@ class _ChatDetailState extends State<ChatDetail> {
     super.initState();
     username = widget.username;
     imageUser = widget.imageUser;
+
     getCurrentUsername();
   }
 
@@ -113,28 +115,32 @@ class _ChatDetailState extends State<ChatDetail> {
                 String text = message['text'];
                 String sender = message['sender'];
 
-                return Container(
-                  margin: EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: sender == currentUserUsername
-                        ? MainAxisAlignment.end
-                        : MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: sender == currentUserUsername
-                              ? Colors.blue
-                              : Colors.green,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          text,
-                          style: TextStyle(color: Colors.white),
-                        ),
+                return Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: sender == currentUserUsername
+                            ? MainAxisAlignment.end
+                            : MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: sender == currentUserUsername
+                                  ? Colors.blue
+                                  : Colors.green,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              '$text',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 );
               },
             );
@@ -188,22 +194,45 @@ class _ChatDetailState extends State<ChatDetail> {
     DateTime now = DateTime.now();
     String messageText = _controller.text.trim();
     if (messageText.isNotEmpty && currentUserUsername.isNotEmpty) {
-      userMessagesRef
-          .child(username)
-          .push()
-          .set({
-            'imageUser': imageUser,
-            'text': messageText,
-            'sender': currentUserUsername,
-            'recevier': username,
-            'time': now.hour.toString().padLeft(2, '0') +
-                ":" +
-                now.minute.toString().padLeft(2, '0')
-          })
-          .then((_) => _controller.clear())
-          .catchError((error) {
-            print("Failed to send message: $error");
-          });
+      var senderUid = currentUser?.uid;
+      var receiverUid =
+          'VGQvLhSkJRQwQzifFbOP5kP6S4j1'; // You need to replace this with the UID of the receiver.
+
+      if (senderUid != null) {
+        // Sender's message
+        userMessagesRef.child(username).push().set({
+          'imageUser': imageUser,
+          'text': messageText,
+          'sender': currentUserUsername,
+          'receiver': username,
+          'time': now.hour.toString().padLeft(2, '0') +
+              ":" +
+              now.minute.toString().padLeft(2, '0') +
+              ":" +
+              now.second.toString().padLeft(2, '0')
+        });
+
+        // Receiver's message
+        FirebaseDatabase.instance
+            .ref()
+            .child('users/$receiverUid/messages/$currentUserUsername')
+            .push()
+            .set({
+              'imageUser': imageUser,
+              'text': messageText,
+              'sender': currentUserUsername,
+              'receiver': username,
+              'time': now.hour.toString().padLeft(2, '0') +
+                  ":" +
+                  now.minute.toString().padLeft(2, '0') +
+                  ":" +
+                  now.second.toString().padLeft(2, '0')
+            })
+            .then((_) => _controller.clear())
+            .catchError((error) {
+              print("Failed to send message: $error");
+            });
+      }
     }
   }
 }
