@@ -67,7 +67,7 @@ class _Offer_comeState extends State<Offer_come> {
     });
   }
 
-  Map<String, Map<dynamic, dynamic>> offersMap = {};
+  Map<String, Map<dynamic, dynamic>>? offersMap = {};
 
   void _loadPostData1(String postUid) {
     FirebaseDatabase.instance
@@ -77,9 +77,11 @@ class _Offer_comeState extends State<Offer_come> {
         .onValue
         .listen((databaseEvent1) {
       if (databaseEvent1.snapshot.value != null) {
-        Map<dynamic, dynamic> offers =
+
+        Map<dynamic, dynamic>? offers =
             Map<dynamic, dynamic>.from(databaseEvent1.snapshot.value as Map);
         List<Map<dynamic, dynamic>> offersList = [];
+
         offers.forEach((key, value) {
           offersList.add(Map<dynamic, dynamic>.from(value));
         });
@@ -124,10 +126,20 @@ class _Offer_comeState extends State<Offer_come> {
         body: StreamBuilder(
           stream: _postRef.orderByChild('uid').equalTo(_user.uid).onValue,
           builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (!snapshot.hasData || snapshot.data!.snapshot.value == null) {
+              return Center(
+                child: Text(
+                  'ไม่มีข้อเสนอที่เข้ามา',
+                  style: TextStyle(fontSize: 20),
+                ),
+              );
+            }
             if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
               postsList.clear();
-              Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
-                  snapshot.data!.snapshot.value as Map);
+              Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(snapshot.data!.snapshot.value as Map);
               data.forEach((key, value) {
                 postsList.add(Map<dynamic, dynamic>.from(value));
               });
@@ -420,7 +432,7 @@ class _Offer_comeState extends State<Offer_come> {
                                         },
                                       ),
                                     ),
-                                    Text(selectedOffers1!['post_uid']),
+                                    Text(selectedOffers1?['post_uid']),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
