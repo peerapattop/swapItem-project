@@ -1,3 +1,4 @@
+import '19_offer_come.dart';
 import '5_his_post.dart';
 import '7_first_offer.dart';
 import 'package:intl/intl.dart';
@@ -414,7 +415,7 @@ class _ProfileState extends State<Profile> {
                                     onPressed: () {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (context) => OfferRequest(),
+                                          builder: (context) => Offer_come(),
                                         ),
                                       );
                                     }),

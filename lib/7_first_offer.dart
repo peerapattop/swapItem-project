@@ -62,6 +62,8 @@ class _OfferRequestState extends State<OfferRequest> {
     });
   }
 
+
+
   void selectPayment(Map<dynamic, dynamic> postData) {
     setState(() {
       selectedPost = postData; // Update selectedPost with the chosen data
