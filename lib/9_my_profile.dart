@@ -17,12 +17,12 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  late TextEditingController _firstNameController;
-  late TextEditingController _lastNameController;
-  late TextEditingController _genderController;
-  late TextEditingController _birthdayController;
-  late String status_user;
-  late String remainingTime;
+  late TextEditingController _firstNameController,
+      _lastNameController,
+      _genderController,
+      _birthdayController;
+  late String statusUser, remainingTime;
+
   Map dataUser = {};
   late User _user;
   late DatabaseReference _userRef;
@@ -57,7 +57,6 @@ class _ProfileState extends State<Profile> {
         selectedDate = pickedDate;
         _birthdayController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
 
-        // Save the updated birthday data to the database
         _userRef.update({'birthday': _birthdayController.text});
       });
     }
@@ -184,7 +183,7 @@ class _ProfileState extends State<Profile> {
                       _genderController.text = dataUser['gender'].toString();
                       _birthdayController.text =
                           dataUser['birthday'].toString();
-                      status_user = dataUser['status_user'];
+                      statusUser = dataUser['status_user'];
                       remainingTime = dataUser['remainingTime'];
                       return Padding(
                         padding: const EdgeInsets.all(15.0),
@@ -202,7 +201,7 @@ class _ProfileState extends State<Profile> {
                                 Column(
                                   children: [
                                     Text(
-                                      'สถานะ : $status_user',
+                                      'สถานะ : $statusUser',
                                       style: TextStyle(fontSize: 18),
                                     ),
                                     Text(
@@ -268,13 +267,14 @@ class _ProfileState extends State<Profile> {
                                         child: TextField(
                                           controller: _firstNameController,
                                           decoration: const InputDecoration(
-                                            label: Text(
-                                              "ชื่อ",
-                                              style: TextStyle(fontSize: 20),
-                                            ),
-                                            border: OutlineInputBorder(),
-                                            prefixIcon: Icon(Icons.person),
-                                          ),
+                                              label: Text(
+                                                "ชื่อ",
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                              border: OutlineInputBorder(),
+                                              prefixIcon: Icon(Icons.person),
+                                              suffixIcon: Icon(Icons
+                                                  .drive_file_rename_outline)),
                                         ),
                                       ),
                                       const SizedBox(
@@ -284,13 +284,14 @@ class _ProfileState extends State<Profile> {
                                         child: TextField(
                                           controller: _lastNameController,
                                           decoration: InputDecoration(
-                                            label: Text(
-                                              "นามสกุล",
-                                              style: TextStyle(fontSize: 20),
-                                            ),
-                                            border: OutlineInputBorder(),
-                                            prefixIcon: Icon(Icons.person),
-                                          ),
+                                              label: Text(
+                                                "นามสกุล",
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                              border: OutlineInputBorder(),
+                                              prefixIcon: Icon(Icons.person),
+                                              suffixIcon: Icon(Icons
+                                                  .drive_file_rename_outline)),
                                         ),
                                       ),
                                     ],
