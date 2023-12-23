@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swapitem/12_makeAnOffer.dart';
+import 'package:swapitem/makeAnOffer_page.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 

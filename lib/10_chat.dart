@@ -43,9 +43,21 @@ class _ChatHomePageState extends State<ChatHomePage> {
         body: StreamBuilder(
           stream: _database.child('users/${currentUser?.uid}/messages').onValue,
           builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // แสดง Loading Indicator เมื่อกำลังโหลดข้อมูล
+              return Center(
+                  child: Column(
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 20),
+                  Text('กำลังโหลดข้อมูล'),
+                ],
+              ));
+            }
             if (snapshot.hasData &&
                 !snapshot.hasError &&
                 snapshot.data?.snapshot.value != null) {
+              // ข้อมูลถูกโหลดเสร็จแล้ว
               Map<dynamic, dynamic> messageGroups =
                   snapshot.data!.snapshot.value;
               List<Widget> messageWidgets = [];
@@ -62,18 +74,22 @@ class _ChatHomePageState extends State<ChatHomePage> {
                   String text = latestMessage['text'];
                   String receiver = latestMessage['receiver'];
                   String sender = latestMessage['sender'];
+                  String senderUid = latestMessage['senderUid'];
                   String time = latestMessage['time'];
-                  String imageUser = latestMessage['imageUser'];
+                  String imageUserReceiver = latestMessage['imageUserReceiver'];
+                  String imageUserSender = latestMessage['imageUserSender'];
                   print('Sender: $sender');
                   print('Receiver: $receiver');
                   print('Current user ID: ${currentUser?.uid}');
 
                   messageWidgets.add(MessageListItem(
                     sender: sender,
+                    senderUid:senderUid,
                     receiver: receiver,
                     text: text,
                     time: time,
-                    imageUser: imageUser,
+                    imageUserReceiver: imageUserReceiver,
+                    imageUserSender: imageUserSender,
                     currentUserId: currentUser?.uid ?? "", // ส่งตัวแปรนี้
                   ));
                 }
@@ -107,29 +123,31 @@ class _ChatHomePageState extends State<ChatHomePage> {
 
 class MessageListItem extends StatelessWidget {
   final String sender;
+  final String senderUid;
   final String receiver;
   final String text;
   final String time;
-  final String imageUser;
+  final String imageUserReceiver;
+  final String imageUserSender;
   final String currentUserId;
 
   const MessageListItem({
     Key? key,
     required this.sender,
+    required this.senderUid,
     required this.receiver,
     required this.text,
     required this.time,
-    required this.imageUser,
+    required this.imageUserReceiver,
+    required this.imageUserSender,
     required this.currentUserId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    bool isCurrentUserSender = currentUserId == sender;
+    bool isCurrentUserSender = currentUserId == senderUid;
 
     String displayedUsername = isCurrentUserSender ? receiver : sender;
-
-    print(displayedUsername);
 
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -140,7 +158,7 @@ class MessageListItem extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => ChatDetail(
                 username: displayedUsername,
-                imageUser: imageUser,
+                imageUserReceiver: imageUserReceiver,
               ),
             ),
           );
@@ -148,7 +166,9 @@ class MessageListItem extends StatelessWidget {
         child: Row(
           children: <Widget>[
             CircleAvatar(
-              backgroundImage: NetworkImage(imageUser),
+              backgroundImage: NetworkImage(
+                isCurrentUserSender ? imageUserReceiver : imageUserSender,
+              ),
               radius: 30,
             ),
             SizedBox(width: 10),

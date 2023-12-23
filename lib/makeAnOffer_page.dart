@@ -12,7 +12,11 @@ class MakeAnOffer extends StatefulWidget {
   final String postUid;
   final String username;
   final String imageUser;
-  const MakeAnOffer({Key? key, required this.postUid, required this.username,required this.imageUser})
+  const MakeAnOffer(
+      {Key? key,
+      required this.postUid,
+      required this.username,
+      required this.imageUser})
       : super(key: key);
 
   @override
@@ -49,6 +53,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     dropdownValue = category.first; // Initialize in initState
   }
 
+  @override
   Widget build(BuildContext context) {
     void removeImage(int index) {
       setState(() {
@@ -259,16 +264,20 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                               });
                               try {
                                 String? offerId = await _submitOffer();
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => MakeAnOfferSuccess(
-                                      offer_id: offerId!,
-                                      date: date1,
-                                      time: time1,
-                                      offerNumber: generateRandomNumber(),
+                                if (offerId != null) {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => MakeAnOfferSuccess(
+                                        offer_id: offerId,
+                                        date: date1,
+                                        time: time1,
+                                        offerNumber: generateRandomNumber(),
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                } else {
+                                  // Handle the case where offerId is null before navigation
+                                }
                               } catch (e) {
                                 print(e);
                               }
@@ -325,6 +334,40 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
 
   Future<String?> _submitOffer() async {
     try {
+      if (_nameItem1.text.isEmpty ||
+          _brand1.text.isEmpty ||
+          _model1.text.isEmpty ||
+          _detail1.text.isEmpty ||
+          _images.isEmpty) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text(
+              'แจ้งเตือน',
+              style: TextStyle(color: Colors.red),
+            ),
+             content: const Text('กรุณากรอกข้อมูลให้ครบถ้วน'),
+              actions: <Widget>[
+               ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Colors.green, // Set the button color to green
+                ),
+                child: const Text(
+                  'ตกลง',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              ],
+            );
+          },
+        );
+        return null; // Prevent further processing
+      }
       String uid = FirebaseAuth.instance.currentUser!.uid;
       DatabaseReference userRef =
           FirebaseDatabase.instance.ref().child('users').child(uid);
@@ -351,7 +394,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
         List<String> imageUrls = await _uploadImages();
         // Then, set the data with image URLs in the Realtime Database.
         Map<String, dynamic> dataRef = {
-          'imageUser':imageUser,
+          'imageUser': imageUser,
           'status': 'รอการยืนยัน',
           'offer_uid': offerUid,
           'offerNumber': generateRandomNumber(),
@@ -379,7 +422,6 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
         return itemRef.key;
       }
     } catch (error) {
-      
       Navigator.pop(context);
     }
     return null;

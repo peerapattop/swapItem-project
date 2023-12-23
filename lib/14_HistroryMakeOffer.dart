@@ -769,7 +769,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                               username:
                                                                   postItemData[
                                                                       'username'],
-                                                              imageUser:
+                                                              imageUserReceiver:
                                                                   postItemData[
                                                                       'imageUser'])));
                                                 },
