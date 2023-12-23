@@ -43,9 +43,21 @@ class _ChatHomePageState extends State<ChatHomePage> {
         body: StreamBuilder(
           stream: _database.child('users/${currentUser?.uid}/messages').onValue,
           builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // แสดง Loading Indicator เมื่อกำลังโหลดข้อมูล
+              return Center(
+                  child: Column(
+                children: [ 
+                  CircularProgressIndicator(),
+                  SizedBox(height: 20),
+                  Text('กำลังโหลดข้อมูล'),
+                ],
+              ));
+            }
             if (snapshot.hasData &&
                 !snapshot.hasError &&
                 snapshot.data?.snapshot.value != null) {
+              // ข้อมูลถูกโหลดเสร็จแล้ว
               Map<dynamic, dynamic> messageGroups =
                   snapshot.data!.snapshot.value;
               List<Widget> messageWidgets = [];
