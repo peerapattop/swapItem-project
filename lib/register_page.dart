@@ -7,14 +7,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-class RegisPage extends StatefulWidget {
-  const RegisPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  _RegisPageState createState() => _RegisPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _RegisPageState extends State<RegisPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _firstnameController = TextEditingController();

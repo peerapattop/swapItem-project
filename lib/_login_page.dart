@@ -213,7 +213,7 @@ class _LoginState extends State<Login> {
                           child: ElevatedButton.icon(
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => RegisPage(),
+                                builder: (context) => RegisterPage(),
                               ));
                             },
                             icon: const Icon(
