@@ -26,14 +26,9 @@ class _Offer_comeState extends State<Offer_come> {
 
   late GoogleMapController mapController;
   int? mySlideindex;
+  int? mySlideindex1;
   List<String> image_post = [];
-  List<String> foodList = [
-    "https://cdn.pixabay.com/photo/2010/12/13/10/05/berries-2277_1280.jpg",
-    "https://cdn.pixabay.com/photo/2015/12/09/17/11/vegetables-1085063_640.jpg",
-    "https://cdn.pixabay.com/photo/2017/01/20/15/06/oranges-1995056_640.jpg",
-    "https://cdn.pixabay.com/photo/2014/11/05/15/57/salmon-518032_640.jpg",
-    "https://cdn.pixabay.com/photo/2016/07/22/09/59/fruits-1534494_640.jpg",
-  ];
+  List<String> image_offer = [];
 
   @override
   void initState() {
@@ -77,7 +72,6 @@ class _Offer_comeState extends State<Offer_come> {
         .onValue
         .listen((databaseEvent1) {
       if (databaseEvent1.snapshot.value != null) {
-
         Map<dynamic, dynamic>? offers =
             Map<dynamic, dynamic>.from(databaseEvent1.snapshot.value as Map);
         List<Map<dynamic, dynamic>> offersList = [];
@@ -92,6 +86,9 @@ class _Offer_comeState extends State<Offer_come> {
             print(postsList1);
             _selectedIndex1 = 0; // Select the first offer by default
             selectedOffers1 = offersList.first;
+
+            image_offer =
+            List<String>.from(selectedOffers1?['imageUrls']);
           }
         });
       } else {
@@ -139,7 +136,8 @@ class _Offer_comeState extends State<Offer_come> {
             }
             if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
               postsList.clear();
-              Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(snapshot.data!.snapshot.value as Map);
+              Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
+                  snapshot.data!.snapshot.value as Map);
               data.forEach((key, value) {
                 postsList.add(Map<dynamic, dynamic>.from(value));
               });
@@ -306,10 +304,9 @@ class _Offer_comeState extends State<Offer_come> {
                                           bottom: 10),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          color: Color.fromARGB(
-                                              255, 214, 214, 212),
+                                          color: Color(0xFFF0F0F0),
                                           borderRadius:
-                                              BorderRadius.circular(12.0),
+                                              BorderRadius.circular(7.0),
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(11.0),
@@ -432,7 +429,284 @@ class _Offer_comeState extends State<Offer_come> {
                                         },
                                       ),
                                     ),
-                                    Text(selectedOffers1?['post_uid']),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      width: 400,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 16),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(19),
+                                        color: Color(0xFFF0F0F0),
+                                      ),
+
+                                      // Reduced horizontal padding
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8, top: 8, right: 8),
+                                            child: SizedBox(
+                                              height: 300,
+                                              child: PageView.builder(
+                                                onPageChanged: (value) {
+                                                  setState(() {
+                                                    mySlideindex1 = value;
+                                                  });
+                                                },
+                                                itemCount: image_offer.length,
+                                                itemBuilder: (context, index) {
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            20.0),
+                                                    child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                        child: Image.network(
+                                                          image_offer[index],
+                                                          fit: BoxFit.cover,
+                                                        )),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 60,
+                                            width: 300,
+                                            child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: image_offer.length,
+                                              itemBuilder: (context, index) {
+                                                return Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      20.0),
+                                                  child: Container(
+                                                    height: 20,
+                                                    width: 20,
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: index ==
+                                                              mySlideindex1
+                                                          ? Colors.deepPurple
+                                                          : Colors.grey,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 203,
+                                            height: 22,
+                                            child: Text(
+                                              "เลขที่ผู้ยื่นข้อเสนอ : " +
+                                                  selectedOffers1![
+                                                          'offerNumber']
+                                                      .toString(),
+                                              style: TextStyle(
+                                                color: Color(0xFFA717DA),
+                                                fontSize: 17,
+                                                fontFamily: 'Inter',
+                                                fontWeight: FontWeight.w400,
+                                                height: 0,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 6), // Added spacing
+                                          SizedBox(
+                                            width: 217,
+                                            height: 21,
+                                            child: Text(
+                                              "วันที่ " +
+                                                  selectedOffers1!['date']
+                                                      .toString() +
+                                                  " เวลา" +
+                                                  selectedOffers1!['time']
+                                                      .toString(),
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 17,
+                                                fontFamily: 'Inter',
+                                                fontWeight: FontWeight.w400,
+                                                height: 0,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 6),
+                                          SizedBox(
+                                            width: 217,
+                                            height: 21,
+                                            child: Text(
+                                              "เวลา " +
+                                                  selectedOffers1!['time']
+                                                      .toString(),
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 17,
+                                                fontFamily: 'Inter',
+                                                fontWeight: FontWeight.w400,
+                                                height: 0,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 6), // Added spacing
+                                          Text.rich(
+                                            TextSpan(
+                                              children: [
+                                                TextSpan(
+                                                  text: 'ชื่อคนเสนอ : ',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 17,
+                                                    fontFamily: 'Inter',
+                                                    fontWeight: FontWeight.w400,
+                                                    height: 0,
+                                                  ),
+                                                ),
+                                                TextSpan(
+                                                  text: 'Simpson',
+                                                  style: TextStyle(
+                                                    color: Color(0xFFA717DA),
+                                                    fontSize: 17,
+                                                    fontFamily: 'Inter',
+                                                    fontWeight: FontWeight.w400,
+                                                    height: 0,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(height: 6), // Added spacing
+                                          Text(
+                                            'ชื่อสิ่งของ : ' +
+                                                selectedOffers1!['nameitem1'],
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 17,
+                                              fontFamily: 'Inter',
+                                              fontWeight: FontWeight.w400,
+                                              height: 0,
+                                            ),
+                                          ),
+                                          SizedBox(height: 6), // Added spacing
+                                          Text(
+                                            'แบรนด์: ' +
+                                                selectedOffers1!['brand1'],
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 17,
+                                              fontFamily: 'Inter',
+                                              fontWeight: FontWeight.w400,
+                                              height: 0,
+                                            ),
+                                          ),
+                                          SizedBox(height: 6), // Added spacing
+                                          Text(
+                                            'รุ่น: ' +
+                                                selectedOffers1!['model1'],
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 17,
+                                              fontFamily: 'Inter',
+                                              fontWeight: FontWeight.w400,
+                                              height: 0,
+                                            ),
+                                          ),
+                                          SizedBox(height: 6), // Added spacing
+                                          Text(
+                                            'หมวดหมู่ : ' +
+                                                selectedOffers1!['type1'],
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 17,
+                                              fontFamily: 'Inter',
+                                              fontWeight: FontWeight.w400,
+                                              height: 0,
+                                            ),
+                                          ),
+                                          SizedBox(height: 6), // Added spacing
+                                          Text(
+                                            'รายละเอียด : ' +
+                                                selectedOffers1!['detail1'],
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 17,
+                                              fontFamily: 'Inter',
+                                              fontWeight: FontWeight.w400,
+                                              height: 0,
+                                            ),
+                                          ),
+                                          SizedBox(height: 6),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                'สถานะการยื่น :',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 17,
+                                                  fontFamily: 'Inter',
+                                                  fontWeight: FontWeight.w400,
+                                                  height: 0,
+                                                ),
+                                              ),
+                                              SizedBox(width: 6),
+                                              Container(
+                                                width: 11,
+                                                height: 11,
+                                                decoration: ShapeDecoration(
+                                                  color: Color(0xFFBAFA7B),
+                                                  shape: OvalBorder(
+                                                      side:
+                                                          BorderSide(width: 1)),
+                                                ),
+                                              ),
+                                              Text(
+                                                ' สามารถแลกเปลี่ยนได้',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 17,
+                                                  fontFamily: 'Inter',
+                                                  fontWeight: FontWeight.w400,
+                                                  height: 0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              SizedBox(width: 115, height: 40),
+                                              Container(
+                                                width: 11,
+                                                height: 11,
+                                                decoration: ShapeDecoration(
+                                                  color: Color(0xFFD9D9D9),
+                                                  shape: OvalBorder(
+                                                      side:
+                                                          BorderSide(width: 1)),
+                                                ),
+                                              ),
+                                              Text(
+                                                ' ถูกลบ',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 17,
+                                                  fontFamily: 'Inter',
+                                                  fontWeight: FontWeight.w400,
+                                                  height: 0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 6), // Added spacing
+                                        ],
+                                      ),
+                                    ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
