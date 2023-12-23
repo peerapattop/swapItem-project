@@ -108,134 +108,136 @@ class _NewPostState extends State<NewPost> {
   }
 
   Future<void> buildPost(BuildContext context, List<File> images) async {
-  try {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-    DatabaseReference userRef =
-        FirebaseDatabase.instance.ref().child('users').child(uid);
-    DatabaseEvent userDataSnapshot = await userRef.once();
-    Map<dynamic, dynamic> datamap =
-        userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
-    int currentPostCount = int.tryParse(datamap['postCount'].toString()) ?? 0;
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      DatabaseReference userRef =
+          FirebaseDatabase.instance.ref().child('users').child(uid);
+      DatabaseEvent userDataSnapshot = await userRef.once();
+      Map<dynamic, dynamic> datamap =
+          userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
+      int currentPostCount = int.tryParse(datamap['postCount'].toString()) ?? 0;
 
+      // ตรวจสอบว่ายังมีโอกาสโพสต์หรือไม่
+      if (currentPostCount > 0 || canPostAfter30Days(userRef, datamap)) {
+        // ลดค่า postCount
+        if (currentPostCount > 0) {
+          await userRef.update({
+            'postCount': currentPostCount - 1,
+            'lastPostDate': DateTime.now().toString(),
+          });
+        }
 
-    // ตรวจสอบว่ายังมีโอกาสโพสต์หรือไม่
-    if (currentPostCount > 0 || canPostAfter30Days(userRef, datamap)) {
-      // ลดค่า postCount
-      if (currentPostCount > 0) {
-        await userRef.update({
-          'postCount': currentPostCount - 1,
-          'lastPostDate': DateTime.now().toString(),
-        });
+        // ... ส่วนที่เหลือของโค้ดสำหรับการโพสต์
+        String username = datamap['username'];
+        String email = datamap['email'];
+        String imageUser = datamap['image_user'];
+        DatabaseReference itemRef =
+            FirebaseDatabase.instance.ref().child('postitem').push();
+        List<String> imageUrls = await uploadImages(images);
+
+        // Generate uid for the post
+        String? postUid = itemRef.key;
+
+        // บันทึก URL รูปภาพพร้อมกับข้อมูลอื่น ๆ ในฐานข้อมูล
+        Map userDataMap = {
+          'imageUser': imageUser,
+          'post_uid': postUid,
+          'email': email,
+          'postNumber': generateRandomPostNumber(),
+          'imageUrls': imageUrls,
+          'type': dropdownValue,
+          'latitude': selectedLatitude.toString(),
+          'longitude': selectedLongitude.toString(),
+          'time': now.hour.toString().padLeft(2, '0') +
+              ":" +
+              now.minute.toString().padLeft(2, '0') +
+              ":" +
+              now.second.toString().padLeft(2, '0'),
+          'date': now.year.toString() +
+              "-" +
+              now.month.toString().padLeft(2, '0') +
+              "-" +
+              now.day.toString().padLeft(2, '0'),
+          'username': username,
+          'item_name': item_name.text.trim(),
+          'brand': brand.text.trim(),
+          "model": model.text.trim(),
+          "detail": details.text.trim(),
+          "item_name1": item_name1.text.trim(),
+          "brand1": brand1.text.trim(),
+          "model1": model1.text.trim(),
+          "details1": details1.text.trim(),
+          'uid': uid,
+        };
+        await itemRef.set(userDataMap);
       }
-
-      // ... ส่วนที่เหลือของโค้ดสำหรับการโพสต์
-      String username = datamap['username'];
-      String email = datamap['email'];
-      String imageUser = datamap['image_user'];
-      DatabaseReference itemRef =
-          FirebaseDatabase.instance.ref().child('postitem').push();
-      List<String> imageUrls = await uploadImages(images);
-
-      // Generate uid for the post
-      String? postUid = itemRef.key;
-
-      // บันทึก URL รูปภาพพร้อมกับข้อมูลอื่น ๆ ในฐานข้อมูล
-      Map userDataMap = {
-        'imageUser':imageUser,
-        'post_uid':postUid,
-        'email': email,
-        'postNumber': generateRandomPostNumber(),
-        'imageUrls': imageUrls,
-        'type': dropdownValue,
-        'latitude': selectedLatitude.toString(),
-        'longitude': selectedLongitude.toString(),
-        'time': now.hour.toString().padLeft(2, '0') +
-            ":" +
-            now.minute.toString().padLeft(2, '0') +
-            ":" +
-            now.second.toString().padLeft(2, '0'),
-        'date': now.year.toString() +
-            "-" +
-            now.month.toString().padLeft(2, '0') +
-            "-" +
-            now.day.toString().padLeft(2, '0'),
-        'username': username,
-        'item_name': item_name.text.trim(),
-        'brand': brand.text.trim(),
-        "model": model.text.trim(),
-        "detail": details.text.trim(),
-        "item_name1": item_name1.text.trim(),
-        "brand1": brand1.text.trim(),
-        "model1": model1.text.trim(),
-        "details1": details1.text.trim(),
-        'uid': uid,
-      };
-      await itemRef.set(userDataMap);
-    } 
-  } catch (error) {
-    print('Error in buildPost: $error');
-    Navigator.pop(context);
-  }
-}
-
-
-  bool canPostAfter30Days(
-  DatabaseReference userRef, Map<dynamic, dynamic> userData
-) {
-  // Check if last post date is available
-  if (userData.containsKey('lastPostDate')) {
-    DateTime lastPostDate = DateTime.parse(userData['lastPostDate'].toString());
-    DateTime currentDate = DateTime.now();
-
-    // Check if 30 days have passed since the last post
-    if (currentDate.difference(lastPostDate).inDays >= 30) {
-      // Reset post count and update last post date
-      userRef.set({
-        'postCount': 5,
-        'lastPostDate': currentDate.toIso8601String(),
-      });
-      return true;
-    } else {
-      Duration remainingTime =
-          lastPostDate.add(Duration(days: 30)).difference(currentDate);
-
-      // Extract days, hours, minutes, and seconds from the remaining time
-      int daysRemaining = remainingTime.inDays;
-      int hoursRemaining = remainingTime.inHours % 24;
-      int minutesRemaining = remainingTime.inMinutes % 60;
-
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Row(
-              children: [
-                Image.network('https://cdn-icons-png.flaticon.com/128/9068/9068699.png',width: 40,),
-                Text(' ไม่สามารถโพสต์ได้'),
-              ],
-            ),
-            content: Text(
-                'เนื่องจากครบจำนวนการโพสต์ 5 ครั้ง/เดือน \nโปรดรอ : $daysRemaining วัน $hoursRemaining ชั่วโมง $minutesRemaining นาที\nหรือสมัคร VIP เพื่อโพสต์หรือยื่นข้อเสนอได้ไม่จำกัด'),
-            actions: <Widget>[
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('ยืนยัน',style: TextStyle(color: Colors.white),),
-              ),
-            ],
-          );
-        },
-      );
+    } catch (error) {
+      print('Error in buildPost: $error');
+      Navigator.pop(context);
     }
   }
 
-  return false;
-}
+  bool canPostAfter30Days(
+      DatabaseReference userRef, Map<dynamic, dynamic> userData) {
+    // Check if last post date is available
+    if (userData.containsKey('lastPostDate')) {
+      DateTime lastPostDate =
+          DateTime.parse(userData['lastPostDate'].toString());
+      DateTime currentDate = DateTime.now();
 
+      // Check if 30 days have passed since the last post
+      if (currentDate.difference(lastPostDate).inDays >= 30) {
+        // Reset post count and update last post date
+        userRef.set({
+          'postCount': 5,
+          'lastPostDate': currentDate.toIso8601String(),
+        });
+        return true;
+      } else {
+        Duration remainingTime =
+            lastPostDate.add(Duration(days: 30)).difference(currentDate);
+
+        // Extract days, hours, minutes, and seconds from the remaining time
+        int daysRemaining = remainingTime.inDays;
+        int hoursRemaining = remainingTime.inHours % 24;
+        int minutesRemaining = remainingTime.inMinutes % 60;
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Row(
+                children: [
+                  Image.network(
+                    'https://cdn-icons-png.flaticon.com/128/9068/9068699.png',
+                    width: 40,
+                  ),
+                  Text(' ไม่สามารถโพสต์ได้'),
+                ],
+              ),
+              content: Text(
+                  'เนื่องจากครบจำนวนการโพสต์ 5 ครั้ง/เดือน \nโปรดรอ : $daysRemaining วัน $hoursRemaining ชั่วโมง $minutesRemaining นาที\nหรือสมัคร VIP เพื่อโพสต์หรือยื่นข้อเสนอได้ไม่จำกัด'),
+              actions: <Widget>[
+                ElevatedButton(
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'ยืนยัน',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
+
+    return false;
+  }
 
   Future<List<String>> uploadImages(List<File> images) async {
     List<String> imageUrls = [];
@@ -267,6 +269,69 @@ class _NewPostState extends State<NewPost> {
 
   Future<bool> _showPostConfirmationDialog() async {
     Completer<bool> completer = Completer<bool>();
+
+    // Add input validation
+    if (item_name.text.trim().isEmpty ||
+        brand.text.trim().isEmpty ||
+        model.text.trim().isEmpty ||
+        details.text.trim().isEmpty ||
+        item_name1.text.trim().isEmpty ||
+        brand1.text.trim().isEmpty ||
+        model1.text.trim().isEmpty ||
+        details1.text.trim().isEmpty ||
+        selectedLatitude == null ||
+        selectedLongitude == null ||
+        _images.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              'แจ้งเตือน',
+              style: TextStyle(color: Colors.red),
+            ),
+             content: const Text('กรุณากรอกข้อมูลให้ครบถ้วน'),
+            actions: <Widget>[
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Colors.green, // Set the button color to green
+                ),
+                child: const Text(
+                  'ตกลง',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+      return false;
+    }
+
+    // Check if images are attached
+    if (_images.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('กรุณาแนบรูปภาพ'),
+            actions: <Widget>[
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('ตกลง'),
+              ),
+            ],
+          );
+        },
+      );
+      return false;
+    }
 
     showDialog(
       context: context,
@@ -321,7 +386,6 @@ class _NewPostState extends State<NewPost> {
                       Navigator.of(context).pop();
                       completer.complete(true);
                       Navigator.of(context).pop();
-                      
                     },
                     child: Text(
                       'ยืนยัน',
