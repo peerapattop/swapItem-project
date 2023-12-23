@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 
 class ChatDetail extends StatefulWidget {
   final String username;
-  final String imageUser;
+  final String imageUserReceiver;
 
-  ChatDetail({Key? key, required this.username, required this.imageUser})
+  const ChatDetail(
+      {Key? key, required this.username, required this.imageUserReceiver})
       : super(key: key);
 
   @override
@@ -15,7 +16,8 @@ class ChatDetail extends StatefulWidget {
 
 class _ChatDetailState extends State<ChatDetail> {
   late String username;
-  late String imageUser;
+  late String imageUserReceiver;
+  late String imageUserSender;
 
   final TextEditingController _controller = TextEditingController();
   User? get currentUser => FirebaseAuth.instance.currentUser;
@@ -35,24 +37,31 @@ class _ChatDetailState extends State<ChatDetail> {
   void initState() {
     super.initState();
     username = widget.username;
-    imageUser = widget.imageUser;
+    imageUserReceiver = widget.imageUserReceiver;
 
     getCurrentUsername();
   }
 
   void getCurrentUsername() {
-    var user = currentUser;
-    if (user != null) {
-      DatabaseReference userRef =
-          FirebaseDatabase.instance.ref().child('users/${user.uid}/username');
-      userRef.onValue.listen((event) {
-        final String usernameme = event.snapshot.value as String;
+  var user = currentUser;
+  if (user != null) {
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.ref().child('users/${user.uid}');
+    userRef.onValue.listen((event) {
+      final data = event.snapshot.value as Map<dynamic, dynamic>?;
+
+      if (data != null) {
+        final String usernameme = data['username'] as String? ?? '';
+        final String profileImage = data['image_user'] as String? ?? '';
         setState(() {
           currentUserUsername = usernameme;
+          imageUserSender = profileImage;
         });
-      });
-    }
+      }
+    });
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +79,7 @@ class _ChatDetailState extends State<ChatDetail> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(35),
                     child: Image.network(
-                      imageUser,
+                      imageUserReceiver,
                       height: 45,
                       width: 45,
                     ),
@@ -183,33 +192,37 @@ class _ChatDetailState extends State<ChatDetail> {
           ),
           IconButton(
             icon: Icon(Icons.send, color: Color(0xFF113953), size: 30),
-            onPressed: () => _sendMessage(currentUserUsername, imageUser),
+            onPressed: () =>
+                _sendMessage(currentUserUsername, imageUserReceiver),
           ),
         ],
       ),
     );
   }
 
-  void _sendMessage(String currentUserUsername, String imageUser) {
+  void _sendMessage(String currentUserUsername, String imageUserReceiver) {
     DateTime now = DateTime.now();
     String messageText = _controller.text.trim();
     if (messageText.isNotEmpty && currentUserUsername.isNotEmpty) {
       var senderUid = currentUser?.uid;
       var receiverUid =
           'VGQvLhSkJRQwQzifFbOP5kP6S4j1'; // You need to replace this with the UID of the receiver.
-
+      String time = now.hour.toString().padLeft(2, '0') +
+          ":" +
+          now.minute.toString().padLeft(2, '0') +
+          ":" +
+          now.second.toString().padLeft(2, '0');
       if (senderUid != null) {
         // Sender's message
         userMessagesRef.child(username).push().set({
-          'imageUser': imageUser,
+          'imageUserReceiver': imageUserReceiver,
+          'imageUserSender': imageUserSender,
           'text': messageText,
           'sender': currentUserUsername,
+          'senderUid': senderUid,
           'receiver': username,
-          'time': now.hour.toString().padLeft(2, '0') +
-              ":" +
-              now.minute.toString().padLeft(2, '0') +
-              ":" +
-              now.second.toString().padLeft(2, '0')
+          'receiverUid': receiverUid,
+          'time': time,
         });
 
         // Receiver's message
@@ -218,15 +231,14 @@ class _ChatDetailState extends State<ChatDetail> {
             .child('users/$receiverUid/messages/$currentUserUsername')
             .push()
             .set({
-              'imageUser': imageUser,
+              'imageUserReceiver': imageUserReceiver,
+              'imageUserSender': imageUserSender,
               'text': messageText,
               'sender': currentUserUsername,
+              'senderUid': senderUid,
               'receiver': username,
-              'time': now.hour.toString().padLeft(2, '0') +
-                  ":" +
-                  now.minute.toString().padLeft(2, '0') +
-                  ":" +
-                  now.second.toString().padLeft(2, '0')
+              'receiverUid': receiverUid,
+              'time': time,
             })
             .then((_) => _controller.clear())
             .catchError((error) {
