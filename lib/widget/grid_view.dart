@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:swapitem/11_detail.dart';
+import 'package:swapitem/detailPost_page.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_database/firebase_database.dart';
 
