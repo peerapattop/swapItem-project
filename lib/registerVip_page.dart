@@ -31,7 +31,6 @@ class _PaymentState extends State<Payment> {
   }
 
   void createRequestVip() async {
-    
     // ดึง UID ของผู้ใช้ที่ล็อกอินอยู่
     String uid = FirebaseAuth.instance.currentUser!.uid;
     DateTime now = DateTime.now();
@@ -56,6 +55,7 @@ class _PaymentState extends State<Payment> {
 
       // ตรวจสอบว่า dropdownValue ไม่ใช่ null
       selectedPackage = dropdownValue;
+
       String fileName = 'payment_${DateTime.now().millisecondsSinceEpoch}.png';
 
       // อัปโหลดรูปภาพไปยัง Firebase Storage
@@ -108,6 +108,38 @@ class _PaymentState extends State<Payment> {
   }
 
   Future<void> _showPaymentConfirmationDialog(BuildContext context) async {
+    if (_imageFile == null) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              'แจ้งเตือน',
+              style: TextStyle(
+                color: Colors.red,
+              ),
+            ),
+            content: const Text('กรุณาเลือกรูปภาพสลิปการโอนเงิน'),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Colors.green, // Set the button color to green
+                ),
+                child: const Text(
+                  'ตกลง',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -165,7 +197,6 @@ class _PaymentState extends State<Payment> {
                               builder: (context) => PaymentSuccess(
                                     date: DateTime.now(),
                                     time: DateTime.now(),
-                                    
                                   )));
                     },
                     child: const Text(
@@ -198,7 +229,7 @@ class _PaymentState extends State<Payment> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("ชำระเงิน"),
+          title: const Text("ชำระเงิน"),
           toolbarHeight: 40,
           centerTitle: true,
           flexibleSpace: Container(
@@ -223,13 +254,11 @@ class _PaymentState extends State<Payment> {
                   ),
                 ),
               ),
-              Text(
+              const Text(
                 'บริษัท ????????????? จำกัด',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               DropdownMenu<String>(
                 width: 280,
                 initialSelection: package.first,
