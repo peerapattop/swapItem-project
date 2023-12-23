@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:swapitem/0_btnnt.dart';
-import 'package:swapitem/_login_page.dart';
+import 'package:swapitem/login_page.dart';
 import 'package:swapitem/api/firebase_api.dart';
 import 'package:swapitem/firebase_options.dart';
 
@@ -43,7 +43,7 @@ class _MainPageState extends State<MainPage> {
         if (snapshot.hasData) {
           return btnnt();
         } else {
-          return Login();
+          return LoginPage();
         }
       },
     );
