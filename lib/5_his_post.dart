@@ -454,9 +454,15 @@ class _HistoryPostState extends State<HistoryPost> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                   Image.network('https://cdn-icons-png.flaticon.com/256/11191/11191755.png',width: 100,),
-                   SizedBox(height: 20),
-                   Text('ไม่มีประวัติการโพสต์',style: TextStyle(fontSize: 20),),
+                    Image.network(
+                      'https://cdn-icons-png.flaticon.com/256/11191/11191755.png',
+                      width: 100,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'ไม่มีประวัติการโพสต์',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ],
                 ),
               );

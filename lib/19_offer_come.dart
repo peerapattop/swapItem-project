@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:swapitem/widget/offer_imageshow.dart';
 
 class Offer_come extends StatefulWidget {
   const Offer_come({Key? key}) : super(key: key);
@@ -11,6 +12,7 @@ class Offer_come extends StatefulWidget {
 }
 
 class _Offer_comeState extends State<Offer_come> {
+  int currentPage = 0;
   late User _user;
   double? latitude;
   double? longitude;
@@ -29,6 +31,13 @@ class _Offer_comeState extends State<Offer_come> {
   int? mySlideindex1;
   List<String> image_post = [];
   List<String> image_offer = [];
+  List<String> foodList = [
+    "https://cdn.pixabay.com/photo/2010/12/13/10/05/berries-2277_1280.jpg",
+    "https://cdn.pixabay.com/photo/2015/12/09/17/11/vegetables-1085063_640.jpg",
+    "https://cdn.pixabay.com/photo/2017/01/20/15/06/oranges-1995056_640.jpg",
+    "https://cdn.pixabay.com/photo/2014/11/05/15/57/salmon-518032_640.jpg",
+    "https://cdn.pixabay.com/photo/2016/07/22/09/59/fruits-1534494_640.jpg",
+  ];
 
   @override
   void initState() {
@@ -86,9 +95,6 @@ class _Offer_comeState extends State<Offer_come> {
             print(postsList1);
             _selectedIndex1 = 0; // Select the first offer by default
             selectedOffers1 = offersList.first;
-
-            image_offer =
-            List<String>.from(selectedOffers1?['imageUrls']);
           }
         });
       } else {
@@ -150,7 +156,7 @@ class _Offer_comeState extends State<Offer_come> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: postsList.asMap().entries.map((entry) {
                         int idx = entry.key;
-
+                        image_offer = List<String>.from(selectedOffers1!['imageUrls']);
                         Map<dynamic, dynamic> postData = entry.value;
                         image_post =
                             List<String>.from(selectedPost!['imageUrls']);
@@ -171,61 +177,11 @@ class _Offer_comeState extends State<Offer_come> {
                           child: ListView(children: [
                           Column(
                             children: [
+                              ImageGalleryWidget(imageUrls: image_post,),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8, top: 8, right: 8),
-                                      child: SizedBox(
-                                        height: 300,
-                                        child: PageView.builder(
-                                          onPageChanged: (value) {
-                                            setState(() {
-                                              mySlideindex = value;
-                                            });
-                                          },
-                                          itemCount: image_post.length,
-                                          itemBuilder: (context, index) {
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.all(20.0),
-                                              child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  child: Image.network(
-                                                    image_post[index],
-                                                    fit: BoxFit.cover,
-                                                  )),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 60,
-                                      width: 300,
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: image_post.length,
-                                        itemBuilder: (context, index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.all(20.0),
-                                            child: Container(
-                                              height: 20,
-                                              width: 20,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: index == mySlideindex
-                                                    ? Colors.deepPurple
-                                                    : Colors.grey,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
                                     Row(
                                       children: [
                                         Icon(
@@ -411,27 +367,11 @@ class _Offer_comeState extends State<Offer_come> {
                                       style: TextStyle(fontSize: 20),
                                     ),
                                     SizedBox(height: 10),
-                                    SizedBox(
-                                      height: 50,
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: postsList1.length,
-                                        itemBuilder: (context, index) {
-                                          Map<dynamic, dynamic> offerData =
-                                              postsList1[index];
-                                          // The following line renders the circular number button
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 4.0),
-                                            child: buildCircularNumberButton1(
-                                                index, offerData),
-                                          );
-                                        },
-                                      ),
-                                    ),
+
                                     SizedBox(
                                       height: 10,
                                     ),
+                                    ImageGalleryWidget(imageUrls: image_offer,),//
                                     Container(
                                       width: 400,
                                       padding: EdgeInsets.symmetric(
@@ -446,61 +386,6 @@ class _Offer_comeState extends State<Offer_come> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8, top: 8, right: 8),
-                                            child: SizedBox(
-                                              height: 300,
-                                              child: PageView.builder(
-                                                onPageChanged: (value) {
-                                                  setState(() {
-                                                    mySlideindex1 = value;
-                                                  });
-                                                },
-                                                itemCount: image_offer.length,
-                                                itemBuilder: (context, index) {
-                                                  return Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            20.0),
-                                                    child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                        child: Image.network(
-                                                          image_offer[index],
-                                                          fit: BoxFit.cover,
-                                                        )),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 60,
-                                            width: 300,
-                                            child: ListView.builder(
-                                              scrollDirection: Axis.horizontal,
-                                              itemCount: image_offer.length,
-                                              itemBuilder: (context, index) {
-                                                return Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      20.0),
-                                                  child: Container(
-                                                    height: 20,
-                                                    width: 20,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: index ==
-                                                              mySlideindex1
-                                                          ? Colors.deepPurple
-                                                          : Colors.grey,
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
                                           SizedBox(
                                             width: 203,
                                             height: 22,
@@ -621,7 +506,7 @@ class _Offer_comeState extends State<Offer_come> {
                                           SizedBox(height: 6), // Added spacing
                                           Text(
                                             'หมวดหมู่ : ' +
-                                                selectedOffers1!['type1'],
+                                                selectedOffers1?['type1'],
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 17,
@@ -633,7 +518,7 @@ class _Offer_comeState extends State<Offer_come> {
                                           SizedBox(height: 6), // Added spacing
                                           Text(
                                             'รายละเอียด : ' +
-                                                selectedOffers1!['detail1'],
+                                                selectedOffers1?['detail1'],
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 17,
@@ -685,14 +570,14 @@ class _Offer_comeState extends State<Offer_come> {
                                                 width: 11,
                                                 height: 11,
                                                 decoration: ShapeDecoration(
-                                                  color: Color(0xFFD9D9D9),
+                                                  color: Color(0xFFBAFA7B),
                                                   shape: OvalBorder(
                                                       side:
                                                           BorderSide(width: 1)),
                                                 ),
                                               ),
                                               Text(
-                                                ' ถูกลบ',
+                                                ' ลบ',
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 17,
@@ -703,10 +588,15 @@ class _Offer_comeState extends State<Offer_come> {
                                               ),
                                             ],
                                           ),
+
                                           SizedBox(height: 6), // Added spacing
                                         ],
                                       ),
                                     ),
+
+                                    //Text("เลขที่ผู้ยื่นข้อเสนอ" +selectedOffers1?['post_uid']),
+                                    // Text(selectedOffers1?['time']),
+                                    // Text(selectedOffers1?['post_uid']),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
