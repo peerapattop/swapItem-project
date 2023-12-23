@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swapitem/registerVip_page.dart';
-import 'package:swapitem/3_build_post.dart';
+import 'package:swapitem/buildPost_page.dart';
 import 'package:swapitem/widget/grid_view.dart';
 import 'package:swapitem/notification_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
