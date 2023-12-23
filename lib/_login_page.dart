@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swapitem/1_register_page.dart';
+import 'package:swapitem/register_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'forgot_password.dart';

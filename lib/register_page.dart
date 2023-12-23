@@ -23,7 +23,7 @@ class _RegisPageState extends State<RegisPage> {
   final _birthdayController = TextEditingController();
   final _usernameController = TextEditingController();
   int monthlyPostLimit = 5;
-  int makeofferCount = 5;
+  int makeOfferCount = 5;
 
   XFile? _imageFile;
   String? imageUrl;
@@ -51,12 +51,14 @@ class _RegisPageState extends State<RegisPage> {
         selectedGender.isEmpty ||
         _usernameController.text.trim().isEmpty ||
         _emailController.text.trim().isEmpty ||
+        _imageFile == null ||
+        _birthdayController.text.trim().isEmpty ||
         _passwordController.text.trim().isEmpty) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Row(
+            title: const Row(
               children: [
                 Icon(
                   Icons.error,
@@ -71,7 +73,7 @@ class _RegisPageState extends State<RegisPage> {
                 ),
               ],
             ),
-            content: Text('โปรดกรอกข้อมูลให้ครบทุกช่อง'),
+            content: const Text('โปรดกรอกข้อมูลให้ครบทุกช่อง'),
             actions: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -80,7 +82,7 @@ class _RegisPageState extends State<RegisPage> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text(
+                child: const Text(
                   'รับทราบ',
                   style: TextStyle(color: Colors.white),
                 ),
@@ -95,7 +97,7 @@ class _RegisPageState extends State<RegisPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return const AlertDialog(
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -140,8 +142,7 @@ class _RegisPageState extends State<RegisPage> {
           // ตรวจสอบว่าข้อมูลที่ได้มีค่าหรือไม่
           return snapshot.snapshot.value != null;
         } catch (error) {
-          print("เกิดข้อผิดพลาดในการตรวจสอบ ID: $error");
-          return false; // หรือตอบ false ในกรณีที่เกิดข้อผิดพลาด
+          return false;
         }
       }
 
@@ -187,7 +188,7 @@ class _RegisPageState extends State<RegisPage> {
         'remainingTime': '',
         'uid': uid,
         'lastPostDate': '',
-        'makeofferCount': makeofferCount,
+        'makeofferCount': makeOfferCount,
         'postCount': monthlyPostLimit,
         'status_user': 'ผู้ใช้ทั่วไป',
         'image_user': imageUrl,
@@ -266,10 +267,8 @@ class _RegisPageState extends State<RegisPage> {
           child: Center(
             child: Column(
               children: [
-                SizedBox(
-                  height: 15,
-                ),
-                imgPost(),
+                const SizedBox(height: 15),
+                imgProfile(),
                 textField('ชื่อ', Icons.person, _firstnameController),
                 textField('นามสกุล', Icons.person, _lastnameController),
                 choseGender(),
@@ -290,9 +289,7 @@ class _RegisPageState extends State<RegisPage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
@@ -304,8 +301,8 @@ class _RegisPageState extends State<RegisPage> {
                     child: const Text(
                       'ลงทะเบียน',
                       style: TextStyle(
-                        color: Colors.white, // Change text color as needed
-                        fontSize: 18, // Change font size as needed
+                        color: Colors.white,
+                        fontSize: 18,
                       ),
                     ),
                   ),
@@ -325,10 +322,10 @@ class _RegisPageState extends State<RegisPage> {
       child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: '$labelText',
+          border: const OutlineInputBorder(),
+          labelText: labelText,
           labelStyle: const TextStyle(fontSize: 20),
-          prefixIcon: Icon(icon), // Use prefixIcon for adding an icon
+          prefixIcon: Icon(icon),
         ),
       ),
     );
@@ -349,14 +346,14 @@ class _RegisPageState extends State<RegisPage> {
     }
   }
 
-  Widget imgPost() {
+  Widget imgProfile() {
     return Stack(
       children: <Widget>[
         CircleAvatar(
           radius: 60.0,
           backgroundImage: _imageFile != null
               ? FileImage(File(_imageFile!.path))
-              : AssetImage('assets/icons/Person-icon.jpg')
+              : const AssetImage('assets/icons/Person-icon.jpg')
                   as ImageProvider<Object>,
         ),
         Positioned(
@@ -365,11 +362,11 @@ class _RegisPageState extends State<RegisPage> {
           child: InkWell(
             onTap: () {
               showModalBottomSheet(
-                  context: context, builder: ((Builder) => bottomSheet()));
+                  context: context, builder: ((builder) => bottomSheet()));
             },
             child: const Icon(
               Icons.camera_alt,
-              color: const Color.fromARGB(255, 52, 0, 150),
+              color: Color.fromARGB(255, 52, 0, 150),
               size: 28,
             ),
           ),
@@ -382,21 +379,19 @@ class _RegisPageState extends State<RegisPage> {
     return Container(
       height: 100.0,
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
         horizontal: 20,
         vertical: 20,
       ),
       child: Column(
         children: <Widget>[
-          Text(
+          const Text(
             "เลือกรูปภาพของคุณ",
             style: TextStyle(
               fontSize: 20,
             ),
           ),
-          SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -404,15 +399,15 @@ class _RegisPageState extends State<RegisPage> {
                 onPressed: () {
                   takePhoto(ImageSource.camera);
                 },
-                icon: Icon(Icons.camera),
-                label: Text('กล้อง'),
+                icon: const Icon(Icons.camera),
+                label: const Text('กล้อง'),
               ),
               TextButton.icon(
                 onPressed: () {
                   takePhoto(ImageSource.gallery);
                 },
-                icon: Icon(Icons.camera),
-                label: Text('แกลลอรี่'),
+                icon: const Icon(Icons.camera),
+                label: const Text('แกลลอรี่'),
               ),
             ],
           )
@@ -432,18 +427,14 @@ class _RegisPageState extends State<RegisPage> {
                 'assets/icons/gender.png',
                 width: 29,
               ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
+              const SizedBox(width: 10),
+              const Text(
                 'เพศ',
                 style: TextStyle(fontSize: 22),
               ),
             ],
           ),
-          const SizedBox(
-            width: 15,
-          ),
+          const SizedBox(width: 15),
           Radio(
             activeColor: Colors.green,
             value: "ชาย",
@@ -490,18 +481,19 @@ class _RegisPageState extends State<RegisPage> {
         controller: controller,
         onTap: () => _selectDate(context),
         decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'วันเกิด',
-            labelStyle: const TextStyle(
-              fontSize: 20,
-            ),
-            hintStyle: const TextStyle(
-              fontStyle: FontStyle.italic,
-            ),
-            fillColor: Colors.white,
-            filled: true,
-            prefixIcon: Icon(icon),
-            suffixIcon: Icon(Icons.arrow_drop_down)),
+          border: const OutlineInputBorder(),
+          labelText: 'วันเกิด',
+          labelStyle: const TextStyle(
+            fontSize: 20,
+          ),
+          hintStyle: const TextStyle(
+            fontStyle: FontStyle.italic,
+          ),
+          fillColor: Colors.white,
+          filled: true,
+          prefixIcon: Icon(icon),
+          suffixIcon: const Icon(Icons.arrow_drop_down),
+        ),
       ),
     );
   }
