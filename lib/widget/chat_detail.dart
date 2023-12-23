@@ -43,24 +43,25 @@ class _ChatDetailState extends State<ChatDetail> {
   }
 
   void getCurrentUsername() {
-    var user = currentUser;
-    if (user != null) {
-      DatabaseReference userRef =
-          FirebaseDatabase.instance.ref().child('users/${user.uid}');
-      userRef.onValue.listen((event) {
-        final data = event.snapshot.value as Map<dynamic, dynamic>?;
+  var user = currentUser;
+  if (user != null) {
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.ref().child('users/${user.uid}');
+    userRef.onValue.listen((event) {
+      final data = event.snapshot.value as Map<dynamic, dynamic>?;
 
-        if (data != null) {
-          final String usernameme = data['username'] as String? ?? '';
-          final String profileImage = data['image_user'] as String? ?? '';
-          setState(() {
-            currentUserUsername = usernameme;
-            imageUserSender = profileImage;
-          });
-        }
-      });
-    }
+      if (data != null) {
+        final String usernameme = data['username'] as String? ?? '';
+        final String profileImage = data['image_user'] as String? ?? '';
+        setState(() {
+          currentUserUsername = usernameme;
+          imageUserSender = profileImage;
+        });
+      }
+    });
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
