@@ -5,7 +5,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 //หน้าประวัติการยื่นข้อเสนอ
 
-
 class HistoryMakeOffer extends StatefulWidget {
   const HistoryMakeOffer({Key? key}) : super(key: key);
 
@@ -125,7 +124,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
       });
     }).catchError((error) {
       print("Failed to delete offer: $error");
-    });//888
+    }); //888
   }
 
   void showDeleteConfirmation(BuildContext context, String offerKey) {
@@ -769,9 +768,12 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                               username:
                                                                   postItemData[
                                                                       'username'],
-                                                              imageUserReceiver:
+                                                              imageUser:
                                                                   postItemData[
-                                                                      'imageUser'],receiverUid:postItemData['uid'])));
+                                                                      'imageUser'],
+                                                              receiverUid:
+                                                                  postItemData[
+                                                                      'uid'])));
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                     padding: EdgeInsets.all(16),

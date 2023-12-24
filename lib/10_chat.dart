@@ -148,6 +148,7 @@ class MessageListItem extends StatelessWidget {
     bool isCurrentUserSender = currentUserId == senderUid;
 
     String displayedUsername = isCurrentUserSender ? receiver : sender;
+    String displayedImage = isCurrentUserSender ? imageUserReceiver : imageUserSender;
 
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -158,7 +159,7 @@ class MessageListItem extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => ChatDetail(
                 username: displayedUsername,
-                imageUserReceiver: imageUserReceiver,
+                imageUser: displayedImage,
                 receiverUid: receiver,
               ),
             ),
