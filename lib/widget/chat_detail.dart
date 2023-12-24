@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 
 class ChatDetail extends StatefulWidget {
   final String username;
-  final String imageUserReceiver;
+  final String imageUser;
+  final String receiverUid;
 
   const ChatDetail(
-      {Key? key, required this.username, required this.imageUserReceiver})
+      {Key? key,
+      required this.username,
+      required this.imageUser,
+      required this.receiverUid})
       : super(key: key);
 
   @override
@@ -18,6 +22,7 @@ class _ChatDetailState extends State<ChatDetail> {
   late String username;
   late String imageUserReceiver;
   late String imageUserSender;
+  late String receiverUid;
 
   final TextEditingController _controller = TextEditingController();
   User? get currentUser => FirebaseAuth.instance.currentUser;
@@ -37,31 +42,31 @@ class _ChatDetailState extends State<ChatDetail> {
   void initState() {
     super.initState();
     username = widget.username;
-    imageUserReceiver = widget.imageUserReceiver;
+    imageUserReceiver = widget.imageUser;
+    receiverUid = widget.receiverUid;
 
     getCurrentUsername();
   }
 
   void getCurrentUsername() {
-  var user = currentUser;
-  if (user != null) {
-    DatabaseReference userRef =
-        FirebaseDatabase.instance.ref().child('users/${user.uid}');
-    userRef.onValue.listen((event) {
-      final data = event.snapshot.value as Map<dynamic, dynamic>?;
+    var user = currentUser;
+    if (user != null) {
+      DatabaseReference userRef =
+          FirebaseDatabase.instance.ref().child('users/${user.uid}');
+      userRef.onValue.listen((event) {
+        final data = event.snapshot.value as Map<dynamic, dynamic>?;
 
-      if (data != null) {
-        final String usernameme = data['username'] as String? ?? '';
-        final String profileImage = data['image_user'] as String? ?? '';
-        setState(() {
-          currentUserUsername = usernameme;
-          imageUserSender = profileImage;
-        });
-      }
-    });
+        if (data != null) {
+          final String username = data['username'] as String? ?? '';
+          final String profileImage = data['image_user'] as String? ?? '';
+          setState(() {
+            currentUserUsername = username;
+            imageUserSender = profileImage;
+          });
+        }
+      });
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -177,10 +182,10 @@ class _ChatDetailState extends State<ChatDetail> {
       ),
       child: Row(
         children: [
-          Icon(Icons.add, color: Color(0xFF113953), size: 30),
+          Icon(Icons.text_format
+          , color: Color(0xFF113953), size: 30),
           SizedBox(width: 10),
-          Icon(Icons.emoji_emotions, color: Color(0xFF113953), size: 30),
-          SizedBox(width: 10),
+
           Expanded(
             child: TextFormField(
               controller: _controller,
@@ -192,21 +197,21 @@ class _ChatDetailState extends State<ChatDetail> {
           ),
           IconButton(
             icon: Icon(Icons.send, color: Color(0xFF113953), size: 30),
-            onPressed: () =>
-                _sendMessage(currentUserUsername, imageUserReceiver),
+            onPressed: () => _sendMessage(
+                currentUserUsername, imageUserReceiver, receiverUid),
           ),
         ],
       ),
     );
   }
 
-  void _sendMessage(String currentUserUsername, String imageUserReceiver) {
+  void _sendMessage(String currentUserUsername, String imageUserReceiver,
+      String receiverUid) {
     DateTime now = DateTime.now();
     String messageText = _controller.text.trim();
     if (messageText.isNotEmpty && currentUserUsername.isNotEmpty) {
       var senderUid = currentUser?.uid;
-      var receiverUid =
-          'VGQvLhSkJRQwQzifFbOP5kP6S4j1'; // You need to replace this with the UID of the receiver.
+      var receiverUidUser = receiverUid;
       String time = now.hour.toString().padLeft(2, '0') +
           ":" +
           now.minute.toString().padLeft(2, '0') +
@@ -221,7 +226,7 @@ class _ChatDetailState extends State<ChatDetail> {
           'sender': currentUserUsername,
           'senderUid': senderUid,
           'receiver': username,
-          'receiverUid': receiverUid,
+          'receiverUid': receiverUidUser,
           'time': time,
         });
 
