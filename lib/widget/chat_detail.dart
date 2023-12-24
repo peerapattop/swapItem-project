@@ -51,10 +51,10 @@ class _ChatDetailState extends State<ChatDetail> {
       final data = event.snapshot.value as Map<dynamic, dynamic>?;
 
       if (data != null) {
-        final String usernameme = data['username'] as String? ?? '';
+        final String username = data['username'] as String? ?? '';
         final String profileImage = data['image_user'] as String? ?? '';
         setState(() {
-          currentUserUsername = usernameme;
+          currentUserUsername = username;
           imageUserSender = profileImage;
         });
       }
