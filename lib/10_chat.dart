@@ -159,6 +159,7 @@ class MessageListItem extends StatelessWidget {
               builder: (context) => ChatDetail(
                 username: displayedUsername,
                 imageUserReceiver: imageUserReceiver,
+                receiverUid: receiver,
               ),
             ),
           );

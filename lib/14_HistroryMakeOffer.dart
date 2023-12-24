@@ -771,7 +771,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                                       'username'],
                                                               imageUserReceiver:
                                                                   postItemData[
-                                                                      'imageUser'])));
+                                                                      'imageUser'],receiverUid:postItemData['uid'])));
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                     padding: EdgeInsets.all(16),
