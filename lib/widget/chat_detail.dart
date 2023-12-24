@@ -182,10 +182,10 @@ class _ChatDetailState extends State<ChatDetail> {
       ),
       child: Row(
         children: [
-          Icon(Icons.add, color: Color(0xFF113953), size: 30),
+          Icon(Icons.text_format
+          , color: Color(0xFF113953), size: 30),
           SizedBox(width: 10),
-          Icon(Icons.emoji_emotions, color: Color(0xFF113953), size: 30),
-          SizedBox(width: 10),
+
           Expanded(
             child: TextFormField(
               controller: _controller,
