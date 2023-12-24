@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 
 class ChatDetail extends StatefulWidget {
   final String username;
-  final String imageUserReceiver;
+  final String imageUser;
   final String receiverUid;
 
   const ChatDetail(
       {Key? key,
       required this.username,
-      required this.imageUserReceiver,
+      required this.imageUser,
       required this.receiverUid})
       : super(key: key);
 
@@ -42,7 +42,7 @@ class _ChatDetailState extends State<ChatDetail> {
   void initState() {
     super.initState();
     username = widget.username;
-    imageUserReceiver = widget.imageUserReceiver;
+    imageUserReceiver = widget.imageUser;
     receiverUid = widget.receiverUid;
 
     getCurrentUsername();
@@ -182,10 +182,10 @@ class _ChatDetailState extends State<ChatDetail> {
       ),
       child: Row(
         children: [
-          Icon(Icons.add, color: Color(0xFF113953), size: 30),
+          Icon(Icons.text_format
+          , color: Color(0xFF113953), size: 30),
           SizedBox(width: 10),
-          Icon(Icons.emoji_emotions, color: Color(0xFF113953), size: 30),
-          SizedBox(width: 10),
+
           Expanded(
             child: TextFormField(
               controller: _controller,
