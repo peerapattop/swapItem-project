@@ -81,7 +81,7 @@ class _Offer_comeState extends State<Offer_come> {
 
         offers.forEach((key, value) {
           offersList.add(Map<dynamic, dynamic>.from(value));
-        });
+        });//gg
         postsList1.clear();
         setState(() {
           postsList1 = offersList;
