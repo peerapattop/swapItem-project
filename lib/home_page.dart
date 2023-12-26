@@ -247,28 +247,23 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Divider(),
                     Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: TextField(
-                        controller: searchController,
-                        onChanged: (val) {
-                          setState(() {
-                            _searchString = val.toLowerCase();
-                          });
-                        },
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: const BorderSide(width: 0.8),
-                          ),
-                          hintText: "ค้นหา",
-                          prefixIcon: const Icon(
-                            Icons.search,
-                            size: 30,
-                          ),
-                          suffixIcon: IconButton(
-                            icon: const Icon(
-                              Icons.clear,
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: searchController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: const BorderSide(width: 0.8),
+                                ),
+                                hintText: "ค้นหา",
+                              ),
                             ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.clear),
                             onPressed: () {
                               setState(() {
                                 searchController.clear();
@@ -276,13 +271,23 @@ class _HomePageState extends State<HomePage> {
                               });
                             },
                           ),
-                        ),
+                          IconButton(
+                            icon: const Icon(Icons.search),
+                            onPressed: () {
+                              setState(() {
+                                _searchString =
+                                    searchController.text.toLowerCase();
+                              });
+                              handleSearch();
+                            },
+                          ),
+                        ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    const Padding(
+                      padding:  EdgeInsets.all(8.0),
                       child: SingleChildScrollView(
-                        child: Container(
+                        child: SizedBox(
                             height: 600,
                             width: double.infinity,
                             child: ShowAllPostItem()),
@@ -297,6 +302,16 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  void handleSearch() {
+  // ส่งค่า _searchString ไปยัง ShowAllPostItem
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => ShowAllPostItem(searchString: _searchString),
+    ),
+  );
+}
+
 }
 
 Widget gh(BuildContext context) => Column(

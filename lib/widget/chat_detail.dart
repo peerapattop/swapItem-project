@@ -182,10 +182,8 @@ class _ChatDetailState extends State<ChatDetail> {
       ),
       child: Row(
         children: [
-          Icon(Icons.text_format
-          , color: Color(0xFF113953), size: 30),
+          Icon(Icons.text_format, color: Color(0xFF113953), size: 30),
           SizedBox(width: 10),
-
           Expanded(
             child: TextFormField(
               controller: _controller,
@@ -211,7 +209,7 @@ class _ChatDetailState extends State<ChatDetail> {
     String messageText = _controller.text.trim();
     if (messageText.isNotEmpty && currentUserUsername.isNotEmpty) {
       var senderUid = currentUser?.uid;
-      var receiverUidUser = receiverUid;
+
       String time = now.hour.toString().padLeft(2, '0') +
           ":" +
           now.minute.toString().padLeft(2, '0') +
@@ -226,7 +224,7 @@ class _ChatDetailState extends State<ChatDetail> {
           'sender': currentUserUsername,
           'senderUid': senderUid,
           'receiver': username,
-          'receiverUid': receiverUidUser,
+          'receiverUid': receiverUid,
           'time': time,
         });
 
