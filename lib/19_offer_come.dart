@@ -48,12 +48,13 @@ class _Offer_comeState extends State<Offer_come> {
         .listen((event) {
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic> data =
-        Map<dynamic, dynamic>.from(event.snapshot.value as Map);
+            Map<dynamic, dynamic>.from(event.snapshot.value as Map);
         var firstKey = data.keys.first; // Change this line to get the first key
         var firstPost = Map<dynamic, dynamic>.from(data[firstKey]);
 
         // When you get the first post, load its offers
-        _loadPostData1(firstPost['post_uid']); // This will load the offers for the first post
+        _loadPostData1(firstPost[
+            'post_uid']); // This will load the offers for the first post
         setState(() {
           postsList.clear();
           postsList.insert(0, firstPost);
@@ -63,7 +64,6 @@ class _Offer_comeState extends State<Offer_come> {
       }
     });
   }
-
 
   void _loadPostData1(String postUid) {
     FirebaseDatabase.instance
@@ -371,6 +371,7 @@ class _Offer_comeState extends State<Offer_come> {
                                         );
                                       }).toList(),
                                     ),
+                                    Divider(),
                                     SizedBox(
                                       height: 10,
                                     ),
