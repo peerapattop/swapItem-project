@@ -25,6 +25,14 @@ class _HomePageState extends State<HomePage> {
     _user = FirebaseAuth.instance.currentUser!;
     _userRef = FirebaseDatabase.instance.ref().child('users').child(_user.uid);
   }
+   void handleSearch() {
+    setState(() {
+      // Update the searchString with the current text of the searchController
+      _searchString = searchController.text.trim().isEmpty 
+                      ? null 
+                      : searchController.text.trim().toLowerCase();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -273,24 +281,20 @@ class _HomePageState extends State<HomePage> {
                           ),
                           IconButton(
                             icon: const Icon(Icons.search),
-                            onPressed: () {
-                              setState(() {
-                                _searchString =
-                                    searchController.text.toLowerCase();
-                              });
-                              handleSearch();
-                            },
+
+                            onPressed: handleSearch,
                           ),
                         ],
                       ),
                     ),
-                    const Padding(
+                     Padding(
                       padding:  EdgeInsets.all(8.0),
                       child: SingleChildScrollView(
                         child: SizedBox(
                             height: 600,
                             width: double.infinity,
-                            child: ShowAllPostItem()),
+                            child: ShowAllPostItem(
+                              searchString: _searchString)),
                       ),
                     ),
                   ],
@@ -303,14 +307,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void handleSearch() {
-  // ส่งค่า _searchString ไปยัง ShowAllPostItem
-  Navigator.of(context).push(
-    MaterialPageRoute(
-      builder: (context) => ShowAllPostItem(searchString: _searchString),
-    ),
-  );
-}
+  
 
 }
 
