@@ -19,42 +19,46 @@ class _ImageGalleryWidgetState extends State<ImageGalleryWidget> {
     // Get the screen width to calculate the carousel height based on a 16:9 aspect ratio
     final double screenWidth = MediaQuery.of(context).size.width;
     // This height will enforce the 16:9 aspect ratio
-    final double carouselHeight = screenWidth * (9 / 16); // For a 16:9 aspect ratio
+    final double carouselHeight =
+        screenWidth * (9 / 16); // For a 16:9 aspect ratio
 
     return Column(
       children: <Widget>[
         CarouselSlider.builder(
           itemCount: widget.imageUrls.length,
           carouselController: _controller,
-          itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
-              GestureDetector(
-                onTap: () {
-                  // Navigate to the DetailScreen when tapped
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailScreen(
-                        imageUrl: widget.imageUrls[itemIndex],
-                        currentIndex: itemIndex,
-                        imageUrls: widget.imageUrls,
-                        carouselController: _controller,
-                      ),
-                    ),
-                  );
-                },
-                child: AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: Image.network(
-                    widget.imageUrls[itemIndex],
-                    fit: BoxFit.cover,
+          itemBuilder:
+              (BuildContext context, int itemIndex, int pageViewIndex) =>
+                  GestureDetector(
+            onTap: () {
+              // Navigate to the DetailScreen when tapped
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailScreen(
+                    imageUrl: widget.imageUrls[itemIndex],
+                    currentIndex: itemIndex,
+                    imageUrls: widget.imageUrls,
+                    carouselController: _controller,
                   ),
                 ),
+              );
+            },
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Image.network(
+                widget.imageUrls[itemIndex],
+                fit: BoxFit.cover,
               ),
+            ),
+          ),
           options: CarouselOptions(
             autoPlay: false,
             enlargeCenterPage: false,
-            viewportFraction: 1.0, // Occupy the full width of the viewport
-            height: carouselHeight, // Set the height based on the aspect ratio
+            viewportFraction: 1.0,
+            // Occupy the full width of the viewport
+            height: carouselHeight,
+            // Set the height based on the aspect ratio
             onPageChanged: (index, reason) {
               setState(() {
                 _currentIndex = index;
@@ -107,38 +111,54 @@ class DetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Image Viewer'),
-        actions: [
-          if (currentIndex < imageUrls.length - 1) // Check if not the last image
-            IconButton(
-              icon: Icon(Icons.arrow_forward),
-              onPressed: () {
-                // Navigate to the next image
-                carouselController.nextPage();
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DetailScreen(
-                      imageUrl: imageUrls[currentIndex + 1],
-                      currentIndex: currentIndex + 1,
-                      imageUrls: imageUrls,
-                      carouselController: carouselController,
-                    ),
-                  ),
-                );
-              },
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("ดูรูปภาพขนาดเต็ม"),
+          toolbarHeight: 40,
+          centerTitle: true,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/image 40.png'),
+                fit: BoxFit.fill,
+              ),
             ),
-        ],
-      ),
-      body: GestureDetector(
-        onTap: () {
-          Navigator.pop(context); // Close the full size view when tapped
-        },
-        child: Center(
-          child: Image.network(imageUrl, fit: BoxFit.contain),
+          ),
+          actions: [
+            if (currentIndex <
+                imageUrls.length - 1) // Check if not the last image
+              IconButton(
+                icon: Icon(Icons.arrow_forward),
+                onPressed: () {
+                  // Navigate to the next image
+                  carouselController.nextPage();
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailScreen(
+                        imageUrl: imageUrls[currentIndex + 1],
+                        currentIndex: currentIndex + 1,
+                        imageUrls: imageUrls,
+                        carouselController: carouselController,
+                      ),
+                    ),
+                  );
+                },
+              ),
+          ],
+        ),
+        body: Container(
+          color: Colors.black,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pop(context); // Close the full size view when tapped
+            },
+            child: Center(
+              child: Image.network(imageUrl, fit: BoxFit.contain),
+            ),
+          ),
         ),
       ),
     );
