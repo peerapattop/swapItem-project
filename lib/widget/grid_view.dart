@@ -5,7 +5,9 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class ShowAllPostItem extends StatefulWidget {
-  const ShowAllPostItem({Key? key}) : super(key: key);
+    final String? searchString;
+
+  const ShowAllPostItem({Key? key, this.searchString}) : super(key: key);
 
   @override
   _ShowAllPostItemState createState() => _ShowAllPostItemState();
@@ -158,8 +160,8 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                                       builder: (context) => ShowDetailAll(
                                           postUid: post_uid,
                                           longti: longti,
-                                          lati:lati,
-                                          imageUser:imageUser),
+                                          lati: lati,
+                                          imageUser: imageUser),
                                     ),
                                   );
                                 });
