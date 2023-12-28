@@ -18,6 +18,8 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
   late DatabaseReference _offerRef;
   late DatabaseReference _postRef;
   List<Map<dynamic, dynamic>> offerList = [];
+    final PageController _pageController1 = PageController();
+  final PageController _pageController2 = PageController();
 
   int _selectedIndex = -1;
   Map<dynamic, dynamic>? selectedOffer;
@@ -257,70 +259,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                               'ข้อเสนอของคุณ',
                                               style: TextStyle(fontSize: 20),
                                             ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8, top: 2, right: 8),
-                                              child: SizedBox(
-                                                height: 300,
-                                                child: PageView.builder(
-                                                  onPageChanged: (value) {
-                                                    setState(() {
-                                                      mySlideindex = value;
-                                                    });
-                                                  },
-                                                  itemCount: imageOffer.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    return Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              20.0),
-                                                      child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(20),
-                                                          child: Image.network(
-                                                            imageOffer[index],
-                                                            fit: BoxFit.cover,
-                                                          )),
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                            Center(
-                                              child: SizedBox(
-                                                height: 60,
-                                                width: 300,
-                                                child: ListView.builder(
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  itemCount: imageOffer.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    return Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              20.0),
-                                                      child: Container(
-                                                        height: 20,
-                                                        width: 20,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          color: index ==
-                                                                  mySlideindex
-                                                              ? Colors
-                                                                  .deepPurple
-                                                              : Colors.grey,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                            ),
+                                            _buildImageSliderOffer(),
                                             Padding(
                                               padding:
                                                   const EdgeInsets.all(8.0),
@@ -883,7 +822,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
               SizedBox(
                 height: 200, // Set your desired height for the image area
                 child: PageView.builder(
-                  controller: _pageController,
+                  controller: _pageController1,
                   itemCount: imagePost.length,
                   itemBuilder: (context, index) {
                     return Image.network(
@@ -903,8 +842,8 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                   IconButton(
                     icon: Icon(Icons.arrow_back_ios, size: 30),
                     onPressed: () {
-                      if (_pageController.page! > 0) {
-                        _pageController.previousPage(
+                      if (_pageController1.page! > 0) {
+                        _pageController1.previousPage(
                           duration: Duration(milliseconds: 200),
                           curve: Curves.easeIn,
                         );
@@ -914,8 +853,8 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                   IconButton(
                     icon: Icon(Icons.arrow_forward_ios, size: 30),
                     onPressed: () {
-                      if (_pageController.page! < imagePost.length - 1) {
-                        _pageController.nextPage(
+                      if (_pageController1.page! < imagePost.length - 1) {
+                        _pageController1.nextPage(
                           duration: Duration(milliseconds: 200),
                           curve: Curves.easeIn,
                         );
@@ -926,6 +865,76 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
               ),
             ],
           );
+  }
+
+  Widget _buildImageSliderOffer() {
+    if (imageOffer.isEmpty) {
+      return const SizedBox.shrink();
+    } else if (imageOffer.length == 1) {
+      // Display the single image without PageView
+      return Column(
+        children: [
+          SizedBox(
+            height: 200, // Set your desired height for the image area
+            child: Image.network(
+              imageOffer[0],
+              width: 200,
+              height: 100,
+            ),
+          ),
+          const SizedBox(height: 5),
+        ],
+      );
+    } else {
+      // Display multiple images using PageView
+      return Column(
+        children: [
+          SizedBox(
+            height: 200, // Set your desired height for the image area
+            child: PageView.builder(
+              controller: _pageController2,
+              itemCount: imageOffer.length,
+              itemBuilder: (context, index) {
+                return Image.network(
+                  imageOffer[index],
+                  width: 200,
+                  height: 100,
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 5),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back_ios, size: 30),
+                onPressed: () {
+                  if (_pageController2.page! > 0) {
+                    _pageController2.previousPage(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeIn,
+                    );
+                  }
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.arrow_forward_ios, size: 30),
+                onPressed: () {
+                  if (_pageController2.hasClients &&
+                      _pageController2.page! < imageOffer.length - 1) {
+                    _pageController2.nextPage(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeIn,
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+        ],
+      );
+    }
   }
 }
 
