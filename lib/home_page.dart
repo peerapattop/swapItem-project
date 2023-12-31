@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swapitem/registerVip_page.dart';
 import 'package:swapitem/buildPost_page.dart';
@@ -25,13 +26,25 @@ class _HomePageState extends State<HomePage> {
     _user = FirebaseAuth.instance.currentUser!;
     _userRef = FirebaseDatabase.instance.ref().child('users').child(_user.uid);
   }
-   void handleSearch() {
+
+  void handleSearch() {
     setState(() {
       // Update the searchString with the current text of the searchController
-      _searchString = searchController.text.trim().isEmpty 
-                      ? null 
-                      : searchController.text.trim().toLowerCase();
+      _searchString = searchController.text.trim().isEmpty
+          ? null
+          : searchController.text.trim().toLowerCase();
     });
+  }
+
+  Stream<int> getNotificationCountStream() {
+    // Point to the specific collection/document that holds your notifications.
+    // This is a placeholder; you need to use your actual path to the notification documents.
+    var notificationCollection =
+        FirebaseFirestore.instance.collection('notifications');
+
+    return notificationCollection
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
   }
 
   @override
@@ -41,15 +54,51 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           actions: <Widget>[
             IconButton(
-              icon: Icon(
-                Icons.notifications,
-                color: Colors.white,
-              ),
+              icon: StreamBuilder<int>(
+                  stream: getNotificationCountStream(),
+                  builder: (context, snapshot) {
+                    int notificationCount = 0;
+                    if (snapshot.hasData) {
+                      notificationCount = snapshot.data!;
+                    }
+                    return Stack(
+                      children: <Widget>[
+                        Icon(
+                          Icons.notifications,
+                          color: Colors.white,
+                        ),
+                        if (notificationCount > 0)
+                          Positioned(
+                            // Badge position
+                            right: 0,
+                            child: Container(
+                              padding: EdgeInsets.all(1),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              constraints: BoxConstraints(
+                                minWidth: 12,
+                                minHeight: 12,
+                              ),
+                              child: Text(
+                                '$notificationCount', // Replace with your dynamic data
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          )
+                      ],
+                    );
+                  }),
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => NotificationD()));
               },
-            )
+            ),
           ],
           toolbarHeight: 40,
           centerTitle: true,
@@ -281,20 +330,19 @@ class _HomePageState extends State<HomePage> {
                           ),
                           IconButton(
                             icon: const Icon(Icons.search),
-
                             onPressed: handleSearch,
                           ),
                         ],
                       ),
                     ),
-                     Padding(
-                      padding:  EdgeInsets.all(8.0),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: SingleChildScrollView(
                         child: SizedBox(
                             height: 600,
                             width: double.infinity,
-                            child: ShowAllPostItem(
-                              searchString: _searchString)),
+                            child:
+                                ShowAllPostItem(searchString: _searchString)),
                       ),
                     ),
                   ],
@@ -306,9 +354,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  
-
 }
 
 Widget gh(BuildContext context) => Column(
