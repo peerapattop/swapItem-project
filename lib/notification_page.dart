@@ -30,6 +30,8 @@ class _NotificationDState extends State<NotificationD> {
           child: StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('notifications')
+                  .orderBy('timestamp',
+                      descending: true) // Add your timestamp field here.
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -48,7 +50,7 @@ class _NotificationDState extends State<NotificationD> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
-                              top: 5, right: 10, left: 10,bottom: 10),
+                              top: 5, right: 10, left: 10, bottom: 10),
                           child: Container(
                             width: 400,
                             height: 150,
@@ -58,7 +60,7 @@ class _NotificationDState extends State<NotificationD> {
                                   color: Colors.black,
                                   width: 1.0,
                                 ),
-                                color: Color.fromARGB(255, 246, 225, 225)),
+                                color: Color.fromARGB(255, 246, 243, 243)),
                             child: Column(
                               children: [
                                 Row(
