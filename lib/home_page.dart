@@ -35,13 +35,32 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Stream<int> getNotificationCountStream() {
+  Stream<int> getUnreadNotificationCountStream() {
     var notificationCollection =
         FirebaseFirestore.instance.collection('notifications');
 
+    // Adjust the query to filter only notifications that haven't been read.
     return notificationCollection
+        .where('read',
+            isEqualTo: false) // Only count notifications where 'read' is false.
         .snapshots()
         .map((snapshot) => snapshot.docs.length);
+  }
+
+  Future<void> markNotificationsAsRead() async {
+    var notificationCollection =
+        FirebaseFirestore.instance.collection('notifications');
+    var batch = FirebaseFirestore.instance.batch();
+
+    var querySnapshot = await notificationCollection
+        .where('read', isEqualTo: false) // Fetch only unread notifications.
+        .get();
+    for (var doc in querySnapshot.docs) {
+      // Set 'read' to true for each notification.
+      batch.update(doc.reference, {'read': true});
+    }
+
+    await batch.commit();
   }
 
   @override
@@ -52,7 +71,7 @@ class _HomePageState extends State<HomePage> {
           actions: <Widget>[
             IconButton(
               icon: StreamBuilder<int>(
-                stream: getNotificationCountStream(),
+                stream: getUnreadNotificationCountStream(),
                 builder: (context, snapshot) {
                   int notificationCount = 0;
                   if (snapshot.hasData) {
@@ -90,7 +109,8 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               ),
-              onPressed: () {
+              onPressed: () async {
+                await markNotificationsAsRead();
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -136,7 +156,8 @@ class _HomePageState extends State<HomePage> {
                 return Column(
                   children: [
                     //ส่วนบนของหน้าหลัก
-                    buildUserProfileSection(dataUser, postCount,makeofferCount), 
+                    buildUserProfileSection(
+                        dataUser, postCount, makeofferCount),
                     const Divider(),
                     searchItem(), //ค้นหา
                     showItemSearch(), //แสดงสิ่งของที่ค้นหา
