@@ -48,6 +48,7 @@ dependencies:
   custom_clippers: ^2.0.0
   carousel_slider: ^4.2.1
   flutter_launcher_icons: ^0.13.1
+  image_picker: ^1.0.5
 
 flutter_icons:
   android: true

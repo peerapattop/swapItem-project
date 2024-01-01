@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
 import 'paymentSuccess_page.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -113,7 +112,7 @@ class _PaymentState extends State<Payment> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text(
+            title: const Text(
               'แจ้งเตือน',
               style: TextStyle(
                 color: Colors.red,
@@ -228,19 +227,7 @@ class _PaymentState extends State<Payment> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text("ชำระเงิน"),
-          toolbarHeight: 40,
-          centerTitle: true,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/image 40.png'),
-                fit: BoxFit.fill,
-              ),
-            ),
-          ),
-        ),
+        appBar: myAppbar(),
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -272,26 +259,13 @@ class _PaymentState extends State<Payment> {
                   return DropdownMenuEntry<String>(value: value, label: value);
                 }).toList(),
               ),
-              const SizedBox(
-                height: 15,
-              ),
+              const SizedBox(height: 15),
               imgPayment(),
-              SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               SizedBox(
                 height: 50,
                 width: 250,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                  onPressed: () {
-                    _showPaymentConfirmationDialog(context);
-                  },
-                  child: Text(
-                    "ชำระเงิน",
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
-                ),
+                child: buttonPayment(), //ปุ่มชำระเงิน
               ),
             ],
           ),
@@ -386,6 +360,35 @@ class _PaymentState extends State<Payment> {
             ],
           )
         ],
+      ),
+    );
+  }
+
+  PreferredSizeWidget myAppbar() {
+    return AppBar(
+      title: const Text("ชำระเงิน"),
+      toolbarHeight: 40,
+      centerTitle: true,
+      flexibleSpace: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/image 40.png'),
+            fit: BoxFit.fill,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buttonPayment() {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+      onPressed: () {
+        _showPaymentConfirmationDialog(context);
+      },
+      child: const Text(
+        "ชำระเงิน",
+        style: TextStyle(fontSize: 20, color: Colors.white),
       ),
     );
   }
