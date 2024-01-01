@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key});
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -29,7 +29,6 @@ class _HomePageState extends State<HomePage> {
 
   void handleSearch() {
     setState(() {
-      // Update the searchString with the current text of the searchController
       _searchString = searchController.text.trim().isEmpty
           ? null
           : searchController.text.trim().toLowerCase();
@@ -37,8 +36,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Stream<int> getNotificationCountStream() {
-    // Point to the specific collection/document that holds your notifications.
-    // This is a placeholder; you need to use your actual path to the notification documents.
     var notificationCollection =
         FirebaseFirestore.instance.collection('notifications');
 
@@ -55,55 +52,56 @@ class _HomePageState extends State<HomePage> {
           actions: <Widget>[
             IconButton(
               icon: StreamBuilder<int>(
-                  stream: getNotificationCountStream(),
-                  builder: (context, snapshot) {
-                    int notificationCount = 0;
-                    if (snapshot.hasData) {
-                      notificationCount = snapshot.data!;
-                    }
-                    return Stack(
-                      children: <Widget>[
-                        Icon(
-                          Icons.notifications,
-                          color: Colors.white,
-                        ),
-                        if (notificationCount > 0)
-                          Positioned(
-                            // Badge position
-                            right: 0,
-                            child: Container(
-                              padding: EdgeInsets.all(1),
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              constraints: BoxConstraints(
-                                minWidth: 12,
-                                minHeight: 12,
-                              ),
-                              child: Text(
-                                '$notificationCount', // Replace with your dynamic data
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
+                stream: getNotificationCountStream(),
+                builder: (context, snapshot) {
+                  int notificationCount = 0;
+                  if (snapshot.hasData) {
+                    notificationCount = snapshot.data!;
+                  }
+                  return Stack(
+                    children: <Widget>[
+                      const Icon(
+                        Icons.notifications,
+                        color: Colors.white,
+                      ),
+                      if (notificationCount > 0)
+                        Positioned(
+                          // Badge position
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(1),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(6),
                             ),
-                          )
-                      ],
-                    );
-                  }),
+                            constraints: const BoxConstraints(
+                              minWidth: 12,
+                              minHeight: 12,
+                            ),
+                            child: Text(
+                              notificationCount.toString(),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 10),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                    ],
+                  );
+                },
+              ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => NotificationD()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const NotificationD()));
               },
             ),
           ],
           toolbarHeight: 40,
           centerTitle: true,
           flexibleSpace: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/images/image 40.png'),
                 fit: BoxFit.fill,
@@ -119,9 +117,7 @@ class _HomePageState extends State<HomePage> {
                 return const Center(
                   child: Column(
                     children: [
-                      SizedBox(
-                        height: 350,
-                      ),
+                      SizedBox(height: 350),
                       CircularProgressIndicator(),
                       Text('กำลังโหลดข้อมูล...')
                     ],
@@ -139,212 +135,11 @@ class _HomePageState extends State<HomePage> {
 
                 return Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(top: 6.0),
-                                  child: ClipRRect(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                        border: Border.all(
-                                            width: 1.0,
-                                            color: Colors.black), // เส้นขอบ
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                            'โควตาการโพสต์ ${postCount}/5 เดือน',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 6.0),
-                                  child: ClipRRect(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                        border: Border.all(
-                                            width: 1.0,
-                                            color: Colors.black), // เส้นขอบ
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                            'โควตาการยื่นข้อเสนอ ${makeofferCount}/5 เดือน',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 6.0),
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => Payment(),
-                                        ),
-                                      );
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                            border: Border.all(
-                                                width: 1.0,
-                                                color: Colors.black),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Wrap(
-                                              spacing:
-                                                  5.0, // ระยะห่างระหว่างไอคอนและข้อความ
-                                              children: [
-                                                Image.asset(
-                                                    'assets/images/vip.png'),
-                                                Text(
-                                                  'เติม VIP',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 6.0),
-                                          child: ElevatedButton.icon(
-                                            icon: const Icon(
-                                              Icons.create,
-                                              color: Colors.white,
-                                            ),
-                                            onPressed: () {
-                                              Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      NewPost(),
-                                                ),
-                                              );
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              side: const BorderSide(
-                                                  width: 1.0,
-                                                  color:
-                                                      Colors.black), // เส้นขอบ
-                                              padding: const EdgeInsets
-                                                  .symmetric(
-                                                  vertical: 10.0,
-                                                  horizontal:
-                                                      20.0), // ระยะห่างภายในปุ่ม
-                                              backgroundColor:
-                                                  Colors.red, // สีข้างใน
-                                            ),
-                                            label: const Text(
-                                              'สร้างโพสต์',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Column(
-                            children: [
-                              Container(
-                                alignment: Alignment.topCenter,
-                                child: ClipOval(
-                                  child: Image.network(
-                                    dataUser['image_user'],
-                                    width: 120,
-                                    height: 120,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                dataUser['username'],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: searchController,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(width: 0.8),
-                                ),
-                                hintText: "ค้นหา",
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: () {
-                              setState(() {
-                                searchController.clear();
-                                _searchString = '';
-                              });
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.search),
-                            onPressed: handleSearch,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: SingleChildScrollView(
-                        child: SizedBox(
-                            height: 600,
-                            width: double.infinity,
-                            child:
-                                ShowAllPostItem(searchString: _searchString)),
-                      ),
-                    ),
+                    //ส่วนบนของหน้าหลัก
+                    buildUserProfileSection(dataUser, postCount,makeofferCount), 
+                    const Divider(),
+                    searchItem(), //ค้นหา
+                    showItemSearch(), //แสดงสิ่งของที่ค้นหา
                   ],
                 );
               }
@@ -354,23 +149,208 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-}
 
-Widget gh(BuildContext context) => Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: 10.0),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12.0),
-            child: ElevatedButton(
-              onPressed: () {},
-              child: Column(
-                children: [
-                  Text('สร้างโพสต์'),
-                ],
+  Widget buildUserProfileSection(
+      Map dataUser, String postCount, String makeofferCount) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 6.0),
+                  child: ClipRRect(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12.0),
+                        border: Border.all(
+                          width: 1.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'โควตาการโพสต์ ${postCount}/5 เดือน',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 6.0),
+                  child: ClipRRect(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12.0),
+                        border: Border.all(
+                          width: 1.0,
+                          color: Colors.black,
+                        ), // เส้นขอบ
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'โควตาการยื่นข้อเสนอ ${makeofferCount}/5 เดือน',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 6.0),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => Payment(),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                            border: Border.all(
+                              width: 1.0,
+                              color: Colors.black,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Wrap(
+                              spacing: 5.0, // ระยะห่างระหว่างไอคอนและข้อความ
+                              children: [
+                                Image.asset('assets/images/vip.png'),
+                                Text(
+                                  'เติม VIP',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Padding(
+                          padding: EdgeInsets.only(top: 6.0),
+                          child: ElevatedButton.icon(
+                            icon: const Icon(
+                              Icons.create,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => NewPost(),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              side: const BorderSide(
+                                width: 1.0,
+                                color: Colors.black,
+                              ), // เส้นขอบ
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10.0,
+                                horizontal: 20.0,
+                              ), // ระยะห่างภายในปุ่ม
+                              backgroundColor: Colors.red, // สีข้างใน
+                            ),
+                            label: const Text(
+                              'สร้างโพสต์',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Column(
+            children: [
+              Container(
+                alignment: Alignment.topCenter,
+                child: ClipOval(
+                  child: Image.network(
+                    dataUser['image_user'],
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                dataUser['username'],
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget showItemSearch() {
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: SingleChildScrollView(
+        child: SizedBox(
+            height: 600,
+            width: double.infinity,
+            child: ShowAllPostItem(searchString: _searchString)),
+      ),
+    );
+  }
+
+  Widget searchItem() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: searchController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                  borderSide: const BorderSide(width: 0.8),
+                ),
+                hintText: "ค้นหา",
               ),
             ),
           ),
-        ),
-      ],
+          IconButton(
+            icon: const Icon(Icons.clear),
+            onPressed: () {
+              setState(() {
+                searchController.clear();
+                _searchString = '';
+              });
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: handleSearch,
+          ),
+        ],
+      ),
     );
+  }
+}
