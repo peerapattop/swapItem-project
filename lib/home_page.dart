@@ -19,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   late DatabaseReference _userRef;
   String? _searchString;
   TextEditingController searchController = TextEditingController();
+  int _unreadNotificationCount = 0;
 
   @override
   void initState() {
@@ -35,33 +36,34 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Stream<int> getUnreadNotificationCountStream() {
-    var notificationCollection =
-        FirebaseFirestore.instance.collection('notifications');
+Stream<int> getUnreadNotificationCountStream() {
+  var notificationCollection =
+      FirebaseFirestore.instance.collection('notifications');
 
-    // Adjust the query to filter only notifications that haven't been read.
-    return notificationCollection
-        .where('read',
-            isEqualTo: false) // Only count notifications where 'read' is false.
-        .snapshots()
-        .map((snapshot) => snapshot.docs.length);
+  return notificationCollection
+      .where('userId', isEqualTo: _user.uid) // Filter by current user ID
+      .where('read', isEqualTo: false)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.length);
+}
+
+Future<void> markNotificationsAsRead() async {
+  var notificationCollection =
+      FirebaseFirestore.instance.collection('notifications');
+  var batch = FirebaseFirestore.instance.batch();
+
+  var querySnapshot = await notificationCollection
+      .where('userId', isEqualTo: _user.uid) // Filter by current user ID
+      .where('read', isEqualTo: false)
+      .get();
+
+  for (var doc in querySnapshot.docs) {
+    batch.update(doc.reference, {'read': true});
   }
 
-  Future<void> markNotificationsAsRead() async {
-    var notificationCollection =
-        FirebaseFirestore.instance.collection('notifications');
-    var batch = FirebaseFirestore.instance.batch();
+  await batch.commit();
+}
 
-    var querySnapshot = await notificationCollection
-        .where('read', isEqualTo: false) // Fetch only unread notifications.
-        .get();
-    for (var doc in querySnapshot.docs) {
-      // Set 'read' to true for each notification.
-      batch.update(doc.reference, {'read': true});
-    }
-
-    await batch.commit();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,10 +75,8 @@ class _HomePageState extends State<HomePage> {
               icon: StreamBuilder<int>(
                 stream: getUnreadNotificationCountStream(),
                 builder: (context, snapshot) {
-                  int notificationCount = 0;
-                  if (snapshot.hasData) {
-                    notificationCount = snapshot.data!;
-                  }
+                  int notificationCount = snapshot.data ??
+                      0; // Use null-aware operator to handle null data
                   return Stack(
                     children: <Widget>[
                       const Icon(
@@ -100,11 +100,13 @@ class _HomePageState extends State<HomePage> {
                             child: Text(
                               notificationCount.toString(),
                               style: const TextStyle(
-                                  color: Colors.white, fontSize: 10),
+                                color: Colors.white,
+                                fontSize: 10,
+                              ),
                               textAlign: TextAlign.center,
                             ),
                           ),
-                        )
+                        ),
                     ],
                   );
                 },
@@ -112,9 +114,11 @@ class _HomePageState extends State<HomePage> {
               onPressed: () async {
                 await markNotificationsAsRead();
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const NotificationD()));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NotificationD(),
+                  ),
+                );
               },
             ),
           ],
