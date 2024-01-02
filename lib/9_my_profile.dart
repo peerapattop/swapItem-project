@@ -471,15 +471,17 @@ class _ProfileState extends State<Profile> {
                                         ),
                                       );
                                     }),
-                                GradientButton(
-                                    colors: [
-                                      Color.fromARGB(255, 212, 208, 143),
-                                      Color(0xFF5fadcf)
-                                    ],
-                                    text: 'ออกจากระบบ',
-                                    onPressed: () {
-                                      _showSignOutConfirmationDialog();
-                                    }),
+                                ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red),
+                                  label: Text('ออกจากระบบ',
+                                      style: TextStyle(color: Colors.white,
+                                          fontSize: 16)),
+                                  icon: Icon(Icons.logout,color: Colors.white),
+                                  onPressed: () {
+                                    _showSignOutConfirmationDialog();
+                                  },
+                                ),
                               ],
                             ),
                           ],

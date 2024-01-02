@@ -9,7 +9,7 @@ class GradientButton extends StatelessWidget {
     Key? key,
     required this.text,
     required this.onPressed,
-    required this.colors, // Expect a list of colors
+    required this.colors,
   }) : super(key: key);
 
   @override
