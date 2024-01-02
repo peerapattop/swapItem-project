@@ -107,7 +107,7 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'Item Name: $item_name',
+                                  'ชื่อสิ่งของ: $item_name',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -115,7 +115,6 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                                 ),
                               ),
                             ),
-
                             if (imageUrls.isNotEmpty)
                               Center(
                                 child: AspectRatio(
@@ -130,13 +129,15 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                               height: 10,
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
                               child: Center(
                                 child: Text(
-                                  'Exchange with',
+                                  'แลกเปลี่ยนกับ',
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: const Color.fromARGB(255, 22, 22, 22),
+                                    color:
+                                        const Color.fromARGB(255, 22, 22, 22),
                                   ),
                                 ),
                               ),
@@ -176,7 +177,7 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                                       Theme.of(context).primaryColor,
                                   foregroundColor: Colors.white,
                                 ),
-                                child: Center(child: Text('Details')),
+                                child: Center(child: Text('รายละเอียด')),
                               ),
                             ),
                           ],
@@ -227,7 +228,7 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'Item Name: $item_name',
+                                  'ชื่อสิ่งของ: $item_name',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -235,7 +236,6 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                                 ),
                               ),
                             ),
-
                             if (imageUrls.isNotEmpty)
                               Center(
                                 child: AspectRatio(
@@ -246,17 +246,17 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                                   ),
                                 ),
                               ),
-                            SizedBox(
-                              height: 10,
-                            ),
+                            SizedBox(height: 10),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
                               child: Center(
                                 child: Text(
-                                  'Exchange with',
+                                  'แลกเปลี่ยนกับ',
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: const Color.fromARGB(255, 22, 22, 22),
+                                    color:
+                                        const Color.fromARGB(255, 22, 22, 22),
                                   ),
                                 ),
                               ),
