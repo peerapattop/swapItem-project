@@ -12,13 +12,12 @@ class NotificationD extends StatefulWidget {
 class _NotificationDState extends State<NotificationD> {
   late String loggedInUserId;
 
-  @override
+   @override
   void initState() {
     super.initState();
     // ดึงข้อมูล uid ของผู้ใช้ที่ล็อกอิน
     loggedInUserId = FirebaseAuth.instance.currentUser!.uid;
   }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -40,9 +39,8 @@ class _NotificationDState extends State<NotificationD> {
           child: StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('notifications')
-                  .where('userId',
-                      isEqualTo: loggedInUserId) // เพิ่มเงื่อนไขการกรอง
-                  .orderBy('timestamp', descending: true)
+                  .orderBy('timestamp',
+                      descending: true) // Add your timestamp field here.
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
