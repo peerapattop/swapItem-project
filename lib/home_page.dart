@@ -36,34 +36,33 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-Stream<int> getUnreadNotificationCountStream() {
-  var notificationCollection =
-      FirebaseFirestore.instance.collection('notifications');
+  Stream<int> getUnreadNotificationCountStream() {
+    var notificationCollection =
+        FirebaseFirestore.instance.collection('notifications');
 
-  return notificationCollection
-      .where('userId', isEqualTo: _user.uid) // Filter by current user ID
-      .where('read', isEqualTo: false)
-      .snapshots()
-      .map((snapshot) => snapshot.docs.length);
-}
-
-Future<void> markNotificationsAsRead() async {
-  var notificationCollection =
-      FirebaseFirestore.instance.collection('notifications');
-  var batch = FirebaseFirestore.instance.batch();
-
-  var querySnapshot = await notificationCollection
-      .where('userId', isEqualTo: _user.uid) // Filter by current user ID
-      .where('read', isEqualTo: false)
-      .get();
-
-  for (var doc in querySnapshot.docs) {
-    batch.update(doc.reference, {'read': true});
+    return notificationCollection
+        .where('userId', isEqualTo: _user.uid) // Filter by current user ID
+        .where('read', isEqualTo: false)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
   }
 
-  await batch.commit();
-}
+  Future<void> markNotificationsAsRead() async {
+    var notificationCollection =
+        FirebaseFirestore.instance.collection('notifications');
+    var batch = FirebaseFirestore.instance.batch();
 
+    var querySnapshot = await notificationCollection
+        .where('userId', isEqualTo: _user.uid) // Filter by current user ID
+        .where('read', isEqualTo: false)
+        .get();
+
+    for (var doc in querySnapshot.docs) {
+      batch.update(doc.reference, {'read': true});
+    }
+
+    await batch.commit();
+  }
 
   @override
   Widget build(BuildContext context) {

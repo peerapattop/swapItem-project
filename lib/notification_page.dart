@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class NotificationD extends StatefulWidget {
@@ -9,6 +10,15 @@ class NotificationD extends StatefulWidget {
 }
 
 class _NotificationDState extends State<NotificationD> {
+  late String loggedInUserId;
+
+  @override
+  void initState() {
+    super.initState();
+    // ดึงข้อมูล uid ของผู้ใช้ที่ล็อกอิน
+    loggedInUserId = FirebaseAuth.instance.currentUser!.uid;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -30,8 +40,9 @@ class _NotificationDState extends State<NotificationD> {
           child: StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('notifications')
-                  .orderBy('timestamp',
-                      descending: true) // Add your timestamp field here.
+                  .where('userId',
+                      isEqualTo: loggedInUserId) // เพิ่มเงื่อนไขการกรอง
+                  .orderBy('timestamp', descending: true)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
