@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swapitem/widget/offer_imageshow.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Offer_come extends StatefulWidget {
   const Offer_come({Key? key}) : super(key: key);
@@ -379,166 +379,7 @@ class _Offer_comeState extends State<Offer_come> {
                                       imageUrls: image_offer,
                                     ),
                                     //
-                                    Container(
-                                      width: 400,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 16),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(19),
-                                        color: Color(0xFFF0F0F0),
-                                      ),
-
-                                      // Reduced horizontal padding
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          SizedBox(
-                                            width: 203,
-                                            height: 22,
-                                            child: Text(
-                                              "เลขที่ผู้ยื่นข้อเสนอ : " +
-                                                  selectedOffers1![
-                                                          'offerNumber']
-                                                      .toString(),
-                                              style: TextStyle(
-                                                color: Color(0xFFA717DA),
-                                                fontSize: 17,
-                                                fontFamily: 'Inter',
-                                                fontWeight: FontWeight.w400,
-                                                height: 0,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: 6), // Added spacing
-                                          SizedBox(
-                                            width: 217,
-                                            height: 21,
-                                            child: Text(
-                                              "วันที่ " +
-                                                  selectedOffers1!['date']
-                                                      .toString() +
-                                                  " เวลา" +
-                                                  selectedOffers1!['time']
-                                                      .toString(),
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 17,
-                                                fontFamily: 'Inter',
-                                                fontWeight: FontWeight.w400,
-                                                height: 0,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: 6),
-                                          SizedBox(
-                                            width: 217,
-                                            height: 21,
-                                            child: Text(
-                                              "เวลา " +
-                                                  selectedOffers1!['time']
-                                                      .toString(),
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 17,
-                                                fontFamily: 'Inter',
-                                                fontWeight: FontWeight.w400,
-                                                height: 0,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: 6), // Added spacing
-                                          Text.rich(
-                                            TextSpan(
-                                              children: [
-                                                TextSpan(
-                                                  text: 'ชื่อคนเสนอ : ',
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 17,
-                                                    fontFamily: 'Inter',
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 0,
-                                                  ),
-                                                ),
-                                                TextSpan(
-                                                  text: 'Simpson',
-                                                  style: TextStyle(
-                                                    color: Color(0xFFA717DA),
-                                                    fontSize: 17,
-                                                    fontFamily: 'Inter',
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 0,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(height: 6), // Added spacing
-                                          Text(
-                                            'ชื่อสิ่งของ : ' +
-                                                selectedOffers1!['nameitem1'],
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 17,
-                                              fontFamily: 'Inter',
-                                              fontWeight: FontWeight.w400,
-                                              height: 0,
-                                            ),
-                                          ),
-                                          SizedBox(height: 6), // Added spacing
-                                          Text(
-                                            'แบรนด์: ' +
-                                                selectedOffers1!['brand1'],
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 17,
-                                              fontFamily: 'Inter',
-                                              fontWeight: FontWeight.w400,
-                                              height: 0,
-                                            ),
-                                          ),
-                                          SizedBox(height: 6), // Added spacing
-                                          Text(
-                                            'รุ่น: ' +
-                                                selectedOffers1!['model1'],
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 17,
-                                              fontFamily: 'Inter',
-                                              fontWeight: FontWeight.w400,
-                                              height: 0,
-                                            ),
-                                          ),
-                                          SizedBox(height: 6), // Added spacing
-                                          Text(
-                                            'หมวดหมู่ : ' +
-                                                selectedOffers1?['type1'],
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 17,
-                                              fontFamily: 'Inter',
-                                              fontWeight: FontWeight.w400,
-                                              height: 0,
-                                            ),
-                                          ),
-                                          SizedBox(height: 6), // Added spacing
-                                          Text(
-                                            'รายละเอียด : ' +
-                                                selectedOffers1?['detail1'],
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 17,
-                                              fontFamily: 'Inter',
-                                              fontWeight: FontWeight.w400,
-                                              height: 0,
-                                            ),
-                                          ),
-                                          SizedBox(height: 12), // Added spacing
-                                        ],
-                                      ),
-                                    ),
-
+                                    offerdata(),
                                     //Text("เลขที่ผู้ยื่นข้อเสนอ" +selectedOffers1?['post_uid']),
                                     // Text(selectedOffers1?['time']),
                                     // Text(selectedOffers1?['post_uid']),
@@ -576,7 +417,20 @@ class _Offer_comeState extends State<Offer_come> {
                                                         Colors.green),
                                                 icon: Icon(Icons.check,
                                                     color: Colors.white),
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  late DatabaseReference
+                                                      _offerRef;
+                                                  _offerRef = FirebaseDatabase
+                                                      .instance
+                                                      .ref()
+                                                      .child('offer')
+                                                      .child(selectedOffers1?[
+                                                          'offer_uid']);
+                                                  setState(() {
+                                                    _offerRef.update(
+                                                        {'status': 'test'});
+                                                  });
+                                                },
                                                 label: Text(
                                                   'ยืนยัน',
                                                   style: TextStyle(
@@ -671,6 +525,176 @@ class _Offer_comeState extends State<Offer_come> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget offerdata() {
+    if (selectedOffers1!['status'] == 'test') {
+      return Container(
+        width: 392,
+        height: 220,
+        decoration: BoxDecoration(color: Color(0x4CA0F74A)),
+        child: SizedBox(
+          width: 342,
+          height: 22,
+          child: Text(
+            'หมายเลขการโพสต์ของคุณ #0001',
+            style: TextStyle(
+              color: Color(0xFFA717DA),
+              fontSize: 23,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w400,
+              height: 0,
+            ),
+          ),
+        ),
+      );
+    }
+    return Container(
+      width: 400,
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(19),
+        color: Color(0xFFF0F0F0),
+      ),
+
+      // Reduced horizontal padding
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(
+            width: 203,
+            height: 22,
+            child: Text(
+              "เลขที่ผู้ยื่นข้อเสนอ : " +
+                  selectedOffers1!['offerNumber'].toString(),
+              style: TextStyle(
+                color: Color(0xFFA717DA),
+                fontSize: 17,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+                height: 0,
+              ),
+            ),
+          ),
+          SizedBox(height: 6), // Added spacing
+          SizedBox(
+            width: 217,
+            height: 21,
+            child: Text(
+              "วันที่ " +
+                  selectedOffers1!['date'].toString() +
+                  " เวลา" +
+                  selectedOffers1!['time'].toString(),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 17,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+                height: 0,
+              ),
+            ),
+          ),
+          SizedBox(height: 6),
+          SizedBox(
+            width: 217,
+            height: 21,
+            child: Text(
+              "เวลา " + selectedOffers1!['time'].toString(),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 17,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+                height: 0,
+              ),
+            ),
+          ),
+          SizedBox(height: 6), // Added spacing
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: 'ชื่อคนเสนอ : ',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 17,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
+                    height: 0,
+                  ),
+                ),
+                TextSpan(
+                  text: 'Simpson',
+                  style: TextStyle(
+                    color: Color(0xFFA717DA),
+                    fontSize: 17,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
+                    height: 0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 6), // Added spacing
+          Text(
+            'ชื่อสิ่งของ : ' + selectedOffers1!['nameitem1'],
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 17,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w400,
+              height: 0,
+            ),
+          ),
+          SizedBox(height: 6), // Added spacing
+          Text(
+            'แบรนด์: ' + selectedOffers1!['brand1'],
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 17,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w400,
+              height: 0,
+            ),
+          ),
+          SizedBox(height: 6), // Added spacing
+          Text(
+            'รุ่น: ' + selectedOffers1!['model1'],
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 17,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w400,
+              height: 0,
+            ),
+          ),
+          SizedBox(height: 6), // Added spacing
+          Text(
+            'หมวดหมู่ : ' + selectedOffers1?['type1'],
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 17,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w400,
+              height: 0,
+            ),
+          ),
+          SizedBox(height: 6), // Added spacing
+          Text(
+            'รายละเอียด : ' + selectedOffers1?['detail1'],
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 17,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w400,
+              height: 0,
+            ),
+          ),
+          SizedBox(height: 12), // Added spacing
+        ],
       ),
     );
   }
