@@ -41,8 +41,7 @@ class _HomePageState extends State<HomePage> {
         FirebaseFirestore.instance.collection('notifications');
 
     return notificationCollection
-        .where('userId', isEqualTo: _user.uid) // Filter by current user ID
-        .where('read', isEqualTo: false)
+        .where('readBy.${_user.uid}', isEqualTo: false)
         .snapshots()
         .map((snapshot) => snapshot.docs.length);
   }
@@ -53,12 +52,13 @@ class _HomePageState extends State<HomePage> {
     var batch = FirebaseFirestore.instance.batch();
 
     var querySnapshot = await notificationCollection
-        .where('userId', isEqualTo: _user.uid) // Filter by current user ID
-        .where('read', isEqualTo: false)
+        .where('readBy.${_user.uid}', isEqualTo: false)
         .get();
 
     for (var doc in querySnapshot.docs) {
-      batch.update(doc.reference, {'read': true});
+      batch.update(doc.reference, {
+        'readBy.${_user.uid}': true,
+      });
     }
 
     await batch.commit();
