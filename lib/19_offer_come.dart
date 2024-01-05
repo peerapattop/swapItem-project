@@ -375,9 +375,6 @@ class _Offer_comeState extends State<Offer_come> {
                                     SizedBox(
                                       height: 10,
                                     ),
-                                    ImageGalleryWidget(
-                                      imageUrls: image_offer,
-                                    ),
                                     //
                                     offerdata(),
                                     //Text("เลขที่ผู้ยื่นข้อเสนอ" +selectedOffers1?['post_uid']),
@@ -532,23 +529,10 @@ class _Offer_comeState extends State<Offer_come> {
   Widget offerdata() {
     if (selectedOffers1!['status'] == 'test') {
       return Container(
-        width: 392,
-        height: 220,
-        decoration: BoxDecoration(color: Color(0x4CA0F74A)),
-        child: SizedBox(
-          width: 342,
-          height: 22,
-          child: Text(
-            'หมายเลขการโพสต์ของคุณ #0001',
-            style: TextStyle(
-              color: Color(0xFFA717DA),
-              fontSize: 23,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w400,
-              height: 0,
-            ),
-          ),
-        ),
+        width: MediaQuery.of(context)
+            .size
+            .width, // This sets the width to the screen width
+        child: Image.asset('assets/icons/xmark.png'),
       );
     }
     return Container(
@@ -563,6 +547,9 @@ class _Offer_comeState extends State<Offer_come> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          ImageGalleryWidget(
+            imageUrls: image_offer,
+          ),
           SizedBox(
             width: 203,
             height: 22,
