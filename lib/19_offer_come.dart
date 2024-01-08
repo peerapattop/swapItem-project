@@ -46,33 +46,36 @@ class _Offer_comeState extends State<Offer_come> {
     _postRef
         .orderByChild('uid')
         .equalTo(_user.uid)
-        .limitToFirst(1)
         .onValue
         .listen((event) {
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic> data =
         Map<dynamic, dynamic>.from(event.snapshot.value as Map);
-        var firstKey = data.keys.first;
-        var firstPost = Map<dynamic, dynamic>.from(data[firstKey]);
 
+        // Clear the list before adding new items
+        postsList.clear();
 
-          if (firstPost['status_post'] != "finish") {
-            _loadPostData1(firstPost['post_uid']);
-            setState(() {
-              postsList.clear();
-              postsList.insert(0, firstPost);
-              selectedPost = firstPost;
+        data.forEach((key, value) {
+          var post = Map<dynamic, dynamic>.from(value);
+
+          // Check if the post's status is not 'finish'
+          if (post['status_post'] != 'finish') {
+            postsList.add(post);
+            if (_selectedIndex == -1) {
               _selectedIndex = 0;
+              selectedPost = post;
 
-              print(firstPost);
-            });
-            // If the status of the post is "finish", perform specific actions here
-            // For example, you might want to skip this post or mark it in a special way
-          } else{
-
+              // Load offers for the first eligible post
+              _loadPostData1(post['post_uid']);
+            }
           }
-        }
+        });
 
+        // Update the state if there are eligible posts
+        if (postsList.isNotEmpty) {
+          setState(() {});
+        }
+      }
     });
   }
 
@@ -86,20 +89,17 @@ class _Offer_comeState extends State<Offer_come> {
         .listen((databaseEvent1) {
       if (databaseEvent1.snapshot.value != null) {
         Map<dynamic, dynamic>? offers =
-        Map<dynamic, dynamic>.from(databaseEvent1.snapshot.value as Map);
+            Map<dynamic, dynamic>.from(databaseEvent1.snapshot.value as Map);
         List<Map<dynamic, dynamic>> offersList = [];
 
         offers.forEach((key, value) {
-          var offer = Map<dynamic, dynamic>.from(value);
-          // ตรวจสอบ status_post ก่อนเพิ่มข้อมูลลงใน offersList
-          if(offer['status_post'] != 'finish') {
-            offersList.add(offer);
-          }
+          offersList.add(Map<dynamic, dynamic>.from(value));
         });
         postsList1.clear();
         setState(() {
           postsList1 = offersList;
           if (offersList.isNotEmpty) {
+            print(postsList1);
             _selectedIndex1 = 0; // Select the first offer by default
             selectedOffers1 = offersList.first;
           }
@@ -109,7 +109,6 @@ class _Offer_comeState extends State<Offer_come> {
       }
     });
   }
-
 
   void selectPayment(Map<dynamic, dynamic> postData) {
     setState(() {
@@ -137,23 +136,21 @@ class _Offer_comeState extends State<Offer_come> {
         body: StreamBuilder(
           stream: StreamZip([
             _postRef.orderByChild('uid').equalTo(_user.uid).onValue,
-            _offerRef
-                .orderByChild('post_uid')
-                .equalTo(selectedOffers1?['postUid'])
-                .onValue,
+            _offerRef.orderByChild('post_uid').equalTo(selectedOffers1?['postUid']).onValue,
           ]),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               List<DatabaseEvent> events = snapshot.data as List<DatabaseEvent>;
-              Map<dynamic, dynamic> data =
-                  Map<dynamic, dynamic>.from(events[0].snapshot.value as Map);
+              Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(events[0].snapshot.value as Map);
               postsList.clear();
+
+              // Iterate through each post and add to the list only if its status is not 'finish'
               data.forEach((key, value) {
-                if (value['status_post'] != 'finish') {
-                  postsList.add(Map<dynamic, dynamic>.from(value));
+                var post = Map<dynamic, dynamic>.from(value);
+                if (post['status_post'] != 'finish') {
+                  postsList.add(post);
                 }
               });
-
               return Column(
                 children: [
                   SizedBox(
@@ -502,8 +499,6 @@ class _Offer_comeState extends State<Offer_come> {
                                                                               'test'
                                                                         });
                                                                       });
-                                                                      Navigator.pop(
-                                                                          context);
                                                                     },
                                                                     child: Text(
                                                                         "ยืนยันปฎิเสษ")),
