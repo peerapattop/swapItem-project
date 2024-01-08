@@ -43,32 +43,39 @@ class _Offer_comeState extends State<Offer_come> {
     _offerRef = FirebaseDatabase.instance.ref().child('offer');
     selectedPost = null;
 
-    // Load the first post
-    // Load the first post
     _postRef
         .orderByChild('uid')
         .equalTo(_user.uid)
-        .limitToFirst(1) // Change this line to limitToFirst(1)
+        .limitToFirst(1)
         .onValue
         .listen((event) {
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic> data =
-            Map<dynamic, dynamic>.from(event.snapshot.value as Map);
-        var firstKey = data.keys.first; // Change this line to get the first key
+        Map<dynamic, dynamic>.from(event.snapshot.value as Map);
+        var firstKey = data.keys.first;
         var firstPost = Map<dynamic, dynamic>.from(data[firstKey]);
 
-        // When you get the first post, load its offers
-        _loadPostData1(firstPost[
-            'post_uid']); // This will load the offers for the first post
-        setState(() {
-          postsList.clear();
-          postsList.insert(0, firstPost);
-          selectedPost = firstPost;
-          _selectedIndex = 0;
-        });
-      }
+
+          if (firstPost['status_post'] != "finish") {
+            _loadPostData1(firstPost['post_uid']);
+            setState(() {
+              postsList.clear();
+              postsList.insert(0, firstPost);
+              selectedPost = firstPost;
+              _selectedIndex = 0;
+
+              print(firstPost);
+            });
+            // If the status of the post is "finish", perform specific actions here
+            // For example, you might want to skip this post or mark it in a special way
+          } else{
+
+          }
+        }
+
     });
   }
+
 
   void _loadPostData1(String postUid) {
     FirebaseDatabase.instance
@@ -79,17 +86,20 @@ class _Offer_comeState extends State<Offer_come> {
         .listen((databaseEvent1) {
       if (databaseEvent1.snapshot.value != null) {
         Map<dynamic, dynamic>? offers =
-            Map<dynamic, dynamic>.from(databaseEvent1.snapshot.value as Map);
+        Map<dynamic, dynamic>.from(databaseEvent1.snapshot.value as Map);
         List<Map<dynamic, dynamic>> offersList = [];
 
         offers.forEach((key, value) {
-          offersList.add(Map<dynamic, dynamic>.from(value));
+          var offer = Map<dynamic, dynamic>.from(value);
+          // ตรวจสอบ status_post ก่อนเพิ่มข้อมูลลงใน offersList
+          if(offer['status_post'] != 'finish') {
+            offersList.add(offer);
+          }
         });
         postsList1.clear();
         setState(() {
           postsList1 = offersList;
           if (offersList.isNotEmpty) {
-            print(postsList1);
             _selectedIndex1 = 0; // Select the first offer by default
             selectedOffers1 = offersList.first;
           }
@@ -99,6 +109,7 @@ class _Offer_comeState extends State<Offer_come> {
       }
     });
   }
+
 
   void selectPayment(Map<dynamic, dynamic> postData) {
     setState(() {
@@ -138,7 +149,9 @@ class _Offer_comeState extends State<Offer_come> {
                   Map<dynamic, dynamic>.from(events[0].snapshot.value as Map);
               postsList.clear();
               data.forEach((key, value) {
-                postsList.add(Map<dynamic, dynamic>.from(value));
+                if (value['status_post'] != 'finish') {
+                  postsList.add(Map<dynamic, dynamic>.from(value));
+                }
               });
 
               return Column(
@@ -489,6 +502,8 @@ class _Offer_comeState extends State<Offer_come> {
                                                                               'test'
                                                                         });
                                                                       });
+                                                                      Navigator.pop(
+                                                                          context);
                                                                     },
                                                                     child: Text(
                                                                         "ยืนยันปฎิเสษ")),
