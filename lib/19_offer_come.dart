@@ -426,20 +426,7 @@ class _Offer_comeState extends State<Offer_come> {
                                                         Colors.green),
                                                 icon: Icon(Icons.check,
                                                     color: Colors.white),
-                                                onPressed: () {
-                                                  late DatabaseReference
-                                                      _offerRef;
-                                                  _offerRef = FirebaseDatabase
-                                                      .instance
-                                                      .ref()
-                                                      .child('offer')
-                                                      .child(selectedOffers1?[
-                                                          'offer_uid']);
-                                                  setState(() {
-                                                    _offerRef.update(
-                                                        {'status': 'test'});
-                                                  });
-                                                },
+                                                onPressed: () {},
                                                 label: Text(
                                                   'ยืนยัน',
                                                   style: TextStyle(
@@ -455,7 +442,62 @@ class _Offer_comeState extends State<Offer_come> {
                                                         Colors.red),
                                                 icon: Icon(Icons.close,
                                                     color: Colors.white),
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (_) {
+                                                        return AlertDialog(
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        16.0),
+                                                          ),
+                                                          title: Text(
+                                                              "ยืนยันการปฎิเสษ"),
+                                                          content: Text(
+                                                              "หากปฎิเสษแล้ว สินค้านี้จะไม่สามารถทำการเลือกได้"),
+                                                          actions: [
+                                                            Row(
+                                                              children: [
+                                                                TextButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    },
+                                                                    child: Text(
+                                                                        "ยกเลิก")),
+                                                                TextButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      late DatabaseReference
+                                                                          _offerRef;
+                                                                      _offerRef = FirebaseDatabase
+                                                                          .instance
+                                                                          .ref()
+                                                                          .child(
+                                                                              'offer')
+                                                                          .child(
+                                                                              selectedOffers1?['offer_uid']);
+                                                                      setState(
+                                                                          () {
+                                                                        _offerRef
+                                                                            .update({
+                                                                          'status':
+                                                                              'test'
+                                                                        });
+                                                                      });
+                                                                    },
+                                                                    child: Text(
+                                                                        "ยืนยันปฎิเสษ")),
+                                                              ],
+                                                            )
+                                                          ],
+                                                        );
+                                                      });
+                                                },
                                                 label: Text(
                                                   'ปฎิเสธ',
                                                   style: TextStyle(
