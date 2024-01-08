@@ -53,13 +53,13 @@ class _Offer_comeState extends State<Offer_come> {
         .listen((event) {
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic> data =
-        Map<dynamic, dynamic>.from(event.snapshot.value as Map);
+            Map<dynamic, dynamic>.from(event.snapshot.value as Map);
         var firstKey = data.keys.first; // Change this line to get the first key
         var firstPost = Map<dynamic, dynamic>.from(data[firstKey]);
 
         // When you get the first post, load its offers
         _loadPostData1(firstPost[
-        'post_uid']); // This will load the offers for the first post
+            'post_uid']); // This will load the offers for the first post
         setState(() {
           postsList.clear();
           postsList.insert(0, firstPost);
@@ -79,7 +79,7 @@ class _Offer_comeState extends State<Offer_come> {
         .listen((databaseEvent1) {
       if (databaseEvent1.snapshot.value != null) {
         Map<dynamic, dynamic>? offers =
-        Map<dynamic, dynamic>.from(databaseEvent1.snapshot.value as Map);
+            Map<dynamic, dynamic>.from(databaseEvent1.snapshot.value as Map);
         List<Map<dynamic, dynamic>> offersList = [];
 
         offers.forEach((key, value) {
@@ -131,12 +131,11 @@ class _Offer_comeState extends State<Offer_come> {
                 .equalTo(selectedOffers1?['postUid'])
                 .onValue,
           ]),
-
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               List<DatabaseEvent> events = snapshot.data as List<DatabaseEvent>;
-              Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
-                  events[0].snapshot.value as Map);
+              Map<dynamic, dynamic> data =
+                  Map<dynamic, dynamic>.from(events[0].snapshot.value as Map);
               postsList.clear();
               data.forEach((key, value) {
                 postsList.add(Map<dynamic, dynamic>.from(value));
