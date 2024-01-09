@@ -1,9 +1,9 @@
 import 'package:async/async.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:swapitem/widget/offer_imageshow.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:swapitem/widget/offer_imageshow.dart';
 
 class Offer_come extends StatefulWidget {
   const Offer_come({Key? key}) : super(key: key);
@@ -35,7 +35,6 @@ class _Offer_comeState extends State<Offer_come> {
   List<String> image_post = [];
   List<String> image_offer = [];
 
-  @override
   void initState() {
     super.initState();
     _user = FirebaseAuth.instance.currentUser!;
@@ -43,42 +42,36 @@ class _Offer_comeState extends State<Offer_come> {
     _offerRef = FirebaseDatabase.instance.ref().child('offer');
     selectedPost = null;
 
+    // Load the first post
     _postRef
         .orderByChild('uid')
         .equalTo(_user.uid)
+        .limitToFirst(1)
         .onValue
         .listen((event) {
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic> data =
         Map<dynamic, dynamic>.from(event.snapshot.value as Map);
+        var firstKey = data.keys.first;
+        var firstPost = Map<dynamic, dynamic>.from(data[firstKey]);
 
-        // Clear the list before adding new items
-        postsList.clear();
-
-        data.forEach((key, value) {
-          var post = Map<dynamic, dynamic>.from(value);
-
-          // Check if the post's status is not 'finish'
-          if (post['status_post'] != 'finish') {
-            postsList.add(post);
-            if (_selectedIndex == -1) {
-              _selectedIndex = 0;
-              selectedPost = post;
-
-              // Load offers for the first eligible post
-              _loadPostData1(post['post_uid']);
-            }
-          }
-        });
-
-        // Update the state if there are eligible posts
-        if (postsList.isNotEmpty) {
-          setState(() {});
+        // Check the status before loading post data
+        String g = "finish";
+        if (firstPost['status'] != g) {
+          // Status is not finish, perform your actions here
+          _loadPostData1(firstPost['post_uid']);
+          setState(() {
+            postsList.clear();
+            postsList.insert(0, firstPost);
+            selectedPost = firstPost;
+            _selectedIndex = 0;
+          });
+        } else {
+          print('Post with status "finish" found, skipping...');
         }
       }
     });
   }
-
 
   void _loadPostData1(String postUid) {
     FirebaseDatabase.instance
@@ -89,7 +82,7 @@ class _Offer_comeState extends State<Offer_come> {
         .listen((databaseEvent1) {
       if (databaseEvent1.snapshot.value != null) {
         Map<dynamic, dynamic>? offers =
-            Map<dynamic, dynamic>.from(databaseEvent1.snapshot.value as Map);
+        Map<dynamic, dynamic>.from(databaseEvent1.snapshot.value as Map);
         List<Map<dynamic, dynamic>> offersList = [];
 
         offers.forEach((key, value) {
@@ -99,7 +92,6 @@ class _Offer_comeState extends State<Offer_come> {
         setState(() {
           postsList1 = offersList;
           if (offersList.isNotEmpty) {
-            print(postsList1);
             _selectedIndex1 = 0; // Select the first offer by default
             selectedOffers1 = offersList.first;
           }
@@ -136,21 +128,31 @@ class _Offer_comeState extends State<Offer_come> {
         body: StreamBuilder(
           stream: StreamZip([
             _postRef.orderByChild('uid').equalTo(_user.uid).onValue,
-            _offerRef.orderByChild('post_uid').equalTo(selectedOffers1?['postUid']).onValue,
+            _offerRef
+                .orderByChild('post_uid')
+                .equalTo(selectedOffers1?['postUid'])
+                .onValue,
           ]),
+
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               List<DatabaseEvent> events = snapshot.data as List<DatabaseEvent>;
-              Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(events[0].snapshot.value as Map);
-              postsList.clear();
+              Map<dynamic, dynamic> postData =
+              Map<dynamic, dynamic>.from(events[0].snapshot.value as Map);
 
-              // Iterate through each post and add to the list only if its status is not 'finish'
-              data.forEach((key, value) {
-                var post = Map<dynamic, dynamic>.from(value);
+              // Filter posts based on status_post
+              List<Map<dynamic, dynamic>> filteredPosts = [];
+              postData.forEach((key, value) {
+                Map<dynamic, dynamic> post = Map<dynamic, dynamic>.from(value);
                 if (post['status_post'] != 'finish') {
-                  postsList.add(post);
+                  filteredPosts.add(post);
                 }
               });
+
+              // Clear and add filtered posts to postsList
+              postsList.clear();
+              postsList.addAll(filteredPosts);
+
               return Column(
                 children: [
                   SizedBox(
@@ -160,10 +162,10 @@ class _Offer_comeState extends State<Offer_come> {
                       children: postsList.asMap().entries.map((entry) {
                         int idx = entry.key;
                         image_offer =
-                            List<String>.from(selectedOffers1!['imageUrls']);
+                        List<String>.from(selectedOffers1!['imageUrls']);
                         Map<dynamic, dynamic> postData = entry.value;
                         image_post =
-                            List<String>.from(selectedPost!['imageUrls']);
+                        List<String>.from(selectedPost!['imageUrls']);
                         latitude = double.tryParse(
                             selectedPost!['latitude'].toString());
                         longitude = double.tryParse(
@@ -178,353 +180,311 @@ class _Offer_comeState extends State<Offer_come> {
                   Divider(),
                   selectedPost != null
                       ? Expanded(
-                          child: ListView(children: [
-                          Column(
-                            children: [
-                              ImageGalleryWidget(
-                                imageUrls: image_post,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Row(
+                      child: ListView(children: [
+                        Column(
+                          children: [
+                            ImageGalleryWidget(
+                              imageUrls: image_post,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.tag,
+                                        // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                                        color: Colors
+                                            .blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'โพสต์ของคุณ : ' +
+                                            selectedPost!['postNumber'],
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.date_range,
+                                        // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                                        color: Colors
+                                            .blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                                      ),
+                                      SizedBox(
+                                          width:
+                                          8), // ระยะห่างระหว่างไอคอนและข้อความ
+                                      Text(
+                                        'วันที่ : ' + selectedPost!['date'],
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.punch_clock,
+                                        // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                                        color: Colors
+                                            .blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                                      ),
+                                      Text(
+                                        " เวลา :" +
+                                            selectedPost!['time'] +
+                                            ' น.',
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    width: 400,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 16),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(19),
+                                      color: Color(0xFFF0F0F0),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                       children: [
-                                        Icon(
-                                          Icons.tag,
-                                          // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                          color: Colors
-                                              .blue, // เปลี่ยนสีไอคอนตามความต้องการ
-                                        ),
-                                        SizedBox(width: 8),
                                         Text(
-                                          'โพสต์ของคุณ : ' +
-                                              selectedPost!['postNumber'],
+                                          'ชื่อสิ่งของ : ' +
+                                              selectedPost!['item_name'],
                                           style: TextStyle(fontSize: 18),
                                         ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.date_range,
-                                          // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                          color: Colors
-                                              .blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                                        Text(
+                                          'หมวดหมู่ : ' +
+                                              selectedPost!['type'],
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                        Text(
+                                          'ยี่ห้อ : ' +
+                                              selectedPost!['brand'],
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                        Text(
+                                          'รุ่น : ' + selectedPost!['model'],
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                        Text(
+                                          'รายละเอียด : ' +
+                                              selectedPost!['detail'],
+                                          style: TextStyle(fontSize: 18),
                                         ),
                                         SizedBox(
-                                            width:
-                                                8), // ระยะห่างระหว่างไอคอนและข้อความ
+                                          height: 10,
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Center(
+                                      child: Image.asset(
+                                        'assets/images/swap.png',
+                                        width: 20,
+                                      )),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    width: 400,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 16),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(19),
+                                      color: Color(0xFFF0F0F0),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: <Widget>[
                                         Text(
-                                          'วันที่ : ' + selectedPost!['date'],
+                                          'ของที่ต้องการแลก : ' +
+                                              selectedPost!['item_name1'],
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                        Text(
+                                          'ยี่ห้อ : ' +
+                                              selectedPost!['brand1'],
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                        Text(
+                                          'รุ่น : ' + selectedPost!['model1'],
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                        Text(
+                                          'รายละเอียด : ' +
+                                              selectedPost!['details1'],
                                           style: TextStyle(fontSize: 18),
                                         ),
                                       ],
                                     ),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.punch_clock,
-                                          // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                          color: Colors
-                                              .blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    decoration:
+                                    BoxDecoration(border: Border.all()),
+                                    height: 300,
+                                    width: 380,
+                                    child: GoogleMap(
+                                      onMapCreated:
+                                          (GoogleMapController controller) {
+                                        mapController = controller;
+                                      },
+                                      initialCameraPosition: CameraPosition(
+                                        target: LatLng(latitude!, longitude!),
+                                        zoom: 12.0,
+                                      ),
+                                      markers: <Marker>{
+                                        Marker(
+                                          markerId:
+                                          MarkerId('initialPosition'),
+                                          position:
+                                          LatLng(latitude!, longitude!),
+                                          infoWindow: InfoWindow(
+                                            title: 'Marker Title',
+                                            snippet: 'Marker Snippet',
+                                          ),
                                         ),
-                                        Text(
-                                          " เวลา :" +
-                                              selectedPost!['time'] +
-                                              ' น.',
-                                          style: TextStyle(fontSize: 18),
-                                        ),
-                                      ],
+                                      },
                                     ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                      width: 400,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 16),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(19),
-                                        color: Color(0xFFF0F0F0),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'ชื่อสิ่งของ : ' +
-                                                selectedPost!['item_name'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          Text(
-                                            'หมวดหมู่ : ' +
-                                                selectedPost!['type'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          Text(
-                                            'ยี่ห้อ : ' +
-                                                selectedPost!['brand'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          Text(
-                                            'รุ่น : ' + selectedPost!['model'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          Text(
-                                            'รายละเอียด : ' +
-                                                selectedPost!['detail'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Center(
-                                        child: Image.asset(
-                                      'assets/images/swap.png',
-                                      width: 20,
-                                    )),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                      width: 400,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 16),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(19),
-                                        color: Color(0xFFF0F0F0),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            'ของที่ต้องการแลก : ' +
-                                                selectedPost!['item_name1'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          Text(
-                                            'ยี่ห้อ : ' +
-                                                selectedPost!['brand1'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          Text(
-                                            'รุ่น : ' + selectedPost!['model1'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          Text(
-                                            'รายละเอียด : ' +
-                                                selectedPost!['details1'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                      decoration:
-                                          BoxDecoration(border: Border.all()),
-                                      height: 300,
-                                      width: 380,
-                                      child: GoogleMap(
-                                        onMapCreated:
-                                            (GoogleMapController controller) {
-                                          mapController = controller;
-                                        },
-                                        initialCameraPosition: CameraPosition(
-                                          target: LatLng(latitude!, longitude!),
-                                          zoom: 12.0,
-                                        ),
-                                        markers: <Marker>{
-                                          Marker(
-                                            markerId:
-                                                MarkerId('initialPosition'),
-                                            position:
-                                                LatLng(latitude!, longitude!),
-                                            infoWindow: InfoWindow(
-                                              title: 'Marker Title',
-                                              snippet: 'Marker Snippet',
-                                            ),
-                                          ),
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Divider(),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      'ผู้ยื่นข้อเสนอแลกเปลี่ยน',
-                                      style: TextStyle(fontSize: 20),
-                                    ),
-                                    SizedBox(height: 10),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Divider(),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    'ผู้ยื่นข้อเสนอแลกเปลี่ยน',
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                  SizedBox(height: 10),
 
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: postsList1
-                                          .asMap()
-                                          .entries
-                                          .map((entry) {
-                                        int idx = entry.key;
-                                        image_offer = List<String>.from(
-                                            selectedOffers1!['imageUrls']);
-                                        Map<dynamic, dynamic> offerData =
-                                            entry.value;
-                                        return Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 4.0),
-                                          child: buildCircularNumberButton1(
-                                              idx, offerData),
-                                        );
-                                      }).toList(),
-                                    ),
-                                    Divider(),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    //
-                                    offerdata(),
-                                    //Text("เลขที่ผู้ยื่นข้อเสนอ" +selectedOffers1?['post_uid']),
-                                    // Text(selectedOffers1?['time']),
-                                    // Text(selectedOffers1?['post_uid']),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        children: [
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            children: [
-                                              ElevatedButton.icon(
-                                                style: ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        Colors.blue),
-                                                icon: Icon(Icons.chat,
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    children: postsList1
+                                        .asMap()
+                                        .entries
+                                        .map((entry) {
+                                      int idx = entry.key;
+                                      image_offer = List<String>.from(
+                                          selectedOffers1!['imageUrls']);
+                                      Map<dynamic, dynamic> offerData =
+                                          entry.value;
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4.0),
+                                        child: buildCircularNumberButton1(
+                                            idx, offerData),
+                                      );
+                                    }).toList(),
+                                  ),
+                                  Divider(),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  //
+                                  offerdata(),
+                                  //Text("เลขที่ผู้ยื่นข้อเสนอ" +selectedOffers1?['post_uid']),
+                                  // Text(selectedOffers1?['time']),
+                                  // Text(selectedOffers1?['post_uid']),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          children: [
+                                            ElevatedButton.icon(
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                  Colors.blue),
+                                              icon: Icon(Icons.chat,
+                                                  color: Colors.white),
+                                              onPressed: () {},
+                                              label: Text(
+                                                'แชท',
+                                                style: TextStyle(
                                                     color: Colors.white),
-                                                onPressed: () {},
-                                                label: Text(
-                                                  'แชท',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
                                               ),
-                                              SizedBox(
-                                                width: 50,
-                                              ),
-                                              ElevatedButton.icon(
-                                                style: ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        Colors.green),
-                                                icon: Icon(Icons.check,
+                                            ),
+                                            SizedBox(
+                                              width: 50,
+                                            ),
+                                            ElevatedButton.icon(
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                  Colors.green),
+                                              icon: Icon(Icons.check,
+                                                  color: Colors.white),
+                                              onPressed: () {
+                                                late DatabaseReference
+                                                _offerRef;
+                                                _offerRef = FirebaseDatabase
+                                                    .instance
+                                                    .ref()
+                                                    .child('offer')
+                                                    .child(selectedOffers1?[
+                                                'offer_uid']);
+                                                setState(() {
+                                                  _offerRef.update(
+                                                      {'status': 'test'});
+                                                });
+                                              },
+                                              label: Text(
+                                                'ยืนยัน',
+                                                style: TextStyle(
                                                     color: Colors.white),
-                                                onPressed: () {},
-                                                label: Text(
-                                                  'ยืนยัน',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
                                               ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              ElevatedButton.icon(
-                                                style: ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        Colors.red),
-                                                icon: Icon(Icons.close,
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            ElevatedButton.icon(
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                  Colors.red),
+                                              icon: Icon(Icons.close,
+                                                  color: Colors.white),
+                                              onPressed: () {},
+                                              label: Text(
+                                                'ปฎิเสธ',
+                                                style: TextStyle(
                                                     color: Colors.white),
-                                                onPressed: () {
-                                                  showDialog(
-                                                      context: context,
-                                                      builder: (_) {
-                                                        return AlertDialog(
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        16.0),
-                                                          ),
-                                                          title: Text(
-                                                              "ยืนยันการปฎิเสษ"),
-                                                          content: Text(
-                                                              "หากปฎิเสษแล้ว สินค้านี้จะไม่สามารถทำการเลือกได้"),
-                                                          actions: [
-                                                            Row(
-                                                              children: [
-                                                                TextButton(
-                                                                    onPressed:
-                                                                        () {
-                                                                      Navigator.pop(
-                                                                          context);
-                                                                    },
-                                                                    child: Text(
-                                                                        "ยกเลิก")),
-                                                                TextButton(
-                                                                    onPressed:
-                                                                        () {
-                                                                      late DatabaseReference
-                                                                          _offerRef;
-                                                                      _offerRef = FirebaseDatabase
-                                                                          .instance
-                                                                          .ref()
-                                                                          .child(
-                                                                              'offer')
-                                                                          .child(
-                                                                              selectedOffers1?['offer_uid']);
-                                                                      setState(
-                                                                          () {
-                                                                        _offerRef
-                                                                            .update({
-                                                                          'status':
-                                                                              'test'
-                                                                        });
-                                                                      });
-                                                                    },
-                                                                    child: Text(
-                                                                        "ยืนยันปฎิเสษ")),
-                                                              ],
-                                                            )
-                                                          ],
-                                                        );
-                                                      });
-                                                },
-                                                label: Text(
-                                                  'ปฎิเสธ',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
                                               ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ]))
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ]))
                       : Text('ไม่มีประวัติการโพสต์')
                 ],
               );
