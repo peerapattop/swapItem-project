@@ -475,15 +475,45 @@ class _ProfileState extends State<Profile> {
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.red),
                                   label: Text('ออกจากระบบ',
-                                      style: TextStyle(color: Colors.white,
-                                          fontSize: 16)),
-                                  icon: Icon(Icons.logout,color: Colors.white),
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16)),
+                                  icon: Icon(Icons.logout, color: Colors.white),
                                   onPressed: () {
                                     _showSignOutConfirmationDialog();
                                   },
                                 ),
                               ],
                             ),
+                            SizedBox(height: 10),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.email,
+                                  color: Colors.blue,
+                                  size: 25,
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  'peerapatza401@gmail.com',
+                                  style: TextStyle(fontSize: 17),
+                                ),
+                                SizedBox(width: 10),
+                                ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Color.fromARGB(255, 255, 181, 7),
+                                    ),
+                                    onPressed: () {},
+                                    child: const Text(
+                                      'ติดต่อเรา',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ))
+                              ],
+                            )
                           ],
                         ),
                       );
