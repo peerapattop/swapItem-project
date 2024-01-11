@@ -1,3 +1,5 @@
+import 'package:url_launcher/url_launcher.dart';
+
 import '19_offer_come.dart';
 import '5_his_post.dart';
 import '7_first_offer.dart';
@@ -505,7 +507,31 @@ class _ProfileState extends State<Profile> {
                                       backgroundColor:
                                           Color.fromARGB(255, 255, 181, 7),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () async{
+                                      encodeQueryParameters(
+                                          Map<String, String> params) {
+                                        return params.entries
+                                            .map((MapEntry<String, String> e) =>
+                                                '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+                                            .join('&');
+                                      }
+
+                                      final Uri emailUri = Uri(
+                                        scheme: 'mailto',
+                                        path: 'smith@example.com',
+                                        query: encodeQueryParameters(<String, String>{
+                                          'subject':
+                                              'Example Subject & Symbols are allowed!',
+                                          'body': 'test1'
+                                        }),
+                                      );
+                                      if(await canLaunchUrl(emailUri)){
+                                        launchUrl(emailUri);
+                                      }else{
+                                        throw Exception('Could not launch $emailUri');
+                                      }
+                                     
+                                    },
                                     child: const Text(
                                       'ติดต่อเรา',
                                       style: TextStyle(
