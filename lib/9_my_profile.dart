@@ -471,14 +471,14 @@ class _ProfileState extends State<Profile> {
                                     );
                                   },
                                 ),
-                                SizedBox(width: 15,),
+                                const SizedBox(width: 15),
                                 ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.red),
-                                  label: Text('ออกจากระบบ',
+                                  label: const Text('ออกจากระบบ',
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 16)),
-                                  icon: Icon(Icons.logout, color: Colors.white),
+                                  icon: const Icon(Icons.logout, color: Colors.white),
                                   onPressed: () {
                                     _showSignOutConfirmationDialog();
                                   },
@@ -492,7 +492,7 @@ class _ProfileState extends State<Profile> {
                               children: [
                                 Icon(
                                   Icons.email,
-                                  color: Colors.blue,
+                                  color: Color.fromARGB(255, 191, 19, 243),
                                   size: 25,
                                 ),
                                 SizedBox(width: 10),
@@ -622,7 +622,7 @@ class _ProfileState extends State<Profile> {
                   },
                   child: const Icon(
                     Icons.camera_alt,
-                    color: Color.fromARGB(255, 52, 0, 150),
+                    color: Color.fromARGB(255, 0, 188, 251),
                     size: 28,
                   ),
                 ),
