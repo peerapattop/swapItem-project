@@ -2,7 +2,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '19_offer_come.dart';
 import '5_his_post.dart';
-import '7_first_offer.dart';
 import 'package:intl/intl.dart';
 import 'widget/profile_widget.dart';
 import 'package:flutter/material.dart';
@@ -370,9 +369,9 @@ class _ProfileState extends State<Profile> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
                                 GradientButton(
-                                  colors: [
-                                    Color.fromARGB(255, 188, 246, 165),
-                                    Color(0xFF5fadcf)
+                                  colors: const [
+                                    Color.fromARGB(255, 66, 206, 11),
+                                    Color.fromARGB(255, 43, 248, 64)
                                   ],
                                   text: 'บันทึกการแก้ไข',
                                   onPressed: () {
@@ -457,22 +456,22 @@ class _ProfileState extends State<Profile> {
                               ],
                             ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
                                 GradientButton(
-                                    colors: [
-                                      Color(0xFFf6a5c1),
-                                      Color(0xFF5fadcf)
-                                    ],
-                                    text: 'ประวัติการชำระเงิน',
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              HistoryPayment(),
-                                        ),
-                                      );
-                                    }),
+                                  colors: [
+                                    Color(0xFFf6a5c1),
+                                    Color(0xFF5fadcf)
+                                  ],
+                                  text: 'ประวัติการชำระเงิน',
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => HistoryPayment(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                SizedBox(width: 15,),
                                 ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.red),
@@ -486,7 +485,7 @@ class _ProfileState extends State<Profile> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 15),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -505,9 +504,9 @@ class _ProfileState extends State<Profile> {
                                 ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor:
-                                          Color.fromARGB(255, 255, 181, 7),
+                                          Color.fromARGB(255, 101, 191, 247),
                                     ),
-                                    onPressed: () async{
+                                    onPressed: () async {
                                       encodeQueryParameters(
                                           Map<String, String> params) {
                                         return params.entries
@@ -519,18 +518,19 @@ class _ProfileState extends State<Profile> {
                                       final Uri emailUri = Uri(
                                         scheme: 'mailto',
                                         path: 'smith@example.com',
-                                        query: encodeQueryParameters(<String, String>{
+                                        query: encodeQueryParameters(<String,
+                                            String>{
                                           'subject':
                                               'Example Subject & Symbols are allowed!',
                                           'body': 'test1'
                                         }),
                                       );
-                                      if(await canLaunchUrl(emailUri)){
+                                      if (await canLaunchUrl(emailUri)) {
                                         launchUrl(emailUri);
-                                      }else{
-                                        throw Exception('Could not launch $emailUri');
+                                      } else {
+                                        throw Exception(
+                                            'Could not launch $emailUri');
                                       }
-                                     
                                     },
                                     child: const Text(
                                       'ติดต่อเรา',
@@ -559,7 +559,7 @@ class _ProfileState extends State<Profile> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Center(child: Text('บันทึกสำเร็จ')),
+          title: const Center(child: Text('บันทึกสำเร็จ')),
           content: Image.asset(
             'assets/images/checked.png',
             width: 50,
