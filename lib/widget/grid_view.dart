@@ -91,6 +91,9 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                       String lati = userData['latitude'].toString();
                       String longti = userData['longitude'].toString();
                       String imageUser = userData['imageUser'];
+                     bool isVip = userData['status_user'] == 'ผู้ใช้พรีเมี่ยม';
+
+
                       List<String> imageUrls =
                           List<String>.from(userData['imageUrls'] ?? []);
                       return Card(
@@ -106,12 +109,18 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                             Center(
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  'ชื่อสิ่งของ: $item_name',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                child: Row(
+                                  children: [
+                                    if (isVip)
+                                      Image.asset('assets/images/vip.png'),
+                                    Text(
+                                      'ชื่อสิ่งของ: $item_name',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),

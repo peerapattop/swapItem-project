@@ -131,6 +131,7 @@ class _NewPostState extends State<NewPost> {
         String username = datamap['username'];
         String email = datamap['email'];
         String imageUser = datamap['image_user'];
+        String status_user = datamap['status_user'];
         DatabaseReference itemRef =
             FirebaseDatabase.instance.ref().child('postitem').push();
         List<String> imageUrls = await uploadImages(images);
@@ -169,6 +170,7 @@ class _NewPostState extends State<NewPost> {
           "model1": model1.text.trim(),
           "details1": details1.text.trim(),
           'uid': uid,
+          'status_user':status_user,
         };
         await itemRef.set(userDataMap);
       }
