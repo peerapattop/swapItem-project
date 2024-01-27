@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:swapitem/detailPost_page.dart';
@@ -17,7 +18,8 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
   TextEditingController searchController = TextEditingController();
   final _postRef = FirebaseDatabase.instance.ref().child('postitem');
   String? formattedDateTime;
-  List<dynamic> filteredData = []; // Store data that matches the search
+  List<dynamic> filteredData = [];
+  User? user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +107,7 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                 String lati = userData['latitude'].toString();
                 String longti = userData['longitude'].toString();
                 String imageUser = userData['imageUser'];
+                String userUid = userData['uid'];
                 bool isVip = userData['status_user'] == 'ผู้ใช้พรีเมี่ยม';
 
                 List<String> imageUrls =
@@ -124,8 +127,7 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                             children: [
-                              if (isVip)
-                                Image.asset('assets/images/vip.png'),
+                              if (isVip) Image.asset('assets/images/vip.png'),
                               Text(
                                 'ชื่อสิ่งของ: $item_name',
                                 style: TextStyle(
@@ -177,28 +179,39 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                       Spacer(),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Future.delayed(Duration(seconds: 1), () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => ShowDetailAll(
-                                    postUid: post_uid,
-                                    longti: longti,
-                                    lati: lati,
-                                    imageUser: imageUser,
-                                  ),
+                        child: user?.uid != userUid
+                            ? ElevatedButton(
+                                onPressed: () {
+                                  Future.delayed(Duration(seconds: 1), () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => ShowDetailAll(
+                                          postUid: post_uid,
+                                          longti: longti,
+                                          lati: lati,
+                                          imageUser: imageUser,
+                                        ),
+                                      ),
+                                    );
+                                  });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  foregroundColor: Colors.white,
                                 ),
-                              );
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).primaryColor,
-                            foregroundColor: Colors.white,
-                          ),
-                          child: Center(child: Text('รายละเอียด')),
-                        ),
+                                child: Center(child: Text('รายละเอียด')),
+                              )
+                            : const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Center(
+                                    child: Text(
+                                  'โพสต์ของฉัน',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                )),
+                              ),
                       ),
                     ],
                   ),
