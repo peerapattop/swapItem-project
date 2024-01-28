@@ -375,8 +375,6 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
         );
         return null; // Prevent further processing
       }
-      User? user = FirebaseAuth.instance.currentUser;
-     
 
       String uid = FirebaseAuth.instance.currentUser!.uid;
       DatabaseReference userRef =
