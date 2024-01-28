@@ -645,7 +645,7 @@ class _Offer_comeState extends State<Offer_come> {
                   ),
                 ),
                 TextSpan(
-                  text: selectedOffers1!['time'].toString(),
+                  text: selectedOffers1!['username'].toString(),
                   style: TextStyle(
                     color: Color(0xFFA717DA),
                     fontSize: 17,

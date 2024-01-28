@@ -159,9 +159,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 17,
-                ),
+                SizedBox(height: 17),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 10.0),
                   decoration: BoxDecoration(
@@ -195,9 +193,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                     }).toList(),
                   ),
                 ),
-                SizedBox(
-                  height: 17,
-                ),
+                SizedBox(height: 17),
                 TextField(
                   controller: _nameItem1,
                   decoration: InputDecoration(
@@ -242,50 +238,52 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                   ),
                   maxLines: null, // Allows for multi-line input
                 ),
-                SizedBox(
-                  height: 17,
-                ),
-
-                SizedBox(
-                  height: 7,
-                ),
-                // ... Other text fields
+                SizedBox(height: 17),
+                SizedBox(height: 7),
                 Center(
                   child: Container(
                     width: 360,
                     height: 50,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green),
+                        backgroundColor: Colors.green,
+                      ),
                       onPressed: !_isSubmitting
                           ? () async {
-                              setState(() {
-                                _isSubmitting = true; // กำลังดำเนินการ
-                              });
-                              try {
-                                String? offerId = await _submitOffer();
-                                if (offerId != null) {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => MakeAnOfferSuccess(
-                                        offer_id: offerId,
-                                        date: date1,
-                                        time: time1,
-                                        offerNumber: generateRandomNumber(),
+                              bool? confirmed = await _showConfirmationDialog();
+                              if (confirmed ?? false) {
+                                try {
+                                  setState(() {
+                                    _isSubmitting = true;
+                                  });
+
+                                  String? offerId = await _submitOffer();
+
+                                  if (offerId != null) {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            MakeAnOfferSuccess(
+                                          offer_id: offerId,
+                                          date: date1,
+                                          time: time1,
+                                          offerNumber: generateRandomNumber(),
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                } else {
-                                  // Handle the case where offerId is null before navigation
+                                    );
+                                  } else {
+                                    // Handle the case where offerId is null before navigation
+                                  }
+                                } catch (e) {
+                                  print(e);
+                                } finally {
+                                  setState(() {
+                                    _isSubmitting = false;
+                                  });
                                 }
-                              } catch (e) {
-                                print(e);
                               }
-                              setState(() {
-                                _isSubmitting = false; // ดำเนินการเสร็จสิ้น
-                              });
                             }
-                          : null, // ป้องกันการกดซ้ำหากกำลังดำเนินการ
+                          : null, // Prevents clicking when submitting
                       child: Text(
                         "ยื่นข้อเสนอ",
                         style: TextStyle(
@@ -344,24 +342,24 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text(
-              'แจ้งเตือน',
-              style: TextStyle(color: Colors.red),
-            ),
-             content: const Text('กรุณากรอกข้อมูลให้ครบถ้วน'),
-              actions: <Widget>[
-               ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Colors.green, // Set the button color to green
-                ),
-                child: const Text(
-                  'ตกลง',
-                  style: TextStyle(color: Colors.white),
-                ),
+                'แจ้งเตือน',
+                style: TextStyle(color: Colors.red),
               ),
+              content: const Text('กรุณากรอกข้อมูลให้ครบถ้วน'),
+              actions: <Widget>[
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Colors.green, // Set the button color to green
+                  ),
+                  child: const Text(
+                    'ตกลง',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               ],
             );
           },
@@ -386,6 +384,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
         }
         String postUid = widget.postUid;
         String imageUser = widget.imageUser;
+        String username = widget.username;
         String uid = FirebaseAuth.instance.currentUser!.uid;
         DatabaseReference itemRef =
             FirebaseDatabase.instance.ref().child('offer').push();
@@ -394,6 +393,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
         List<String> imageUrls = await _uploadImages();
         // Then, set the data with image URLs in the Realtime Database.
         Map<String, dynamic> dataRef = {
+          'username': username,
           'imageUser': imageUser,
           'status': 'รอการยืนยัน',
           'offer_uid': offerUid,
@@ -510,5 +510,37 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     }
 
     return imageUrls;
+  }
+
+  Future<bool?> _showConfirmationDialog() async {
+    return await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("ยืนยันการยื่นข้อเสนอ"),
+          content: Text("คุณแน่ใจหรือไม่ที่ต้องการยื่นข้อเสนอนี้?"),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(false); // ยกเลิก
+              },
+              child: Text("ยกเลิก",style: TextStyle(color: Colors.white),),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: Text("ยืนยัน",style: TextStyle(color: Colors.white),),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
