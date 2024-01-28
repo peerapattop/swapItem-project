@@ -6,14 +6,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:swapitem/ProfileScreen.dart';
 import 'package:swapitem/widget/offer_imageshow.dart';
 
-class Offer_come extends StatefulWidget {
-  const Offer_come({Key? key}) : super(key: key);
+class OfferCome extends StatefulWidget {
+  const OfferCome({Key? key}) : super(key: key);
 
   @override
-  State<Offer_come> createState() => _Offer_comeState();
+  State<OfferCome> createState() => _Offer_comeState();
 }
 
-class _Offer_comeState extends State<Offer_come> {
+class _Offer_comeState extends State<OfferCome> {
   int currentPage = 0;
   late User _user;
   double? latitude;
