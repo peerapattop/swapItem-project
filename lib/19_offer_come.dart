@@ -41,6 +41,7 @@ class _Offer_comeState extends State<OfferCome> {
     _user = FirebaseAuth.instance.currentUser!;
     _postRef = FirebaseDatabase.instance.ref().child('postitem');
     _offerRef = FirebaseDatabase.instance.ref().child('offer');
+    
     selectedPost = null;
 
     // Load the first post
@@ -644,11 +645,14 @@ class _Offer_comeState extends State<OfferCome> {
               SizedBox(width: 5),
               GestureDetector(
                 onTap: () {
+                  
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => ProfileScreen(
+                        id : selectedOffers1!['id'].toString(),
                         username: selectedOffers1!['username'].toString(),
+                        imageUser : selectedOffers1!['image_user'].toString(),
                       ),
                     ),
                   );
