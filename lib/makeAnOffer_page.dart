@@ -375,6 +375,9 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
         );
         return null; // Prevent further processing
       }
+      User? user = FirebaseAuth.instance.currentUser;
+     
+
       String uid = FirebaseAuth.instance.currentUser!.uid;
       DatabaseReference userRef =
           FirebaseDatabase.instance.ref().child('users').child(uid);
@@ -382,6 +385,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
       Map<dynamic, dynamic> datamap =
           userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
       int currentOfferCount = datamap['makeofferCount'] as int? ?? 0;
+         String? username = datamap['username'];
 
       if (currentOfferCount > 0 || canPostAfter30Days(userRef, datamap)) {
         // ลดค่า postCount
@@ -391,9 +395,12 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
             'lastOfferDate': DateTime.now().toString(),
           });
         }
+      
         String postUid = widget.postUid;
         String imageUser = widget.imageUser;
-        String username = widget.username;
+
+// Use the `username` variable as needed
+
         String uid = FirebaseAuth.instance.currentUser!.uid;
         DatabaseReference itemRef =
             FirebaseDatabase.instance.ref().child('offer').push();
