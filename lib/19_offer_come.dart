@@ -311,7 +311,7 @@ class _Offer_comeState extends State<Offer_come> {
                                       CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Text(
-                                          'ของที่ต้องการแลก : ' +
+                                          'สิ่งของที่ต้องการแลกเปลี่ยน : ' +
                                               selectedPost!['item_name1'],
                                           style: TextStyle(fontSize: 18),
                                         ),
@@ -400,7 +400,7 @@ class _Offer_comeState extends State<Offer_come> {
                                     height: 10,
                                   ),
                                   //
-                                  offerdata(),
+                                  offerData(),
                                   //Text("เลขที่ผู้ยื่นข้อเสนอ" +selectedOffers1?['post_uid']),
                                   // Text(selectedOffers1?['time']),
                                   // Text(selectedOffers1?['post_uid']),
@@ -550,7 +550,7 @@ class _Offer_comeState extends State<Offer_come> {
     );
   }
 
-  Widget offerdata() {
+  Widget offerData() {
     if (selectedOffers1!['status'] == 'test') {
       return Container(
         width: MediaQuery.of(context)
@@ -567,62 +567,70 @@ class _Offer_comeState extends State<Offer_come> {
         color: Color(0xFFF0F0F0),
       ),
 
-      // Reduced horizontal padding
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           ImageGalleryWidget(
             imageUrls: image_offer,
           ),
-          SizedBox(
-            width: 203,
-            height: 22,
-            child: Text(
-              "เลขที่ผู้ยื่นข้อเสนอ : " +
-                  selectedOffers1!['offerNumber'].toString(),
-              style: TextStyle(
-                color: Color(0xFFA717DA),
-                fontSize: 17,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
-                height: 0,
+          Row(
+            children: [
+              const Icon(Icons.tag,color: Colors.blue),
+              SizedBox(
+                width: 203,
+                height: 22,
+                child: Text(
+                  "เลขที่ผู้ยื่นข้อเสนอ : " +
+                      selectedOffers1!['offerNumber'].toString(),
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-          SizedBox(height: 6), // Added spacing
-          SizedBox(
-            width: 217,
-            height: 21,
-            child: Text(
-              "วันที่ " +
-                  selectedOffers1!['date'].toString() +
-                  " เวลา" +
-                  selectedOffers1!['time'].toString(),
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 17,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
-                height: 0,
+          const SizedBox(height: 6), // Added spacing
+          Row(
+            children: [
+              const Icon(Icons.date_range,color: Colors.blue),
+              SizedBox(
+                width: 217,
+                height: 21,
+                child: Text(
+                  "วันที่ " +
+                      selectedOffers1!['date'].toString() +
+                      " เวลา" +
+                      selectedOffers1!['time'].toString(),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 17,             
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
-            ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              const Icon(Icons.lock_clock_outlined,color: Colors.blue),
+              SizedBox(
+                width: 217,
+                height: 21,
+                child: Text(
+                  "เวลา " + selectedOffers1!['time'].toString(),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 17,              
+                    fontWeight: FontWeight.w400,
+                    height: 0,
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 6),
-          SizedBox(
-            width: 217,
-            height: 21,
-            child: Text(
-              "เวลา " + selectedOffers1!['time'].toString(),
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 17,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
-                height: 0,
-              ),
-            ),
-          ),
-          SizedBox(height: 6), // Added spacing
           Text.rich(
             TextSpan(
               children: [
@@ -637,13 +645,11 @@ class _Offer_comeState extends State<Offer_come> {
                   ),
                 ),
                 TextSpan(
-                  text: 'Simpson',
+                  text: selectedOffers1!['time'].toString(),
                   style: TextStyle(
                     color: Color(0xFFA717DA),
                     fontSize: 17,
-                    fontFamily: 'Inter',
                     fontWeight: FontWeight.w400,
-                    height: 0,
                   ),
                 ),
               ],
@@ -655,14 +661,12 @@ class _Offer_comeState extends State<Offer_come> {
             style: TextStyle(
               color: Colors.black,
               fontSize: 17,
-              fontFamily: 'Inter',
               fontWeight: FontWeight.w400,
-              height: 0,
             ),
           ),
           SizedBox(height: 6), // Added spacing
           Text(
-            'แบรนด์: ' + selectedOffers1!['brand1'],
+            'ยี่ห้อ: ' + selectedOffers1!['brand1'],
             style: TextStyle(
               color: Colors.black,
               fontSize: 17,
