@@ -257,6 +257,8 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                                     _isSubmitting = true;
                                   });
 
+                                  // Show a loading indicator here, such as CircularProgressIndicator
+
                                   String? offerId = await _submitOffer();
 
                                   if (offerId != null) {
@@ -277,20 +279,27 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                                 } catch (e) {
                                   print(e);
                                 } finally {
+                                  // Hide the loading indicator here
+
                                   setState(() {
                                     _isSubmitting = false;
                                   });
                                 }
                               }
                             }
-                          : null, // Prevents clicking when submitting
-                      child: Text(
-                        "ยื่นข้อเสนอ",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
-                      ),
+                          : null,
+                      child: _isSubmitting
+                          ? CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            )
+                          : Text(
+                              "ยื่นข้อเสนอ",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            ),
                     ),
                   ),
                 ),
@@ -521,22 +530,24 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
           content: Text("คุณแน่ใจหรือไม่ที่ต้องการยื่นข้อเสนอนี้?"),
           actions: <Widget>[
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red
-              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               onPressed: () {
                 Navigator.of(context).pop(false); // ยกเลิก
               },
-              child: Text("ยกเลิก",style: TextStyle(color: Colors.white),),
+              child: Text(
+                "ยกเลิก",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green
-              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text("ยืนยัน",style: TextStyle(color: Colors.white),),
+              child: Text(
+                "ยืนยัน",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         );
