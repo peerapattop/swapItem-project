@@ -87,7 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: TextDecoration.underline)),
                   Text('แลกเปลี่ยนสำเร็จ : 999999',
                       style: TextStyle(fontSize: 19)),
-                  Text('ถูกปฎิเสธ : 999999', style: TextStyle(fontSize: 19)),
+                  
                   SizedBox(height: 20),
                   Text('เครดิตการยื่นข้อเสนอ',
                       style: TextStyle(
