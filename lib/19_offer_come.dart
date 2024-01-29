@@ -76,7 +76,7 @@ class _Offer_comeState extends State<OfferCome> {
   }
 
   void sendDataToProfileScreen(
-      String userId, String username, String imageUser,String uid) async {
+      String userId, String username, String imageUser, String uid) async {
     try {
       // UID ของผู้ใช้ที่คุณต้องการดึงข้อมูล
       String userUID = uid;
@@ -112,6 +112,41 @@ class _Offer_comeState extends State<OfferCome> {
       print('Error: $error');
     }
   }
+
+  Future<void> updateUserData() async {
+  try {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser != null) {
+      String userUid = currentUser.uid;
+      DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(userUid);
+      
+      // ใช้ `once()` เพื่อดึงข้อมูลเพียงครั้งเดียว
+      DataSnapshot userSnapshot = (await userRef.once()).snapshot;
+
+      var valueMap = userSnapshot.value as Map<Object?, Object?>;
+      var userData = <String, dynamic>{};
+      for (var entry in valueMap.entries) {
+        if (entry.key is String) {
+          userData[entry.key as String] = entry.value;
+        }
+      }
+
+      if (!userData.containsKey('creditPostSuccess')) {
+        userRef.child('creditPostSuccess').set(0);
+      }
+
+      userRef.update({
+        'creditPostSuccess': ServerValue.increment(1),
+      });
+        } else {
+      print('User not logged in');
+    }
+  } catch (error) {
+    print('Error updating user data: $error');
+  }
+}
+
 
   void _loadPostData1(String postUid) {
     FirebaseDatabase.instance
@@ -473,11 +508,12 @@ class _Offer_comeState extends State<OfferCome> {
                                               ),
                                               ElevatedButton.icon(
                                                 style: ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        Colors.green),
+                                                  backgroundColor: Colors.green,
+                                                ),
                                                 icon: Icon(Icons.check,
                                                     color: Colors.white),
-                                                onPressed: () {
+                                                onPressed: () async {
+                                                  await updateUserData();
                                                   late DatabaseReference
                                                       _offerRef;
                                                   _offerRef = FirebaseDatabase
@@ -486,10 +522,8 @@ class _Offer_comeState extends State<OfferCome> {
                                                       .child('offer')
                                                       .child(selectedOffers1?[
                                                           'offer_uid']);
-                                                  setState(() {
-                                                    _offerRef.update(
-                                                        {'status': 'test'});
-                                                  });
+                                                  _offerRef.update(
+                                                      {'status': 'test'});
                                                 },
                                                 label: Text(
                                                   'ยืนยัน',
@@ -497,9 +531,7 @@ class _Offer_comeState extends State<OfferCome> {
                                                       color: Colors.white),
                                                 ),
                                               ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
+                                              SizedBox(width: 5),
                                               ElevatedButton.icon(
                                                 style: ElevatedButton.styleFrom(
                                                     backgroundColor:
@@ -684,11 +716,11 @@ class _Offer_comeState extends State<OfferCome> {
               GestureDetector(
                 onTap: () {
                   sendDataToProfileScreen(
-                      selectedOffers1!['id'].toString(),
-                      selectedOffers1!['username'].toString(),
-                      selectedOffers1!['image_user'].toString(),
-                      selectedOffers1!['uid'].toString(),
-                      );
+                    selectedOffers1!['id'].toString(),
+                    selectedOffers1!['username'].toString(),
+                    selectedOffers1!['image_user'].toString(),
+                    selectedOffers1!['uid'].toString(),
+                  );
                 },
                 child: Row(
                   children: [
