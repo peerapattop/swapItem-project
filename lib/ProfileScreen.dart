@@ -9,7 +9,7 @@ class ProfileScreen extends StatefulWidget {
       {Key? key,
       required this.username,
       required this.id,
-      required this.imageUser})
+      required this.imageUser,})
       : super(key: key);
 
   @override
@@ -37,19 +37,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 30),
-            Center(child: Image.asset("assets/images/person.png")),
+            const SizedBox(height: 25),
+            Center(
+              child: Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.black, // สีของเส้นกรอบ
+                    width: 3.0, // ความกว้างของเส้นกรอบ
+                  ),
+                ),
+                child: ClipOval(
+                  child: Image.network(
+                    widget.imageUser,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 30),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Row(
+                  Row(
                     children: [
-                      Icon(Icons.tag, color: Colors.blue),
-                      SizedBox(width: 5),
-                      Text('หมายเลขผู้ใช้ : 999999',
+                      const Icon(Icons.tag, color: Colors.blue),
+                      const SizedBox(width: 5),
+                      Text('หมายเลขผู้ใช้ : ${widget.id}',
                           style: TextStyle(fontSize: 19)),
                     ],
                   ),
@@ -62,12 +80,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                   const SizedBox(height: 30),
-                  const Text('เครดิตการโพสต์', style: TextStyle(fontSize: 19,color: Color.fromARGB(255, 124, 1, 124),decoration: TextDecoration.underline)),
+                  const Text('เครดิตการโพสต์',
+                      style: TextStyle(
+                          fontSize: 19,
+                          color: Color.fromARGB(255, 124, 1, 124),
+                          decoration: TextDecoration.underline)),
                   Text('แลกเปลี่ยนสำเร็จ : 999999',
                       style: TextStyle(fontSize: 19)),
                   Text('ถูกปฎิเสธ : 999999', style: TextStyle(fontSize: 19)),
                   SizedBox(height: 20),
-                  Text('เครดิตการยื่นข้อเสนอ', style: TextStyle(fontSize: 19,color: Color.fromARGB(255, 124, 1, 124),decoration: TextDecoration.underline)),
+                  Text('เครดิตการยื่นข้อเสนอ',
+                      style: TextStyle(
+                          fontSize: 19,
+                          color: Color.fromARGB(255, 124, 1, 124),
+                          decoration: TextDecoration.underline)),
                   Text('แลกเปลี่ยนสำเร็จ : 999999',
                       style: TextStyle(fontSize: 19)),
                   Text('ถูกปฎิเสธ : 999999', style: TextStyle(fontSize: 19)),

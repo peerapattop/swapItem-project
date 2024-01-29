@@ -26,7 +26,6 @@ class _Offer_comeState extends State<OfferCome> {
   int _selectedIndex = -1;
   Map<dynamic, dynamic>? selectedPost;
 
-  ////
   int _selectedIndex1 = -1;
   Map<dynamic, dynamic>? selectedOffers1;
 
@@ -36,12 +35,13 @@ class _Offer_comeState extends State<OfferCome> {
   List<String> image_post = [];
   List<String> image_offer = [];
 
+  @override
   void initState() {
     super.initState();
     _user = FirebaseAuth.instance.currentUser!;
     _postRef = FirebaseDatabase.instance.ref().child('postitem');
     _offerRef = FirebaseDatabase.instance.ref().child('offer');
-    
+
     selectedPost = null;
 
     // Load the first post
@@ -73,6 +73,44 @@ class _Offer_comeState extends State<OfferCome> {
         }
       }
     });
+  }
+
+  void sendDataToProfileScreen(
+      String userId, String username, String imageUser) async {
+    try {
+      // UID ของผู้ใช้ที่คุณต้องการดึงข้อมูล
+      String userUID = "G9SHS1h5w9hyq2vvtn2Ylz8TrEx2";
+
+      // สร้าง DatabaseReference สำหรับตาราง offer
+
+      // ดึงข้อมูลจากตาราง users โดยใช้ UID ของผู้ใช้
+      DatabaseReference userRef =
+          FirebaseDatabase.instance.ref().child('users').child(userUID);
+      DataSnapshot userSnapshot = (await userRef.once()).snapshot;
+
+      // ตอนนี้คุณสามารถใช้ข้อมูลจากทั้งสองตารางได้
+      var valueMap = userSnapshot.value as Map<Object?, Object?>;
+      var userData = <String, dynamic>{};
+      for (var entry in valueMap.entries) {
+        if (entry.key is String) {
+          userData[entry.key as String] = entry.value;
+        }
+      }
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProfileScreen(
+            id: userData['id'].toString(),
+            username: userData['username'].toString(),
+            imageUser: userData['image_user'].toString(),
+          ),
+        ),
+      );
+    } catch (error) {
+      // การดึงข้อมูลผิดพลาด
+      print('Error: $error');
+    }
   }
 
   void _loadPostData1(String postUid) {
@@ -645,17 +683,10 @@ class _Offer_comeState extends State<OfferCome> {
               SizedBox(width: 5),
               GestureDetector(
                 onTap: () {
-                  
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProfileScreen(
-                        id : selectedOffers1!['id'].toString(),
-                        username: selectedOffers1!['username'].toString(),
-                        imageUser : selectedOffers1!['image_user'].toString(),
-                      ),
-                    ),
-                  );
+                  sendDataToProfileScreen(
+                      selectedOffers1!['id'].toString(),
+                      selectedOffers1!['username'].toString(),
+                      selectedOffers1!['image_user'].toString());
                 },
                 child: Row(
                   children: [
