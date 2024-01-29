@@ -76,10 +76,10 @@ class _Offer_comeState extends State<OfferCome> {
   }
 
   void sendDataToProfileScreen(
-      String userId, String username, String imageUser) async {
+      String userId, String username, String imageUser,String uid) async {
     try {
       // UID ของผู้ใช้ที่คุณต้องการดึงข้อมูล
-      String userUID = "G9SHS1h5w9hyq2vvtn2Ylz8TrEx2";
+      String userUID = uid;
 
       // สร้าง DatabaseReference สำหรับตาราง offer
 
@@ -686,7 +686,9 @@ class _Offer_comeState extends State<OfferCome> {
                   sendDataToProfileScreen(
                       selectedOffers1!['id'].toString(),
                       selectedOffers1!['username'].toString(),
-                      selectedOffers1!['image_user'].toString());
+                      selectedOffers1!['image_user'].toString(),
+                      selectedOffers1!['uid'].toString(),
+                      );
                 },
                 child: Row(
                   children: [
