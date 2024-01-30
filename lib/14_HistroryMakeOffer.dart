@@ -201,7 +201,8 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
               return Center(
                 child: Text('Error loading data'),
               );
-            }else if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
+            } else if (snapshot.hasData &&
+                snapshot.data!.snapshot.value != null) {
               offerList.clear();
               Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
                   snapshot.data!.snapshot.value as Map);
@@ -225,7 +226,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                           child: buildCircularNumberButton(idx, offerData),
                         );
                       }).toList(),
-                    ),
+                    ), 
                   ),
                   Divider(),
                   selectedOffer != null
@@ -235,7 +236,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                   fetchPostItemData(selectedOffer!['post_uid'])
                                       .asStream(),
                               builder: (context, snapshot) {
-                               if (snapshot.hasData) {
+                                if (snapshot.hasData) {
                                   List<Map<dynamic, dynamic>> postItemList =
                                       snapshot.data
                                           as List<Map<dynamic, dynamic>>;
@@ -791,9 +792,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
         height: 40,
         margin: EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: _selectedIndex == index
-              ? Colors.blue
-              : Colors.grey, // Highlight if selected
+          color: _selectedIndex == index ? Colors.blue : Colors.grey,
           shape: BoxShape.circle,
           border: Border.all(
             color: Colors.black,
