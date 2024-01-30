@@ -18,7 +18,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
   late DatabaseReference _offerRef;
   late DatabaseReference _postRef;
   List<Map<dynamic, dynamic>> offerList = [];
-    final PageController _pageController1 = PageController();
+  final PageController _pageController1 = PageController();
   final PageController _pageController2 = PageController();
 
   int _selectedIndex = -1;
@@ -184,7 +184,24 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
         body: StreamBuilder(
           stream: _offerRef.orderByChild('uid').equalTo(_user.uid).onValue,
           builder: (context, snapshot) {
-            if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Display a loading indicator while data is being fetched
+              return const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 10),
+                    Text('กำลังดาวน์โหลดข้อมูล....'),
+                  ],
+                ),
+              );
+            } else if (snapshot.hasError) {
+              // Handle errors
+              return Center(
+                child: Text('Error loading data'),
+              );
+            }else if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
               offerList.clear();
               Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
                   snapshot.data!.snapshot.value as Map);
@@ -218,24 +235,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                   fetchPostItemData(selectedOffer!['post_uid'])
                                       .asStream(),
                               builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'กำลังดาวน์โหลด',
-                                        style: TextStyle(fontSize: 19),
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      CircularProgressIndicator(),
-                                    ],
-                                  );
-                                } else if (snapshot.hasError) {
-                                  return Text('Error: ${snapshot.error}');
-                                } else if (snapshot.hasData) {
+                               if (snapshot.hasData) {
                                   List<Map<dynamic, dynamic>> postItemList =
                                       snapshot.data
                                           as List<Map<dynamic, dynamic>>;
