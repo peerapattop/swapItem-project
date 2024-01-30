@@ -279,7 +279,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                       Text(
                                                         "สถานะ : " +
                                                             selectedOffer![
-                                                                    'status']
+                                                                    'statusOffers']
                                                                 .toString(),
                                                         style: myTextStyle(),
                                                       ),

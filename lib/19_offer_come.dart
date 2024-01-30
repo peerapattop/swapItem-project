@@ -523,7 +523,7 @@ class _Offer_comeState extends State<OfferCome> {
                                                       .child(selectedOffers1?[
                                                           'offer_uid']);
                                                   _offerRef.update(
-                                                      {'status': 'test'});
+                                                      {'statusOffers': 'สำเร็จ'});
                                                 },
                                                 label: Text(
                                                   'ยืนยัน',

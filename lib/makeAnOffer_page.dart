@@ -409,10 +409,11 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
         Map<String, dynamic> dataRef = {
           'username': username,
           'imageUser': imageUser,
-          'status': 'รอการยืนยัน',
+          'statusOffers': 'รอการยืนยัน',
           'offer_uid': offerUid,
           'offerNumber': generateRandomNumber(),
           'uid': uid,
+
           'type1': dropdownValue,
           'nameitem1': _nameItem1.text.trim(),
           'brand1': _brand1.text.trim(),
