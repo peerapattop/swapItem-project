@@ -50,15 +50,12 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
             Map<dynamic, dynamic>.from(event.snapshot.value as Map);
         var lastKey = data.keys.last;
         var lastPayment = Map<dynamic, dynamic>.from(data[lastKey]);
-
-        // Since we are listening to the last payment, we clear the list to ensure
-        // it only contains the latest payment and corresponds to the first button.
         offerList.clear();
 
         setState(() {
-          offerList.insert(0, lastPayment); // Insert at the start of the list
+          offerList.insert(0, lastPayment);
           selectedOffer = lastPayment;
-          _selectedIndex = 0; // This ensures the first button is selected
+          _selectedIndex = 0;
         });
       }
     });
@@ -139,7 +136,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
           actions: <Widget>[
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: Text(
+              child: const Text(
                 'ยกเลิก',
                 style: TextStyle(color: Colors.white),
               ),
@@ -149,7 +146,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              child: Text(
+              child: const Text(
                 'ลบ',
                 style: TextStyle(color: Colors.white),
               ),
@@ -256,7 +253,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                       children: [
                                         Column(
                                           children: [
-                                            Text(
+                                            const Text(
                                               'ข้อเสนอของคุณ',
                                               style: TextStyle(fontSize: 20),
                                             ),
@@ -358,14 +355,14 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                               .size
                                                               .width,
                                                       decoration: BoxDecoration(
-                                                        color: Color.fromARGB(
+                                                        color: const Color.fromARGB(
                                                             255, 170, 170, 169),
                                                         borderRadius:
                                                             BorderRadius.circular(
                                                                 12.0), // ทำให้ Container โค้งมน
                                                       ),
-                                                      padding: EdgeInsets.all(
-                                                          16), // ระยะห่างของเนื้อหาจาก Container
+                                                      padding: const EdgeInsets.all(
+                                                          16),
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -410,62 +407,6 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                       ),
                                                     ),
                                                   ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Center(
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12.0),
-                                                        child:
-                                                            ElevatedButton.icon(
-                                                          icon: const Icon(
-                                                              Icons.delete,
-                                                              color:
-                                                                  Colors.white),
-                                                          onPressed: () {
-                                                            if (selectedOffer !=
-                                                                    null &&
-                                                                selectedOffer!
-                                                                    .containsKey(
-                                                                        'offer_uid')) {
-                                                              showDeleteConfirmation(
-                                                                  context,
-                                                                  selectedOffer![
-                                                                      'offer_uid']);
-                                                            } else {
-                                                              print(
-                                                                  'No post selected for deletion.');
-                                                              // Debug: Print the current state of selectedPost
-                                                              print(
-                                                                  'Current selectedPost: $selectedOffer');
-                                                            }
-                                                          },
-                                                          style: ElevatedButton
-                                                              .styleFrom(
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .all(
-                                                                              16),
-                                                                  backgroundColor:
-                                                                      Color.fromARGB(
-                                                                          255,
-                                                                          248,
-                                                                          1,
-                                                                          1)),
-                                                          label: Text(
-                                                            "ลบข้อเสนอ",
-                                                            style: TextStyle(
-                                                                fontSize: 16,
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
                                                 ],
                                               ),
                                             )
@@ -476,14 +417,14 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                           width: 50,
                                           height: 50,
                                         ),
-                                        Divider(),
-                                        Center(
+                                        const Divider(),
+                                        const Center(
                                             child: Text(
                                           'รายละเอียดโพสต์',
                                           style: TextStyle(fontSize: 20),
                                         )),
                                         SizedBox(
-                                          height: 30,
+                                          height: 30
                                         ),
                                         _buildImageSlider(),
                                         Padding(
