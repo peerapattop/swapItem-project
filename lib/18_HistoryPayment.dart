@@ -80,7 +80,25 @@ class _HistoryPaymentState extends State<HistoryPayment> {
               .equalTo(_user.uid)
               .onValue,
           builder: (context, snapshot) {
-            if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Display a loading indicator while data is being fetched
+              return const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 10),
+                    Text('กำลังดาวน์โหลดข้อมูล....'),
+                  ],
+                ),
+              );
+            } else if (snapshot.hasError) {
+              // Handle errors
+              return Center(
+                child: Text('Error loading data'),
+              );
+            } else if (snapshot.hasData &&
+                snapshot.data!.snapshot.value != null) {
               paymentsList.clear();
               Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
                   snapshot.data!.snapshot.value as Map);
@@ -104,7 +122,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                       }).toList(),
                     ),
                   ),
-                  Divider(),
+                  const Divider(),
                   selectedPayment != null
                       ? Expanded(
                           child: ListView(
@@ -115,6 +133,38 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                                     selectedPayment!['image_payment'],
                                     fit: BoxFit.cover,
                                     width: 300,
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              CircularProgressIndicator(
+                                                value: loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                    ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        (loadingProgress
+                                                                .expectedTotalBytes ??
+                                                            1)
+                                                    : null,
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                'กำลังดาวน์โหลดรูปภาพ...',
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                    },
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -134,9 +184,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                                                 Icons.tag,
                                                 color: Colors.blue,
                                               ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
+                                              const SizedBox(width: 5),
                                               Text(
                                                 ' หมายเลขการชำระเงิน PAY-' +
                                                     selectedPayment![
@@ -151,9 +199,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                                                 Icons.date_range,
                                                 color: Colors.blue,
                                               ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
+                                              const SizedBox(width: 5),
                                               Text(
                                                 ' วันที่ : ' +
                                                     selectedPayment!['date'],
@@ -167,9 +213,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                                                 Icons.access_time_outlined,
                                                 color: Colors.blue,
                                               ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
+                                              const SizedBox(width: 5),
                                               Text(
                                                 ' เวลา : ${selectedPayment!['time']} น.',
                                                 style: TextStyle(fontSize: 18),
@@ -182,9 +226,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                                                 Icons.list,
                                                 color: Colors.blue,
                                               ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
+                                              const SizedBox(width: 5),
                                               Text(
                                                 ' แพ็กเกจ : ' +
                                                     selectedPayment!['packed'],
@@ -198,9 +240,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                                                 Icons.safety_check,
                                                 color: Colors.blue,
                                               ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
+                                              const SizedBox(width: 5),
                                               Text(
                                                 ' สถานะ : ' +
                                                     selectedPayment!['status'],
@@ -230,9 +270,15 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                   Image.network('https://cdn-icons-png.flaticon.com/256/7152/7152394.png',width: 100,),
-                   SizedBox(height: 20),
-                    Text('ไม่มีประวัติการชำระเงิน',style: TextStyle(fontSize: 20),),
+                    Image.network(
+                      'https://cdn-icons-png.flaticon.com/256/7152/7152394.png',
+                      width: 100,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'ไม่มีประวัติการชำระเงิน',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ],
                 ),
               );
