@@ -133,7 +133,24 @@ class _HistoryPostState extends State<HistoryPost> {
         body: StreamBuilder(
           stream: _postRef.orderByChild('uid').equalTo(_user.uid).onValue,
           builder: (context, snapshot) {
-            if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 10),
+                    Text('กำลังดาวน์โหลดข้อมูล....'),
+                  ],
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Error loading data'),
+              );
+            } else if (snapshot.hasData &&
+                snapshot.data!.snapshot.value != null) {
+              // Your existing code for handling data
               postsList.clear();
               Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
                   snapshot.data!.snapshot.value as Map);
