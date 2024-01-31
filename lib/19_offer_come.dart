@@ -35,6 +35,8 @@ class _Offer_comeState extends State<OfferCome> {
   List<String> image_post = [];
   List<String> image_offer = [];
 
+  bool canSeepost = true;
+
   @override
   void initState() {
     super.initState();
@@ -45,21 +47,24 @@ class _Offer_comeState extends State<OfferCome> {
     selectedPost = null;
 
     // Load the first post
-    _postRef
-    .orderByChild('uid')
-    .equalTo(_user.uid)
-    .onValue
-    .listen((event) {
+    _postRef.orderByChild('uid').equalTo(_user.uid).onValue.listen((event) {
       if (event.snapshot.value != null) {
-        Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(event.snapshot.value as Map);
-        
+        Map<dynamic, dynamic> data =
+            Map<dynamic, dynamic>.from(event.snapshot.value as Map);
+
         // Iterate through the data to find a post that meets both conditions
         for (var postKey in data.keys) {
           var post = Map<dynamic, dynamic>.from(data[postKey]);
+          // if (post['statusPosts'] == "รอการยืนยัน" && post.isNotEmpty) {
+          //   canSeepost = true;
+          // }
+          if (post.isEmpty) {
+            bool canSeepost = false;
+          }
 
           // Check if the post meets both conditions
-          if (post['statusPosts'] == "รอการยืนยัน") {
-            // Perform your actions here with the matching post
+          else if (post['statusPosts'] == "รอการยืนยัน" && canSeepost) {
+            bool canSeepost = true;
             _loadPostData1(post['post_uid']);
             setState(() {
               postsList.clear();
@@ -67,13 +72,11 @@ class _Offer_comeState extends State<OfferCome> {
               selectedPost = post;
               _selectedIndex = 0;
             });
-            // Break out of the loop after finding the first matching post
-            break;
+            // Break out of the loop after finding the first matching po
           }
         }
       }
     });
-
   }
 
   void sendDataToProfileScreen(
@@ -115,39 +118,39 @@ class _Offer_comeState extends State<OfferCome> {
   }
 
   Future<void> updateUserData() async {
-  try {
-    User? currentUser = FirebaseAuth.instance.currentUser;
+    try {
+      User? currentUser = FirebaseAuth.instance.currentUser;
 
-    if (currentUser != null) {
-      String userUid = currentUser.uid;
-      DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(userUid);
-      
-      // ใช้ `once()` เพื่อดึงข้อมูลเพียงครั้งเดียว
-      DataSnapshot userSnapshot = (await userRef.once()).snapshot;
+      if (currentUser != null) {
+        String userUid = currentUser.uid;
+        DatabaseReference userRef =
+            FirebaseDatabase.instance.ref().child('users').child(userUid);
 
-      var valueMap = userSnapshot.value as Map<Object?, Object?>;
-      var userData = <String, dynamic>{};
-      for (var entry in valueMap.entries) {
-        if (entry.key is String) {
-          userData[entry.key as String] = entry.value;
+        // ใช้ `once()` เพื่อดึงข้อมูลเพียงครั้งเดียว
+        DataSnapshot userSnapshot = (await userRef.once()).snapshot;
+
+        var valueMap = userSnapshot.value as Map<Object?, Object?>;
+        var userData = <String, dynamic>{};
+        for (var entry in valueMap.entries) {
+          if (entry.key is String) {
+            userData[entry.key as String] = entry.value;
+          }
         }
-      }
 
-      if (!userData.containsKey('creditPostSuccess')) {
-        userRef.child('creditPostSuccess').set(0);
-      }
+        if (!userData.containsKey('creditPostSuccess')) {
+          userRef.child('creditPostSuccess').set(0);
+        }
 
-      userRef.update({
-        'creditPostSuccess': ServerValue.increment(1),
-      });
-        } else {
-      print('User not logged in');
+        userRef.update({
+          'creditPostSuccess': ServerValue.increment(1),
+        });
+      } else {
+        print('User not logged in');
+      }
+    } catch (error) {
+      print('Error updating user data: $error');
     }
-  } catch (error) {
-    print('Error updating user data: $error');
   }
-}
-
 
   void _loadPostData1(String postUid) {
     FirebaseDatabase.instance
@@ -219,7 +222,7 @@ class _Offer_comeState extends State<OfferCome> {
               List<Map<dynamic, dynamic>> filteredPosts = [];
               postData.forEach((key, value) {
                 Map<dynamic, dynamic> post = Map<dynamic, dynamic>.from(value);
-                if (post['status_post'] != 'finish') {
+                if (post['statusPosts'] != 'รอการยืนยัน') {
                   filteredPosts.add(post);
                 }
               });
@@ -230,215 +233,18 @@ class _Offer_comeState extends State<OfferCome> {
 
               return Column(
                 children: [
-                  SizedBox(
-                    height: 50,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: postsList.asMap().entries.map((entry) {
-                        int idx = entry.key;
-                        image_offer =
-                            List<String>.from(selectedOffers1!['imageUrls']);
-                        Map<dynamic, dynamic> postData = entry.value;
-                        image_post =
-                            List<String>.from(selectedPost!['imageUrls']);
-                        latitude = double.tryParse(
-                            selectedPost!['latitude'].toString());
-                        longitude = double.tryParse(
-                            selectedPost!['longitude'].toString());
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: buildCircularNumberButton(idx, postData),
-                        );
-                      }).toList(),
-                    ),
-                  ),
                   Divider(),
                   selectedPost != null
                       ? Expanded(
                           child: ListView(children: [
                           Column(
                             children: [
-                              ImageGalleryWidget(
-                                imageUrls: image_post,
-                              ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   children: [
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.tag,
-                                          // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                          color: Colors
-                                              .blue, // เปลี่ยนสีไอคอนตามความต้องการ
-                                        ),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          'โพสต์ของคุณ : ' +
-                                              selectedPost!['postNumber'],
-                                          style: TextStyle(fontSize: 18),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.date_range,
-                                          // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                          color: Colors
-                                              .blue, // เปลี่ยนสีไอคอนตามความต้องการ
-                                        ),
-                                        SizedBox(
-                                            width:
-                                                8), // ระยะห่างระหว่างไอคอนและข้อความ
-                                        Text(
-                                          'วันที่ : ' + selectedPost!['date'],
-                                          style: TextStyle(fontSize: 18),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.punch_clock,
-                                          // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                          color: Colors
-                                              .blue, // เปลี่ยนสีไอคอนตามความต้องการ
-                                        ),
-                                        Text(
-                                          " เวลา :" +
-                                              selectedPost!['time'] +
-                                              ' น.',
-                                          style: TextStyle(fontSize: 18),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                      width: 400,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 16),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(19),
-                                        color: Color(0xFFF0F0F0),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'ชื่อสิ่งของ : ' +
-                                                selectedPost!['item_name'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          Text(
-                                            'หมวดหมู่ : ' +
-                                                selectedPost!['type'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          Text(
-                                            'ยี่ห้อ : ' +
-                                                selectedPost!['brand'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          Text(
-                                            'รุ่น : ' + selectedPost!['model'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          Text(
-                                            'รายละเอียด : ' +
-                                                selectedPost!['detail'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Center(
-                                        child: Image.asset(
-                                      'assets/images/swap.png',
-                                      width: 20,
-                                    )),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                      width: 400,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 16),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(19),
-                                        color: Color(0xFFF0F0F0),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            'สิ่งของที่ต้องการแลกเปลี่ยน : ' +
-                                                selectedPost!['item_name1'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          Text(
-                                            'ยี่ห้อ : ' +
-                                                selectedPost!['brand1'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          Text(
-                                            'รุ่น : ' + selectedPost!['model1'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          Text(
-                                            'รายละเอียด : ' +
-                                                selectedPost!['details1'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                      decoration:
-                                          BoxDecoration(border: Border.all()),
-                                      height: 300,
-                                      width: 380,
-                                      child: GoogleMap(
-                                        onMapCreated:
-                                            (GoogleMapController controller) {
-                                          mapController = controller;
-                                        },
-                                        initialCameraPosition: CameraPosition(
-                                          target: LatLng(latitude!, longitude!),
-                                          zoom: 12.0,
-                                        ),
-                                        markers: <Marker>{
-                                          Marker(
-                                            markerId:
-                                                MarkerId('initialPosition'),
-                                            position:
-                                                LatLng(latitude!, longitude!),
-                                            infoWindow: InfoWindow(
-                                              title: 'Marker Title',
-                                              snippet: 'Marker Snippet',
-                                            ),
-                                          ),
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
+                                    seepost1(),
+
                                     Divider(),
                                     SizedBox(height: 10),
                                     Text(
@@ -523,8 +329,9 @@ class _Offer_comeState extends State<OfferCome> {
                                                       .child('offer')
                                                       .child(selectedOffers1?[
                                                           'offer_uid']);
-                                                  _offerRef.update(
-                                                      {'statusOffers': 'สำเร็จ'});
+                                                  _offerRef.update({
+                                                    'statusOffers': 'สำเร็จ'
+                                                  });
                                                 },
                                                 label: Text(
                                                   'ยืนยัน',
@@ -683,6 +490,7 @@ class _Offer_comeState extends State<OfferCome> {
             ],
           ),
           const SizedBox(height: 6),
+
           Row(
             children: [
               const Icon(Icons.lock_clock_outlined, color: Colors.blue),
@@ -802,6 +610,194 @@ class _Offer_comeState extends State<OfferCome> {
         ],
       ),
     );
+  }
+
+  Widget seepost1() {
+    if (canSeepost == true) {
+      return Column(
+        children: [
+          SizedBox(
+            height: 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: postsList.asMap().entries.map((entry) {
+                int idx = entry.key;
+                image_offer = List<String>.from(selectedOffers1!['imageUrls']);
+                Map<dynamic, dynamic> postData = entry.value;
+                image_post = List<String>.from(selectedPost!['imageUrls']);
+                latitude =
+                    double.tryParse(selectedPost!['latitude'].toString());
+                longitude =
+                    double.tryParse(selectedPost!['longitude'].toString());
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: buildCircularNumberButton(idx, postData),
+                );
+              }).toList(),
+            ),
+          ),
+          ImageGalleryWidget(
+            imageUrls: image_post,
+          ),
+          Row(
+            children: [
+              Icon(
+                Icons.tag,
+                // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+              ),
+              SizedBox(width: 8),
+              Text(
+                'โพสต์ของคุณ : ' + selectedPost!['postNumber'],
+                style: TextStyle(fontSize: 18),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Icon(
+                Icons.date_range,
+                // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+              ),
+              SizedBox(width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
+              Text(
+                'วันที่ : ' + selectedPost!['date'],
+                style: TextStyle(fontSize: 18),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Icon(
+                Icons.punch_clock,
+                // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+              ),
+              Text(
+                " เวลา :" + selectedPost!['time'] + ' น.',
+                style: TextStyle(fontSize: 18),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            width: 400,
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(19),
+              color: Color(0xFFF0F0F0),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'ชื่อสิ่งของ : ' + selectedPost!['item_name'],
+                  style: TextStyle(fontSize: 18),
+                ),
+                Text(
+                  'หมวดหมู่ : ' + selectedPost!['type'],
+                  style: TextStyle(fontSize: 18),
+                ),
+                Text(
+                  'ยี่ห้อ : ' + selectedPost!['brand'],
+                  style: TextStyle(fontSize: 18),
+                ),
+                Text(
+                  'รุ่น : ' + selectedPost!['model'],
+                  style: TextStyle(fontSize: 18),
+                ),
+                Text(
+                  'รายละเอียด : ' + selectedPost!['detail'],
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Center(
+              child: Image.asset(
+            'assets/images/swap.png',
+            width: 20,
+          )),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            width: 400,
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(19),
+              color: Color(0xFFF0F0F0),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'สิ่งของที่ต้องการแลกเปลี่ยน : ' +
+                      selectedPost!['item_name1'],
+                  style: TextStyle(fontSize: 18),
+                ),
+                Text(
+                  'ยี่ห้อ : ' + selectedPost!['brand1'],
+                  style: TextStyle(fontSize: 18),
+                ),
+                Text(
+                  'รุ่น : ' + selectedPost!['model1'],
+                  style: TextStyle(fontSize: 18),
+                ),
+                Text(
+                  'รายละเอียด : ' + selectedPost!['details1'],
+                  style: TextStyle(fontSize: 18),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            decoration: BoxDecoration(border: Border.all()),
+            height: 300,
+            width: 380,
+            child: GoogleMap(
+              onMapCreated: (GoogleMapController controller) {
+                mapController = controller;
+              },
+              initialCameraPosition: CameraPosition(
+                target: LatLng(latitude!, longitude!),
+                zoom: 12.0,
+              ),
+              markers: <Marker>{
+                Marker(
+                  markerId: MarkerId('initialPosition'),
+                  position: LatLng(latitude!, longitude!),
+                  infoWindow: InfoWindow(
+                    title: 'Marker Title',
+                    snippet: 'Marker Snippet',
+                  ),
+                ),
+              },
+            ),
+          ),
+          SizedBox(height: 10),
+        ],
+      );
+    } else {
+      return Container(
+        child: Text("ไม่พบข้อมูล"),
+      );
+    }
   }
 
   Widget buildCircularNumberButton(int index, Map<dynamic, dynamic> postData) {
