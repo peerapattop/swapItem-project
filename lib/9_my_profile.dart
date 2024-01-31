@@ -197,19 +197,32 @@ class _ProfileState extends State<Profile> {
                                   alignment: Alignment.topCenter,
                                   child: imgPost(),
                                 ),
-                                SizedBox(
-                                  width: 60,
-                                ),
+                                const SizedBox(width: 20),
                                 Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      'สถานะ : $statusUser',
-                                      style: TextStyle(fontSize: 18),
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          'สถานะ : ',
+                                          style: TextStyle(fontSize: 21),
+                                        ),
+                                        if (statusUser == 'ผู้ใช้พรีเมี่ยม')
+                                          Image.asset(
+                                              'assets/images/vipbar.png',
+                                              width: 30,
+                                              height: 30),
+                                        Text(
+                                          statusUser,
+                                          style: const TextStyle(fontSize: 21),
+                                        ),
+                                      ],
                                     ),
+                                    const SizedBox(height: 10),
                                     Text(
-                                      'ใช้ได้อีก : $remainingTime',
-                                      style: TextStyle(fontSize: 10),
-                                    )
+                                      'ถึงวันที่ : $remainingTime',
+                                      style: const TextStyle(fontSize: 10),
+                                    ),
                                   ],
                                 )
                               ],
@@ -478,7 +491,8 @@ class _ProfileState extends State<Profile> {
                                   label: const Text('ออกจากระบบ',
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 16)),
-                                  icon: const Icon(Icons.logout, color: Colors.white),
+                                  icon: const Icon(Icons.logout,
+                                      color: Colors.white),
                                   onPressed: () {
                                     _showSignOutConfirmationDialog();
                                   },
