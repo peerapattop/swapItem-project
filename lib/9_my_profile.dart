@@ -1,6 +1,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io' as io;
+import 'dart:io';
 
 import '19_offer_come.dart';
 import '5_his_post.dart';
@@ -646,18 +647,19 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> takePhoto(ImageSource source) async {
-  final XFile? pickedFile = await ImagePicker().pickImage(
-    source: source,
-  );
+    final XFile? pickedFile = await ImagePicker().pickImage(
+      source: source,
+    );
 
-  if (pickedFile != null) {
-    setState(() {
-      _image = PickedFile(pickedFile.path); // Convert XFile to PickedFile
-    });
+    if (pickedFile != null) {
+      setState(() {
+        _image = PickedFile(pickedFile.path); // Convert XFile to PickedFile
+      });
 
-    Navigator.pop(context); // Close the bottom sheet
+      Navigator.pop(context); // Close the bottom sheet
+    }
   }
-}
+
 
 
   Widget imageProfile() {
@@ -675,10 +677,12 @@ class _ProfileState extends State<Profile> {
             children: <Widget>[
               CircleAvatar(
                 radius: 60.0,
-                backgroundImage: imageUrl != null
+                backgroundImage: _image != null
+                    ? FileImage(File(_image!.path))
+                    : (imageUrl != null
                     ? NetworkImage(imageUrl)
                     : AssetImage('assets/icons/Person-icon.jpg')
-                        as ImageProvider<Object>,
+                as ImageProvider<Object>),
               ),
               Positioned(
                 bottom: 10.0,
