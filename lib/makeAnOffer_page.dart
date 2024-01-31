@@ -12,9 +12,11 @@ class MakeAnOffer extends StatefulWidget {
   final String postUid;
   final String username;
   final String imageUser;
+  final String uidUserpost;
   const MakeAnOffer(
       {Key? key,
       required this.postUid,
+      required this.uidUserpost,
       required this.username,
       required this.imageUser})
       : super(key: key);
@@ -383,7 +385,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
       Map<dynamic, dynamic> datamap =
           userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
       int currentOfferCount = datamap['makeofferCount'] as int? ?? 0;
-         String? username = datamap['username'];
+      String? username = datamap['username'];
 
       if (currentOfferCount > 0 || canPostAfter30Days(userRef, datamap)) {
         // ลดค่า postCount
@@ -393,7 +395,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
             'lastOfferDate': DateTime.now().toString(),
           });
         }
-      
+
         String postUid = widget.postUid;
         String imageUser = widget.imageUser;
 
@@ -413,7 +415,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
           'offer_uid': offerUid,
           'offerNumber': generateRandomNumber(),
           'uid': uid,
-
+          'uidUserpost': widget.uidUserpost,
           'type1': dropdownValue,
           'nameitem1': _nameItem1.text.trim(),
           'brand1': _brand1.text.trim(),

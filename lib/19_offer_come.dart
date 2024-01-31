@@ -46,33 +46,34 @@ class _Offer_comeState extends State<OfferCome> {
 
     // Load the first post
     _postRef
-        .orderByChild('uid')
-        .equalTo(_user.uid)
-        .limitToFirst(1)
-        .onValue
-        .listen((event) {
+    .orderByChild('uid')
+    .equalTo(_user.uid)
+    .onValue
+    .listen((event) {
       if (event.snapshot.value != null) {
-        Map<dynamic, dynamic> data =
-            Map<dynamic, dynamic>.from(event.snapshot.value as Map);
-        var firstKey = data.keys.first;
-        var firstPost = Map<dynamic, dynamic>.from(data[firstKey]);
+        Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(event.snapshot.value as Map);
+        
+        // Iterate through the data to find a post that meets both conditions
+        for (var postKey in data.keys) {
+          var post = Map<dynamic, dynamic>.from(data[postKey]);
 
-        // Check the status before loading post data
-        String g = "finish";
-        if (firstPost['status'] != g) {
-          // Status is not finish, perform your actions here
-          _loadPostData1(firstPost['post_uid']);
-          setState(() {
-            postsList.clear();
-            postsList.insert(0, firstPost);
-            selectedPost = firstPost;
-            _selectedIndex = 0;
-          });
-        } else {
-          print('Post with status "finish" found, skipping...');
+          // Check if the post meets both conditions
+          if (post['statusPosts'] == "รอการยืนยัน") {
+            // Perform your actions here with the matching post
+            _loadPostData1(post['post_uid']);
+            setState(() {
+              postsList.clear();
+              postsList.insert(0, post);
+              selectedPost = post;
+              _selectedIndex = 0;
+            });
+            // Break out of the loop after finding the first matching post
+            break;
+          }
         }
       }
     });
+
   }
 
   void sendDataToProfileScreen(

@@ -141,7 +141,7 @@ class _NewPostState extends State<NewPost> {
 
         // บันทึก URL รูปภาพพร้อมกับข้อมูลอื่น ๆ ในฐานข้อมูล
         Map userDataMap = {
-          'status_post': "no_finish",
+          'statusPosts': "รอการยืนยัน",
           'imageUser': imageUser,
           'post_uid': postUid,
           'email': email,

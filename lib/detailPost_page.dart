@@ -10,7 +10,10 @@ class ShowDetailAll extends StatefulWidget {
   final String imageUser;
 
   ShowDetailAll(
-      {required this.postUid, required this.longti, required this.lati,required this.imageUser});
+      {required this.postUid,
+      required this.longti,
+      required this.lati,
+      required this.imageUser});
 
   @override
   _ShowDetailAllState createState() => _ShowDetailAllState();
@@ -354,10 +357,10 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                   builder: (context) => MakeAnOffer(
-                                        postUid: send_uid,
-                                        username: username,
-                                        imageUser:imageUser,
-                                      )),
+                                      postUid: send_uid,
+                                      username: username,
+                                      imageUser: imageUser,
+                                      uidUserpost: postData['uid'])),
                             );
                           },
                           child: Text(
