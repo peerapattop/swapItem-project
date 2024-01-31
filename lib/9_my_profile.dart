@@ -1,4 +1,6 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:io' as io;
 
 import '19_offer_come.dart';
 import '5_his_post.dart';
@@ -29,6 +31,7 @@ class _ProfileState extends State<Profile> {
   late User _user;
   late DatabaseReference _userRef;
   DateTime? selectedDate;
+  PickedFile? _image;
 
   bool isTextFieldEnabled = false;
   @override
@@ -61,6 +64,66 @@ class _ProfileState extends State<Profile> {
 
         _userRef.update({'birthday': _birthdayController.text});
       });
+    }
+  }
+
+  Future<void> _updateUserData() async {
+    try {
+      // Update text-based user data
+      await _userRef.update({
+        'firstname': _firstNameController.text,
+        'lastname': _lastNameController.text,
+        'gender': _genderController.text,
+        'birthday': _birthdayController.text,
+      });
+
+      // Check if a new image is selected
+      if (_image != null) {
+        // Get the UID of the currently logged-in user
+        final String uid = FirebaseAuth.instance.currentUser!.uid;
+
+        // Upload the new image to Firebase Storage
+        final storageRef = FirebaseStorage.instance.ref().child('images_user');
+        final uploadTask =
+            storageRef.child('$uid.jpg').putFile(io.File(_image!.path));
+
+        // Await the upload task directly
+        final TaskSnapshot taskSnapshot = await uploadTask;
+
+        // Get the download URL
+        final imageUrl = await taskSnapshot.ref.getDownloadURL();
+
+        // Update the user's image URL in Firebase Realtime Database
+        _userRef.child('image_user').set(imageUrl);
+      }
+
+      // Show success message
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('บันทึกข้อมูลสำเร็จ'),
+            actions: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the AlertDialog
+                },
+                child: Text(
+                  'ตกลง',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (error) {
+      // Handle errors, such as network issues, permission denied, etc.
+      print('Error updating user data: $error');
+      // Show an error message to the user or handle it appropriately
     }
   }
 
@@ -195,21 +258,34 @@ class _ProfileState extends State<Profile> {
                               children: [
                                 Container(
                                   alignment: Alignment.topCenter,
-                                  child: imgPost(),
+                                  child: imageProfile(),
                                 ),
-                                SizedBox(
-                                  width: 60,
-                                ),
+                                const SizedBox(width: 20),
                                 Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      'สถานะ : $statusUser',
-                                      style: TextStyle(fontSize: 18),
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          'สถานะ : ',
+                                          style: TextStyle(fontSize: 21),
+                                        ),
+                                        if (statusUser == 'ผู้ใช้พรีเมี่ยม')
+                                          Image.asset(
+                                              'assets/images/vipbar.png',
+                                              width: 30,
+                                              height: 30),
+                                        Text(
+                                          statusUser,
+                                          style: const TextStyle(fontSize: 21),
+                                        ),
+                                      ],
                                     ),
+                                    const SizedBox(height: 10),
                                     Text(
-                                      'ใช้ได้อีก : $remainingTime',
-                                      style: TextStyle(fontSize: 10),
-                                    )
+                                      'ถึงวันที่ : $remainingTime',
+                                      style: const TextStyle(fontSize: 10),
+                                    ),
                                   ],
                                 )
                               ],
@@ -375,37 +451,7 @@ class _ProfileState extends State<Profile> {
                                   ],
                                   text: 'บันทึกการแก้ไข',
                                   onPressed: () {
-                                    _userRef.update({
-                                      'firstname': _firstNameController.text,
-                                      'lastname': _lastNameController.text,
-                                      'gender': _genderController.text,
-                                      'birthday': _birthdayController.text,
-                                    }).then((value) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text('บันทึกข้อมูลสำเร็จ'),
-                                            actions: [
-                                              ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.green,
-                                                ),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // ปิด AlertDialog
-                                                },
-                                                child: Text(
-                                                  'ตกลง',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    });
+                                    _updateUserData();
                                   },
                                 ),
                                 GradientButton(
@@ -478,7 +524,8 @@ class _ProfileState extends State<Profile> {
                                   label: const Text('ออกจากระบบ',
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 16)),
-                                  icon: const Icon(Icons.logout, color: Colors.white),
+                                  icon: const Icon(Icons.logout,
+                                      color: Colors.white),
                                   onPressed: () {
                                     _showSignOutConfirmationDialog();
                                   },
@@ -578,24 +625,27 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  void takePhoto(ImageSource source) async {
-    final dynamic pickedFile = await ImagePicker().pickImage(
-      source: source,
-    );
+  Future<void> takePhoto(ImageSource source) async {
+  final XFile? pickedFile = await ImagePicker().pickImage(
+    source: source,
+  );
 
-    if (pickedFile != null) {
-      setState(() {});
+  if (pickedFile != null) {
+    setState(() {
+      _image = PickedFile(pickedFile.path); // Convert XFile to PickedFile
+    });
 
-      Navigator.pop(context);
-    }
+    Navigator.pop(context); // Close the bottom sheet
   }
+}
 
-  Widget imgPost() {
+
+  Widget imageProfile() {
     return StreamBuilder(
       stream: _userRef.child('image_user').onValue,
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
