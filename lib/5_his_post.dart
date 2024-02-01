@@ -38,7 +38,7 @@ class _HistoryPostState extends State<HistoryPost> {
         .listen((event) {
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic> data =
-            Map<dynamic, dynamic>.from(event.snapshot.value as Map);
+        Map<dynamic, dynamic>.from(event.snapshot.value as Map);
         var lastKey = data.keys.last;
         var lastPayment = Map<dynamic, dynamic>.from(data[lastKey]);
 
@@ -168,7 +168,7 @@ class _HistoryPostState extends State<HistoryPost> {
                         int idx = entry.key;
                         Map<dynamic, dynamic> postData = entry.value;
                         image_post =
-                            List<String>.from(selectedPost!['imageUrls']);
+                        List<String>.from(selectedPost!['imageUrls']);
                         latitude = double.tryParse(
                             selectedPost!['latitude'].toString());
                         longitude = double.tryParse(
@@ -183,286 +183,286 @@ class _HistoryPostState extends State<HistoryPost> {
                   Divider(),
                   selectedPost != null
                       ? Expanded(
-                          child: ListView(
-                            children: [
-                              Column(
+                    child: ListView(
+                      children: [
+                        Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 8, top: 8, right: 8),
-                                          child: SizedBox(
-                                            height: 300,
-                                            child: PageView.builder(
-                                              onPageChanged: (value) {
-                                                setState(() {
-                                                  mySlideindex = value;
-                                                });
-                                              },
-                                              itemCount: image_post.length,
-                                              itemBuilder: (context, index) {
-                                                return Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      20.0),
-                                                  child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
-                                                      child: Image.network(
-                                                        image_post[index],
-                                                        fit: BoxFit.cover,
-                                                      )),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 60,
-                                          width: 300,
-                                          child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: image_post.length,
-                                            itemBuilder: (context, index) {
-                                              return Padding(
-                                                padding:
-                                                    const EdgeInsets.all(20.0),
-                                                child: Container(
-                                                  height: 20,
-                                                  width: 20,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: index == mySlideindex
-                                                        ? Colors.deepPurple
-                                                        : Colors.grey,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              Icons
-                                                  .tag, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                              color: Colors
-                                                  .blue, // เปลี่ยนสีไอคอนตามความต้องการ
-                                            ),
-                                            SizedBox(
-                                                width:
-                                                    8), // ระยะห่างระหว่างไอคอนและข้อความ
-                                            Text(
-                                              'หมายเลขโพสต์ : ' +
-                                                  selectedPost!['postNumber'],
-                                              style: TextStyle(fontSize: 18),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              Icons
-                                                  .date_range, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                              color: Colors
-                                                  .blue, // เปลี่ยนสีไอคอนตามความต้องการ
-                                            ),
-                                            SizedBox(
-                                                width:
-                                                    8), // ระยะห่างระหว่างไอคอนและข้อความ
-                                            Text(
-                                              'วันที่ : ' +
-                                                  selectedPost!['date'],
-                                              style: TextStyle(fontSize: 18),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              Icons
-                                                  .punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                              color: Colors
-                                                  .blue, // เปลี่ยนสีไอคอนตามความต้องการ
-                                            ),
-                                            Text(
-                                              " เวลา :" +
-                                                  selectedPost!['time'] +
-                                                  ' น.',
-                                              style: TextStyle(fontSize: 18),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 2,
-                                              right: 15,
-                                              top: 10,
-                                              bottom: 10),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 214, 214, 212),
-                                              borderRadius:
-                                                  BorderRadius.circular(12.0),
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(11.0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'ชื่อสิ่งของ : ' +
-                                                        selectedPost![
-                                                            'item_name'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'หมวดหมู่ : ' +
-                                                        selectedPost!['type'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'ยี่ห้อ : ' +
-                                                        selectedPost!['brand'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'รุ่น : ' +
-                                                        selectedPost!['model'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'รายละเอียด : ' +
-                                                        selectedPost!['detail'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Center(
-                                                      child: Image.asset(
-                                                    'assets/images/swap.png',
-                                                    width: 20,
-                                                  )),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Text(
-                                                    'ชื่อสิ่งของ : ' +
-                                                        selectedPost![
-                                                            'item_name1'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'ยี่ห้อ : ' +
-                                                        selectedPost!['brand1'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'รุ่น : ' +
-                                                        selectedPost!['model1'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'รายละเอียด : ' +
-                                                        selectedPost![
-                                                            'details1'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              border: Border.all()),
-                                          height: 300,
-                                          width: 380,
-                                          child: GoogleMap(
-                                            onMapCreated: (GoogleMapController
-                                                controller) {
-                                              mapController = controller;
-                                            },
-                                            initialCameraPosition:
-                                                CameraPosition(
-                                              target:
-                                                  LatLng(latitude!, longitude!),
-                                              zoom: 12.0,
-                                            ),
-                                            markers: <Marker>{
-                                              Marker(
-                                                markerId:
-                                                    MarkerId('initialPosition'),
-                                                position: LatLng(
-                                                    latitude!, longitude!),
-                                                infoWindow: InfoWindow(
-                                                  title: 'Marker Title',
-                                                  snippet: 'Marker Snippet',
-                                                ),
-                                              ),
-                                            },
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        ElevatedButton.icon(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.red),
-                                          onPressed: () {
-                                            if (selectedPost != null &&
-                                                selectedPost!
-                                                    .containsKey('post_uid')) {
-                                              showDeleteConfirmation(context,
-                                                  selectedPost!['post_uid']);
-                                            } else {
-                                              print(
-                                                  'No post selected for deletion.');
-                                              // Debug: Print the current state of selectedPost
-                                              print(
-                                                  'Current selectedPost: $selectedPost');
-                                            }
-                                          },
-                                          icon: Icon(Icons.delete,
-                                              color: Colors.white),
-                                          label: Text('ลบโพสต์',
-                                              style: TextStyle(
-                                                  color: Colors.white)),
-                                        ),
-                                        Divider(),
-                                      ],
+                                    padding: const EdgeInsets.only(
+                                        left: 8, top: 8, right: 8),
+                                    child: SizedBox(
+                                      height: 300,
+                                      child: PageView.builder(
+                                        onPageChanged: (value) {
+                                          setState(() {
+                                            mySlideindex = value;
+                                          });
+                                        },
+                                        itemCount: image_post.length,
+                                        itemBuilder: (context, index) {
+                                          return Padding(
+                                            padding: const EdgeInsets.all(
+                                                20.0),
+                                            child: ClipRRect(
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    20),
+                                                child: Image.network(
+                                                  image_post[index],
+                                                  fit: BoxFit.cover,
+                                                )),
+                                          );
+                                        },
+                                      ),
                                     ),
-                                  )
+                                  ),
+                                  SizedBox(
+                                    height: 60,
+                                    width: 300,
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: image_post.length,
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                          padding:
+                                          const EdgeInsets.all(20.0),
+                                          child: Container(
+                                            height: 20,
+                                            width: 20,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: index == mySlideindex
+                                                  ? Colors.deepPurple
+                                                  : Colors.grey,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons
+                                            .tag, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                                        color: Colors
+                                            .blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                                      ),
+                                      SizedBox(
+                                          width:
+                                          8), // ระยะห่างระหว่างไอคอนและข้อความ
+                                      Text(
+                                        'หมายเลขโพสต์ : ' +
+                                            selectedPost!['postNumber'],
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons
+                                            .date_range, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                                        color: Colors
+                                            .blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                                      ),
+                                      SizedBox(
+                                          width:
+                                          8), // ระยะห่างระหว่างไอคอนและข้อความ
+                                      Text(
+                                        'วันที่ : ' +
+                                            selectedPost!['date'],
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons
+                                            .punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                                        color: Colors
+                                            .blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                                      ),
+                                      Text(
+                                        " เวลา :" +
+                                            selectedPost!['time'] +
+                                            ' น.',
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 2,
+                                        right: 15,
+                                        top: 10,
+                                        bottom: 10),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Color.fromARGB(
+                                            255, 214, 214, 212),
+                                        borderRadius:
+                                        BorderRadius.circular(12.0),
+                                      ),
+                                      child: Padding(
+                                        padding:
+                                        const EdgeInsets.all(11.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'ชื่อสิ่งของ : ' +
+                                                  selectedPost![
+                                                  'item_name'],
+                                              style:
+                                              TextStyle(fontSize: 18),
+                                            ),
+                                            Text(
+                                              'หมวดหมู่ : ' +
+                                                  selectedPost!['type'],
+                                              style:
+                                              TextStyle(fontSize: 18),
+                                            ),
+                                            Text(
+                                              'ยี่ห้อ : ' +
+                                                  selectedPost!['brand'],
+                                              style:
+                                              TextStyle(fontSize: 18),
+                                            ),
+                                            Text(
+                                              'รุ่น : ' +
+                                                  selectedPost!['model'],
+                                              style:
+                                              TextStyle(fontSize: 18),
+                                            ),
+                                            Text(
+                                              'รายละเอียด : ' +
+                                                  selectedPost!['detail'],
+                                              style:
+                                              TextStyle(fontSize: 18),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Center(
+                                                child: Image.asset(
+                                                  'assets/images/swap.png',
+                                                  width: 20,
+                                                )),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'ชื่อสิ่งของ : ' +
+                                                  selectedPost![
+                                                  'item_name1'],
+                                              style:
+                                              TextStyle(fontSize: 18),
+                                            ),
+                                            Text(
+                                              'ยี่ห้อ : ' +
+                                                  selectedPost!['brand1'],
+                                              style:
+                                              TextStyle(fontSize: 18),
+                                            ),
+                                            Text(
+                                              'รุ่น : ' +
+                                                  selectedPost!['model1'],
+                                              style:
+                                              TextStyle(fontSize: 18),
+                                            ),
+                                            Text(
+                                              'รายละเอียด : ' +
+                                                  selectedPost![
+                                                  'details1'],
+                                              style:
+                                              TextStyle(fontSize: 18),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all()),
+                                    height: 300,
+                                    width: 380,
+                                    child: GoogleMap(
+                                      onMapCreated: (GoogleMapController
+                                      controller) {
+                                        mapController = controller;
+                                      },
+                                      initialCameraPosition:
+                                      CameraPosition(
+                                        target:
+                                        LatLng(latitude!, longitude!),
+                                        zoom: 12.0,
+                                      ),
+                                      markers: <Marker>{
+                                        Marker(
+                                          markerId:
+                                          MarkerId('initialPosition'),
+                                          position: LatLng(
+                                              latitude!, longitude!),
+                                          infoWindow: InfoWindow(
+                                            title: 'Marker Title',
+                                            snippet: 'Marker Snippet',
+                                          ),
+                                        ),
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  ElevatedButton.icon(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.red),
+                                    onPressed: () {
+                                      if (selectedPost != null &&
+                                          selectedPost!
+                                              .containsKey('post_uid')) {
+                                        showDeleteConfirmation(context,
+                                            selectedPost!['post_uid']);
+                                      } else {
+                                        print(
+                                            'No post selected for deletion.');
+                                        // Debug: Print the current state of selectedPost
+                                        print(
+                                            'Current selectedPost: $selectedPost');
+                                      }
+                                    },
+                                    icon: Icon(Icons.delete,
+                                        color: Colors.white),
+                                    label: Text('ลบโพสต์',
+                                        style: TextStyle(
+                                            color: Colors.white)),
+                                  ),
+                                  Divider(),
                                 ],
                               ),
-                            ],
-                          ),
-                        )
-                      : Column(
-                          children: [
-                            CircularProgressIndicator(),
-                            Text('กำลังโหลด..'),
+                            )
                           ],
                         ),
+                      ],
+                    ),
+                  )
+                      : Column(
+                    children: [
+                      CircularProgressIndicator(),
+                      Text('กำลังโหลด..'),
+                    ],
+                  ),
                 ],
               );
             } else {

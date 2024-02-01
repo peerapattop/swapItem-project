@@ -1,4 +1,5 @@
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:swapitem/CheckOffercome.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io' as io;
 
@@ -463,7 +464,7 @@ class _ProfileState extends State<Profile> {
                                     onPressed: () {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (context) => OfferCome(),
+                                          builder: (context) => offerCome(),
                                         ),
                                       );
                                     }),
