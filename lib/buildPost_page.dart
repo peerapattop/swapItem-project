@@ -426,8 +426,9 @@ class _NewPostState extends State<NewPost> {
                     ),
                     onPressed: () {
                       completer.complete(true);
+                      Navigator.pop(context);
                     },
-                    child: Text(
+                    child: const Text(
                       'ยืนยัน',
                       style: TextStyle(color: Colors.white),
                     ),
