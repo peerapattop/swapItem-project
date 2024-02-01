@@ -252,57 +252,70 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                       ),
                       onPressed: !_isSubmitting
                           ? () async {
-                              bool? confirmed = await _showConfirmationDialog();
-                              if (confirmed ?? false) {
-                                try {
-                                  setState(() {
-                                    _isSubmitting = true;
-                                  });
+                        bool? confirmed = await _showConfirmationDialog();
+                        if (confirmed ?? false) {
+                          try {
+                            setState(() {
+                              _isSubmitting = true;
+                            });
 
-                                  // Show a loading indicator here, such as CircularProgressIndicator
+                            // Show a loading dialog
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      CircularProgressIndicator(),
+                                      SizedBox(height: 10),
+                                      Text("กำลังยื่นข้อเสนอ..."),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
 
-                                  String? offerId = await _submitOffer();
+                            String? offerId = await _submitOffer();
 
-                                  if (offerId != null) {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            MakeAnOfferSuccess(
-                                          offer_id: offerId,
-                                          date: date1,
-                                          time: time1,
-                                          offerNumber: generateRandomNumber(),
-                                        ),
-                                      ),
-                                    );
-                                  } else {
-                                    // Handle the case where offerId is null before navigation
-                                  }
-                                } catch (e) {
-                                  print(e);
-                                } finally {
-                                  // Hide the loading indicator here
+                            if (offerId != null) {
+                              // Close the loading dialog
+                              Navigator.pop(context);
 
-                                  setState(() {
-                                    _isSubmitting = false;
-                                  });
-                                }
-                              }
+                              // Navigate to MakeAnOfferSuccess page
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => MakeAnOfferSuccess(
+                                    offer_id: offerId,
+                                    date: date1,
+                                    time: time1,
+                                    offerNumber: generateRandomNumber(),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              // Handle the case where offerId is null before navigation
                             }
+                          } catch (e) {
+                            print(e);
+                          } finally {
+                            setState(() {
+                              _isSubmitting = false;
+                            });
+                          }
+                        }
+                      }
                           : null,
-                      child: _isSubmitting
-                          ? CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
-                            )
-                          : Text(
-                              "ยื่นข้อเสนอ",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                              ),
-                            ),
+                      child: Text(
+                        "ยื่นข้อเสนอ",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
                     ),
+
                   ),
                 ),
               ],
