@@ -2,6 +2,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:swapitem/CheckOffercome.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io' as io;
+import 'dart:io';
 
 import '19_offer_come.dart';
 import '5_his_post.dart';
@@ -69,8 +70,65 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> _updateUserData() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return FutureBuilder<void>(
+          future: _performUpdate(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Display a loading indicator while waiting for the update to complete
+              return AlertDialog(
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 10),
+                    Text("กำลังบันทึกข้อมูล..."),
+                  ],
+                ),
+              );
+            } else if (snapshot.hasError) {
+              // Display an error message if the update encounters an error
+              return AlertDialog(
+                title: Text('เกิดข้อผิดพลาด'),
+                content: Text('เกิดข้อผิดพลาดในการบันทึกข้อมูล: ${snapshot.error}'),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the AlertDialog
+                    },
+                    child: Text('ตกลง'),
+                  ),
+                ],
+              );
+            } else {
+              // Display a success message when the update is successful
+              return AlertDialog(
+                title: Text('บันทึกข้อมูลสำเร็จ'),
+                actions: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the AlertDialog
+                    },
+                    child: Text('ตกลง',style: TextStyle(color: Colors.white),),
+                  ),
+                ],
+              );
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _performUpdate() async {
     try {
-      // Update text-based user data
+      // Your existing update logic
       await _userRef.update({
         'firstname': _firstNameController.text,
         'lastname': _lastNameController.text,
@@ -78,53 +136,16 @@ class _ProfileState extends State<Profile> {
         'birthday': _birthdayController.text,
       });
 
-      // Check if a new image is selected
       if (_image != null) {
-        // Get the UID of the currently logged-in user
         final String uid = FirebaseAuth.instance.currentUser!.uid;
-
-        // Upload the new image to Firebase Storage
         final storageRef = FirebaseStorage.instance.ref().child('images_user');
-        final uploadTask =
-            storageRef.child('$uid.jpg').putFile(io.File(_image!.path));
-
-        // Await the upload task directly
+        final uploadTask = storageRef.child('$uid.jpg').putFile(io.File(_image!.path));
         final TaskSnapshot taskSnapshot = await uploadTask;
-
-        // Get the download URL
         final imageUrl = await taskSnapshot.ref.getDownloadURL();
-
-        // Update the user's image URL in Firebase Realtime Database
         _userRef.child('image_user').set(imageUrl);
       }
-
-      // Show success message
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('บันทึกข้อมูลสำเร็จ'),
-            actions: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the AlertDialog
-                },
-                child: Text(
-                  'ตกลง',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          );
-        },
-      );
     } catch (error) {
-      // Handle errors, such as network issues, permission denied, etc.
-      print('Error updating user data: $error');
-      // Show an error message to the user or handle it appropriately
+      throw error; // Rethrow the error to be caught by the FutureBuilder
     }
   }
 
@@ -627,18 +648,19 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> takePhoto(ImageSource source) async {
-  final XFile? pickedFile = await ImagePicker().pickImage(
-    source: source,
-  );
+    final XFile? pickedFile = await ImagePicker().pickImage(
+      source: source,
+    );
 
-  if (pickedFile != null) {
-    setState(() {
-      _image = PickedFile(pickedFile.path); // Convert XFile to PickedFile
-    });
+    if (pickedFile != null) {
+      setState(() {
+        _image = PickedFile(pickedFile.path); // Convert XFile to PickedFile
+      });
 
-    Navigator.pop(context); // Close the bottom sheet
+      Navigator.pop(context); // Close the bottom sheet
+    }
   }
-}
+
 
 
   Widget imageProfile() {
@@ -656,10 +678,12 @@ class _ProfileState extends State<Profile> {
             children: <Widget>[
               CircleAvatar(
                 radius: 60.0,
-                backgroundImage: imageUrl != null
+                backgroundImage: _image != null
+                    ? FileImage(File(_image!.path))
+                    : (imageUrl != null
                     ? NetworkImage(imageUrl)
                     : AssetImage('assets/icons/Person-icon.jpg')
-                        as ImageProvider<Object>,
+                as ImageProvider<Object>),
               ),
               Positioned(
                 bottom: 10.0,

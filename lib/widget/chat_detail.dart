@@ -128,8 +128,10 @@ class _ChatDetailState extends State<ChatDetail> {
                 var message = sortedMessages[index];
                 String text = message['text'];
                 String sender = message['sender'];
+                String time = message['time'];
 
                 return Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 10),
@@ -146,16 +148,27 @@ class _ChatDetailState extends State<ChatDetail> {
                                   : Colors.green,
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Text(
-                              '$text',
-                              style: TextStyle(color: Colors.white),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start, // Align text to the start (left)
+                              children: [
+                                Text(
+                                  '$text',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
                             ),
                           ),
+
                         ],
                       ),
                     ),
+                    Text(
+                      '$time',
+                      style: TextStyle(color: Colors.grey),
+                    ),
                   ],
                 );
+
               },
             );
           },

@@ -9,6 +9,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'postSuccess_page.dart';
+
 List<String> category = <String>[
   'เสื้อผ้า',
   'รองเท้า',
@@ -109,70 +111,107 @@ class _NewPostState extends State<NewPost> {
 
   Future<void> buildPost(BuildContext context, List<File> images) async {
     try {
-      String uid = FirebaseAuth.instance.currentUser!.uid;
-      DatabaseReference userRef =
-          FirebaseDatabase.instance.ref().child('users').child(uid);
-      DatabaseEvent userDataSnapshot = await userRef.once();
-      Map<dynamic, dynamic> datamap =
-          userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
-      int currentPostCount = int.tryParse(datamap['postCount'].toString()) ?? 0;
+      bool confirmed = await _showPostConfirmationDialog();
 
-      // ตรวจสอบว่ายังมีโอกาสโพสต์หรือไม่
-      if (currentPostCount > 0 || canPostAfter30Days(userRef, datamap)) {
-        // ลดค่า postCount
-        if (currentPostCount > 0) {
-          await userRef.update({
-            'postCount': currentPostCount - 1,
-            'lastPostDate': DateTime.now().toString(),
-          });
-        }
+      // Check if the user confirmed
+      if (confirmed) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 10),
+                  Text("กำลังสร้างโพสต์..."),
+                ],
+              ),
+            );
+          },
+        );
 
-        // ... ส่วนที่เหลือของโค้ดสำหรับการโพสต์
-        String username = datamap['username'];
-        String email = datamap['email'];
-        String imageUser = datamap['image_user'];
-        String status_user = datamap['status_user'];
-        DatabaseReference itemRef =
-            FirebaseDatabase.instance.ref().child('postitem').push();
-        List<String> imageUrls = await uploadImages(images);
+        String uid = FirebaseAuth.instance.currentUser!.uid;
+        DatabaseReference userRef =
+            FirebaseDatabase.instance.ref().child('users').child(uid);
+        DatabaseEvent userDataSnapshot = await userRef.once();
+        Map<dynamic, dynamic> datamap =
+            userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
+        int currentPostCount =
+            int.tryParse(datamap['postCount'].toString()) ?? 0;
 
-        // Generate uid for the post
-        String? postUid = itemRef.key;
+        // ตรวจสอบว่ายังมีโอกาสโพสต์หรือไม่
+        if (currentPostCount > 0 || canPostAfter30Days(userRef, datamap)) {
+          // ลดค่า postCount
+          if (currentPostCount > 0) {
+            await userRef.update({
+              'postCount': currentPostCount - 1,
+              'lastPostDate': DateTime.now().toString(),
+            });
+          }
 
-        // บันทึก URL รูปภาพพร้อมกับข้อมูลอื่น ๆ ในฐานข้อมูล
-        Map userDataMap = {
-          'statusPosts': "รอการยืนยัน",
-          'imageUser': imageUser,
-          'post_uid': postUid,
-          'email': email,
-          'postNumber': generateRandomPostNumber(),
-          'imageUrls': imageUrls,
-          'type': dropdownValue,
-          'latitude': selectedLatitude.toString(),
-          'longitude': selectedLongitude.toString(),
-          'time': now.hour.toString().padLeft(2, '0') +
+          // ... ส่วนที่เหลือของโค้ดสำหรับการโพสต์
+          String username = datamap['username'];
+          String email = datamap['email'];
+          String imageUser = datamap['image_user'];
+          String status_user = datamap['status_user'];
+          DatabaseReference itemRef =
+              FirebaseDatabase.instance.ref().child('postitem').push();
+          List<String> imageUrls = await uploadImages(images);
+
+          // Generate uid for the post
+          String? postUid = itemRef.key;
+          String time = now.hour.toString().padLeft(2, '0') +
               ":" +
               now.minute.toString().padLeft(2, '0') +
               ":" +
-              now.second.toString().padLeft(2, '0'),
-          'date': now.year.toString() +
+              now.second.toString().padLeft(2, '0');
+          String date = now.year.toString() +
               "-" +
               now.month.toString().padLeft(2, '0') +
               "-" +
-              now.day.toString().padLeft(2, '0'),
-          'username': username,
-          'item_name': item_name.text.trim(),
-          'brand': brand.text.trim(),
-          "model": model.text.trim(),
-          "detail": details.text.trim(),
-          "item_name1": item_name1.text.trim(),
-          "brand1": brand1.text.trim(),
-          "model1": model1.text.trim(),
-          "details1": details1.text.trim(),
-          'uid': uid,
-          'status_user':status_user,
-        };
-        await itemRef.set(userDataMap);
+              now.day.toString().padLeft(2, '0');
+
+          // บันทึก URL รูปภาพพร้อมกับข้อมูลอื่น ๆ ในฐานข้อมูล
+          Map userDataMap = {
+            'statusPosts': "รอการยืนยัน",
+            'imageUser': imageUser,
+            'post_uid': postUid,
+            'email': email,
+            'postNumber': generateRandomPostNumber(),
+            'imageUrls': imageUrls,
+            'type': dropdownValue,
+            'latitude': selectedLatitude.toString(),
+            'longitude': selectedLongitude.toString(),
+            'time': time,
+            'date': date,
+            'username': username,
+            'item_name': item_name.text.trim(),
+            'brand': brand.text.trim(),
+            "model": model.text.trim(),
+            "detail": details.text.trim(),
+            "item_name1": item_name1.text.trim(),
+            "brand1": brand1.text.trim(),
+            "model1": model1.text.trim(),
+            "details1": details1.text.trim(),
+            'uid': uid,
+            'status_user': status_user,
+          };
+          await itemRef.set(userDataMap);
+
+          // Close the alert dialog after successfully adding data to the database
+          Navigator.pop(context);
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (BuildContext context) => PostSuccess(
+              time: time,
+              date: date,
+              postNumber: generateRandomPostNumber(),
+            )),
+          );
+        }
       }
     } catch (error) {
       print('Error in buildPost: $error');
@@ -293,7 +332,7 @@ class _NewPostState extends State<NewPost> {
               'แจ้งเตือน',
               style: TextStyle(color: Colors.red),
             ),
-             content: const Text('กรุณากรอกข้อมูลให้ครบถ้วน'),
+            content: const Text('กรุณากรอกข้อมูลให้ครบถ้วน'),
             actions: <Widget>[
               ElevatedButton(
                 onPressed: () {
@@ -386,11 +425,10 @@ class _NewPostState extends State<NewPost> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.of(context).pop();
                       completer.complete(true);
-                      Navigator.of(context).pop();
+                      Navigator.pop(context);
                     },
-                    child: Text(
+                    child: const Text(
                       'ยืนยัน',
                       style: TextStyle(color: Colors.white),
                     ),
@@ -631,7 +669,7 @@ class _NewPostState extends State<NewPost> {
                                       position: LatLng(selectedLatitude!,
                                           selectedLongitude!),
                                       infoWindow: InfoWindow(
-                                          title: 'Selected Location'),
+                                          title: 'เลือกตำแหน่งที่ต้องการ'),
                                     ),
                                   }
                                 : {},
@@ -645,7 +683,7 @@ class _NewPostState extends State<NewPost> {
                               top: 16,
                               left: 16,
                               child: Text(
-                                'Selected Location: ${selectedLatitude!}, ${selectedLongitude!}',
+                                'ตำแหน่งคือ : ${selectedLatitude!}, ${selectedLongitude!}',
                                 style: TextStyle(fontSize: 16),
                               ),
                             ),
@@ -714,24 +752,19 @@ class _NewPostState extends State<NewPost> {
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.density_medium_sharp)),
                     ),
+                    const SizedBox(height: 15),
                     SizedBox(
-                      height: 15,
-                    ),
-                    Container(
                       height: 50,
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () async {
-                          bool confirmed = await _showPostConfirmationDialog();
-                          if (confirmed) {
-                            await buildPost(context, _images);
-                          }
+                          await buildPost(context, _images);
                         },
                         style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.green),
                         ),
-                        child: Text(
+                        child: const Text(
                           "สร้างโพสต์",
                           style: TextStyle(color: Colors.white),
                         ),
