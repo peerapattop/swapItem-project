@@ -33,27 +33,33 @@ class _offerComeState extends State<offerCome> {
     _postRef
         .orderByChild('uid')
         .equalTo(_user.uid)
-        .limitToLast(1)
         .onValue
         .listen((event) {
+      postsList.clear();
+
       if (event.snapshot.value != null) {
-        Map<dynamic, dynamic> data =
-            Map<dynamic, dynamic>.from(event.snapshot.value as Map);
-        var lastKey = data.keys.last;
-        var lastPayment = Map<dynamic, dynamic>.from(data[lastKey]);
+        Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(event.snapshot.value as Map);
 
-        // Since we are listening to the last payment, we clear the list to ensure
-        // it only contains the latest payment and corresponds to the first button.
-        postsList.clear();
-
-        setState(() {
-          postsList.insert(0, lastPayment); // Insert at the start of the list
-          selectedPost = lastPayment;
-          _selectedIndex = 0; // This ensures the first button is selected
+        // Iterate over all posts and filter by statusPosts
+        data.forEach((key, value) {
+          if (value['statusPosts'] == "รอการยืนยัน") {
+            postsList.insert(0, value);
+          }
         });
+
+        if (postsList.isNotEmpty) {
+          setState(() {
+            selectedPost = postsList.first;
+            _selectedIndex = 0;
+          });
+        }
       }
+    })
+        .onError((error) {
+      print("Error fetching data: $error");
     });
   }
+
 
   void selectPayment(Map<dynamic, dynamic> postData) {
     setState(() {
