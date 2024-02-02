@@ -3,6 +3,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:swapitem/widget/chat_service.dart';
 
+import 'chat_bubble.dart';
+
 class ChatDetail extends StatefulWidget {
   final String receiverUid;
 
@@ -19,8 +21,8 @@ class _ChatDetailState extends State<ChatDetail> {
   final TextEditingController _messageController = TextEditingController();
   final ChatService _chatService = ChatService();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-   String username1 ='';
-   String imageUser1 = '';
+  String username1 = '';
+  String imageUser1 = '';
 
   @override
   void initState() {
@@ -47,7 +49,8 @@ class _ChatDetailState extends State<ChatDetail> {
       DataSnapshot dataSnapshot = event.snapshot;
 
       if (dataSnapshot.value != null && dataSnapshot.value is Map) {
-        Map<dynamic, dynamic> userData = dataSnapshot.value as Map<dynamic, dynamic>;
+        Map<dynamic, dynamic> userData =
+            dataSnapshot.value as Map<dynamic, dynamic>;
         if (userData.values.isNotEmpty) {
           var user = userData.values.first;
           String username = user['username'];
@@ -73,8 +76,6 @@ class _ChatDetailState extends State<ChatDetail> {
       return null;
     }
   }
-
-
 
   void sendMessage() async {
     if (_messageController.text.isNotEmpty) {
@@ -182,44 +183,34 @@ class _ChatDetailState extends State<ChatDetail> {
           Map<String, String> userData = snapshot.data!;
           username1 = userData['username']!;
           imageUser1 = userData['imageUser']!;
-          print("Username: $username1");
-          print("Username: $imageUser1");
-          var alignment = (message['senderId'] == _firebaseAuth.currentUser!.uid)
-              ? Alignment.centerRight
-              : Alignment.centerLeft;
+          var alignment =
+              (message['senderId'] == _firebaseAuth.currentUser!.uid)
+                  ? Alignment.centerRight
+                  : Alignment.centerLeft;
 
           return Container(
             alignment: alignment,
-            margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             padding: const EdgeInsets.all(12.0),
-            decoration: BoxDecoration(
-              color: (alignment == Alignment.centerRight) ? Colors.blue : Colors.grey,
-              borderRadius: BorderRadius.circular(8.0),
-            ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  (message['senderId'] == _firebaseAuth.currentUser!.uid)
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
+              mainAxisAlignment: (message['senderId'] == _firebaseAuth.currentUser!.uid)
+                  ? MainAxisAlignment.end
+                  : MainAxisAlignment.start,
               children: [
-                Text(
-                  message['message'],
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
+                ChatBubble(message: message['message']),
               ],
             ),
           );
-
         } else {
           // If no data is available, return a placeholder or handle accordingly
-          return Text('No user data available');
+          return const Text('No user data available');
         }
       },
     );
   }
-
 
   Widget _buildMessageInput() {
     return Container(
@@ -244,7 +235,7 @@ class _ChatDetailState extends State<ChatDetail> {
             child: TextFormField(
               controller: _messageController,
               decoration: const InputDecoration(
-                hintText: "Type your message",
+                hintText: "ส่งข้อความเลย!!",
                 border: InputBorder.none,
               ),
             ),
