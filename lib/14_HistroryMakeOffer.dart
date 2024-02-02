@@ -646,12 +646,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (context) => ChatDetail(
-                                                              username:
-                                                                  postItemData[
-                                                                      'username'],
-                                                              imageUser:
-                                                                  postItemData[
-                                                                      'imageUser'],
+
                                                               receiverUid:
                                                                   postItemData[
                                                                       'uid'])));

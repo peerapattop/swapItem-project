@@ -4,14 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:swapitem/widget/chat_service.dart';
 
 class ChatDetail extends StatefulWidget {
-  final String username;
-  final String imageUser;
   final String receiverUid;
 
   const ChatDetail({
     Key? key,
-    required this.username,
-    required this.imageUser,
     required this.receiverUid,
   }) : super(key: key);
 
@@ -23,6 +19,62 @@ class _ChatDetailState extends State<ChatDetail> {
   final TextEditingController _messageController = TextEditingController();
   final ChatService _chatService = ChatService();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+   String username1 ='';
+   String imageUser1 = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData(widget.receiverUid).then((userData) {
+      if (userData != null) {
+        setState(() {
+          username1 = userData['username']!;
+          imageUser1 = userData['imageUser']!;
+        });
+      }
+    });
+  }
+
+  Future<Map<String, String>?> fetchUserData(String userId) async {
+    try {
+      DatabaseReference reference = FirebaseDatabase.instance.ref();
+      DatabaseEvent event = await reference
+          .child('users')
+          .orderByChild('uid')
+          .equalTo(userId)
+          .once();
+
+      DataSnapshot dataSnapshot = event.snapshot;
+
+      if (dataSnapshot.value != null && dataSnapshot.value is Map) {
+        Map<dynamic, dynamic> userData = dataSnapshot.value as Map<dynamic, dynamic>;
+        if (userData.values.isNotEmpty) {
+          var user = userData.values.first;
+          String username = user['username'];
+          String imageUser = user['image_user'];
+
+          Map<String, String> userDataMap = {
+            'username': username,
+            'imageUser': imageUser,
+          };
+
+          // Return the user data
+          return userDataMap;
+        } else {
+          print('ไม่พบข้อมูล user');
+          return null;
+        }
+      } else {
+        print('ไม่พบข้อมูล user');
+        return null;
+      }
+    } catch (e) {
+      print('เกิดข้อผิดพลาด: $e');
+      return null;
+    }
+  }
+
+
 
   void sendMessage() async {
     if (_messageController.text.isNotEmpty) {
@@ -40,11 +92,31 @@ class _ChatDetailState extends State<ChatDetail> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.black, // Specify the border color
+                    width: 1.0, // Specify the border width
+                  ),
+                ),
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(imageUser1),
+                  radius: 20, // Increase the radius to your desired size
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(username1),
+            ],
+          ),
+        ),
         body: Column(
           children: [
             Expanded(
@@ -95,20 +167,59 @@ class _ChatDetailState extends State<ChatDetail> {
     );
   }
 
-
-
   Widget _buildMessageItem(dynamic message) {
-    var alignment =
-    (message['senderId'] == _firebaseAuth.currentUser!.uid)
-        ? Alignment.centerRight
-        : Alignment.centerLeft;
-    return Container(
-      alignment: alignment,
-      child: Column(
-        children: [Text(message['message']), Text(message['senderId'])],
-      ),
+    return FutureBuilder<Map<String, String>?>(
+      future: fetchUserData(widget.receiverUid),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // While waiting for data, return a loading indicator or placeholder
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          // If there's an error during fetching, handle it
+          return Text('Error: ${snapshot.error}');
+        } else if (snapshot.data != null) {
+          // If data is available, build and return the message item widget
+          Map<String, String> userData = snapshot.data!;
+          username1 = userData['username']!;
+          imageUser1 = userData['imageUser']!;
+          print("Username: $username1");
+          print("Username: $imageUser1");
+          var alignment = (message['senderId'] == _firebaseAuth.currentUser!.uid)
+              ? Alignment.centerRight
+              : Alignment.centerLeft;
+
+          return Container(
+            alignment: alignment,
+            margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            padding: const EdgeInsets.all(12.0),
+            decoration: BoxDecoration(
+              color: (alignment == Alignment.centerRight) ? Colors.blue : Colors.grey,
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  message['message'],
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+              ],
+            ),
+          );
+
+        } else {
+          // If no data is available, return a placeholder or handle accordingly
+          return Text('No user data available');
+        }
+      },
     );
   }
+
 
   Widget _buildMessageInput() {
     return Container(

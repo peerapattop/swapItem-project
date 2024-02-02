@@ -158,8 +158,6 @@ class MessageListItem extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => ChatDetail(
-                username: displayedUsername,
-                imageUser: displayedImage,
                 receiverUid: receiver,
               ),
             ),
