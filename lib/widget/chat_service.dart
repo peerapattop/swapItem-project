@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +8,25 @@ import 'message.dart';
 class ChatService extends ChangeNotifier {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseDatabase _firebaseRel = FirebaseDatabase.instance;
+
+
+  Stream<List<Map<String, dynamic>>> getUserStream() {
+    return _firebaseRel.ref('users').onValue.map((DatabaseEvent event) {
+      // Process the snapshot data and convert it into a list of maps
+      List<Map<String, dynamic>> userList = [];
+
+      DataSnapshot dataSnapshot = event.snapshot;
+      Map<dynamic, dynamic> data = dataSnapshot.value as Map<dynamic, dynamic>;
+
+      data.forEach((key, value) {
+        userList.add(Map<String, dynamic>.from(value));
+      });
+
+      return userList;
+    });
+  }
+
+
 
   Future<void> sendMessage(String receiverId, String message) async {
     final String currentUserId = _firebaseAuth.currentUser!.uid;
