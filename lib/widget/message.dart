@@ -2,7 +2,7 @@ class Message {
   late String senderId;
   late String receiverId;
   late String message;
-  late dynamic timestamp; // Use dynamic type
+  late String timestamp; // เปลี่ยน dynamic เป็น String
 
   Message({
     required this.senderId,
@@ -16,9 +16,7 @@ class Message {
       'senderId': senderId,
       'receiverId': receiverId,
       'message': message,
-      'timestamp': timestamp is DateTime
-          ? (timestamp as DateTime).millisecondsSinceEpoch
-          : timestamp,
+      'timestamp': timestamp,
     };
   }
 }

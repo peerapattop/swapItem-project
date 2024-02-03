@@ -200,7 +200,7 @@ class _ChatDetailState extends State<ChatDetail> {
                   ? MainAxisAlignment.end
                   : MainAxisAlignment.start,
               children: [
-                ChatBubble(message: message['message']),
+                ChatBubble(message: message['message'],time: message['timestamp'],),
               ],
             ),
           );
