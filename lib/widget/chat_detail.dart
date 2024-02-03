@@ -142,8 +142,8 @@ class _ChatDetailState extends State<ChatDetail> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           DataSnapshot dataSnapshot = snapshot.data!.snapshot;
-          Map<dynamic, dynamic> messages =
-              (dataSnapshot.value as Map<dynamic, dynamic>) ?? {};
+          Map<dynamic, dynamic>? messages =
+              (dataSnapshot.value as Map<dynamic, dynamic>?) ?? {};
           List<dynamic> messageList = messages.values.toList();
 
           return FutureBuilder<Map<String, String>?>(
@@ -161,11 +161,12 @@ class _ChatDetailState extends State<ChatDetail> {
               } else if (userDataSnapshot.hasError) {
                 return Text('Error: ${userDataSnapshot.error}');
               } else if (userDataSnapshot.data != null) {
-                Map<String, String> userData = userDataSnapshot.data ?? {};
+                Map<String, String> userData = userDataSnapshot.data!;
                 username1 = userData['username']!;
                 imageUser1 = userData['imageUser']!;
 
-                return ListView.builder(
+                return messageList.isNotEmpty
+                    ? ListView.builder(
                   itemCount: messageList.length,
                   itemBuilder: (context, index) {
                     var message = messageList[index];
@@ -199,6 +200,9 @@ class _ChatDetailState extends State<ChatDetail> {
                       return const SizedBox.shrink();
                     }
                   },
+                )
+                    : const Center(
+                  child: Text('เริ่มแชทเลย!!',style: TextStyle(fontSize: 20),),
                 );
               } else {
                 return const SizedBox.shrink();
@@ -207,17 +211,19 @@ class _ChatDetailState extends State<ChatDetail> {
           );
         } else {
           // Stream is not active, show loading or handle accordingly
-          return const Column(
+          return  const Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-               CircularProgressIndicator(),
-              Text('กำลังดาวน์โหลด'),
+              CircularProgressIndicator(),
+              Text('กำลังดาวน์โหลด...')
             ],
           );
         }
       },
     );
   }
+
+
 
 
 
