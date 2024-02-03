@@ -27,53 +27,47 @@ class _offerCome2State extends State<offerCome2> {
   List<String> image_post = [];
 
   @override
-  void initState() {
+  void initState () {
     super.initState();
-    idPost = widget.postUid;
     _user = FirebaseAuth.instance.currentUser!;
     _offerRef = FirebaseDatabase.instance.ref().child('offer');
     _postRef = FirebaseDatabase.instance.ref().child('postitem');
     selectedPost = null;
 
-    _offerRef
-        .orderByChild('post_uid')
-        .equalTo(idPost)
-        .onValue
-        .listen((event) {
+    _offerRef.orderByChild('post_uid').equalTo(widget.postUid).onValue.listen((event) {
       postsList.clear();
 
       if (event.snapshot.value != null) {
-        Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(event.snapshot.value as Map);
+        Map<dynamic, dynamic> data =
+            Map<dynamic, dynamic>.from(event.snapshot.value as Map);
 
-        // Convert data to a list
-        List<dynamic> dataList = data.values.toList();
-
-        // Iterate over the list and filter by statusPosts
-        for (int i = dataList.length - 1; i >= 0; i--) {
-          dynamic value = dataList[i];
-          if (true) {
-            postsList.add(value);
-          }
-        }
+        // Iterate over all posts and filter by statusPosts
+        setState(() {
+          data.forEach((key, value) {
+            if (value['statusOffers'] == "รอการยืนยัน") {
+              postsList.add(value);
+            }
+          });
+        });
 
         if (postsList.isNotEmpty) {
           setState(() {
-            selectedPost = postsList.last;
-            _selectedIndex = 0;
+            selectedPost = postsList.first;
+            _selectedIndex = -1;
           });
+          print("kuy"+selectedPost.toString());
         }
       }
     }, onError: (error) {
       print("Error fetching data: $error");
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       child: StreamBuilder(
-        stream: _offerRef.orderByChild('post_uid').equalTo(idPost).onValue,
+        stream: _offerRef.orderByChild('post_uid').equalTo(widget.postUid).onValue,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -102,21 +96,22 @@ class _offerCome2State extends State<offerCome2> {
 
             return Column(
               children: [
-                SizedBox(
-                  height: 50,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: postsList.asMap().entries.map((entry) {
-                      int idx = entry.key;
-                      Map<dynamic, dynamic> postData = entry.value;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: buildCircularNumberButton(idx, postData),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                Text(selectedPost!['uidUserpost']),
+              SizedBox(
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: postsList.reversed.toList().asMap().entries.map((entry) {
+                  int idx = entry.key;
+                  Map<dynamic, dynamic> postData = entry.value;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: buildCircularNumberButton(idx, postData),
+                  );
+                }).toList(),
+              ),
+            ),
+
+            Text(selectedPost!['uidUserpost']),
                 Text(selectedPost!['nameitem1']),
               ],
             );
@@ -132,7 +127,7 @@ class _offerCome2State extends State<offerCome2> {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    'ไม่มีประวัติการโพสต์',
+                    'ยังไม่มีข้อเสนอที่เข้ามาให้แลกเปลี่ยน',
                     style: TextStyle(fontSize: 20),
                   ),
                 ],
@@ -808,6 +803,7 @@ class _offerCome2State extends State<offerCome2> {
     return InkWell(
       onTap: () {
         setState(() {
+          print("kuy"+selectedPost.toString());
           _selectedIndex = index; // Update the selected index
           selectedPost = postData; // Update the selected payment data
         });

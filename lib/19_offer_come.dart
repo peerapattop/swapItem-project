@@ -31,15 +31,12 @@ class _offerComeState extends State<offerCome> {
     _postRef = FirebaseDatabase.instance.ref().child('postitem');
     selectedPost = null;
 
-    _postRef
-        .orderByChild('uid')
-        .equalTo(_user.uid)
-        .onValue
-        .listen((event) {
+    _postRef.orderByChild('uid').equalTo(_user.uid).onValue.listen((event) {
       postsList.clear();
 
       if (event.snapshot.value != null) {
-        Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(event.snapshot.value as Map);
+        Map<dynamic, dynamic> data =
+            Map<dynamic, dynamic>.from(event.snapshot.value as Map);
 
         // Iterate over all posts and filter by statusPosts
         data.forEach((key, value) {
@@ -55,12 +52,10 @@ class _offerComeState extends State<offerCome> {
           });
         }
       }
-    })
-        .onError((error) {
+    }).onError((error) {
       print("Error fetching data: $error");
     });
   }
-
 
   void selectPayment(Map<dynamic, dynamic> postData) {
     setState(() {
@@ -463,7 +458,9 @@ class _offerComeState extends State<offerCome> {
         ),
         body: StreamBuilder(
           stream: _postRef
-              .orderByChild('statusPosts').equalTo("รอการยืนยัน") //.orderByChild('statusPosts').equalTo("รอการยืนยัน")
+              .orderByChild('statusPosts')
+              .equalTo(
+                  "รอการยืนยัน") //.orderByChild('statusPosts').equalTo("รอการยืนยัน")
               .onValue,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -527,59 +524,6 @@ class _offerComeState extends State<offerCome> {
                                         ImageGalleryWidget(
                                           imageUrls: image_post,
                                         ),
-                                        // Padding(
-                                        //   padding: const EdgeInsets.only(
-                                        //       left: 8, top: 8, right: 8),
-                                        //   child: SizedBox(
-                                        //     height: 300,
-                                        //     child: PageView.builder(
-                                        //       onPageChanged: (value) {
-                                        //         setState(() {
-                                        //           mySlideindex = value;
-                                        //         });
-                                        //       },
-                                        //       itemCount: image_post.length,
-                                        //       itemBuilder: (context, index) {
-                                        //         return Padding(
-                                        //           padding: const EdgeInsets.all(
-                                        //               20.0),
-                                        //           child: ClipRRect(
-                                        //               borderRadius:
-                                        //                   BorderRadius.circular(
-                                        //                       20),
-                                        //               child: Image.network(
-                                        //                 image_post[index],
-                                        //                 fit: BoxFit.cover,
-                                        //               )),
-                                        //         );
-                                        //       },
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                        // SizedBox(
-                                        //   height: 60,
-                                        //   width: 300,
-                                        //   child: ListView.builder(
-                                        //     scrollDirection: Axis.horizontal,
-                                        //     itemCount: image_post.length,
-                                        //     itemBuilder: (context, index) {
-                                        //       return Padding(
-                                        //         padding:
-                                        //             const EdgeInsets.all(20.0),
-                                        //         child: Container(
-                                        //           height: 20,
-                                        //           width: 20,
-                                        //           decoration: BoxDecoration(
-                                        //             shape: BoxShape.circle,
-                                        //             color: index == mySlideindex
-                                        //                 ? Colors.deepPurple
-                                        //                 : Colors.grey,
-                                        //           ),
-                                        //         ),
-                                        //       );
-                                        //     },
-                                        //   ),
-                                        // ),
                                         Row(
                                           children: [
                                             Icon(
@@ -799,14 +743,14 @@ class _offerComeState extends State<offerCome> {
                 ),
               );
             }
-          },//gg
+          }, //gg
         ),
       ),
     );
   }
 
   Widget buildCircularNumberButton(int index, Map<dynamic, dynamic> postData) {
-
+    print("kuy"+selectedPost.toString());
     return InkWell(
       onTap: () {
         setState(() {
