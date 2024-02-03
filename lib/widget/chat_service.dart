@@ -39,9 +39,6 @@ class ChatService extends ChangeNotifier {
         .set(newMessage.toMap());
   }
 
-
-
-
   Stream getMessages(String receiverUid, String senderUid) {
     List<String> ids = [receiverUid, senderUid];
     ids.sort();

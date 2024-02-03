@@ -121,7 +121,7 @@ class _ChatDetailState extends State<ChatDetail> {
         body: Column(
           children: [
             Expanded(
-              child: _buildMessageList(),
+              child: buildChatWidget(),
             ),
             _buildMessageInput(),
           ],
@@ -130,87 +130,97 @@ class _ChatDetailState extends State<ChatDetail> {
     );
   }
 
-  Widget _buildMessageList() {
+  Widget buildChatWidget() {
+    Future<Map<String, String>?> fetchUserDataFuture =
+    fetchUserData(widget.receiverUid);
+
     return StreamBuilder(
       stream: _chatService.getMessages(
         widget.receiverUid,
         _firebaseAuth.currentUser!.uid,
       ),
       builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        }
+        if (snapshot.connectionState == ConnectionState.active) {
+          DataSnapshot dataSnapshot = snapshot.data!.snapshot;
+          Map<dynamic, dynamic> messages =
+              (dataSnapshot.value as Map<dynamic, dynamic>) ?? {};
+          List<dynamic> messageList = messages.values.toList();
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text('Loading...');
-        }
+          return FutureBuilder<Map<String, String>?>(
+            future: fetchUserDataFuture,
+            builder: (context, userDataSnapshot) {
+              if (userDataSnapshot.connectionState == ConnectionState.waiting) {
+                return const Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    Text('กำลังโหลด...')
+                  ],
+                );
+              } else if (userDataSnapshot.hasError) {
+                return Text('Error: ${userDataSnapshot.error}');
+              } else if (userDataSnapshot.data != null) {
+                Map<String, String> userData = userDataSnapshot.data ?? {};
+                username1 = userData['username']!;
+                imageUser1 = userData['imageUser']!;
 
-        DataSnapshot dataSnapshot = snapshot.data!.snapshot;
-        Map<dynamic, dynamic> messages =
-            (dataSnapshot.value as Map<dynamic, dynamic>) ?? {};
-        List<dynamic> messageList = messages.values.toList();
+                return ListView.builder(
+                  itemCount: messageList.length,
+                  itemBuilder: (context, index) {
+                    var message = messageList[index];
 
-        return ListView.builder(
-          itemCount: messageList.length,
-          itemBuilder: (context, index) {
-            var message = messageList[index];
+                    if (message is Map<dynamic, dynamic>) {
+                      var alignment = (message['senderId'] ==
+                          _firebaseAuth.currentUser!.uid)
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft;
 
-            // Check if the message is of type Map
-            if (message is Map<dynamic, dynamic>) {
-              return _buildMessageItem(message);
-            } else {
-              // Handle the case where the message is not a Map
-              return SizedBox.shrink(); // or another appropriate widget
-            }
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildMessageItem(dynamic message) {
-    return FutureBuilder<Map<String, String>?>(
-      future: fetchUserData(widget.receiverUid),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // While waiting for data, return a loading indicator or placeholder
-          return CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          // If there's an error during fetching, handle it
-          return Text('Error: ${snapshot.error}');
-        } else if (snapshot.data != null) {
-          // If data is available, build and return the message item widget
-          Map<String, String> userData = snapshot.data!;
-          username1 = userData['username']!;
-          imageUser1 = userData['imageUser']!;
-          var alignment =
-              (message['senderId'] == _firebaseAuth.currentUser!.uid)
-                  ? Alignment.centerRight
-                  : Alignment.centerLeft;
-
-          return Container(
-            alignment: alignment,
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              crossAxisAlignment:
-                  (message['senderId'] == _firebaseAuth.currentUser!.uid)
-                      ? CrossAxisAlignment.end
-                      : CrossAxisAlignment.start,
-              mainAxisAlignment: (message['senderId'] == _firebaseAuth.currentUser!.uid)
-                  ? MainAxisAlignment.end
-                  : MainAxisAlignment.start,
-              children: [
-                ChatBubble(message: message['message'],time: message['timestamp'],),
-              ],
-            ),
+                      return Container(
+                        alignment: alignment,
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: (message['senderId'] ==
+                              _firebaseAuth.currentUser!.uid)
+                              ? CrossAxisAlignment.end
+                              : CrossAxisAlignment.start,
+                          mainAxisAlignment: (message['senderId'] ==
+                              _firebaseAuth.currentUser!.uid)
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.start,
+                          children: [
+                            ChatBubble(
+                                message: message['message'],
+                                time: message['timestamp']),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                );
+              } else {
+                return const SizedBox.shrink();
+              }
+            },
           );
         } else {
-          // If no data is available, return a placeholder or handle accordingly
-          return const Text('No user data available');
+          // Stream is not active, show loading or handle accordingly
+          return const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+               CircularProgressIndicator(),
+              Text('กำลังดาวน์โหลด'),
+            ],
+          );
         }
       },
     );
   }
+
+
+
 
   Widget _buildMessageInput() {
     return Container(

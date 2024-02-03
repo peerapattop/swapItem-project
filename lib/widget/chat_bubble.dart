@@ -19,7 +19,7 @@ class ChatBubble extends StatelessWidget {
             style: const TextStyle(fontSize: 16,color: Colors.white),
           ),
         ),
-        Text(time)
+        Text("ส่งเมื่อ "+time)
       ],
     );
   }
