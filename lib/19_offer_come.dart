@@ -49,7 +49,7 @@ class _offerComeState extends State<offerCome> {
 
         if (postsList.isNotEmpty) {
           setState(() {
-            selectedPost = postsList.first;
+            selectedPost = postsList.last;
             _selectedIndex = 0;
           });
         }
@@ -802,6 +802,7 @@ class _offerComeState extends State<offerCome> {
   }
 
   Widget buildCircularNumberButton(int index, Map<dynamic, dynamic> postData) {
+
     return InkWell(
       onTap: () {
         setState(() {
