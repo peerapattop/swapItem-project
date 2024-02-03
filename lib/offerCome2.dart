@@ -27,7 +27,7 @@ class _offerCome2State extends State<offerCome2> {
   List<String> image_post = [];
 
   @override
-  void initState () {
+  void initState() {
     super.initState();
     _user = FirebaseAuth.instance.currentUser!;
     _offerRef = FirebaseDatabase.instance.ref().child('offer');
@@ -39,29 +39,30 @@ class _offerCome2State extends State<offerCome2> {
 
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic> data =
-            Map<dynamic, dynamic>.from(event.snapshot.value as Map);
+        Map<dynamic, dynamic>.from(event.snapshot.value as Map);
 
         // Iterate over all posts and filter by statusPosts
         setState(() {
           data.forEach((key, value) {
             if (value['statusOffers'] == "รอการยืนยัน") {
-              postsList.add(value);
+              postsList.insert(0, value); // Insert at the beginning of the list
             }
           });
         });
 
         if (postsList.isNotEmpty) {
           setState(() {
-            selectedPost = postsList.first;
-            _selectedIndex = -1;
+            selectedPost = postsList.last;
+            _selectedIndex = 0;
           });
-          print("kuy"+selectedPost.toString());
+          print("kuy" + selectedPost.toString());
         }
       }
     }, onError: (error) {
       print("Error fetching data: $error");
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
