@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:swapitem/widget/offer_imageshow.dart';
 //หน้าประวัติการโพสต์
 
 class offerCome2 extends StatefulWidget {
@@ -10,7 +11,6 @@ class offerCome2 extends StatefulWidget {
   const offerCome2({Key? key, required this.postUid}) : super(key: key);
 
   @override
-
   State<offerCome2> createState() => _offerCome2State();
 }
 
@@ -38,102 +38,110 @@ class _offerCome2State extends State<offerCome2> {
     _offerRef
         .orderByChild('post_uid')
         .equalTo(idPost)
-        .limitToLast(1)
         .onValue
         .listen((event) {
+      postsList.clear();
+
       if (event.snapshot.value != null) {
-        Map<dynamic, dynamic> data =
-            Map<dynamic, dynamic>.from(event.snapshot.value as Map);
-        var lastKey = data.keys.last;
-        var lastPayment = Map<dynamic, dynamic>.from(data[lastKey]);
+        Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(event.snapshot.value as Map);
 
-        // Since we are listening to the last payment, we clear the list to ensure
-        // it only contains the latest payment and corresponds to the first button.
-        postsList.clear();
+        // Convert data to a list
+        List<dynamic> dataList = data.values.toList();
 
-        setState(() {
-          postsList.insert(0, lastPayment); // Insert at the start of the list
-          selectedPost = lastPayment;
-          _selectedIndex = 0; // This ensures the first button is selected
-        });
+        // Iterate over the list and filter by statusPosts
+        for (int i = dataList.length - 1; i >= 0; i--) {
+          dynamic value = dataList[i];
+          if (true) {
+            postsList.add(value);
+          }
+        }
+
+        if (postsList.isNotEmpty) {
+          setState(() {
+            selectedPost = postsList.last;
+            _selectedIndex = 0;
+          });
+        }
       }
+    }, onError: (error) {
+      print("Error fetching data: $error");
     });
-    print("popo" + widget.postUid);
-  }
 
+  }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        child: StreamBuilder(
-          stream: _offerRef.orderByChild('post_uid').equalTo(idPost).onValue,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 10),
-                    Text('กำลังดาวน์โหลดข้อมูล....'),
-                  ],
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text('Error loading data'),
-              );
-            } else if (snapshot.hasData &&
-                snapshot.data!.snapshot.value != null) {
-              // Your existing code for handling data
-              postsList.clear();
-              Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
-                  snapshot.data!.snapshot.value as Map);
-              data.forEach((key, value) {
-                postsList.add(Map<dynamic, dynamic>.from(value));
-              });
-
-              return Column(
+      child: StreamBuilder(
+        stream: _offerRef.orderByChild('post_uid').equalTo(idPost).onValue,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: 50,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: postsList.asMap().entries.map((entry) {
-                        int idx = entry.key;
-                        Map<dynamic, dynamic> postData = entry.value;
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: buildCircularNumberButton(idx, postData),
-                        );
-                      }).toList(),
-                    ),
+                  CircularProgressIndicator(),
+                  SizedBox(height: 10),
+                  Text('กำลังดาวน์โหลดข้อมูล....'),
+                ],
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error loading data'),
+            );
+          } else if (snapshot.hasData &&
+              snapshot.data!.snapshot.value != null) {
+            // Your existing code for handling data
+            postsList.clear();
+            Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
+                snapshot.data!.snapshot.value as Map);
+            data.forEach((key, value) {
+              postsList.add(Map<dynamic, dynamic>.from(value));
+            });
+
+            return Column(
+              children: [
+                SizedBox(
+                  height: 50,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: postsList.asMap().entries.map((entry) {
+                      int idx = entry.key;
+                      Map<dynamic, dynamic> postData = entry.value;
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: buildCircularNumberButton(idx, postData),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                Text(selectedPost!['uidUserpost']),
+                Text(selectedPost!['nameitem1']),
+              ],
+            );
+          } else {
+            return Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.network(
+                    'https://cdn-icons-png.flaticon.com/256/11191/11191755.png',
+                    width: 100,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'ไม่มีประวัติการโพสต์',
+                    style: TextStyle(fontSize: 20),
                   ),
                 ],
-              );
-            } else {
-              return Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.network(
-                      'https://cdn-icons-png.flaticon.com/256/11191/11191755.png',
-                      width: 100,
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      'ไม่มีประวัติการโพสต์',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ],
-                ),
-              );
-            }
-          },
-        ),
-      );
-
+              ),
+            );
+          }
+        },
+      ),
+    );
   }
 
   // Widget build(BuildContext context) {
