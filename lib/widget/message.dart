@@ -2,7 +2,7 @@ class Message {
   late String senderId;
   late String receiverId;
   late String message;
-  late String timestamp; // เปลี่ยน dynamic เป็น String
+  late String timestamp;
 
   Message({
     required this.senderId,

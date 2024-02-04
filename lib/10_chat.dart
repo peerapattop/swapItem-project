@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:swapitem/chatUserCard_page.dart';
 import 'package:swapitem/widget/chat_detail.dart';
 import 'package:swapitem/widget/chat_service.dart';
 
@@ -16,6 +15,37 @@ class ChatHomePage extends StatefulWidget {
 class _ChatHomePageState extends State<ChatHomePage> {
   final ChatService _chatService = ChatService();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<Map<String, dynamic>> getLastMessage(String roomId) async {
+    try {
+      final DatabaseEvent event = await FirebaseDatabase.instance
+          .ref()
+          .child('chat_rooms')
+          .child(roomId)
+          .child('messages')
+          .orderByChild('timestamp')
+          .limitToLast(1)
+          .once();
+
+      final DataSnapshot dataSnapshot = event.snapshot;
+
+      if (dataSnapshot.value != null) {
+        var messageMap = dataSnapshot.value as Map?;
+        if (messageMap != null && messageMap.isNotEmpty) {
+          var message = messageMap.values.first['message'];
+          var timestamp = messageMap.values.first['timestamp'];
+          return {'message': message, 'timestamp': timestamp};
+        } else {
+          return {'message': 'No messages', 'timestamp': 0};
+        }
+      } else {
+        return {'message': 'No messages', 'timestamp': 0};
+      }
+    } catch (e) {
+      return {'message': 'Error loading data', 'timestamp': 0};
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +75,16 @@ class _ChatHomePageState extends State<ChatHomePage> {
             return const Text('Error');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text("Loading");
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 15),
+                  Text('กำลังดาวน์โหลด...'),
+                ],
+              ),
+            );
           }
           return ListView(
             children: snapshot.data!
@@ -56,36 +95,56 @@ class _ChatHomePageState extends State<ChatHomePage> {
         });
   }
 
-  Widget _buildUserListItem(
-      Map<String, dynamic> userData, BuildContext context) {
+  Widget _buildUserListItem(Map<String, dynamic> userData,
+      BuildContext context,) {
     if (userData['uid'] != _auth.currentUser?.uid) {
-      return GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChatDetail(
-                receiverUid: userData['uid'],
+      return Card(
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    ChatDetail(
+                      receiverUid: userData['uid'],
+                    ),
               ),
+            );
+          },
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(userData['image_user']),
+              radius: 30,
             ),
-          );
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondary,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 25),
-          padding: const EdgeInsets.all(20),
-          child: Row(
-            children: [
-              const Icon(Icons.person, color: Colors.white),
-              const SizedBox(width: 10),
-              Text(
-                userData['username'],
-                style: const TextStyle(color: Colors.white, fontSize: 20),
-              ),
-            ],
+            title: Text(
+                userData['username'], style: const TextStyle(fontSize: 20)),
+            subtitle: FutureBuilder<Map<String, dynamic>>(
+              future: getLastMessage('Z6panzsinkbIOIFOVKAcvOzl33n2_wRAV2SgXIPUmhGducyDuM0LwVJu1'),
+              // แทนที่ 'YOUR_ROOM_ID' ด้วย ID ของห้องแชท
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Text('Loading...');
+                } else {
+                  var lastMessage = snapshot.data?['message'] ?? 'No messages';
+                  var lastMessageTime = snapshot.data?['timestamp'] ?? 'No timestamp';
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '$lastMessage',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Text(
+                        '$lastMessageTime',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  );
+                }
+              },
+            ),
           ),
         ),
       );
@@ -93,4 +152,19 @@ class _ChatHomePageState extends State<ChatHomePage> {
       return Container();
     }
   }
+
+  String _formatTime(int timestamp) {
+    var dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    var hour = dateTime.hour;
+    var minute = dateTime.minute.toString().padLeft(2, '0');
+    var period = (hour < 12) ? 'น.' : 'น.';
+    if (hour > 12) {
+      hour -= 12;
+    }
+    if (hour == 0) {
+      hour = 12;
+    }
+    return '$hour:$minute $period';
+  }
+
 }
