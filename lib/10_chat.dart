@@ -46,7 +46,6 @@ class _ChatHomePageState extends State<ChatHomePage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,8 +94,8 @@ class _ChatHomePageState extends State<ChatHomePage> {
         });
   }
 
-  Widget _buildUserListItem(Map<String, dynamic> userData,
-      BuildContext context,) {
+  Widget _buildUserListItem(
+      Map<String, dynamic> userData, BuildContext context) {
     if (userData['uid'] != _auth.currentUser?.uid) {
       return Card(
         child: InkWell(
@@ -104,10 +103,9 @@ class _ChatHomePageState extends State<ChatHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    ChatDetail(
-                      receiverUid: userData['uid'],
-                    ),
+                builder: (context) => ChatDetail(
+                  receiverUid: userData['uid'],
+                ),
               ),
             );
           },
@@ -116,17 +114,18 @@ class _ChatHomePageState extends State<ChatHomePage> {
               backgroundImage: NetworkImage(userData['image_user']),
               radius: 30,
             ),
-            title: Text(
-                userData['username'], style: const TextStyle(fontSize: 20)),
+            title: Text(userData['username'],
+                style: const TextStyle(fontSize: 20)),
             subtitle: FutureBuilder<Map<String, dynamic>>(
-              future: getLastMessage('Z6panzsinkbIOIFOVKAcvOzl33n2_wRAV2SgXIPUmhGducyDuM0LwVJu1'),
-              // แทนที่ 'YOUR_ROOM_ID' ด้วย ID ของห้องแชท
+              future: getLastMessage(
+                  'Z6panzsinkbIOIFOVKAcvOzl33n2_wRAV2SgXIPUmhGducyDuM0LwVJu1'),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Text('Loading...');
                 } else {
                   var lastMessage = snapshot.data?['message'] ?? 'No messages';
-                  var lastMessageTime = snapshot.data?['timestamp'] ?? 'No timestamp';
+                  var timestamp = snapshot.data?['timestamp'] ?? 0;
+                  var lastMessageTime = _formatTime(timestamp);
                   return Row(
                     children: [
                       Expanded(
@@ -137,7 +136,7 @@ class _ChatHomePageState extends State<ChatHomePage> {
                         ),
                       ),
                       Text(
-                        '$lastMessageTime',
+                        lastMessageTime,
                         style: TextStyle(fontSize: 16),
                       ),
                     ],
@@ -153,17 +152,24 @@ class _ChatHomePageState extends State<ChatHomePage> {
     }
   }
 
-  String _formatTime(int timestamp) {
-    var dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
+  String _formatTime(String timestamp) {
+    // Remove the " น." suffix (with or without space before "น.")
+    timestamp = timestamp.replaceAll(RegExp(r'\s*น\.$'), '');
+
+    // Parse the timestamp to a DateTime object
+    var dateTime = DateTime.parse(timestamp);
+
     var hour = dateTime.hour;
     var minute = dateTime.minute.toString().padLeft(2, '0');
     var period = (hour < 12) ? 'น.' : 'น.';
+
     if (hour > 12) {
       hour -= 12;
     }
     if (hour == 0) {
       hour = 12;
     }
+
     return '$hour:$minute $period';
   }
 
