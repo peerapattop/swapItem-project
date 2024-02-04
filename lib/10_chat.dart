@@ -137,7 +137,7 @@ class _ChatHomePageState extends State<ChatHomePage> {
                       ),
                       Text(
                         lastMessageTime,
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ],
                   );
@@ -172,5 +172,4 @@ class _ChatHomePageState extends State<ChatHomePage> {
 
     return '$hour:$minute $period';
   }
-
 }
