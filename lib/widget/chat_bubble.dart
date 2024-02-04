@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ChatBubble extends StatelessWidget {
   final String message,time;
@@ -6,6 +7,9 @@ class ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DateTime dateTime = DateTime.parse(time);
+
+    String formattedTime = DateFormat('hh:mm a').format(dateTime.toLocal());
     return Column(
       children: [
         Container(
@@ -19,7 +23,7 @@ class ChatBubble extends StatelessWidget {
             style: const TextStyle(fontSize: 16,color: Colors.white),
           ),
         ),
-        Text("ส่งเมื่อ "+time)
+        Text("ส่งเมื่อ $formattedTime")
       ],
     );
   }
