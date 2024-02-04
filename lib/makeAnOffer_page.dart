@@ -38,6 +38,7 @@ List<String> category = <String>[
 String dropdownValue = category.first;
 
 class _MakeAnOfferState extends State<MakeAnOffer> {
+  String timeclick = '';
   final _nameItem1 = TextEditingController();
   final _brand1 = TextEditingController();
   final _model1 = TextEditingController();
@@ -52,7 +53,9 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
   @override
   void initState() {
     super.initState();
-    dropdownValue = category.first; // Initialize in initState
+    dropdownValue = category.first;
+    fetchTimestampFromFirebase();
+    saveTimestampToFirebase(); //ให้ firsebase เอาเวลามาให้
   }
 
   @override
@@ -252,60 +255,61 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                       ),
                       onPressed: !_isSubmitting
                           ? () async {
-                        bool? confirmed = await _showConfirmationDialog();
-                        if (confirmed ?? false) {
-                          try {
-                            setState(() {
-                              _isSubmitting = true;
-                            });
+                              bool? confirmed = await _showConfirmationDialog();
+                              if (confirmed ?? false) {
+                                try {
+                                  setState(() {
+                                    _isSubmitting = true;
+                                  });
 
-                            // Show a loading dialog
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      CircularProgressIndicator(),
-                                      SizedBox(height: 10),
-                                      Text("กำลังยื่นข้อเสนอ..."),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
+                                  // Show a loading dialog
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            CircularProgressIndicator(),
+                                            SizedBox(height: 10),
+                                            Text("กำลังยื่นข้อเสนอ..."),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
 
-                            String? offerId = await _submitOffer();
+                                  String? offerId = await _submitOffer();
 
-                            if (offerId != null) {
-                              // Close the loading dialog
-                              Navigator.pop(context);
+                                  if (offerId != null) {
+                                    // Close the loading dialog
+                                    Navigator.pop(context);
 
-                              // Navigate to MakeAnOfferSuccess page
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => MakeAnOfferSuccess(
-                                    offer_id: offerId,
-                                    date: date1,
-                                    time: time1,
-                                    offerNumber: generateRandomNumber(),
-                                  ),
-                                ),
-                              );
-                            } else {
-                              // Handle the case where offerId is null before navigation
+                                    // Navigate to MakeAnOfferSuccess page
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            MakeAnOfferSuccess(
+                                          offer_id: offerId,
+                                          date: date1,
+                                          time: time1,
+                                          offerNumber: generateRandomNumber(),
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    // Handle the case where offerId is null before navigation
+                                  }
+                                } catch (e) {
+                                  print(e);
+                                } finally {
+                                  setState(() {
+                                    _isSubmitting = false;
+                                  });
+                                }
+                              }
                             }
-                          } catch (e) {
-                            print(e);
-                          } finally {
-                            setState(() {
-                              _isSubmitting = false;
-                            });
-                          }
-                        }
-                      }
                           : null,
                       child: Text(
                         "ยื่นข้อเสนอ",
@@ -315,7 +319,6 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                         ),
                       ),
                     ),
-
                   ),
                 ),
               ],
@@ -435,6 +438,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
           'model1': _model1.text.trim(),
           'detail1': _detail1.text.trim(),
           'imageUrls': imageUrls,
+          'timestamp': timeclick, //เอาเวลาขึ้น
           'post_uid': postUid,
           "date": now.year.toString() +
               "-" +
@@ -542,6 +546,37 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     return imageUrls;
   }
 
+
+  Future<void> fetchTimestampFromFirebase() async {
+    DatabaseReference timeRef =
+        FirebaseDatabase.instance.reference().child('Time');
+    print('perm');
+    // Listen for changes on the "Time" node in Firebase Realtime Database
+    timeRef.onValue.listen((event) {
+      if (event.snapshot.value != null) {
+        // Convert the server timestamp to a String
+        String timestamp = event.snapshot.value.toString();
+
+        // Store the timestamp in the 'timeclick' variable
+        setState(() {
+          timeclick = timestamp; //บันทึกจาก firebase ในเครื่องเรา
+        });
+
+        // Use the 'timeclick' variable as needed
+        print('Timestamp from Firebase: $timeclick');
+      }
+    });
+  }
+
+  Future<void> saveTimestampToFirebase() async {
+    DatabaseReference reference = FirebaseDatabase.instance.ref().child('Time');
+
+    // Set the data with the server timestamp in the Realtime Database
+    await reference.set({
+      'timestamp': ServerValue.timestamp,
+    });
+  }
+
   Future<bool?> _showConfirmationDialog() async {
     return await showDialog<bool>(
       context: context,
@@ -563,6 +598,8 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               onPressed: () {
+                saveTimestampToFirebase();
+                fetchTimestampFromFirebase();
                 Navigator.of(context).pop(true);
               },
               child: Text(

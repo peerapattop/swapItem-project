@@ -485,7 +485,7 @@ class _ProfileState extends State<Profile> {
                                     onPressed: () {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (context) => offerCome(),
+                                          builder: (context) => offerCome(postUid: _user.uid,),
                                         ),
                                       );
                                     }),
