@@ -244,6 +244,7 @@ class _ProfileState extends State<Profile> {
                 child: StreamBuilder(
                   stream: _userRef.onValue,
                   builder: (context, AsyncSnapshot snapshot) {
+
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
                         child: Column(
@@ -262,6 +263,7 @@ class _ProfileState extends State<Profile> {
                       );
                     } else {
                       DataSnapshot dataSnapshot = snapshot.data!.snapshot;
+                      
                       Map dataUser = dataSnapshot.value as Map;
                       _firstNameController.text =
                           dataUser['firstname'].toString();
@@ -481,7 +483,7 @@ class _ProfileState extends State<Profile> {
                                       Color(0xFFf6a5c1),
                                       Color(0xFF5fadcf)
                                     ],
-                                    text: 'ช้อเสนอที่เข้ามา',
+                                    text: 'ข้อเสนอที่เข้ามา',
                                     onPressed: () {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(

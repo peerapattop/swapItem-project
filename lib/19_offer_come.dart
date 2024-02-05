@@ -30,7 +30,11 @@ class _offerComeState extends State<offerCome> {
     _postRef = FirebaseDatabase.instance.ref().child('postitem');
     selectedPost = null;
 
-    _postRef.orderByChild('uid').equalTo(widget.postUid).onValue.listen((event) {
+    _postRef
+        .orderByChild('uid')
+        .equalTo(widget.postUid)
+        .onValue
+        .listen((event) {
       postsList.clear();
 
       if (event.snapshot.value != null) {
@@ -41,8 +45,7 @@ class _offerComeState extends State<offerCome> {
         setState(() {
           data.forEach((key, value) {
             if (value['statusPosts'] == "รอการยืนยัน") {
-              postsList.insert(
-                  0, value); // Insert at the beginning of the list
+              postsList.insert(0, value); // Insert at the beginning of the list
             }
           });
         });
@@ -104,8 +107,9 @@ class _offerComeState extends State<offerCome> {
               return Center(
                 child: Text('Error loading data'),
               );
-            } else if (snapshot.hasData &&
-                snapshot.data!.snapshot.value != null) {
+            }
+
+            if (selectedPost != null) {
               // Your existing code for handling data
               postsList.clear();
               Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
@@ -362,7 +366,7 @@ class _offerComeState extends State<offerCome> {
                     ),
                     SizedBox(height: 20),
                     Text(
-                      'ไม่มีประวัติการโพสต์',
+                      'ไม่ข้อเสนอที่เข้ามา',
                       style: TextStyle(fontSize: 20),
                     ),
                   ],
