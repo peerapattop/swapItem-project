@@ -46,6 +46,21 @@ class _ChatHomePageState extends State<ChatHomePage> {
     }
   }
 
+  Future<String?> getChatRoomIdByUserIds(String senderUid, String receiverUid) async {
+    String combinedUid = "$senderUid _$receiverUid";
+    DatabaseReference chatRoomsRef = FirebaseDatabase.instance.ref().child('chat_rooms');
+
+    DataSnapshot snapshot = (await chatRoomsRef.orderByChild('messages').equalTo(combinedUid).once()) as DataSnapshot;
+
+    if (snapshot.value != null) {
+      Map<dynamic, dynamic> values = snapshot.value as Map<dynamic, dynamic>;
+      String chatRoomId = values.keys.first;
+      return chatRoomId;
+    }
+
+    return null; // หากไม่พบ Chat Room ID
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,8 +132,7 @@ class _ChatHomePageState extends State<ChatHomePage> {
             title: Text(userData['username'],
                 style: const TextStyle(fontSize: 20)),
             subtitle: FutureBuilder<Map<String, dynamic>>(
-              future: getLastMessage(
-                  'H6MO9knsIlayG8vvCEm6QQC2etW2_Z6panzsinkbIOIFOVKAcvOzl33n2'),
+              future: getLastMessage('H6MO9knsIlayG8vvCEm6QQC2etW2_Z6panzsinkbIOIFOVKAcvOzl33n2'),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Text('Loading...');
