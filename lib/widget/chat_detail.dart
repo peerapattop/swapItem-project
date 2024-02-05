@@ -180,6 +180,8 @@ class _ChatDetailState extends State<ChatDetail> {
                           _firebaseAuth.currentUser!.uid)
                           ? Alignment.centerRight
                           : Alignment.centerLeft;
+                      bool isCurrent = (message['senderId'] ==
+                          _firebaseAuth.currentUser!.uid);
 
                       return Container(
                         alignment: alignment,
@@ -197,6 +199,7 @@ class _ChatDetailState extends State<ChatDetail> {
                             ChatBubble(
                               message: message['message'],
                               time: message['timestamp'],
+                              isCurrentUser : isCurrent,
                             ),
                           ],
                         ),

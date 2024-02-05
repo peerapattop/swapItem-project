@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ChatBubble extends StatelessWidget {
-  final String message,time;
-  const ChatBubble({super.key,required this.message,required this.time});
+  final String message, time;
+  final bool isCurrentUser;
+  const ChatBubble(
+      {super.key,
+      required this.message,
+      required this.time,
+      required this.isCurrentUser});
 
   @override
   Widget build(BuildContext context) {
@@ -11,21 +16,22 @@ class ChatBubble extends StatelessWidget {
 
     String formattedTime = DateFormat('hh:mm a').format(dateTime.toLocal());
     return Column(
+      crossAxisAlignment:
+          isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: Colors.blue,
+            borderRadius: BorderRadius.circular(12),
+            color: isCurrentUser ? Colors.green : Colors.grey.shade500,
           ),
           child: Text(
             message,
-            style: const TextStyle(fontSize: 16,color: Colors.white),
+            style: const TextStyle(fontSize: 16, color: Colors.white),
           ),
         ),
-        Text("ส่งเมื่อ $formattedTime")
+        // Text("ส่งเมื่อ $formattedTime",style: TextStyle(fontSize: 12),)
       ],
     );
   }
 }
-
