@@ -50,7 +50,6 @@ class _ChatDetailState extends State<ChatDetail> {
         });
       }
     });
-
   }
 
   @override
@@ -154,7 +153,20 @@ class _ChatDetailState extends State<ChatDetail> {
             Expanded(
               child: buildChatWidget(),
             ),
-            _buildMessageInput(),
+            FutureBuilder<Widget>(
+              future: _buildMessageInput(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator(); // or a loading indicator
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  return snapshot.data!;
+                } else {
+                  return SizedBox.shrink();
+                }
+              },
+            ),
           ],
         ),
       ),
@@ -259,49 +271,153 @@ class _ChatDetailState extends State<ChatDetail> {
     );
   }
 
-  Widget _buildMessageInput() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      height: 65,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 10,
-            offset: Offset(0, 3),
+  Future<Widget> _buildMessageInput() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    String userStatus = ''; // Default value if not found or not premium
+
+    if (currentUser != null) {
+      String userId = currentUser.uid;
+
+      DatabaseReference userRef =
+          FirebaseDatabase.instance.ref().child('users').child(userId);
+
+      DatabaseEvent event = await userRef.once();
+      DataSnapshot dataSnapshot = event.snapshot;
+
+      if (dataSnapshot.value != null) {
+        var userMap = dataSnapshot.value as Map?;
+        // Assuming 'status_user' is a String field in the database
+        userStatus = userMap?['status_user'] ?? '';
+      }
+    }
+
+    bool userIsPremium = userStatus == 'ผู้ใช้พรีเมี่ยม';
+
+    return Column(
+      children: [
+        _quickMessage(userIsPremium),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          height: 65,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 10,
+                offset: Offset(0, 3),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.text_format, color: Color(0xFF113953), size: 30),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Focus(
-              focusNode: myFocusNode,
-              child: TextFormField(
-                obscureText: false,
-                controller: _messageController,
-                onEditingComplete: () {
-                  sendMessage();
-                  scrollDown();
-                },
-                decoration: const InputDecoration(
-                  hintText: "ส่งข้อความเลย!!",
-                  border: InputBorder.none,
+          child: Row(
+            children: [
+              const Icon(Icons.text_format, color: Color(0xFF113953), size: 30),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Focus(
+                  focusNode: myFocusNode,
+                  child: TextFormField(
+                    obscureText: false,
+                    controller: _messageController,
+                    onEditingComplete: () {
+                      sendMessage();
+                      scrollDown();
+                    },
+                    decoration: const InputDecoration(
+                      hintText: "ส่งข้อความเลย!!",
+                      border: InputBorder.none,
+                    ),
+                  ),
                 ),
               ),
-            ),
+              IconButton(
+                icon: const Icon(Icons.arrow_forward_sharp, size: 40),
+                onPressed: () {
+                  sendMessage();
+                },
+              ),
+            ],
           ),
-          IconButton(
-            icon: const Icon(Icons.arrow_forward_sharp, size: 40),
-            onPressed: () {
-              sendMessage();
-            },
-          ),
-        ],
+        ),
+      ],
+    );
+  }
+
+  void _sendMessageWithQuickReply(String message) {
+    _messageController.text = message;
+    sendMessage();
+  }
+
+  Widget _quickMessage(bool isVip) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        height: 50,
+        child: Row(
+          children: isVip
+              ? [
+                  ElevatedButton(
+                    onPressed: () {
+                      _sendMessageWithQuickReply("สวัสดี");
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepOrange,
+                    ),
+                    child: const Text("สวัสดี",
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      _sendMessageWithQuickReply("ยังมีสิ่งของนี้ไหม?");
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepOrange,
+                    ),
+                    child: const Text(
+                      "ยังมีสิ่งของนี้ไหม",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      _sendMessageWithQuickReply("คุณสะดวกวันที่เท่าไหร่");
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepOrange,
+                    ),
+                    child: const Text("คุณสะดวกวันที่เท่าไหร่",
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      _sendMessageWithQuickReply(
+                          "สภาพการใช้งานเป็นอย่างไรบ้าง");
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepOrange,
+                    ),
+                    child: const Text("สภาพการใช้งาน",
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                ]
+              : [
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                    ),
+                    child: const Text(
+                      "กรุณาสมัคร VIP!! เพื่อใช้แชทด่วน",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+        ),
       ),
     );
   }
