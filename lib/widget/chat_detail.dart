@@ -24,9 +24,24 @@ class _ChatDetailState extends State<ChatDetail> {
   String username1 = '';
   String imageUser1 = '';
 
+  FocusNode myFocusNode = FocusNode();
   @override
   void initState() {
     super.initState();
+    myFocusNode.addListener(() {
+      if (myFocusNode.hasFocus) {
+        Future.delayed(
+          const Duration(milliseconds: 500),
+          () => scrollDown(),
+        );
+      }
+    });
+
+    Future.delayed(
+      const Duration(milliseconds: 500),
+      () => scrollDown(),
+    );
+
     fetchUserData(widget.receiverUid).then((userData) {
       if (userData != null) {
         setState(() {
@@ -35,6 +50,20 @@ class _ChatDetailState extends State<ChatDetail> {
         });
       }
     });
+
+  }
+
+  @override
+  void dispose() {
+    myFocusNode.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  final ScrollController _scrollController = ScrollController();
+  void scrollDown() {
+    _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+        duration: const Duration(seconds: 1), curve: Curves.fastOutSlowIn);
   }
 
   Future<Map<String, String>?> fetchUserData(String userId) async {
@@ -86,11 +115,13 @@ class _ChatDetailState extends State<ChatDetail> {
         );
         print("Message sent successfully: ${_messageController.text}");
         _messageController.clear();
+        scrollDown();
       } catch (error) {
         print("Error sending message: $error");
         // Handle the error as needed
       }
     }
+    scrollDown();
   }
 
   @override
@@ -132,7 +163,7 @@ class _ChatDetailState extends State<ChatDetail> {
 
   Widget buildChatWidget() {
     Future<Map<String, String>?> fetchUserDataFuture =
-    fetchUserData(widget.receiverUid);
+        fetchUserData(widget.receiverUid);
 
     return StreamBuilder(
       stream: _chatService.getMessages(
@@ -147,8 +178,7 @@ class _ChatDetailState extends State<ChatDetail> {
           List<dynamic> messageList = messages.values.toList();
 
           // Sort messages by timestamp in ascending order (oldest first)
-          messageList.sort((a, b) =>
-              a['timestamp'].compareTo(b['timestamp']));
+          messageList.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
 
           return FutureBuilder<Map<String, String>?>(
             future: fetchUserDataFuture,
@@ -157,10 +187,7 @@ class _ChatDetailState extends State<ChatDetail> {
                 return const Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    Text('กำลังโหลด...')
-                  ],
+                  children: [CircularProgressIndicator(), Text('กำลังโหลด...')],
                 );
               } else if (userDataSnapshot.hasError) {
                 return Text('Error: ${userDataSnapshot.error}');
@@ -171,50 +198,51 @@ class _ChatDetailState extends State<ChatDetail> {
 
                 return messageList.isNotEmpty
                     ? ListView.builder(
-                  itemCount: messageList.length,
-                  itemBuilder: (context, index) {
-                    var message = messageList[index];
+                        controller: _scrollController,
+                        itemCount: messageList.length,
+                        itemBuilder: (context, index) {
+                          var message = messageList[index];
 
-                    if (message is Map<dynamic, dynamic>) {
-                      var alignment = (message['senderId'] ==
-                          _firebaseAuth.currentUser!.uid)
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft;
-                      bool isCurrent = (message['senderId'] ==
-                          _firebaseAuth.currentUser!.uid);
+                          if (message is Map<dynamic, dynamic>) {
+                            var alignment = (message['senderId'] ==
+                                    _firebaseAuth.currentUser!.uid)
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft;
+                            bool isCurrent = (message['senderId'] ==
+                                _firebaseAuth.currentUser!.uid);
 
-                      return Container(
-                        alignment: alignment,
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: (message['senderId'] ==
-                              _firebaseAuth.currentUser!.uid)
-                              ? CrossAxisAlignment.end
-                              : CrossAxisAlignment.start,
-                          mainAxisAlignment: (message['senderId'] ==
-                              _firebaseAuth.currentUser!.uid)
-                              ? MainAxisAlignment.end
-                              : MainAxisAlignment.start,
-                          children: [
-                            ChatBubble(
-                              message: message['message'],
-                              time: message['timestamp'],
-                              isCurrentUser : isCurrent,
-                            ),
-                          ],
+                            return Container(
+                              alignment: alignment,
+                              padding: const EdgeInsets.all(12.0),
+                              child: Column(
+                                crossAxisAlignment: (message['senderId'] ==
+                                        _firebaseAuth.currentUser!.uid)
+                                    ? CrossAxisAlignment.end
+                                    : CrossAxisAlignment.start,
+                                mainAxisAlignment: (message['senderId'] ==
+                                        _firebaseAuth.currentUser!.uid)
+                                    ? MainAxisAlignment.end
+                                    : MainAxisAlignment.start,
+                                children: [
+                                  ChatBubble(
+                                    message: message['message'],
+                                    time: message['timestamp'],
+                                    isCurrentUser: isCurrent,
+                                  ),
+                                ],
+                              ),
+                            );
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
+                      )
+                    : const Center(
+                        child: Text(
+                          'เริ่มแชทเลย!!',
+                          style: TextStyle(fontSize: 20),
                         ),
                       );
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  },
-                )
-                    : const Center(
-                  child: Text(
-                    'เริ่มแชทเลย!!',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                );
               } else {
                 return const SizedBox.shrink();
               }
@@ -224,22 +252,16 @@ class _ChatDetailState extends State<ChatDetail> {
           // Stream is not active, show loading or handle accordingly
           return const Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(),
-              Text('กำลังดาวน์โหลด...')
-            ],
+            children: [CircularProgressIndicator(), Text('กำลังดาวน์โหลด...')],
           );
         }
       },
     );
   }
 
-
-
-
   Widget _buildMessageInput() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       height: 65,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -257,11 +279,19 @@ class _ChatDetailState extends State<ChatDetail> {
           const Icon(Icons.text_format, color: Color(0xFF113953), size: 30),
           const SizedBox(width: 10),
           Expanded(
-            child: TextFormField(
-              controller: _messageController,
-              decoration: const InputDecoration(
-                hintText: "ส่งข้อความเลย!!",
-                border: InputBorder.none,
+            child: Focus(
+              focusNode: myFocusNode,
+              child: TextFormField(
+                obscureText: false,
+                controller: _messageController,
+                onEditingComplete: () {
+                  sendMessage();
+                  scrollDown();
+                },
+                decoration: const InputDecoration(
+                  hintText: "ส่งข้อความเลย!!",
+                  border: InputBorder.none,
+                ),
               ),
             ),
           ),
