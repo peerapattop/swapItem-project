@@ -146,6 +146,10 @@ class _ChatDetailState extends State<ChatDetail> {
               (dataSnapshot.value as Map<dynamic, dynamic>?) ?? {};
           List<dynamic> messageList = messages.values.toList();
 
+          // Sort messages by timestamp in ascending order (oldest first)
+          messageList.sort((a, b) =>
+              a['timestamp'].compareTo(b['timestamp']));
+
           return FutureBuilder<Map<String, String>?>(
             future: fetchUserDataFuture,
             builder: (context, userDataSnapshot) {
@@ -191,8 +195,9 @@ class _ChatDetailState extends State<ChatDetail> {
                               : MainAxisAlignment.start,
                           children: [
                             ChatBubble(
-                                message: message['message'],
-                                time: message['timestamp']),
+                              message: message['message'],
+                              time: message['timestamp'],
+                            ),
                           ],
                         ),
                       );
@@ -202,7 +207,10 @@ class _ChatDetailState extends State<ChatDetail> {
                   },
                 )
                     : const Center(
-                  child: Text('เริ่มแชทเลย!!',style: TextStyle(fontSize: 20),),
+                  child: Text(
+                    'เริ่มแชทเลย!!',
+                    style: TextStyle(fontSize: 20),
+                  ),
                 );
               } else {
                 return const SizedBox.shrink();
@@ -211,7 +219,7 @@ class _ChatDetailState extends State<ChatDetail> {
           );
         } else {
           // Stream is not active, show loading or handle accordingly
-          return  const Column(
+          return const Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircularProgressIndicator(),
@@ -222,8 +230,6 @@ class _ChatDetailState extends State<ChatDetail> {
       },
     );
   }
-
-
 
 
 

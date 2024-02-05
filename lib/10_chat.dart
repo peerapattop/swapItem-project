@@ -136,7 +136,7 @@ class _ChatHomePageState extends State<ChatHomePage> {
                         ),
                       ),
                       Text(
-                        lastMessageTime,
+                        '$lastMessageTime',
                         style: const TextStyle(fontSize: 16),
                       ),
                     ],
