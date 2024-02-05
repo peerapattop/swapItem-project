@@ -263,7 +263,7 @@ class _ChatDetailState extends State<ChatDetail> {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.arrow_upward, size: 40),
+            icon: const Icon(Icons.arrow_forward_sharp, size: 40),
             onPressed: () {
               sendMessage();
             },
