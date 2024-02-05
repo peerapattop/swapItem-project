@@ -32,36 +32,34 @@ class _offerCome2State extends State<offerCome2> {
     _offerRef = FirebaseDatabase.instance.ref().child('offer');
     selectedPost = null;
 
-      _offerRef.orderByChild('post_uid').equalTo(widget.postUid).onValue.listen(
-          (event) {
-        postsList.clear();
+    _offerRef.orderByChild('post_uid').equalTo(widget.postUid).onValue.listen(
+        (event) {
+      postsList.clear();
 
-        if (event.snapshot.value != null) {
-          Map<dynamic, dynamic> data =
-              Map<dynamic, dynamic>.from(event.snapshot.value as Map);
+      if (event.snapshot.value != null) {
+        Map<dynamic, dynamic> data =
+            Map<dynamic, dynamic>.from(event.snapshot.value as Map);
 
-          // Iterate over all posts and filter by statusPosts
-          setState(() {
-            data.forEach((key, value) {
-              if (value['statusOffers'] == "รอการยืนยัน") {
-                postsList.insert(
-                    0, value); // Insert at the beginning of the list
-              }
-            });
+        // Iterate over all posts and filter by statusPosts
+        setState(() {
+          data.forEach((key, value) {
+            if (value['statusOffers'] == "รอการยืนยัน") {
+              postsList.insert(0, value); // Insert at the beginning of the list
+            }
           });
+        });
 
-          if (postsList.isNotEmpty) {
-            setState(() {
-              selectedPost = postsList.last;
-              _selectedIndex = 0;
-            });
-            print("kuy" + selectedPost.toString());
-          }
+        if (postsList.isNotEmpty) {
+          setState(() {
+            selectedPost = postsList.last;
+            _selectedIndex = 0;
+          });
+          print("kuy" + selectedPost.toString());
         }
-      }, onError: (error) {
-        print("Error fetching data: $error");
-      });
-
+      }
+    }, onError: (error) {
+      print("Error fetching data: $error");
+    });
   }
 
   @override
@@ -100,24 +98,38 @@ class _offerCome2State extends State<offerCome2> {
               children: [
                 SizedBox(
                   height: 50,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: postsList.reversed
-                        .toList()
-                        .asMap()
-                        .entries
-                        .map((entry) {
-                      int idx = entry.key;
-                      Map<dynamic, dynamic> postData = entry.value;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: buildCircularNumberButton(idx, postData),
-                      );
-                    }).toList(),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: postsList.reversed
+                          .toList()
+                          .asMap()
+                          .entries
+                          .map((entry) {
+                        int idx = entry.key;
+                        Map<dynamic, dynamic> postData = entry.value;
+                        image_post =
+                            List<String>.from(selectedPost!['imageUrls']);
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: buildCircularNumberButton(idx, postData),
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
-                Text(selectedPost!['uidUserpost']),
-                Text(selectedPost!['nameitem1']),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: const Text(
+                    'ขอเสนอที่เข้ามา',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+
+                ImageGalleryWidget(
+                  imageUrls: image_post,
+                ),
               ],
             );
           } else {

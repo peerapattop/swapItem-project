@@ -28,6 +28,7 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
       DateTime dateTime = DateTime.now();
       formattedDateTime = DateFormat.yMd(locale).add_jm().format(dateTime);
     });
+
     return Scaffold(
       body: StreamBuilder(
         stream: _postRef.onValue,

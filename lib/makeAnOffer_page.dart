@@ -548,25 +548,32 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
 
 
   Future<void> fetchTimestampFromFirebase() async {
-    DatabaseReference timeRef =
-        FirebaseDatabase.instance.reference().child('Time');
+    DatabaseReference timeRef = FirebaseDatabase.instance.reference().child('Time');
     print('perm');
+
     // Listen for changes on the "Time" node in Firebase Realtime Database
     timeRef.onValue.listen((event) {
       if (event.snapshot.value != null) {
         // Convert the server timestamp to a String
         String timestamp = event.snapshot.value.toString();
 
-        // Store the timestamp in the 'timeclick' variable
+        // Remove non-numeric characters
+        String numericTimestamp = timestamp.replaceAll(RegExp(r'[^0-9]'), '');
+
+        // Convert to integer
+        int numericValue = int.parse(numericTimestamp);
+
+        // Store the numeric timestamp in the 'timeclick' variable
         setState(() {
-          timeclick = timestamp; //บันทึกจาก firebase ในเครื่องเรา
+          timeclick = numericValue.toString(); // บันทึกจาก Firebase ในเครื่องเรา
         });
 
         // Use the 'timeclick' variable as needed
-        print('Timestamp from Firebase: $timeclick');
+        print('Numeric Timestamp from Firebase: $timeclick');
       }
     });
   }
+
 
   Future<void> saveTimestampToFirebase() async {
     DatabaseReference reference = FirebaseDatabase.instance.ref().child('Time');

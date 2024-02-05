@@ -1,3 +1,5 @@
+import 'package:swapitem/widget/offer_imageshow.dart';
+
 import 'widget/chat_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -211,20 +213,23 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                 children: [
                   SizedBox(
                     height: 50,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: offerList.asMap().entries.map((entry) {
-                        imageOffer =
-                            List<String>.from(selectedOffer!['imageUrls']);
-                        int idx = entry.key;
-                        Map<dynamic, dynamic> offerData = entry.value;
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: buildCircularNumberButton(idx, offerData),
-                        );
-                      }).toList(),
-                    ), 
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: offerList.asMap().entries.map((entry) {
+                          imageOffer = List<String>.from(selectedOffer!['imageUrls']);
+                          int idx = entry.key;
+                          Map<dynamic, dynamic> offerData = entry.value;
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: buildCircularNumberButton(idx, offerData),
+                          );
+                        }).toList(),
+                      ),
+                    ),
                   ),
+
                   Divider(),
                   selectedOffer != null
                       ? Expanded(
@@ -253,11 +258,16 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                       children: [
                                         Column(
                                           children: [
-                                            const Text(
-                                              'ข้อเสนอของคุณ',
-                                              style: TextStyle(fontSize: 20),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: const Text(
+                                                'ข้อเสนอของคุณ',
+                                                style: TextStyle(fontSize: 20),
+                                              ),
                                             ),
-                                            _buildImageSliderOffer(),
+                                            ImageGalleryWidget(
+                                              imageUrls: imagePost,
+                                            ),
                                             Padding(
                                               padding:
                                                   const EdgeInsets.all(8.0),
@@ -418,15 +428,15 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                           height: 50,
                                         ),
                                         const Divider(),
-                                        const Center(
-                                            child: Text(
-                                          'รายละเอียดโพสต์',
-                                          style: TextStyle(fontSize: 20),
-                                        )),
-                                        SizedBox(
-                                          height: 30
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: const Center(
+                                              child: Text(
+                                            'รายละเอียดโพสต์',
+                                            style: TextStyle(fontSize: 20),
+                                          )),
                                         ),
-                                        _buildImageSlider(),
+                                        ImageGalleryWidget(imageUrls: imagePost),
                                         Padding(
                                           padding: const EdgeInsets.all(10.0),
                                           child: Column(
