@@ -46,21 +46,6 @@ class _ChatHomePageState extends State<ChatHomePage> {
     }
   }
 
-  Future<String?> getChatRoomIdByUserIds(String senderUid, String receiverUid) async {
-    String combinedUid = "$senderUid _$receiverUid";
-    DatabaseReference chatRoomsRef = FirebaseDatabase.instance.ref().child('chat_rooms');
-
-    DataSnapshot snapshot = (await chatRoomsRef.orderByChild('messages').equalTo(combinedUid).once()) as DataSnapshot;
-
-    if (snapshot.value != null) {
-      Map<dynamic, dynamic> values = snapshot.value as Map<dynamic, dynamic>;
-      String chatRoomId = values.keys.first;
-      return chatRoomId;
-    }
-
-    return null; // หากไม่พบ Chat Room ID
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
