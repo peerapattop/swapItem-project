@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:swapitem/makeAnOffer_page.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'ProfileScreen.dart';
 
 class ShowDetailAll extends StatefulWidget {
   final String postUid;
@@ -53,15 +57,38 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
           }
         });
       }
+    }).catchError((error) {});
+  }
+
+  void fetchUserData(String uid) {
+    FirebaseDatabase.instance.ref('users/$uid').once().then((databaseEvent) {
+      if (databaseEvent.snapshot.value != null) {
+        Map<String, dynamic> userData =
+            Map<String, dynamic>.from(databaseEvent.snapshot.value as Map);
+        String id = userData['id'];
+
+        // Navigate to ProfileScreen with user data
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProfileScreen(
+              username: postData['username'],
+              id: id,
+              imageUser: postData['imageUser'],
+            ),
+          ),
+        );
+      } else {
+        print('ไม่พบข้อมูลผู้ใช้');
+      }
     }).catchError((error) {
-      // Handle errors here
-      print('An error occurred while loading post data: $error');
+      print('เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้: $error');
     });
   }
 
   Widget _buildImageSlider() {
     return image_post.isEmpty
-        ? SizedBox.shrink()
+        ? const SizedBox.shrink()
         : Column(
             children: [
               SizedBox(
@@ -77,29 +104,27 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                   },
                 ),
               ),
-              SizedBox(
-                  height:
-                      5), // Adjust the size of this SizedBox as needed for spacing
+              const SizedBox(height: 5),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.arrow_back_ios, size: 30),
+                    icon: const Icon(Icons.arrow_back_ios, size: 30),
                     onPressed: () {
                       if (_pageController.page! > 0) {
                         _pageController.previousPage(
-                          duration: Duration(milliseconds: 200),
+                          duration: const Duration(milliseconds: 200),
                           curve: Curves.easeIn,
                         );
                       }
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.arrow_forward_ios, size: 30),
+                    icon: const Icon(Icons.arrow_forward_ios, size: 30),
                     onPressed: () {
                       if (_pageController.page! < image_post.length - 1) {
                         _pageController.nextPage(
-                          duration: Duration(milliseconds: 200),
+                          duration: const Duration(milliseconds: 200),
                           curve: Curves.easeIn,
                         );
                       }
@@ -116,11 +141,11 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("รายละเอียดสินค้า"),
+          title: const Text("รายละเอียดสินค้า"),
           toolbarHeight: 40,
           centerTitle: true,
           flexibleSpace: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/images/image 40.png'),
                 fit: BoxFit.fill,
@@ -134,41 +159,55 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildImageSlider(),
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.numbers,
                           color: Colors.blue,
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
+                        const SizedBox(width: 5),
                         Text(
                           'หมายเลขโพสต์ : ${postData['postNumber']}',
-                          style: TextStyle(fontSize: 20),
+                          style: const TextStyle(fontSize: 20),
                         ),
                       ],
                     ),
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.person,
                           color: Colors.blue,
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "ชื่อผู้โพสต์ :  ${postData['username']}",
-                          style: TextStyle(fontSize: 20),
-                        ),
+                        const SizedBox(width: 5),
+                        GestureDetector(
+                          onTap: () {
+                            fetchUserData(postData['uid']);
+                          },
+                          child: Row(
+                            children: [
+                              const Text(
+                                "ชื่อผู้โพสต์ : ",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                              Text(
+                                postData['username'],
+                                style: const TextStyle(
+                                    color: Colors.purple, fontSize: 20),
+                              ),
+                              const Icon(
+                                Icons.search,
+                                color: Colors.purple,
+                              )
+                            ],
+                          ),
+                        )
                       ],
                     ),
                     Row(
@@ -177,9 +216,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                           Icons.date_range,
                           color: Colors.blue,
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
+                        SizedBox(width: 5),
                         Text(
                           "วันที่ : ${postData['date']}",
                           style: TextStyle(fontSize: 20),
@@ -192,9 +229,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                           Icons.lock_clock,
                           color: Colors.blue,
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
+                        SizedBox(width: 5),
                         Text(
                           "เวลา : ${postData['time']}",
                           style: TextStyle(fontSize: 20),
@@ -207,9 +242,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                           Icons.list,
                           color: Colors.blue,
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
+                        SizedBox(width: 5),
                         Text(
                           "รายละเอียด : ${postData['detail']}",
                           style: TextStyle(fontSize: 20),
@@ -223,7 +256,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                         width: MediaQuery.of(context).size.width -
                             17, // Subtract 17 to account for padding and margin
                         decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 214, 214, 212),
+                          color: const Color.fromARGB(255, 214, 214, 212),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         child: Column(
@@ -256,9 +289,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    const SizedBox(height: 10),
                     Align(
                       alignment: Alignment.center,
                       child: Column(
@@ -268,9 +299,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    const SizedBox(height: 10),
                     Align(
                       alignment: Alignment.center,
                       child: Column(
@@ -280,7 +309,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                             width: MediaQuery.of(context).size.width -
                                 17, // Subtract 17 to account for padding and margin
                             decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 214, 214, 212),
+                              color: const Color.fromARGB(255, 214, 214, 212),
                               borderRadius: BorderRadius.circular(12.0),
                             ),
                             child: Column(
@@ -347,8 +376,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                       child: Center(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 15, 239,
-                                19), // ตั้งค่าสีพื้นหลังเป็นสีเขียว
+                            backgroundColor: Color.fromARGB(255, 15, 239, 19),
                           ),
                           onPressed: () {
                             String send_uid = postData['post_uid'];
@@ -363,7 +391,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                                       uidUserpost: postData['uid'])),
                             );
                           },
-                          child: Text(
+                          child: const Text(
                             "ยื่นข้อเสนอ",
                             style: TextStyle(
                                 color: Colors.white, // ตั้งค่าสีข้อความเป็นสีดำ
