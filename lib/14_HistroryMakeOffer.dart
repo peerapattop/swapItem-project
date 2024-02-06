@@ -1,3 +1,4 @@
+import 'package:swapitem/ProfileScreen.dart';
 import 'package:swapitem/widget/offer_imageshow.dart';
 
 import 'widget/chat_detail.dart';
@@ -62,6 +63,39 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
       }
     });
   }
+
+  void fetchUserData(String uid, BuildContext context) {
+    print('Fetching user data for UID: $uid');
+
+    FirebaseDatabase.instance.ref('users/$uid').once().then((databaseEvent) {
+      if (databaseEvent.snapshot.value != null) {
+        print('User data found for UID: $uid');
+
+        Map<String, dynamic> userData = Map<String, dynamic>.from(databaseEvent.snapshot.value as Map);
+        String id = userData['id'] ?? '';
+        String username = userData['username'] ?? 'Unknown';
+        String imageUser = userData['image_user'] ?? '';
+
+        // Navigate to ProfileScreen with user data
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProfileScreen(
+              username: username,
+              id: id,
+              imageUser: imageUser,
+            ),
+          ),
+        );
+      } else {
+        print('User data not found for UID: $uid');
+      }
+    }).catchError((error) {
+      print('Error fetching user data: $error');
+    });
+  }
+
+
 
   Future<List<Map<dynamic, dynamic>>> fetchPostItemData(String uidPost) async {
     DatabaseEvent postRef = await FirebaseDatabase.instance
@@ -197,7 +231,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
               );
             } else if (snapshot.hasError) {
               // Handle errors
-              return Center(
+              return const Center(
                 child: Text('Error loading data'),
               );
             } else if (snapshot.hasData &&
@@ -218,18 +252,19 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: offerList.asMap().entries.map((entry) {
-                          imageOffer = List<String>.from(selectedOffer!['imageUrls']);
+                          imageOffer =
+                              List<String>.from(selectedOffer!['imageUrls']);
                           int idx = entry.key;
                           Map<dynamic, dynamic> offerData = entry.value;
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
                             child: buildCircularNumberButton(idx, offerData),
                           );
                         }).toList(),
                       ),
                     ),
                   ),
-
                   Divider(),
                   selectedOffer != null
                       ? Expanded(
@@ -253,14 +288,16 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                     longitude = double.tryParse(
                                         postItemData['longitude'].toString());
                                     imageUser = postItemData['imageUser'];
+                                    String username = postItemData['username'];
 
                                     return ListView(
                                       children: [
                                         Column(
                                           children: [
-                                            Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: const Text(
+                                            const Padding(
+                                              padding:
+                                                  EdgeInsets.all(8.0),
+                                              child: Text(
                                                 'ข้อเสนอของคุณ',
                                                 style: TextStyle(fontSize: 20),
                                               ),
@@ -285,10 +322,8 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                           width:
                                                               8), // ระยะห่างระหว่างไอคอนและข้อความ
                                                       Text(
-                                                        "สถานะ : " +
-                                                            selectedOffer![
-                                                                    'statusOffers']
-                                                                .toString(),
+                                                        "สถานะ : ${selectedOffer![
+                                                                    'statusOffers']}",
                                                         style: myTextStyle(),
                                                       ),
                                                     ],
@@ -305,10 +340,8 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                           width:
                                                               8), // ระยะห่างระหว่างไอคอนและข้อความ
                                                       Text(
-                                                        "หมายเลขยื่นข้อเสนอ : " +
-                                                            selectedOffer![
-                                                                    'offerNumber']
-                                                                .toString(),
+                                                        "หมายเลขยื่นข้อเสนอ : ${selectedOffer![
+                                                                    'offerNumber']}",
                                                         style: myTextStyle(),
                                                       ),
                                                     ],
@@ -365,14 +398,16 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                               .size
                                                               .width,
                                                       decoration: BoxDecoration(
-                                                        color: const Color.fromARGB(
+                                                        color: const Color
+                                                            .fromARGB(
                                                             255, 170, 170, 169),
                                                         borderRadius:
                                                             BorderRadius.circular(
                                                                 12.0), // ทำให้ Container โค้งมน
                                                       ),
-                                                      padding: const EdgeInsets.all(
-                                                          16),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              16),
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -428,15 +463,16 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                           height: 50,
                                         ),
                                         const Divider(),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: const Center(
+                                        const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Center(
                                               child: Text(
                                             'รายละเอียดโพสต์',
                                             style: TextStyle(fontSize: 20),
                                           )),
                                         ),
-                                        ImageGalleryWidget(imageUrls: imagePost),
+                                        ImageGalleryWidget(
+                                            imageUrls: imagePost),
                                         Padding(
                                           padding: const EdgeInsets.all(10.0),
                                           child: Column(
@@ -447,14 +483,9 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                     Icons.tag,
                                                     color: Colors.blue,
                                                   ),
-                                                  const SizedBox(
-                                                      width:
-                                                          2), // ระยะห่างระหว่างไอคอนและข้อความ
+                                                  const SizedBox(width: 2),
                                                   Text(
-                                                    "หมายเลขโพสต์ : " +
-                                                        postItemData[
-                                                                'postNumber']
-                                                            .toString(),
+                                                    "หมายเลขโพสต์ : ${postItemData['postNumber']}",
                                                     style: myTextStyle(),
                                                   ),
                                                 ],
@@ -465,32 +496,42 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                     Icons.person,
                                                     color: Colors.blue,
                                                   ),
-                                                  const SizedBox(
-                                                      width:
-                                                          2), // ระยะห่างระหว่างไอคอนและข้อความ
-                                                  Text(
-                                                    "ชื่อผู้ใช้ : " +
-                                                        postItemData['username']
-                                                            .toString(),
-                                                    style: myTextStyle(),
+                                                  const SizedBox(width: 2),
+                                                  GestureDetector(
+                                                    onTap:(){
+                                                      fetchUserData(postItemData['uid'], context);
+                                                    },
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                          "ชื่อผู้ใช้ : ",
+                                                          style: myTextStyle(),
+                                                        ),
+                                                        Text(
+                                                          postItemData[
+                                                              'username'],
+                                                          style:
+                                                              const TextStyle(
+                                                                  color: Colors
+                                                                      .purple,
+                                                                  fontSize: 20),
+                                                        ),
+                                                        const Icon(
+                                                          Icons.search,
+                                                          color: Colors.purple,
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ],
                                               ),
                                               Row(
                                                 children: [
-                                                  Icon(
-                                                    Icons
-                                                        .date_range, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                                    color: Colors
-                                                        .blue, // เปลี่ยนสีไอคอนตามความต้องการ
-                                                  ),
-                                                  const SizedBox(
-                                                      width:
-                                                          2), // ระยะห่างระหว่างไอคอนและข้อความ
+                                                  Icon(Icons.date_range,
+                                                      color: Colors.blue),
+                                                  const SizedBox(width: 2),
                                                   Text(
-                                                    "วันที่ : " +
-                                                        postItemData['date']
-                                                            .toString(),
+                                                    "วันที่ : ${postItemData['date']}",
                                                     style: myTextStyle(),
                                                   ),
                                                 ],
@@ -523,7 +564,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                               bottom: 10),
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              color: Color.fromARGB(
+                                              color: const Color.fromARGB(
                                                   255, 214, 214, 212),
                                               borderRadius:
                                                   BorderRadius.circular(12.0),
@@ -566,17 +607,13 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                     style:
                                                         TextStyle(fontSize: 18),
                                                   ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
+                                                  SizedBox(height: 10),
                                                   Center(
                                                       child: Image.asset(
                                                     'assets/images/swap.png',
                                                     width: 20,
                                                   )),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
+                                                  const SizedBox(height: 10),
                                                   Text(
                                                     'ชื่อสิ่งของ : ' +
                                                         postItemData[
@@ -628,11 +665,11 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                               ),
                                               markers: <Marker>{
                                                 Marker(
-                                                  markerId: MarkerId(
+                                                  markerId: const MarkerId(
                                                       'initialPosition'),
                                                   position: LatLng(
                                                       latitude!, longitude!),
-                                                  infoWindow: InfoWindow(
+                                                  infoWindow: const InfoWindow(
                                                     title: 'Marker Title',
                                                     snippet: 'Marker Snippet',
                                                   ),
@@ -655,11 +692,11 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                          builder: (context) => ChatDetail(
-
-                                                              receiverUid:
-                                                                  postItemData[
-                                                                      'uid'])));
+                                                          builder: (context) =>
+                                                              ChatDetail(
+                                                                  receiverUid:
+                                                                      postItemData[
+                                                                          'uid'])));
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                     padding: EdgeInsets.all(16),
