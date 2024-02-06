@@ -28,6 +28,8 @@ class _ChatHomePageState extends State<ChatHomePage> {
           .once();
 
       final DataSnapshot dataSnapshot = event.snapshot;
+      print('Data Snapshot value: ${dataSnapshot.value}');
+      print('Data Snapshot key: ${dataSnapshot.key}');
 
       if (dataSnapshot.value != null) {
         var messageMap = dataSnapshot.value as Map?;
@@ -97,6 +99,8 @@ class _ChatHomePageState extends State<ChatHomePage> {
   Widget _buildUserListItem(
       Map<String, dynamic> userData, BuildContext context) {
     if (userData['uid'] != _auth.currentUser?.uid) {
+      // String chatroomId = '${_auth.currentUser?.uid}_${userData['uid']}';
+      String chatroomId = 'H6MO9knsIlayG8vvCEm6QQC2etW2_Z6panzsinkbIOIFOVKAcvOzl33n2';
       return Card(
         child: InkWell(
           onTap: () {
@@ -117,29 +121,38 @@ class _ChatHomePageState extends State<ChatHomePage> {
             title: Text(userData['username'],
                 style: const TextStyle(fontSize: 20)),
             subtitle: FutureBuilder<Map<String, dynamic>>(
-              future: getLastMessage('H6MO9knsIlayG8vvCEm6QQC2etW2_Z6panzsinkbIOIFOVKAcvOzl33n2'),
+              future: getLastMessage(chatroomId),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Text('Loading...');
+                  return const Text('กำลังโหลดข้อความ...');
                 } else {
                   var lastMessage = snapshot.data?['message'] ?? 'No messages';
                   var timestamp = snapshot.data?['timestamp'] ?? 0;
                   var lastMessageTime = _formatTime(timestamp);
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          '$lastMessage',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                  //กรณีไม่เคยแชทกับผู้ใช้นั้นๆ
+                  if (lastMessage == 'No messages') {
+                    return const SizedBox();
+                  }
+                  if (lastMessage != 'No messages') {
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            '$lastMessage',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                      ),
-                      Text(
-                        '$lastMessageTime',
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ],
-                  );
+                        Text(
+                          '$lastMessageTime',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    );
+                  } else {
+                    // If there's no message history, return an empty container
+                    return Container();
+                  }
                 }
               },
             ),
@@ -171,4 +184,5 @@ class _ChatHomePageState extends State<ChatHomePage> {
 
     return '$hour:$minute $period';
   }
+
 }
