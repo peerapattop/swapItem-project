@@ -157,7 +157,7 @@ class _ChatDetailState extends State<ChatDetail> {
               future: _buildMessageInput(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator(); // or a loading indicator
+                  return SizedBox.shrink();
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else if (snapshot.hasData) {
@@ -262,9 +262,12 @@ class _ChatDetailState extends State<ChatDetail> {
           );
         } else {
           // Stream is not active, show loading or handle accordingly
-          return const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [CircularProgressIndicator(), Text('กำลังดาวน์โหลด...')],
+          return const Center(
+            child:  Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [CircularProgressIndicator(), Text('กำลังดาวน์โหลด...')],
+            ),
           );
         }
       },
