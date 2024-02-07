@@ -307,8 +307,8 @@ class _ProfileState extends State<Profile> {
                                     ),
                                     const SizedBox(height: 10),
                                     Text(
-                                      'ถึงวันที่ : $remainingTime',
-                                      style: const TextStyle(fontSize: 10),
+                                      'ใช้ได้ถึงวันที่ : ${formatExpiryDate(remainingTime)}',
+                                      style: const TextStyle(fontSize: 18),
                                     ),
                                   ],
                                 )
@@ -662,6 +662,30 @@ class _ProfileState extends State<Profile> {
       Navigator.pop(context); // Close the bottom sheet
     }
   }
+  String formatExpiryDate(String remainingTime) {
+    List<String> parts = remainingTime.split(' '); // แยกส่วนของวัน เดือน ชั่วโมง นาที วินาที
+    int days = int.parse(parts[0]);
+    int hours = int.parse(parts[2]);
+    int minutes = int.parse(parts[4]);
+    int seconds = int.parse(parts[6]);
+
+    Duration duration = Duration(
+      days: days,
+      hours: hours,
+      minutes: minutes,
+      seconds: seconds,
+    );
+
+    // นับถอยหลังจากเวลาปัจจุบัน
+    DateTime now = DateTime.now();
+    DateTime expiryDate = now.add(duration);
+
+    // แปลงเวลาให้อยู่ในรูปแบบ "วันที่หมดอายุ"
+    String formattedExpiryDate = '${expiryDate.day}/${expiryDate.month}/${expiryDate.year}';
+
+    return formattedExpiryDate;
+  }
+
 
 
 
