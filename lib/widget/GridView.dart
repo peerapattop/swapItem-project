@@ -3,15 +3,15 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import '../detailPost_page.dart';
 
-class GridView2 extends StatefulWidget {
+class GridView3 extends StatefulWidget {
   final String? searchString;
-  const GridView2({Key? key, this.searchString}) : super(key: key);
+  const GridView3({Key? key, this.searchString}) : super(key: key);
 
   @override
-  State<GridView2> createState() => _GridView2State();
+  State<GridView3> createState() => _GridView2State();
 }
 
-class _GridView2State extends State<GridView2> {
+class _GridView2State extends State<GridView3> {
   User? user = FirebaseAuth.instance.currentUser;
   final _postRef = FirebaseDatabase.instance.ref().child('postitem');
 
