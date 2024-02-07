@@ -93,7 +93,8 @@ class _ProfileState extends State<Profile> {
               // Display an error message if the update encounters an error
               return AlertDialog(
                 title: Text('เกิดข้อผิดพลาด'),
-                content: Text('เกิดข้อผิดพลาดในการบันทึกข้อมูล: ${snapshot.error}'),
+                content:
+                    Text('เกิดข้อผิดพลาดในการบันทึกข้อมูล: ${snapshot.error}'),
                 actions: [
                   ElevatedButton(
                     onPressed: () {
@@ -109,13 +110,15 @@ class _ProfileState extends State<Profile> {
                 title: Text('บันทึกข้อมูลสำเร็จ'),
                 actions: [
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green
-                    ),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.green),
                     onPressed: () {
                       Navigator.of(context).pop(); // Close the AlertDialog
                     },
-                    child: Text('ตกลง',style: TextStyle(color: Colors.white),),
+                    child: Text(
+                      'ตกลง',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               );
@@ -139,7 +142,8 @@ class _ProfileState extends State<Profile> {
       if (_image != null) {
         final String uid = FirebaseAuth.instance.currentUser!.uid;
         final storageRef = FirebaseStorage.instance.ref().child('images_user');
-        final uploadTask = storageRef.child('$uid.jpg').putFile(io.File(_image!.path));
+        final uploadTask =
+            storageRef.child('$uid.jpg').putFile(io.File(_image!.path));
         final TaskSnapshot taskSnapshot = await uploadTask;
         final imageUrl = await taskSnapshot.ref.getDownloadURL();
         _userRef.child('image_user').set(imageUrl);
@@ -244,7 +248,6 @@ class _ProfileState extends State<Profile> {
                 child: StreamBuilder(
                   stream: _userRef.onValue,
                   builder: (context, AsyncSnapshot snapshot) {
-
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
                         child: Column(
@@ -263,7 +266,7 @@ class _ProfileState extends State<Profile> {
                       );
                     } else {
                       DataSnapshot dataSnapshot = snapshot.data!.snapshot;
-                      
+
                       Map dataUser = dataSnapshot.value as Map;
                       _firstNameController.text =
                           dataUser['firstname'].toString();
@@ -274,6 +277,8 @@ class _ProfileState extends State<Profile> {
                           dataUser['birthday'].toString();
                       statusUser = dataUser['status_user'];
                       remainingTime = dataUser['remainingTime'];
+                      bool isPremiumUser =
+                          (statusUser == 'ผู้ใช้พรีเมี่ยม') ? true : false;
                       return Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
@@ -306,10 +311,13 @@ class _ProfileState extends State<Profile> {
                                       ],
                                     ),
                                     const SizedBox(height: 10),
-                                    Text(
-                                      'ใช้ได้ถึงวันที่ : ${formatExpiryDate(remainingTime)}',
-                                      style: const TextStyle(fontSize: 18),
-                                    ),
+                                    isPremiumUser
+                                        ? Text(
+                                            'ใช้ได้ถึงวันที่ : ${formatExpiryDate(remainingTime)}',
+                                            style:
+                                                const TextStyle(fontSize: 18),
+                                          )
+                                        : SizedBox()
                                   ],
                                 )
                               ],
@@ -348,7 +356,7 @@ class _ProfileState extends State<Profile> {
                                           controller: TextEditingController(
                                               text: dataUser['username']
                                                   .toString()),
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                             label: Text(
                                               "ชื่อผู้ใช้",
                                               style: TextStyle(fontSize: 20),
@@ -487,7 +495,9 @@ class _ProfileState extends State<Profile> {
                                     onPressed: () {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (context) => offerCome(postUid: _user.uid,),
+                                          builder: (context) => offerCome(
+                                            postUid: _user.uid,
+                                          ),
                                         ),
                                       );
                                     }),
@@ -662,8 +672,10 @@ class _ProfileState extends State<Profile> {
       Navigator.pop(context); // Close the bottom sheet
     }
   }
+
   String formatExpiryDate(String remainingTime) {
-    List<String> parts = remainingTime.split(' '); // แยกส่วนของวัน เดือน ชั่วโมง นาที วินาที
+    List<String> parts =
+        remainingTime.split(' '); // แยกส่วนของวัน เดือน ชั่วโมง นาที วินาที
     int days = int.parse(parts[0]);
     int hours = int.parse(parts[2]);
     int minutes = int.parse(parts[4]);
@@ -681,13 +693,11 @@ class _ProfileState extends State<Profile> {
     DateTime expiryDate = now.add(duration);
 
     // แปลงเวลาให้อยู่ในรูปแบบ "วันที่หมดอายุ"
-    String formattedExpiryDate = '${expiryDate.day}/${expiryDate.month}/${expiryDate.year}';
+    String formattedExpiryDate =
+        '${expiryDate.day}/${expiryDate.month}/${expiryDate.year}';
 
     return formattedExpiryDate;
   }
-
-
-
 
   Widget imageProfile() {
     return StreamBuilder(
@@ -707,9 +717,9 @@ class _ProfileState extends State<Profile> {
                 backgroundImage: _image != null
                     ? FileImage(File(_image!.path))
                     : (imageUrl != null
-                    ? NetworkImage(imageUrl)
-                    : AssetImage('assets/icons/Person-icon.jpg')
-                as ImageProvider<Object>),
+                        ? NetworkImage(imageUrl)
+                        : AssetImage('assets/icons/Person-icon.jpg')
+                            as ImageProvider<Object>),
               ),
               Positioned(
                 bottom: 10.0,
