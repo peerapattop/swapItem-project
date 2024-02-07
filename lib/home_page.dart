@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swapitem/registerVip_page.dart';
 import 'package:swapitem/buildPost_page.dart';
+import 'package:swapitem/widget/GridView.dart';
 import 'package:swapitem/widget/grid_view.dart';
 import 'package:swapitem/notification_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
