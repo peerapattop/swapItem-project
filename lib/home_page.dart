@@ -338,7 +338,7 @@ class _HomePageState extends State<HomePage> {
         child: SizedBox(
             height: 600,
             width: double.infinity,
-            child: ShowAllPostItem(searchString: _searchString)),
+            child: GridView2(searchString: _searchString)),
       ),
     );
   }

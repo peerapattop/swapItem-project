@@ -1,40 +1,28 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter/material.dart';
-import 'package:swapitem/detailPost_page.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
+import '../detailPost_page.dart';
 
-class ShowAllPostItem extends StatefulWidget {
+class GridView2 extends StatefulWidget {
   final String? searchString;
-
-  const ShowAllPostItem({Key? key, this.searchString}) : super(key: key);
+  const GridView2({Key? key, this.searchString}) : super(key: key);
 
   @override
-  _ShowAllPostItemState createState() => _ShowAllPostItemState();
+  State<GridView2> createState() => _GridView2State();
 }
 
-class _ShowAllPostItemState extends State<ShowAllPostItem> {
-  TextEditingController searchController = TextEditingController();
-  final _postRef = FirebaseDatabase.instance.ref().child('postitem');
-  String? formattedDateTime;
-  List<dynamic> filteredData = [];
+class _GridView2State extends State<GridView2> {
   User? user = FirebaseAuth.instance.currentUser;
+  final _postRef = FirebaseDatabase.instance.ref().child('postitem');
 
   @override
   Widget build(BuildContext context) {
-    String locale = 'th_TH';
-    initializeDateFormatting(locale).then((_) {
-      DateTime dateTime = DateTime.now();
-      formattedDateTime = DateFormat.yMd(locale).add_jm().format(dateTime);
-    });
-
     return Scaffold(
       body: StreamBuilder(
         stream: _postRef.onValue,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
+            return Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
@@ -42,62 +30,55 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
               child: Text('Error: ${snapshot.error}'),
             );
           } else if (!snapshot.hasData || snapshot.data == null) {
-            return const Center(
+            return Center(
               child: Text("No data available"),
             );
           }
+
           DataSnapshot dataSnapshot = snapshot.data!.snapshot;
           Map<dynamic, dynamic>? dataMap = dataSnapshot.value as Map?;
 
-          if (dataMap == null || dataMap.isEmpty) {
-            return const Center(
-              child: Text("No data available"),
-            );
-          }
-          filteredData = dataMap.values
-              .where((userData) =>
-                  widget.searchString == null ||
-                  widget.searchString!.isEmpty ||
-                  userData['item_name']
-                      .toString()
-                      .toLowerCase()
-                      .contains(widget.searchString!.toLowerCase()) ||
-                  userData['item_name1']
-                      .toString()
-                      .toLowerCase()
-                      .contains(widget.searchString!.toLowerCase()))
-              .toList();
+          if (dataMap != null) {
+            List<dynamic> filteredData = dataMap.values.toList();
 
-          filteredData.sort((a, b) {
-            String statusA =
-                a['status_user'] ?? ''; // Use an empty string if status is null
-            String statusB =
-                b['status_user'] ?? ''; // Use an empty string if status is null
+            filteredData = dataMap.values
+                .where((userData) =>
+            widget.searchString == null ||
+                widget.searchString!.isEmpty ||
+                userData['item_name']
+                    .toString()
+                    .toLowerCase()
+                    .contains(widget.searchString!.toLowerCase()) ||
+                userData['item_name1']
+                    .toString()
+                    .toLowerCase()
+                    .contains(widget.searchString!.toLowerCase()))
+                .toList();
 
-            // Prioritize 'ผู้ใช้พรีเมี่ยม' cards first
-            if (statusA == 'ผู้ใช้พรีเมี่ยม' && statusB != 'ผู้ใช้พรีเมี่ยม') {
-              return -1; // Move card A (VIP) to the front
-            } else if (statusA != 'ผู้ใช้พรีเมี่ยม' &&
-                statusB == 'ผู้ใช้พรีเมี่ยม') {
-              return 1; // Move card B (VIP) to the front
-            } else {
-              return 0; // No priority change for other cases
-            }
-          });
+            filteredData.sort((a, b) {
+              String statusA =
+                  a['status_user'] ?? ''; // Use an empty string if status is null
+              String statusB =
+                  b['status_user'] ?? ''; // Use an empty string if status is null
 
-          return Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.only(
-                left: 3,
-                right: 3,
-                top: 3,
-                bottom: 150,
-              ),
+              // Prioritize 'ผู้ใช้พรีเมี่ยม' cards first
+              if (statusA == 'ผู้ใช้พรีเมี่ยม' && statusB != 'ผู้ใช้พรีเมี่ยม') {
+                return -1; // Move card A (VIP) to the front
+              } else if (statusA != 'ผู้ใช้พรีเมี่ยม' &&
+                  statusB == 'ผู้ใช้พรีเมี่ยม') {
+                return 1; // Move card B (VIP) to the front
+              } else {
+                return 0; // No priority change for other cases
+              }
+            });
+
+            return GridView.builder(
+              padding: const EdgeInsets.all(10),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 3 / 5.5,
-                crossAxisSpacing: 3,
-                mainAxisSpacing: 3,
+                childAspectRatio: 3 / 6.5,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
               ),
               itemCount: filteredData.length,
               itemBuilder: (context, index) {
@@ -112,7 +93,7 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                 bool isVip = userData['status_user'] == 'ผู้ใช้พรีเมี่ยม';
 
                 List<String> imageUrls =
-                    List<String>.from(userData['imageUrls'] ?? []);
+                List<String>.from(userData['imageUrls'] ?? []);
                 return Card(
                   clipBehavior: Clip.antiAlias,
                   shape: RoundedRectangleBorder(
@@ -182,44 +163,49 @@ class _ShowAllPostItemState extends State<ShowAllPostItem> {
                         padding: const EdgeInsets.all(8.0),
                         child: user?.uid != userUid
                             ? ElevatedButton(
-                                onPressed: () {
-                                  Future.delayed(Duration(seconds: 1), () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => ShowDetailAll(
-                                          postUid: post_uid,
-                                          longti: longti,
-                                          lati: lati,
-                                          imageUser: imageUser,
-                                        ),
-                                      ),
-                                    );
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      Theme.of(context).primaryColor,
-                                  foregroundColor: Colors.white,
+                          onPressed: () {
+                            Future.delayed(Duration(seconds: 1), () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ShowDetailAll(
+                                    postUid: post_uid,
+                                    longti: longti,
+                                    lati: lati,
+                                    imageUser: imageUser,
+                                  ),
                                 ),
-                                child: Center(child: Text('รายละเอียด')),
-                              )
+                              );
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                            Theme.of(context).primaryColor,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: Center(child: Text('รายละเอียด')),
+                        )
                             : const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Center(
-                                    child: Text(
-                                  'โพสต์ของฉัน',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                              ),
+                          padding: EdgeInsets.all(8.0),
+                          child: Center(
+                            child: Text(
+                              'โพสต์ของฉัน',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 );
               },
-            ),
-          );
+            );
+          } else {
+            return Center(
+              child: Text("No data available"),
+            );
+          }
         },
       ),
     );
