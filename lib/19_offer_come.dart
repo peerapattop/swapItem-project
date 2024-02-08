@@ -194,11 +194,21 @@ class _offerComeState extends State<offerCome> {
                                               top: 10,
                                               bottom: 10),
                                           child: Container(
-                                            decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                  255, 214, 214, 212),
-                                              borderRadius:
-                                                  BorderRadius.circular(12.0),
+                                            width: 437,
+                                            height: 360,
+                                            decoration: ShapeDecoration(
+                                              gradient: LinearGradient(
+                                                begin: Alignment(0.00, -1.00),
+                                                end: Alignment(0, 1),
+                                                colors: [
+                                                  Color(0x60414DB3),
+                                                  Color(0x008B47C1)
+                                                ],
+                                              ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(19),
+                                              ),
                                             ),
                                             child: Padding(
                                               padding:
@@ -358,7 +368,7 @@ class _offerComeState extends State<offerCome> {
   }
 
   Widget buildCircularNumberButton(int index, Map<dynamic, dynamic> postData) {
-    print("kuy" + selectedPost.toString());
+    print("look at me" + selectedPost.toString());
     return InkWell(
       onTap: () {
         setState(() {

@@ -17,6 +17,7 @@ class offerCome2 extends StatefulWidget {
 class _offerCome2State extends State<offerCome2> {
   late String? idPost;
   late User _user;
+  late DatabaseReference _postRef;
   late DatabaseReference _offerRef;
   List<Map<dynamic, dynamic>> postsList = [];
   int _selectedIndex = -1;
@@ -29,6 +30,7 @@ class _offerCome2State extends State<offerCome2> {
   void initState() {
     super.initState();
     _user = FirebaseAuth.instance.currentUser!;
+    _postRef = FirebaseDatabase.instance.ref().child('postitem/${widget.postUid}');
     _offerRef = FirebaseDatabase.instance.ref().child('offer');
     selectedPost = null;
 
@@ -47,7 +49,7 @@ class _offerCome2State extends State<offerCome2> {
           if (postsList.isNotEmpty) {
             selectedPost = postsList.last;
             _selectedIndex = 0;
-            print("kuy" + selectedPost.toString());
+            print("look at me" + selectedPost.toString());
           }
         });
       }
@@ -123,6 +125,60 @@ class _offerCome2State extends State<offerCome2> {
                 ImageGalleryWidget(
                   imageUrls: image_post,
                 ),
+                Container(
+                  width: 437,
+                  height: 272,
+                  decoration: ShapeDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment(0.00, -1.00),
+                      end: Alignment(0, 1),
+                      colors: [Color(0x9B419FB3), Color(0x008B47C1)],
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(19),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(11.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'ชื่อสิ่งของ : ' + selectedPost!['nameitem1'],
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Text(
+                          'ยี่ห้อ : ' + selectedPost!['brand1'],
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Text(
+                          'รุ่น : ' + selectedPost!['model1'],
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Text(
+                          'รายละเอียด : ' + selectedPost!['detail1'],
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  onPressed: () {
+                    if (selectedPost != null &&
+                        selectedPost!.containsKey('post_uid')) {
+                      showDeleteConfirmation(
+                          context, selectedPost!['post_uid']);
+                    } else {
+                      print('No post selected for deletion.');
+                      // Debug: Print the current state of selectedPost
+                      print('Current selectedPost: $selectedPost');
+                    }
+                  },
+                  icon: Icon(Icons.delete, color: Colors.white),
+                  label: Text('ลบโพสต์', style: TextStyle(color: Colors.white)),
+                ),
               ],
             );
           } else {
@@ -147,6 +203,54 @@ class _offerCome2State extends State<offerCome2> {
         },
       ),
     );
+  }
+
+  void showDeleteConfirmation(BuildContext context, String postKey) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('ยืนยันการเลือกข้อเสนอนี้'),
+          content: Text('ถ้ากดยืนยัน โพสต์นี้จะไม่แสดงอีกต่อไป'),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: Text(
+                'ยกเลิก',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                // ปิดหน้าต่างโดยไม่ลบ
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: Text(
+                'ลบ',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _performUpdate();
+                // ปิดหน้าต่างและลบโพสต์
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _performUpdate() async {
+    try {
+      // Your existing update logic
+      await _postRef.update({
+        'statusPosts': "สำเร็จ",
+      });
+    } catch (error) {
+      throw error; // Rethrow the error to be caught by the FutureBuilder
+    }
   }
 
   Widget buildCircularNumberButton(int index, Map<dynamic, dynamic> postData) {
