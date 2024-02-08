@@ -73,99 +73,102 @@ class _GridView2State extends State<GridView2> {
               }
             });
 
-            return GridView.builder(
-              padding: const EdgeInsets.all(10),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 3 / 6.5,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
-              itemCount: filteredData.length,
-              itemBuilder: (context, index) {
-                dynamic userData = filteredData[index];
-                String itemName = userData['item_name'].toString();
-                String itemName1 = userData['item_name1'].toString();
-                String postUid = userData['post_uid'].toString();
-                String latitude = userData['latitude'].toString();
-                String longitude = userData['longitude'].toString();
-                String imageUser = userData['imageUser'];
-                String userUid = userData['uid'];
-                bool isVip = userData['status_user'] == 'ผู้ใช้พรีเมี่ยม';
+            return SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(10),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 3 / 6.5,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    itemCount: filteredData.length,
+                    itemBuilder: (context, index) {
+                      dynamic userData = filteredData[index];
+                      String itemName = userData['item_name'].toString();
+                      String itemName1 = userData['item_name1'].toString();
+                      String postUid = userData['post_uid'].toString();
+                      String latitude = userData['latitude'].toString();
+                      String longitude = userData['longitude'].toString();
+                      String imageUser = userData['imageUser'];
+                      String userUid = userData['uid'];
+                      bool isVip = userData['status_user'] == 'ผู้ใช้พรีเมี่ยม';
 
-                List<String> imageUrls =
-                    List<String>.from(userData['imageUrls'] ?? []);
-                return Card(
-                  clipBehavior: Clip.antiAlias,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  elevation: 5,
-                  margin: const EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              if (isVip) Image.asset('assets/images/vip.png'),
-                              Text(
-                                itemName,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                      List<String> imageUrls = List<String>.from(userData['imageUrls'] ?? []);
+                      return Card(
+                        clipBehavior: Clip.antiAlias,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 5,
+                        margin: const EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    if (isVip) Image.asset('assets/images/vip.png'),
+                                    Text(
+                                      itemName,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      if (imageUrls.isNotEmpty)
-                        Center(
-                          child: AspectRatio(
-                            aspectRatio: 1 / 1,
-                            child: Image.network(
-                              imageUrls.first,
-                              fit: BoxFit.cover,
                             ),
-                          ),
-                        ),
-                      const SizedBox(height: 10),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Center(
-                          child: Text(
-                            'แลกเปลี่ยนกับ',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Color.fromARGB(255, 22, 22, 22),
+                            if (imageUrls.isNotEmpty)
+                              Center(
+                                child: AspectRatio(
+                                  aspectRatio: 1 / 1,
+                                  child: Image.network(
+                                    imageUrls.first,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            const SizedBox(height: 10),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Center(
+                                child: Text(
+                                  'แลกเปลี่ยนกับ',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Color.fromARGB(255, 22, 22, 22),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 6),
-                        child: Center(
-                          child: Text(
-                            itemName1,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
+                            Padding(
+                              padding: const EdgeInsets.only(top: 6),
+                              child: Center(
+                                child: Text(
+                                  itemName1,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                      const Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: user?.uid != userUid
-                            ? ElevatedButton(
+                            const Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: user?.uid != userUid
+                                  ? ElevatedButton(
                                 onPressed: () {
-                                  Future.delayed(const Duration(seconds: 1),
-                                      () {
+                                  Future.delayed(const Duration(seconds: 1), () {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) => ShowDetailAll(
@@ -179,28 +182,29 @@ class _GridView2State extends State<GridView2> {
                                   });
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      Theme.of(context).primaryColor,
+                                  backgroundColor: Theme.of(context).primaryColor,
                                   foregroundColor: Colors.white,
                                 ),
                                 child: const Center(child: Text('รายละเอียด')),
                               )
-                            : const Padding(
+                                  : const Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Center(
                                   child: Text(
                                     'โพสต์ของฉัน',
                                     style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
+                                        fontSize: 18, fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ),
-                      ),
-                    ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ],
+              ),
             );
           } else {
             return const Center(
