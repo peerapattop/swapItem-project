@@ -62,7 +62,7 @@ class _GridView2State extends State<GridView3> {
                 bool isVip = userData['status_user'] == 'ผู้ใช้พรีเมี่ยม';
 
                 List<String> imageUrls =
-                List<String>.from(userData['imageUrls'] ?? []);
+                    List<String>.from(userData['imageUrls'] ?? []);
                 return Card(
                   clipBehavior: Clip.antiAlias,
                   shape: RoundedRectangleBorder(
@@ -80,7 +80,7 @@ class _GridView2State extends State<GridView3> {
                             children: [
                               if (isVip) Image.asset('assets/images/vip.png'),
                               Text(
-                                'ชื่อสิ่งของ: $item_name',
+                                item_name,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -100,10 +100,8 @@ class _GridView2State extends State<GridView3> {
                             ),
                           ),
                         ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Padding(
+                      const SizedBox(height: 10),
+                      const Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Center(
                           child: Text(
@@ -119,7 +117,7 @@ class _GridView2State extends State<GridView3> {
                         padding: const EdgeInsets.only(top: 6),
                         child: Center(
                           child: Text(
-                            '$item_name1',
+                            item_name1,
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[600],
@@ -132,38 +130,38 @@ class _GridView2State extends State<GridView3> {
                         padding: const EdgeInsets.all(8.0),
                         child: user?.uid != userUid
                             ? ElevatedButton(
-                          onPressed: () {
-                            Future.delayed(Duration(seconds: 1), () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => ShowDetailAll(
-                                    postUid: post_uid,
-                                    longti: longti,
-                                    lati: lati,
-                                    imageUser: imageUser,
+                                onPressed: () {
+                                  Future.delayed(Duration(seconds: 1), () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => ShowDetailAll(
+                                          postUid: post_uid,
+                                          longti: longti,
+                                          lati: lati,
+                                          imageUser: imageUser,
+                                        ),
+                                      ),
+                                    );
+                                  });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  foregroundColor: Colors.white,
+                                ),
+                                child: Center(child: Text('รายละเอียด')),
+                              )
+                            : const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Center(
+                                  child: Text(
+                                    'โพสต์ของฉัน',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                              );
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                            Theme.of(context).primaryColor,
-                            foregroundColor: Colors.white,
-                          ),
-                          child: Center(child: Text('รายละเอียด')),
-                        )
-                            : const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              'โพสต์ของฉัน',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
+                              ),
                       ),
                     ],
                   ),
@@ -171,7 +169,7 @@ class _GridView2State extends State<GridView3> {
               },
             );
           } else {
-            return Center(
+            return const Center(
               child: Text("No data available"),
             );
           }
