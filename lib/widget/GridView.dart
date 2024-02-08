@@ -22,7 +22,7 @@ class _GridView2State extends State<GridView3> {
         stream: _postRef.onValue,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
@@ -30,7 +30,7 @@ class _GridView2State extends State<GridView3> {
               child: Text('Error: ${snapshot.error}'),
             );
           } else if (!snapshot.hasData || snapshot.data == null) {
-            return Center(
+            return const Center(
               child: Text("No data available"),
             );
           }
@@ -43,7 +43,7 @@ class _GridView2State extends State<GridView3> {
 
             return GridView.builder(
               padding: const EdgeInsets.all(10),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 3 / 6.5,
                 crossAxisSpacing: 10,
@@ -81,7 +81,7 @@ class _GridView2State extends State<GridView3> {
                               if (isVip) Image.asset('assets/images/vip.png'),
                               Text(
                                 item_name,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
