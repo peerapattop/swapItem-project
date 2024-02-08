@@ -15,6 +15,7 @@ class offerCome extends StatefulWidget {
 }
 
 class _offerComeState extends State<offerCome> {
+  late User _user;
   double? latitude;
   double? longitude;
   late DatabaseReference _postRef;
@@ -27,12 +28,13 @@ class _offerComeState extends State<offerCome> {
   @override
   void initState() {
     super.initState();
+    _user = FirebaseAuth.instance.currentUser!;
     _postRef = FirebaseDatabase.instance.ref().child('postitem');
     selectedPost = null;
 
     _postRef
         .orderByChild('uid')
-        .equalTo(widget.postUid)
+        .equalTo(_user)
         .onValue
         .listen((event) {
       postsList.clear();
@@ -87,8 +89,8 @@ class _offerComeState extends State<offerCome> {
         ),
         body: StreamBuilder(
           stream: _postRef
-              .orderByChild('statusPosts')
-              .equalTo('รอการยืนยัน')
+              .orderByChild('uid')
+              .equalTo(_user.uid)
               .onValue,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
