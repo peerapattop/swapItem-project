@@ -32,11 +32,7 @@ class _offerComeState extends State<offerCome> {
     _postRef = FirebaseDatabase.instance.ref().child('postitem');
     selectedPost = null;
 
-    _postRef
-        .orderByChild('uid')
-        .equalTo(_user)
-        .onValue
-        .listen((event) {
+    _postRef.orderByChild('uid').equalTo(_user.uid).onValue.listen((event) {
       postsList.clear();
 
       if (event.snapshot.value != null) {
@@ -88,37 +84,19 @@ class _offerComeState extends State<offerCome> {
           ),
         ),
         body: StreamBuilder(
-          stream: _postRef
-              .orderByChild('uid')
-              .equalTo(_user.uid)
-              .onValue,
+          stream: _postRef.orderByChild('uid').equalTo(_user.uid).onValue,
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 10),
-                    Text('กำลังดาวน์โหลดข้อมูล....'),
-                  ],
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text('Error loading data'),
-              );
-            }
-
-            if (selectedPost != null) {
-              // Your existing code for handling data
-              postsList.clear();
+            if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
               Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
                   snapshot.data!.snapshot.value as Map);
-              data.forEach((key, value) {
-                postsList.add(Map<dynamic, dynamic>.from(value));
-              });
 
+              // Filter posts by status 'รอการยืนยัน'
+              List<Map<dynamic, dynamic>> filteredPosts = [];
+              data.forEach((key, value) {
+                if (value['statusPosts'] == "รอการยืนยัน") {
+                  filteredPosts.add(Map<dynamic, dynamic>.from(value));
+                }
+              });
               return Column(
                 children: [
                   SizedBox(
@@ -137,7 +115,8 @@ class _offerComeState extends State<offerCome> {
                           longitude = double.tryParse(
                               selectedPost!['longitude'].toString());
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
                             child: buildCircularNumberButton(idx, postData),
                           );
                         }).toList(),
