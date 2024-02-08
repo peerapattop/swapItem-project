@@ -102,13 +102,13 @@ class _GridView2State extends State<GridView3> {
                         ),
                       const SizedBox(height: 10),
                       const Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        padding:  EdgeInsets.symmetric(horizontal: 8.0),
                         child: Center(
                           child: Text(
                             'แลกเปลี่ยนกับ',
                             style: TextStyle(
                               fontSize: 14,
-                              color: const Color.fromARGB(255, 22, 22, 22),
+                              color:  Color.fromARGB(255, 22, 22, 22),
                             ),
                           ),
                         ),
