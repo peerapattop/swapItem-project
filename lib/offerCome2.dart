@@ -32,30 +32,24 @@ class _offerCome2State extends State<offerCome2> {
     _offerRef = FirebaseDatabase.instance.ref().child('offer');
     selectedPost = null;
 
-    _offerRef.orderByChild('post_uid').equalTo(widget.postUid).onValue.listen(
+    _offerRef.orderByChild('uidUserpost').equalTo(_user.uid).onValue.listen(
         (event) {
-      postsList.clear();
-
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic> data =
             Map<dynamic, dynamic>.from(event.snapshot.value as Map);
 
-        // Iterate over all posts and filter by statusPosts
         setState(() {
+          postsList.clear(); // Clearing here if new data is coming
           data.forEach((key, value) {
-            if (value['statusOffers'] == "รอการยืนยัน") {
-              postsList.insert(0, value); // Insert at the beginning of the list
-            }
+            postsList.add(Map<dynamic, dynamic>.from(value));
           });
-        });
 
-        if (postsList.isNotEmpty) {
-          setState(() {
+          if (postsList.isNotEmpty) {
             selectedPost = postsList.last;
             _selectedIndex = 0;
-          });
-          print("kuy" + selectedPost.toString());
-        }
+            print("kuy" + selectedPost.toString());
+          }
+        });
       }
     }, onError: (error) {
       print("Error fetching data: $error");
@@ -86,10 +80,10 @@ class _offerCome2State extends State<offerCome2> {
             );
           } else if (snapshot.hasData &&
               snapshot.data!.snapshot.value != null) {
-            // Your existing code for handling data
-            postsList.clear();
+            // Your existing code for handling data without clearing postsList
             Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
                 snapshot.data!.snapshot.value as Map);
+            postsList.clear(); // Clearing here if new data is coming
             data.forEach((key, value) {
               postsList.add(Map<dynamic, dynamic>.from(value));
             });
@@ -126,7 +120,6 @@ class _offerCome2State extends State<offerCome2> {
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
-
                 ImageGalleryWidget(
                   imageUrls: image_post,
                 ),

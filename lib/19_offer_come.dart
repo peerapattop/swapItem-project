@@ -47,7 +47,8 @@ class _offerComeState extends State<offerCome> {
 
         if (postsList.isNotEmpty) {
           setState(() {
-            selectedPost = postsList.last;
+            selectedPost = postsList.first;
+            _selectedIndex = 0;
           });
         }
       }
