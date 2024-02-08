@@ -17,7 +17,6 @@ class offerCome2 extends StatefulWidget {
 class _offerCome2State extends State<offerCome2> {
   late String? idPost;
   late User _user;
-  late DatabaseReference _postRef;
   late DatabaseReference _offerRef;
   List<Map<dynamic, dynamic>> postsList = [];
   int _selectedIndex = -1;
@@ -30,7 +29,6 @@ class _offerCome2State extends State<offerCome2> {
   void initState() {
     super.initState();
     _user = FirebaseAuth.instance.currentUser!;
-    _postRef = FirebaseDatabase.instance.ref().child('postitem/${widget.postUid}');
     _offerRef = FirebaseDatabase.instance.ref().child('offer');
     selectedPost = null;
 
@@ -68,11 +66,8 @@ class _offerCome2State extends State<offerCome2> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 10),
-                  Text('กำลังดาวน์โหลดข้อมูล....'),
+
                 ],
               ),
             );
@@ -244,6 +239,11 @@ class _offerCome2State extends State<offerCome2> {
 
   Future<void> _performUpdate() async {
     try {
+      late DatabaseReference _postRef;
+      _postRef = FirebaseDatabase.instance
+          .ref()
+          .child('posts')
+          .child(selectedPost!['post_uid']);
       // Your existing update logic
       await _postRef.update({
         'statusPosts': "สำเร็จ",
