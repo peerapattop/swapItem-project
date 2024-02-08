@@ -39,30 +39,20 @@ class _offerComeState extends State<offerCome> {
         Map<dynamic, dynamic> data =
             Map<dynamic, dynamic>.from(event.snapshot.value as Map);
 
-        // Iterate over all posts and filter by statusPosts
-        setState(() {
-          data.forEach((key, value) {
-            if (value['statusPosts'] == "รอการยืนยัน") {
-              postsList.insert(0, value); // Insert at the beginning of the list
-            }
-          });
+        data.forEach((key, value) {
+          if (value['statusPosts'] == "รอการยืนยัน") {
+            postsList.insert(0, value);
+          }
         });
 
         if (postsList.isNotEmpty) {
           setState(() {
             selectedPost = postsList.last;
-            _selectedIndex = 0;
           });
         }
       }
     }).onError((error) {
       print("Error fetching data: $error");
-    });
-  }
-
-  void selectPayment(Map<dynamic, dynamic> postData) {
-    setState(() {
-      selectedPost = postData; // Update selectedPost with the chosen data
     });
   }
 
@@ -90,7 +80,6 @@ class _offerComeState extends State<offerCome> {
               Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
                   snapshot.data!.snapshot.value as Map);
 
-              // Filter posts by status 'รอการยืนยัน'
               List<Map<dynamic, dynamic>> filteredPosts = [];
               data.forEach((key, value) {
                 if (value['statusPosts'] == "รอการยืนยัน") {
@@ -182,7 +171,7 @@ class _offerComeState extends State<offerCome> {
                                         ),
                                         Row(
                                           children: [
-                                            Icon(
+                                            const Icon(
                                               Icons
                                                   .punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
                                               color: Colors
@@ -196,9 +185,7 @@ class _offerComeState extends State<offerCome> {
                                             ),
                                           ],
                                         ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
+                                        const SizedBox(height: 10),
                                         Padding(
                                           padding: const EdgeInsets.only(
                                               left: 2,
@@ -207,7 +194,7 @@ class _offerComeState extends State<offerCome> {
                                               bottom: 10),
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              color: Color.fromARGB(
+                                              color: const Color.fromARGB(
                                                   255, 214, 214, 212),
                                               borderRadius:
                                                   BorderRadius.circular(12.0),
@@ -310,11 +297,11 @@ class _offerComeState extends State<offerCome> {
                                             ),
                                             markers: <Marker>{
                                               Marker(
-                                                markerId:
-                                                    MarkerId('initialPosition'),
+                                                markerId: const MarkerId(
+                                                    'initialPosition'),
                                                 position: LatLng(
                                                     latitude!, longitude!),
-                                                infoWindow: InfoWindow(
+                                                infoWindow: const InfoWindow(
                                                   title: 'Marker Title',
                                                   snippet: 'Marker Snippet',
                                                 ),
@@ -322,10 +309,10 @@ class _offerComeState extends State<offerCome> {
                                             },
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 10,
                                         ),
-                                        Divider(),
+                                        const Divider(),
                                         offerCome2(
                                             postUid: selectedPost!['post_uid']),
                                       ],
@@ -336,7 +323,7 @@ class _offerComeState extends State<offerCome> {
                             ],
                           ),
                         )
-                      : Column(
+                      : const Column(
                           children: [
                             CircularProgressIndicator(),
                             Text('กำลังโหลด..'),
@@ -354,8 +341,8 @@ class _offerComeState extends State<offerCome> {
                       'https://cdn-icons-png.flaticon.com/256/11191/11191755.png',
                       width: 100,
                     ),
-                    SizedBox(height: 20),
-                    Text(
+                    const SizedBox(height: 20),
+                    const Text(
                       'ไม่ข้อเสนอที่เข้ามา',
                       style: TextStyle(fontSize: 20),
                     ),
