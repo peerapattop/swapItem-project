@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:swapitem/widget/chat_detail.dart';
 import 'package:swapitem/widget/offer_imageshow.dart';
 //หน้าประวัติการโพสต์
 
@@ -17,20 +20,23 @@ class _HistoryPostState extends State<HistoryPost> {
   late User _user;
   double? latitude;
   double? longitude;
-  late DatabaseReference _postRef;
+  late DatabaseReference _postRef, offerRef;
   List<Map<dynamic, dynamic>> postsList = [];
   int _selectedIndex = -1;
   Map<dynamic, dynamic>? selectedPost;
   late GoogleMapController mapController;
   int? mySlideindex;
   List<String> image_post = [];
+  List<String> imageOffer = [];
   late String offerConfirm;
+  late bool checkPost;
 
   @override
   void initState() {
     super.initState();
     _user = FirebaseAuth.instance.currentUser!;
     _postRef = FirebaseDatabase.instance.ref().child('postitem');
+    offerRef = FirebaseDatabase.instance.ref().child('offer');
     selectedPost = null;
 
     _postRef
@@ -178,6 +184,9 @@ class _HistoryPostState extends State<HistoryPost> {
                               selectedPost!['latitude'].toString());
                           longitude = double.tryParse(
                               selectedPost!['longitude'].toString());
+                          checkPost = selectedPost!['statusPosts'] == 'สำเร็จ'
+                              ? true
+                              : false;
                           return Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 4.0),
@@ -295,8 +304,8 @@ class _HistoryPostState extends State<HistoryPost> {
                                                   Text(
                                                     'รายละเอียด : ' +
                                                         selectedPost!['detail'],
-                                                    style:
-                                                        const TextStyle(fontSize: 18),
+                                                    style: const TextStyle(
+                                                        fontSize: 18),
                                                   ),
                                                   const SizedBox(height: 10),
                                                   Center(
@@ -362,33 +371,41 @@ class _HistoryPostState extends State<HistoryPost> {
                                           ),
                                         ),
                                         const SizedBox(height: 10),
-                                        ElevatedButton.icon(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.red),
-                                          onPressed: () {
-                                            if (selectedPost != null &&
-                                                selectedPost!
-                                                    .containsKey('post_uid')) {
-                                              showDeleteConfirmation(context,
-                                                  selectedPost!['post_uid']);
-                                            } else {
-                                              print(
-                                                  'No post selected for deletion.');
-                                              // Debug: Print the current state of selectedPost
-                                              print(
-                                                  'Current selectedPost: $selectedPost');
-                                            }
-                                          },
-                                          icon: const Icon(Icons.delete,
-                                              color: Colors.white),
-                                          label: const Text('ลบโพสต์',
-                                              style: TextStyle(
-                                                  color: Colors.white)),
-                                        ),
+                                        checkPost
+                                            ? SizedBox()
+                                            : ElevatedButton.icon(
+                                                style: ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        Colors.red),
+                                                onPressed: () {
+                                                  if (selectedPost != null &&
+                                                      selectedPost!.containsKey(
+                                                          'post_uid')) {
+                                                    showDeleteConfirmation(
+                                                        context,
+                                                        selectedPost![
+                                                            'post_uid']);
+                                                  } else {
+                                                    print(
+                                                        'No post selected for deletion.');
+                                                    // Debug: Print the current state of selectedPost
+                                                    print(
+                                                        'Current selectedPost: $selectedPost');
+                                                  }
+                                                },
+                                                icon: const Icon(Icons.delete,
+                                                    color: Colors.white),
+                                                label: const Text('ลบโพสต์',
+                                                    style: TextStyle(
+                                                        color: Colors.white)),
+                                              ),
                                         const Divider(),
-                                        ///ข้อเสนอที่เลือก
-                                        const Text('ข้อเสนอที่เลือก',style: TextStyle(fontSize: 19)),
-                                        // Text(selectedPost!['user_id_confirm']),
+                                        const Padding(
+                                          padding: EdgeInsets.all(10.0),
+                                          child: Text('ข้อเสนอที่เลือก',
+                                              style: TextStyle(fontSize: 19)),
+                                        ),
+                                        offerCome(),
                                       ],
                                     ),
                                   )
@@ -427,6 +444,176 @@ class _HistoryPostState extends State<HistoryPost> {
           },
         ),
       ),
+    );
+  }
+
+  Widget offerCome() {
+    return StreamBuilder(
+      stream: offerRef
+          .orderByChild('offer_uid')
+          .equalTo(selectedPost!['user_id_confirm'])
+          .onValue,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
+          // Extract data from the snapshot
+          Map<dynamic, dynamic> data =
+              Map<dynamic, dynamic>.from(snapshot.data!.snapshot.value as Map);
+
+          // Initialize variables outside the loop
+          String offerNumber = '';
+          String date = '';
+          String time = '';
+          String username = '';
+          List<Widget> offerWidgets = [];
+          String itemname = '';
+          String type1 = '';
+          String brand1 = '';
+          String model1 = '';
+          String detail1 = '';
+          String uid = '';
+
+          data.forEach((key, value) {
+            username = value['username'];
+            offerNumber = value['offerNumber'].toString();
+            date = value['date'].toString();
+            time = value['time'].toString();
+            itemname = value['nameitem1'].toString();
+            type1 = value['type1'].toString();
+            brand1 = value['brand1'].toString();
+            model1 = value['model1'].toString();
+            detail1 = value['detail1'].toString();
+            imageOffer = List<String>.from(value['imageUrls']);
+            uid = value['uid'].toString();
+          });
+
+          return Column(
+            children: [
+              ImageGalleryWidget(
+                imageUrls: imageOffer,
+              ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.tag,
+                    color: Colors.blue,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    "หมายเลขการยื่นข้อเสนอ: $offerNumber",
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.person,
+                    color: Colors.blue,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    "ชื่อผู้ใช้ : $username",
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.date_range,
+                    color: Colors.blue,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    "วันที่ : ${convertDateFormat(date)}",
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                    color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                  ),
+                  Text(
+                    " เวลา : $time น.",
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 2, right: 2, top: 10, bottom: 10),
+                child: Container(
+                  width: 500,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 214, 214, 212),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(11.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "ชื่อสิ่งของ : $itemname",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Text(
+                          'หมวดหมู่ : $type1',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Text(
+                          'ยี่ห้อ : $brand1',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Text(
+                          'รุ่น : $model1',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Text(
+                          'รายละเอียด : $detail1',
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 50,
+                width: double
+                    .infinity, // Make the button expand to the full width available
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatDetail(
+                          receiverUid: uid,
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'แชท',
+                    style: TextStyle(color: Colors.white, fontSize: 19),
+                  ),
+                ),
+              ),
+              ...offerWidgets, // Spread the list of offerWidgets here
+            ],
+          );
+        } else {
+          return Text('ไม่พบข้อมูลที่ตรงกับเงื่อนไข');
+        }
+      },
     );
   }
 
