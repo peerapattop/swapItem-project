@@ -344,44 +344,35 @@ class _HistoryPostState extends State<HistoryPost> {
                                                     'รายละเอียด : ' +
                                                         selectedPost!['detail'],
                                                     style:
-                                                        TextStyle(fontSize: 18),
+                                                        const TextStyle(fontSize: 18),
                                                   ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
+                                                  const SizedBox(height: 10),
                                                   Center(
                                                       child: Image.asset(
                                                     'assets/images/swap.png',
                                                     width: 20,
                                                   )),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
+                                                  const SizedBox(height: 10),
                                                   Text(
-                                                    'ชื่อสิ่งของ : ' +
-                                                        selectedPost![
-                                                            'item_name1'],
+                                                    'ชื่อสิ่งของ : ${selectedPost!['item_name1']}',
                                                     style:
                                                         TextStyle(fontSize: 18),
                                                   ),
                                                   Text(
                                                     'ยี่ห้อ : ' +
                                                         selectedPost!['brand1'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
+                                                    style: const TextStyle(
+                                                        fontSize: 18),
                                                   ),
                                                   Text(
-                                                    'รุ่น : ' +
-                                                        selectedPost!['model1'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
+                                                    'รุ่น : ${selectedPost!['model1']}',
+                                                    style: const TextStyle(
+                                                        fontSize: 18),
                                                   ),
                                                   Text(
-                                                    'รายละเอียด : ' +
-                                                        selectedPost![
-                                                            'details1'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
+                                                    'รายละเอียด : ${selectedPost!['details1']}',
+                                                    style: const TextStyle(
+                                                        fontSize: 18),
                                                   ),
                                                 ],
                                               ),
@@ -406,11 +397,11 @@ class _HistoryPostState extends State<HistoryPost> {
                                             ),
                                             markers: <Marker>{
                                               Marker(
-                                                markerId:
-                                                    MarkerId('initialPosition'),
+                                                markerId: const MarkerId(
+                                                    'initialPosition'),
                                                 position: LatLng(
                                                     latitude!, longitude!),
-                                                infoWindow: InfoWindow(
+                                                infoWindow: const InfoWindow(
                                                   title: 'Marker Title',
                                                   snippet: 'Marker Snippet',
                                                 ),
@@ -443,6 +434,9 @@ class _HistoryPostState extends State<HistoryPost> {
                                                   color: Colors.white)),
                                         ),
                                         const Divider(),
+                                        ///ข้อเสนอที่เลือก
+                                        const Text('ข้อเสนอที่เลือก',style: TextStyle(fontSize: 19)),
+
                                       ],
                                     ),
                                   )
@@ -495,7 +489,7 @@ class _HistoryPostState extends State<HistoryPost> {
       child: Container(
         width: 40,
         height: 40,
-        margin: EdgeInsets.all(4),
+        margin: const EdgeInsets.all(4),
         decoration: BoxDecoration(
           color: _selectedIndex == index
               ? Colors.blue
@@ -509,7 +503,7 @@ class _HistoryPostState extends State<HistoryPost> {
         child: Center(
           child: Text(
             '${index + 1}',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.white,
