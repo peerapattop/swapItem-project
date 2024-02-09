@@ -26,7 +26,11 @@ class ChatService extends ChangeNotifier {
     });
   }
 
-
+  String getRoomId(String senderUid, String receiverUid) {
+    List<String> ids = [senderUid, receiverUid];
+    ids.sort();
+    return ids.join("_");
+  }
 
   Future<void> sendMessage(String receiverId, String message) async {
     final String currentUserId = _firebaseAuth.currentUser!.uid;
