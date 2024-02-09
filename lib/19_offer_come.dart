@@ -341,65 +341,6 @@ class _offerComeState extends State<offerCome> {
                                           offerCome2(
                                               postUid:
                                                   selectedPost!['post_uid']),
-                                          Row(
-                                            children: [
-                                              const SizedBox(width: 7),
-                                              ElevatedButton.icon(
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.blue,
-                                                  minimumSize:
-                                                      const Size(120, 45),
-                                                ),
-                                                icon: const Icon(
-                                                  Icons.chat,
-                                                  color: Colors.white,
-                                                  size: 30,
-                                                ),
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              ChatDetail(
-                                                                  receiverUid:
-                                                                      selectedPost?[
-                                                                          'uid'])));
-                                                },
-                                                label: const Text(
-                                                  'แชท',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 150),
-                                              ElevatedButton.icon(
-                                                style: ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        Colors.green),
-                                                onPressed: () {
-                                                  if (selectedPost != null &&
-                                                      selectedPost!.containsKey(
-                                                          'post_uid')) {
-                                                    showUpdateConfirmation(
-                                                        context,
-                                                        selectedPost![
-                                                            'post_uid']);
-                                                  } else {
-                                                    print(
-                                                        'No post selected for deletion.');
-                                                    // Debug: Print the current state of selectedPost
-                                                    print(
-                                                        'Current selectedPost: $selectedPost');
-                                                  }
-                                                },
-                                                icon: const Icon(Icons.check,
-                                                    color: Colors.white),
-                                                label: const Text('ยืนยัน',
-                                                    style: TextStyle(
-                                                        color: Colors.white)),
-                                              ),
-                                            ],
-                                          ),
                                         ],
                                       ),
                                     ),
@@ -459,55 +400,6 @@ class _offerComeState extends State<offerCome> {
         ),
       ),
     );
-  }
-
-  void showUpdateConfirmation(BuildContext context, String postKey) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('ยืนยันการเลือกข้อเสนอนี้'),
-          content: const Text('ถ้ากดยืนยัน โพสต์นี้จะไม่แสดงอีกต่อไป'),
-          actions: <Widget>[
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: const Text(
-                'ยกเลิก',
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                // ปิดหน้าต่างโดยไม่ลบ
-              },
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              child: const Text(
-                'ยืนยัน',
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _performUpdate();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _performUpdate() async {
-    try {
-      DatabaseReference _postRef = FirebaseDatabase.instance
-          .ref()
-          .child('postitem')
-          .child(selectedPost!['post_uid']);
-
-      await _postRef.update({
-        'statusPosts': "สำเร็จ",
-      });
-    } catch (e) {}
   }
 
   Widget buildCircularNumberButton(int index, Map<dynamic, dynamic> postData) {
