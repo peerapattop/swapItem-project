@@ -86,7 +86,7 @@ class _offerCome2State extends State<offerCome2> {
               postsList.add(Map<dynamic, dynamic>.from(value));
             });
             return Column(
-              children: [
+              children: [//888
                 SizedBox(
                   height: 50,
                   child: SingleChildScrollView(
