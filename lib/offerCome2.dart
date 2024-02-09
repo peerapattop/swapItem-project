@@ -275,10 +275,7 @@ class _offerCome2State extends State<offerCome2> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.network(
-                    'https://cdn-icons-png.flaticon.com/256/11191/11191755.png',
-                    width: 100,
-                  ),
+                  Image.asset('assets/icons/vision.png', width: 200),
                   const SizedBox(height: 20),
                   const Text(
                     'ยังไม่มีข้อเสนอที่เข้ามาให้แลกเปลี่ยน',
