@@ -74,7 +74,7 @@ class _offerCome2State extends State<offerCome2> {
             );
           } else if (snapshot.hasError) {
             return const Center(
-              child: Text('Error loading data'),
+              child: Text('Error loading data'),//888
             );
           } else if (snapshot.hasData &&
               snapshot.data!.snapshot.value != null) {
@@ -85,9 +85,8 @@ class _offerCome2State extends State<offerCome2> {
             data.forEach((key, value) {
               postsList.add(Map<dynamic, dynamic>.from(value));
             });
-
             return Column(
-              children: [
+              children: [//888
                 SizedBox(
                   height: 50,
                   child: SingleChildScrollView(
