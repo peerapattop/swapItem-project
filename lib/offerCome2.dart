@@ -194,18 +194,25 @@ class _offerCome2State extends State<offerCome2> {
                   children: [
                     const SizedBox(width: 7),
                     ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue),
-                        icon: const Icon(
-                          Icons.chat,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {},
-                        label: const Text(
-                          'แชท',
-                          style: TextStyle(color: Colors.white),
-                        )),
-                    const SizedBox(width: 170),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        // เพิ่มความกว้างและความสูงของปุ่ม
+                        minimumSize: Size(120, 45),
+                      ),
+                      icon: const Icon(
+                        Icons.chat,
+                        color: Colors.white,
+                        // ปรับขนาดไอคอน
+                        size: 30,
+                      ),
+                      onPressed: () {},
+                      label: const Text(
+                        'แชท',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+
+                    const SizedBox(width: 150),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green),
