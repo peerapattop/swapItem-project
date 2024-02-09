@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:swapitem/widget/offer_imageshow.dart';
 //หน้าประวัติการโพสต์
 
 class HistoryPost extends StatefulWidget {
@@ -196,58 +197,8 @@ class _HistoryPostState extends State<HistoryPost> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
                                       children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 8, top: 8, right: 8),
-                                          child: SizedBox(
-                                            height: 300,
-                                            child: PageView.builder(
-                                              onPageChanged: (value) {
-                                                setState(() {
-                                                  mySlideindex = value;
-                                                });
-                                              },
-                                              itemCount: image_post.length,
-                                              itemBuilder: (context, index) {
-                                                return Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      20.0),
-                                                  child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
-                                                      child: Image.network(
-                                                        image_post[index],
-                                                        fit: BoxFit.cover,
-                                                      )),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 60,
-                                          width: 300,
-                                          child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: image_post.length,
-                                            itemBuilder: (context, index) {
-                                              return Padding(
-                                                padding:
-                                                    const EdgeInsets.all(20.0),
-                                                child: Container(
-                                                  height: 20,
-                                                  width: 20,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: index == mySlideindex
-                                                        ? Colors.deepPurple
-                                                        : Colors.grey,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          ),
+                                        ImageGalleryWidget(
+                                          imageUrls: image_post,
                                         ),
                                         Row(
                                           children: [
