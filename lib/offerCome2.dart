@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:swapitem/ProfileScreen.dart';
+import 'package:swapitem/widget/chat_detail.dart';
 import 'package:swapitem/widget/offer_imageshow.dart';
 //หน้าประวัติการโพสต์
 
@@ -132,10 +134,37 @@ class _offerCome2State extends State<offerCome2> {
                 ),
                 Row(
                   children: [
+                    const Icon(Icons.person, color: Colors.blue),
+                    const SizedBox(width: 5),
+                    const Text(
+                      'ชื่อผู้ใช้ : ',
+                      style: TextStyle(fontSize: 19),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        fetchUserData(selectedPost?['uid'], context);
+                      },
+                      child: Row(
+                        children: [
+                          Text(
+                            selectedPost?['username'],
+                            style: const TextStyle(
+                                fontSize: 19, color: Colors.purple),
+                          ),
+                          const Icon(
+                            Icons.search,
+                            color: Colors.purple,
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
                     const Icon(Icons.date_range, color: Colors.blue),
                     const SizedBox(width: 5),
                     Text(
-
                       'วันที่ : ${convertDateFormat(selectedPost?['date'])}',
                       style: const TextStyle(fontSize: 19),
                     )
@@ -146,7 +175,7 @@ class _offerCome2State extends State<offerCome2> {
                     const Icon(Icons.lock_clock, color: Colors.blue),
                     const SizedBox(width: 5),
                     Text(
-                      'วันที่ : ${selectedPost?['time']} น.',
+                      'เวลา : ${selectedPost?['time']} น.',
                       style: const TextStyle(fontSize: 19),
                     )
                   ],
@@ -196,22 +225,25 @@ class _offerCome2State extends State<offerCome2> {
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
-                        // เพิ่มความกว้างและความสูงของปุ่ม
-                        minimumSize: Size(120, 45),
+                        minimumSize: const Size(120, 45),
                       ),
                       icon: const Icon(
                         Icons.chat,
                         color: Colors.white,
-                        // ปรับขนาดไอคอน
                         size: 30,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChatDetail(
+                                    receiverUid: selectedPost?['uid'])));
+                      },
                       label: const Text(
                         'แชท',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-
                     const SizedBox(width: 150),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
@@ -346,12 +378,42 @@ class _offerCome2State extends State<offerCome2> {
       ),
     );
   }
+
   String convertDateFormat(String inputDate) {
     DateTime dateTime = DateTime.parse(inputDate); // แปลงสตริงเป็นวันที่
     DateFormat formatter =
-    DateFormat('d MMMM y', 'th'); // สร้างรูปแบบการแสดงวันที่ตามที่ต้องการ
+        DateFormat('d MMMM y', 'th'); // สร้างรูปแบบการแสดงวันที่ตามที่ต้องการ
     String formattedDate =
-    formatter.format(dateTime); // แปลงวันที่เป็นรูปแบบที่ต้องการ
+        formatter.format(dateTime); // แปลงวันที่เป็นรูปแบบที่ต้องการ
     return formattedDate; // คืนค่าวันที่ที่ถูกแปลง
+  }
+
+  void fetchUserData(String uid, BuildContext context) {
+
+    FirebaseDatabase.instance.ref('users/$uid').once().then((databaseEvent) {
+      if (databaseEvent.snapshot.value != null) {
+
+        Map<String, dynamic> userData =
+            Map<String, dynamic>.from(databaseEvent.snapshot.value as Map);
+        String id = userData['id'] ?? '';
+        String imageUser = userData['image_user'];
+        String username = userData['username'];
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProfileScreen(
+              username: username,
+              id: id,
+              imageUser: imageUser,
+            ),
+          ),
+        );
+      } else {
+        print('User data not found for UID: $uid');
+      }
+    }).catchError((error) {
+      print('Error fetching user data: $error');
+    });
   }
 }
