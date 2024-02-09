@@ -24,6 +24,7 @@ class _HistoryPostState extends State<HistoryPost> {
   late GoogleMapController mapController;
   int? mySlideindex;
   List<String> image_post = [];
+  late String offerConfirm;
 
   @override
   void initState() {
@@ -387,7 +388,7 @@ class _HistoryPostState extends State<HistoryPost> {
                                         const Divider(),
                                         ///ข้อเสนอที่เลือก
                                         const Text('ข้อเสนอที่เลือก',style: TextStyle(fontSize: 19)),
-
+                                        // Text(selectedPost!['user_id_confirm']),
                                       ],
                                     ),
                                   )
