@@ -35,18 +35,23 @@ class _ChatHomePageState extends State<ChatHomePage> {
         var messageMap = dataSnapshot.value as Map?;
         if (messageMap != null && messageMap.isNotEmpty) {
           var message = messageMap.values.first['message'];
-          var timestamp = messageMap.values.first['timestamp'];
-          return {'message': message, 'timestamp': timestamp};
+          var timestampInt = messageMap.values.first['timestamp'];
+          var timestampString = timestampInt.toString();
+          return {'message': message, 'timestamp': timestampString};
         } else {
-          return {'message': 'No messages', 'timestamp': 0};
+          // Handle case where there are no messages
+          return {'message': 'No messages', 'timestamp': DateTime.now().toString()};
         }
       } else {
-        return {'message': 'No messages', 'timestamp': 0};
+        // Handle case where there are no messages
+        return {'message': 'No messages', 'timestamp': DateTime.now().toString()};
       }
     } catch (e) {
-      return {'message': 'Error loading data', 'timestamp': 0};
+      // Handle error case
+      return {'message': 'Error loading data', 'timestamp': DateTime.now().toString()};
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +93,7 @@ class _ChatHomePageState extends State<ChatHomePage> {
             );
           }
           return ListView(
-            children: snapshot.data!
+            children: (snapshot.data as List<Map<String, dynamic>>)
                 .map<Widget>(
                     (userData) => _buildUserListItem(userData, context))
                 .toList(),
@@ -96,73 +101,68 @@ class _ChatHomePageState extends State<ChatHomePage> {
         });
   }
 
-  Widget _buildUserListItem(
-      Map<String, dynamic> userData, BuildContext context) {
+  Widget _buildUserListItem(Map<String, dynamic> userData, BuildContext context) {
     if (userData['uid'] != _auth.currentUser?.uid) {
-      // String chatroomId = '${_auth.currentUser?.uid}_${userData['uid']}';
-      String chatroomId = 'H6MO9knsIlayG8vvCEm6QQC2etW2_Z6panzsinkbIOIFOVKAcvOzl33n2';
-      return Card(
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ChatDetail(
-                  receiverUid: userData['uid'],
+      String chatroomId = _chatService.getRoomId(_auth.currentUser!.uid, userData['uid']);
+
+      return FutureBuilder<Map<String, dynamic>>(
+        future: getLastMessage(chatroomId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SizedBox();
+          } else {
+            var lastMessage = snapshot.data?['message'] ?? 'No messages';
+            var timestamp = snapshot.data?['timestamp'] ?? 0;
+            var lastMessageTime = _formatTime(timestamp);
+
+            if (lastMessage == 'No messages' || lastMessage == null) {
+              return SizedBox(); // ไม่แสดงชื่อผู้ใช้เมื่อไม่มีข้อความ
+            }
+
+            return Card(
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatDetail(
+                        receiverUid: userData['uid'],
+                      ),
+                    ),
+                  );
+                },
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(userData['image_user']),
+                    radius: 30,
+                  ),
+                  title: Text(userData['username'], style: const TextStyle(fontSize: 20)),
+                  subtitle: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '$lastMessage',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Text(
+                        lastMessageTime,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
-          },
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(userData['image_user']),
-              radius: 30,
-            ),
-            title: Text(userData['username'],
-                style: const TextStyle(fontSize: 20)),
-            subtitle: FutureBuilder<Map<String, dynamic>>(
-              future: getLastMessage(chatroomId),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Text('กำลังโหลดข้อความ...');
-                } else {
-                  var lastMessage = snapshot.data?['message'] ?? 'No messages';
-                  var timestamp = snapshot.data?['timestamp'] ?? 0;
-                  var lastMessageTime = _formatTime(timestamp);
-                  //กรณีไม่เคยแชทกับผู้ใช้นั้นๆ
-                  if (lastMessage == 'No messages') {
-                    return const SizedBox();
-                  }
-                  if (lastMessage != 'No messages') {
-                    return Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            '$lastMessage',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Text(
-                          '$lastMessageTime',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    );
-                  } else {
-                    // If there's no message history, return an empty container
-                    return Container();
-                  }
-                }
-              },
-            ),
-          ),
-        ),
+          }
+        },
       );
     } else {
       return Container();
     }
   }
+
 
   String _formatTime(String timestamp) {
     // Remove the " น." suffix (with or without space before "น.")
@@ -184,5 +184,4 @@ class _ChatHomePageState extends State<ChatHomePage> {
 
     return '$hour:$minute $period';
   }
-
 }
