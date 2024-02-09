@@ -41,19 +41,18 @@ class _GridView2State extends State<GridView2> {
           if (dataMap != null) {
             List<dynamic> filteredData = dataMap.values.toList();
 
-            filteredData = dataMap.values
-                .where((userData) =>
-                    widget.searchString == null ||
-                    widget.searchString!.isEmpty ||
-                    userData['item_name']
-                        .toString()
-                        .toLowerCase()
-                        .contains(widget.searchString!.toLowerCase()) ||
-                    userData['item_name1']
-                        .toString()
-                        .toLowerCase()
-                        .contains(widget.searchString!.toLowerCase()))
-                .toList();
+            filteredData = dataMap.values.where((userData) {
+              // เช็คว่าสถานะของโพสต์เป็น 'สำเร็จ' หรือไม่
+              bool isPostSuccess = userData['statusPosts'] == 'สำเร็จ';
+
+              // กรองข้อมูลออกไปหากโพสต์เป็น 'สำเร็จ'
+              return !isPostSuccess &&
+                  (widget.searchString == null ||
+                      widget.searchString!.isEmpty ||
+                      userData['item_name'].toString().toLowerCase().contains(widget.searchString!.toLowerCase()) ||
+                      userData['item_name1'].toString().toLowerCase().contains(widget.searchString!.toLowerCase()));
+            }).toList();
+
 
             filteredData.sort((a, b) {
               String statusA = a['status_user'] ??
