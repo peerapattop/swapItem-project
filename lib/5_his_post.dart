@@ -7,6 +7,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:swapitem/widget/chat_detail.dart';
 import 'package:swapitem/widget/offer_imageshow.dart';
+
+import 'ProfileScreen.dart';
 //หน้าประวัติการโพสต์
 
 class HistoryPost extends StatefulWidget {
@@ -400,11 +402,6 @@ class _HistoryPostState extends State<HistoryPost> {
                                                         color: Colors.white)),
                                               ),
                                         const Divider(),
-                                        const Padding(
-                                          padding: EdgeInsets.all(10.0),
-                                          child: Text('ข้อเสนอที่เลือก',
-                                              style: TextStyle(fontSize: 19)),
-                                        ),
                                         offerCome(),
                                       ],
                                     ),
@@ -514,10 +511,32 @@ class _HistoryPostState extends State<HistoryPost> {
                     Icons.person,
                     color: Colors.blue,
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    "ชื่อผู้ใช้ : $username",
-                    style: const TextStyle(fontSize: 18),
+                  SizedBox(width: 8),
+                  Row(
+                    children: [
+                      const Text(
+                        "ชื่อผู้ใช้ :",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          fetchUserData(uid, context);
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              username,
+                              style: const TextStyle(
+                                  fontSize: 18, color: Colors.purple),
+                            ),
+                            const Icon(
+                              Icons.search,
+                              color: Colors.purple,
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -611,10 +630,53 @@ class _HistoryPostState extends State<HistoryPost> {
             ],
           );
         } else {
-          return Text('ไม่พบข้อมูลที่ตรงกับเงื่อนไข');
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 70),
+              Image.network(
+                  'https://cdn-icons-png.flaticon.com/128/4310/4310056.png'),
+              const SizedBox(height: 20),
+              const Text('โปรดเลือกข้อเสนอที่ต้องการ',
+                  style: TextStyle(fontSize: 20)),
+            ],
+          );
         }
       },
     );
+  }
+
+  void fetchUserData(String uid, BuildContext context) {
+    print('Fetching user data for UID: $uid');
+
+    FirebaseDatabase.instance.ref('users/$uid').once().then((databaseEvent) {
+      if (databaseEvent.snapshot.value != null) {
+        print('User data found for UID: $uid');
+
+        Map<String, dynamic> userData =
+            Map<String, dynamic>.from(databaseEvent.snapshot.value as Map);
+        String id = userData['id'] ?? '';
+        String username = userData['username'] ?? 'Unknown';
+        String imageUser = userData['image_user'] ?? '';
+
+        // Navigate to ProfileScreen with user data
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProfileScreen(
+              username: username,
+              id: id,
+              imageUser: imageUser,
+            ),
+          ),
+        );
+      } else {
+        print('User data not found for UID: $uid');
+      }
+    }).catchError((error) {
+      print('Error fetching user data: $error');
+    });
   }
 
   Widget buildCircularNumberButton(int index, Map<dynamic, dynamic> postData) {
