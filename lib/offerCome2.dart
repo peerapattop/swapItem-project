@@ -23,7 +23,7 @@ class _offerCome2State extends State<offerCome2> {
   late DatabaseReference _offerRef;
   List<Map<dynamic, dynamic>> postsList = [];
   int _selectedIndex = -1;
-  Map<dynamic, dynamic>? selectedPost;
+  Map<dynamic, dynamic>? selectedOffer;
   late GoogleMapController mapController;
   int? mySlideindex;
   List<String> image_post = [];
@@ -33,7 +33,7 @@ class _offerCome2State extends State<offerCome2> {
     super.initState();
     _user = FirebaseAuth.instance.currentUser!;
     _offerRef = FirebaseDatabase.instance.ref().child('offer');
-    selectedPost = null;
+    selectedOffer = null;
 
     _offerRef.orderByChild('uidUserpost').equalTo(_user.uid).onValue.listen(
         (event) {
@@ -48,9 +48,9 @@ class _offerCome2State extends State<offerCome2> {
           });
 
           if (postsList.isNotEmpty) {
-            selectedPost = postsList.last;
+            selectedOffer = postsList.last;
             _selectedIndex = 0;
-            print("look at me" + selectedPost.toString());
+            print("look at me" + selectedOffer.toString());
           }
         });
       }
@@ -102,7 +102,7 @@ class _offerCome2State extends State<offerCome2> {
                         int idx = entry.key;
                         Map<dynamic, dynamic> postData = entry.value;
                         image_post =
-                            List<String>.from(selectedPost!['imageUrls']);
+                            List<String>.from(selectedOffer!['imageUrls']);
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4.0),
                           child: buildCircularNumberButton(idx, postData),
@@ -127,7 +127,7 @@ class _offerCome2State extends State<offerCome2> {
                     const Icon(Icons.tag, color: Colors.blue),
                     const SizedBox(width: 5),
                     Text(
-                      'หมายเลขการยื่นข้อเสนอ : ${selectedPost?['offerNumber']}',
+                      'หมายเลขการยื่นข้อเสนอ : ${selectedOffer?['offerNumber']}',
                       style: const TextStyle(fontSize: 19),
                     )
                   ],
@@ -142,12 +142,12 @@ class _offerCome2State extends State<offerCome2> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        fetchUserData(selectedPost?['uid'], context);
+                        fetchUserData(selectedOffer?['uid'], context);
                       },
                       child: Row(
                         children: [
                           Text(
-                            selectedPost?['username'],
+                            selectedOffer?['username'],
                             style: const TextStyle(
                                 fontSize: 19, color: Colors.purple),
                           ),
@@ -165,7 +165,7 @@ class _offerCome2State extends State<offerCome2> {
                     const Icon(Icons.date_range, color: Colors.blue),
                     const SizedBox(width: 5),
                     Text(
-                      'วันที่ : ${convertDateFormat(selectedPost?['date'])}',
+                      'วันที่ : ${convertDateFormat(selectedOffer?['date'])}',
                       style: const TextStyle(fontSize: 19),
                     )
                   ],
@@ -175,7 +175,7 @@ class _offerCome2State extends State<offerCome2> {
                     const Icon(Icons.lock_clock, color: Colors.blue),
                     const SizedBox(width: 5),
                     Text(
-                      'เวลา : ${selectedPost?['time']} น.',
+                      'เวลา : ${selectedOffer?['time']} น.',
                       style: const TextStyle(fontSize: 19),
                     )
                   ],
@@ -200,19 +200,19 @@ class _offerCome2State extends State<offerCome2> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'ชื่อสิ่งของ : ' + selectedPost!['nameitem1'],
+                          'ชื่อสิ่งของ : ' + selectedOffer!['nameitem1'],
                           style: const TextStyle(fontSize: 19),
                         ),
                         Text(
-                          'ยี่ห้อ : ' + selectedPost!['brand1'],
+                          'ยี่ห้อ : ' + selectedOffer!['brand1'],
                           style: const TextStyle(fontSize: 19),
                         ),
                         Text(
-                          'รุ่น : ' + selectedPost!['model1'],
+                          'รุ่น : ' + selectedOffer!['model1'],
                           style: const TextStyle(fontSize: 19),
                         ),
                         Text(
-                          'รายละเอียด : ' + selectedPost!['detail1'],
+                          'รายละเอียด : ' + selectedOffer!['detail1'],
                           style: const TextStyle(fontSize: 19),
                         ),
                       ],
@@ -225,8 +225,7 @@ class _offerCome2State extends State<offerCome2> {
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
-                        minimumSize:
-                        const Size(120, 45),
+                        minimumSize: const Size(120, 45),
                       ),
                       icon: const Icon(
                         Icons.chat,
@@ -237,51 +236,38 @@ class _offerCome2State extends State<offerCome2> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                ChatDetail(
-                                  receiverUid:
-                                  selectedPost?[
-                                  'uid'],
-                                ),
+                            builder: (context) => ChatDetail(
+                              receiverUid: selectedOffer?['uid'],
+                            ),
                           ),
                         );
                       },
                       label: const Text(
                         'แชท',
-                        style: TextStyle(
-                            color: Colors.white),
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                     const SizedBox(width: 150),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                          Colors.green),
+                          backgroundColor: Colors.green),
                       onPressed: () {
-                        if (selectedPost != null &&
-                            selectedPost!.containsKey(
-                                'post_uid')) {
+                        if (selectedOffer != null &&
+                            selectedOffer!.containsKey('post_uid')) {
                           showUpdateConfirmation(
-                              context,
-                              selectedPost![
-                              'post_uid']);
+                              context, selectedOffer!['post_uid']);
                         } else {
-                          print(
-                              'No post selected for deletion.');
+                          print('No post selected for deletion.');
                           // Debug: Print the current state of selectedPost
-                          print(
-                              'Current selectedPost: $selectedPost');
+                          print('Current selectedPost: $selectedOffer');
                         }
                       },
-                      icon: const Icon(Icons.check,
-                          color: Colors.white),
+                      icon: const Icon(Icons.check, color: Colors.white),
                       label: const Text('ยืนยัน',
-                          style: TextStyle(
-                              color: Colors.white)),
+                          style: TextStyle(color: Colors.white)),
                     ),
                   ],
                 ),
-
               ],
             );
           } else {
@@ -313,7 +299,7 @@ class _offerCome2State extends State<offerCome2> {
       onTap: () {
         setState(() {
           _selectedIndex = index; // Update the selected index
-          selectedPost = postData; // Update the selected payment data
+          selectedOffer = postData; // Update the selected payment data
         });
       },
       child: Container(
@@ -379,6 +365,7 @@ class _offerCome2State extends State<offerCome2> {
       print('Error fetching user data: $error');
     });
   }
+
   void showUpdateConfirmation(BuildContext context, String postKey) {
     showDialog(
       context: context,
@@ -406,7 +393,7 @@ class _offerCome2State extends State<offerCome2> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                _performUpdate();
+                _performUpdateOffer();
               },
             ),
           ],
@@ -415,16 +402,23 @@ class _offerCome2State extends State<offerCome2> {
     );
   }
 
-  Future<void> _performUpdate() async {
+  Future<void> _performUpdateOffer() async {
     try {
       DatabaseReference _postRef = FirebaseDatabase.instance
           .ref()
           .child('postitem')
-          .child(selectedPost!['post_uid']);
+          .child(widget.postUid);
 
+      await _postRef.update({
+        'user_id_confirm': selectedOffer?['offer_uid'],
+      });
+
+      // Update statusPosts field to "สำเร็จ" in the same postitem node
       await _postRef.update({
         'statusPosts': "สำเร็จ",
       });
-    } catch (e) {}
+    } catch (e) {
+      // Handle error if necessary
+    }
   }
 }
