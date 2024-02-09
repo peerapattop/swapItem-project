@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:swapitem/offerCome2.dart';
+import 'package:swapitem/widget/chat_detail.dart';
 import 'package:swapitem/widget/offer_imageshow.dart';
 //หน้าประวัติการโพสต์
 
@@ -77,271 +78,364 @@ class _offerComeState extends State<offerCome> {
         body: StreamBuilder(
           stream: _postRef.orderByChild('uid').equalTo(_user.uid).onValue,
           builder: (context, snapshot) {
-            if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasData &&
+                snapshot.data!.snapshot.value != null) {
               Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
                   snapshot.data!.snapshot.value as Map);
 
-              List<Map<dynamic, dynamic>> filteredPosts = [];
+              bool hasPendingPosts = false;
               data.forEach((key, value) {
                 if (value['statusPosts'] == "รอการยืนยัน") {
-                  filteredPosts.add(Map<dynamic, dynamic>.from(value));
+                  hasPendingPosts = true;
                 }
               });
-              return Column(
-                children: [
-                  SizedBox(
-                    height: 50,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: postsList.asMap().entries.map((entry) {
-                          int idx = entry.key;
-                          Map<dynamic, dynamic> postData = entry.value;
-                          image_post =
-                              List<String>.from(selectedPost!['imageUrls']);
-                          latitude = double.tryParse(
-                              selectedPost!['latitude'].toString());
-                          longitude = double.tryParse(
-                              selectedPost!['longitude'].toString());
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 4.0),
-                            child: buildCircularNumberButton(idx, postData),
-                          );
-                        }).toList(),
+
+              if (hasPendingPosts) {
+                // Return content when there are posts with "รอการยืนยัน" status
+                return Column(
+                  children: [
+                    SizedBox(
+                      height: 50,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: postsList.asMap().entries.map((entry) {
+                            int idx = entry.key;
+                            Map<dynamic, dynamic> postData = entry.value;
+                            image_post =
+                                List<String>.from(selectedPost!['imageUrls']);
+                            latitude = double.tryParse(
+                                selectedPost!['latitude'].toString());
+                            longitude = double.tryParse(
+                                selectedPost!['longitude'].toString());
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: buildCircularNumberButton(idx, postData),
+                            );
+                          }).toList(),
+                        ),
                       ),
                     ),
-                  ),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: const Text(
-                      'โพสต์ของคุณ',
-                      style: TextStyle(fontSize: 20),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: const Text(
+                        'โพสต์ของคุณ',
+                        style: TextStyle(fontSize: 20),
+                      ),
                     ),
-                  ),
-                  selectedPost != null
-                      ? Expanded(
-                          child: ListView(
-                            children: [
-                              Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      children: [
-                                        ImageGalleryWidget(
-                                          imageUrls: image_post,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              Icons
-                                                  .tag, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                              color: Colors
-                                                  .blue, // เปลี่ยนสีไอคอนตามความต้องการ
-                                            ),
-                                            SizedBox(
-                                                width:
-                                                    8), // ระยะห่างระหว่างไอคอนและข้อความ
-                                            Text(
-                                              'หมายเลขโพสต์ : ' +
-                                                  selectedPost!['postNumber'],
-                                              style: TextStyle(fontSize: 18),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              Icons
-                                                  .date_range, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                              color: Colors
-                                                  .blue, // เปลี่ยนสีไอคอนตามความต้องการ
-                                            ),
-                                            SizedBox(
-                                                width:
-                                                    8), // ระยะห่างระหว่างไอคอนและข้อความ
-                                            Text(
-                                              'วันที่ : ' +
-                                                  selectedPost!['date'],
-                                              style: TextStyle(fontSize: 18),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            const Icon(
-                                              Icons
-                                                  .punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                              color: Colors
-                                                  .blue, // เปลี่ยนสีไอคอนตามความต้องการ
-                                            ),
-                                            Text(
-                                              " เวลา :" +
-                                                  selectedPost!['time'] +
-                                                  ' น.',
-                                              style: TextStyle(fontSize: 18),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 2,
-                                              right: 15,
-                                              top: 10,
-                                              bottom: 10),
-                                          child: Container(
-                                            width: 437,
-                                            height: 360,
-                                            decoration: ShapeDecoration(
-                                              gradient: LinearGradient(
-                                                begin: Alignment(0.00, -1.00),
-                                                end: Alignment(0, 1),
-                                                colors: [
-                                                  Color(0x60414DB3),
-                                                  Color(0x008B47C1)
-                                                ],
-                                              ),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(19),
-                                              ),
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(11.0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'ชื่อสิ่งของ : ' +
-                                                        selectedPost![
-                                                            'item_name'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'หมวดหมู่ : ' +
-                                                        selectedPost!['type'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'ยี่ห้อ : ' +
-                                                        selectedPost!['brand'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'รุ่น : ' +
-                                                        selectedPost!['model'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'รายละเอียด : ' +
-                                                        selectedPost!['detail'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Center(
-                                                      child: Image.asset(
-                                                    'assets/images/swap.png',
-                                                    width: 20,
-                                                  )),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Text(
-                                                    'ชื่อสิ่งของ : ' +
-                                                        selectedPost![
-                                                            'item_name1'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'ยี่ห้อ : ' +
-                                                        selectedPost!['brand1'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'รุ่น : ' +
-                                                        selectedPost!['model1'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'รายละเอียด : ' +
-                                                        selectedPost![
-                                                            'details1'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
+                    selectedPost != null
+                        ? Expanded(
+                            child: ListView(
+                              children: [
+                                Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        children: [
+                                          ImageGalleryWidget(
+                                            imageUrls: image_post,
                                           ),
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              border: Border.all()),
-                                          height: 300,
-                                          width: 380,
-                                          child: GoogleMap(
-                                            onMapCreated: (GoogleMapController
-                                                controller) {
-                                              mapController = controller;
-                                            },
-                                            initialCameraPosition:
-                                                CameraPosition(
-                                              target:
-                                                  LatLng(latitude!, longitude!),
-                                              zoom: 12.0,
-                                            ),
-                                            markers: <Marker>{
-                                              Marker(
-                                                markerId: const MarkerId(
-                                                    'initialPosition'),
-                                                position: LatLng(
-                                                    latitude!, longitude!),
-                                                infoWindow: const InfoWindow(
-                                                  title: 'Marker Title',
-                                                  snippet: 'Marker Snippet',
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons
+                                                    .tag, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                                                color: Colors
+                                                    .blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                                              ),
+                                              SizedBox(
+                                                  width:
+                                                      8), // ระยะห่างระหว่างไอคอนและข้อความ
+                                              Text(
+                                                'หมายเลขโพสต์ : ' +
+                                                    selectedPost!['postNumber'],
+                                                style: TextStyle(fontSize: 18),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons
+                                                    .date_range, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                                                color: Colors
+                                                    .blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                                              ),
+                                              SizedBox(
+                                                  width:
+                                                      8), // ระยะห่างระหว่างไอคอนและข้อความ
+                                              Text(
+                                                'วันที่ : ' +
+                                                    selectedPost!['date'],
+                                                style: TextStyle(fontSize: 18),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons
+                                                    .punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                                                color: Colors
+                                                    .blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                                              ),
+                                              Text(
+                                                " เวลา :" +
+                                                    selectedPost!['time'] +
+                                                    ' น.',
+                                                style: TextStyle(fontSize: 18),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 2,
+                                                right: 15,
+                                                top: 10,
+                                                bottom: 10),
+                                            child: Container(
+                                              width: 437,
+                                              height: 360,
+                                              decoration: ShapeDecoration(
+                                                gradient: LinearGradient(
+                                                  begin: Alignment(0.00, -1.00),
+                                                  end: Alignment(0, 1),
+                                                  colors: [
+                                                    Color(0x60414DB3),
+                                                    Color(0x008B47C1)
+                                                  ],
+                                                ),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(19),
                                                 ),
                                               ),
-                                            },
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(11.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'ชื่อสิ่งของ : ' +
+                                                          selectedPost![
+                                                              'item_name'],
+                                                      style: TextStyle(
+                                                          fontSize: 18),
+                                                    ),
+                                                    Text(
+                                                      'หมวดหมู่ : ' +
+                                                          selectedPost!['type'],
+                                                      style: TextStyle(
+                                                          fontSize: 18),
+                                                    ),
+                                                    Text(
+                                                      'ยี่ห้อ : ' +
+                                                          selectedPost![
+                                                              'brand'],
+                                                      style: TextStyle(
+                                                          fontSize: 18),
+                                                    ),
+                                                    Text(
+                                                      'รุ่น : ' +
+                                                          selectedPost![
+                                                              'model'],
+                                                      style: TextStyle(
+                                                          fontSize: 18),
+                                                    ),
+                                                    Text(
+                                                      'รายละเอียด : ' +
+                                                          selectedPost![
+                                                              'detail'],
+                                                      style: TextStyle(
+                                                          fontSize: 18),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Center(
+                                                        child: Image.asset(
+                                                      'assets/images/swap.png',
+                                                      width: 20,
+                                                    )),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Text(
+                                                      'ชื่อสิ่งของ : ' +
+                                                          selectedPost![
+                                                              'item_name1'],
+                                                      style: TextStyle(
+                                                          fontSize: 18),
+                                                    ),
+                                                    Text(
+                                                      'ยี่ห้อ : ' +
+                                                          selectedPost![
+                                                              'brand1'],
+                                                      style: TextStyle(
+                                                          fontSize: 18),
+                                                    ),
+                                                    Text(
+                                                      'รุ่น : ' +
+                                                          selectedPost![
+                                                              'model1'],
+                                                      style: TextStyle(
+                                                          fontSize: 18),
+                                                    ),
+                                                    Text(
+                                                      'รายละเอียด : ' +
+                                                          selectedPost![
+                                                              'details1'],
+                                                      style: TextStyle(
+                                                          fontSize: 18),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        const Divider(),
-                                        offerCome2(
-                                            postUid: selectedPost!['post_uid']),
-                                      ],
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                border: Border.all()),
+                                            height: 300,
+                                            width: 380,
+                                            child: GoogleMap(
+                                              onMapCreated: (GoogleMapController
+                                                  controller) {
+                                                mapController = controller;
+                                              },
+                                              initialCameraPosition:
+                                                  CameraPosition(
+                                                target: LatLng(
+                                                    latitude!, longitude!),
+                                                zoom: 12.0,
+                                              ),
+                                              markers: <Marker>{
+                                                Marker(
+                                                  markerId: const MarkerId(
+                                                      'initialPosition'),
+                                                  position: LatLng(
+                                                      latitude!, longitude!),
+                                                  infoWindow: const InfoWindow(
+                                                    title: 'Marker Title',
+                                                    snippet: 'Marker Snippet',
+                                                  ),
+                                                ),
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          const Divider(),
+                                          offerCome2(
+                                              postUid:
+                                                  selectedPost!['post_uid']),
+                                          Row(
+                                            children: [
+                                              const SizedBox(width: 7),
+                                              ElevatedButton.icon(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.blue,
+                                                  minimumSize:
+                                                      const Size(120, 45),
+                                                ),
+                                                icon: const Icon(
+                                                  Icons.chat,
+                                                  color: Colors.white,
+                                                  size: 30,
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ChatDetail(
+                                                                  receiverUid:
+                                                                      selectedPost?[
+                                                                          'uid'])));
+                                                },
+                                                label: const Text(
+                                                  'แชท',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 150),
+                                              ElevatedButton.icon(
+                                                style: ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        Colors.green),
+                                                onPressed: () {
+                                                  if (selectedPost != null &&
+                                                      selectedPost!.containsKey(
+                                                          'post_uid')) {
+                                                    showUpdateConfirmation(
+                                                        context,
+                                                        selectedPost![
+                                                            'post_uid']);
+                                                  } else {
+                                                    print(
+                                                        'No post selected for deletion.');
+                                                    // Debug: Print the current state of selectedPost
+                                                    print(
+                                                        'Current selectedPost: $selectedPost');
+                                                  }
+                                                },
+                                                icon: const Icon(Icons.check,
+                                                    color: Colors.white),
+                                                label: const Text('ยืนยัน',
+                                                    style: TextStyle(
+                                                        color: Colors.white)),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )
+                        : const Column(
+                            children: [
+                              CircularProgressIndicator(),
+                              Text('กำลังโหลด..'),
                             ],
                           ),
-                        )
-                      : const Column(
-                          children: [
-                            CircularProgressIndicator(),
-                            Text('กำลังโหลด..'),
-                          ],
-                        ),
-                ],
-              );
+                  ],
+                ); //ทำงานเมื่อมีข้อมูล และ ['statusPosts'] == "รอการยืนยัน"
+              } else {
+                // Return content when there are no posts with "รอการยืนยัน" status
+                return Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.network(
+                        'https://cdn-icons-png.flaticon.com/256/11191/11191755.png',
+                        width: 100,
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'ไม่มีข้อเสนอที่เข้ามา',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  ),
+                );
+              }
             } else {
               return Center(
                 child: Column(
@@ -354,7 +448,7 @@ class _offerComeState extends State<offerCome> {
                     ),
                     const SizedBox(height: 20),
                     const Text(
-                      'ไม่ข้อเสนอที่เข้ามา',
+                      'ไม่มีข้อเสนอที่เข้ามา',
                       style: TextStyle(fontSize: 20),
                     ),
                   ],
@@ -365,6 +459,55 @@ class _offerComeState extends State<offerCome> {
         ),
       ),
     );
+  }
+
+  void showUpdateConfirmation(BuildContext context, String postKey) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('ยืนยันการเลือกข้อเสนอนี้'),
+          content: const Text('ถ้ากดยืนยัน โพสต์นี้จะไม่แสดงอีกต่อไป'),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text(
+                'ยกเลิก',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                // ปิดหน้าต่างโดยไม่ลบ
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: const Text(
+                'ยืนยัน',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _performUpdate();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _performUpdate() async {
+    try {
+      DatabaseReference _postRef = FirebaseDatabase.instance
+          .ref()
+          .child('postitem')
+          .child(selectedPost!['post_uid']);
+
+      await _postRef.update({
+        'statusPosts': "สำเร็จ",
+      });
+    } catch (e) {}
   }
 
   Widget buildCircularNumberButton(int index, Map<dynamic, dynamic> postData) {
