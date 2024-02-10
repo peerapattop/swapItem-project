@@ -303,7 +303,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                               ),
                                             ),
                                             ImageGalleryWidget(
-                                              imageUrls: imagePost,
+                                              imageUrls: imageOffer,
                                             ),
                                             Padding(
                                               padding:

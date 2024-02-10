@@ -403,19 +403,24 @@ class _offerCome2State extends State<offerCome2> {
 
   Future<void> _performUpdateOffer() async {
     try {
-      DatabaseReference _postRef = FirebaseDatabase.instance
+      DatabaseReference postRef = FirebaseDatabase.instance
           .ref()
           .child('postitem')
           .child(widget.postUid);
+      DatabaseReference offerRef = FirebaseDatabase.instance
+      .ref()
+      .child('offer')
+      .child(selectedOffer!['offer_uid']);
 
-      await _postRef.update({
+      await postRef.update({
         'user_id_confirm': selectedOffer?['offer_uid'],
-      });
-
-      // Update statusPosts field to "สำเร็จ" in the same postitem node
-      await _postRef.update({
         'statusPosts': "สำเร็จ",
       });
+
+      await offerRef.update({
+        'statusOffers' : 'สำเร็จ'
+      });
+
     } catch (e) {
       // Handle error if necessary
     }
