@@ -659,6 +659,7 @@ class _HistoryPostState extends State<HistoryPost> {
         String id = userData['id'] ?? '';
         String username = userData['username'] ?? 'Unknown';
         String imageUser = userData['image_user'] ?? '';
+        String creditPostSuccess = userData['creditPostSuccess'].toString();
 
         // Navigate to ProfileScreen with user data
         Navigator.push(
@@ -668,6 +669,7 @@ class _HistoryPostState extends State<HistoryPost> {
               username: username,
               id: id,
               imageUser: imageUser,
+                creditPostSuccess: creditPostSuccess,
             ),
           ),
         );

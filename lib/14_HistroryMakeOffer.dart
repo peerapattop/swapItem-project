@@ -71,11 +71,12 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
       if (databaseEvent.snapshot.value != null) {
         print('User data found for UID: $uid');
 
-        Map<String, dynamic> userData = Map<String, dynamic>.from(databaseEvent.snapshot.value as Map);
+        Map<String, dynamic> userData =
+            Map<String, dynamic>.from(databaseEvent.snapshot.value as Map);
         String id = userData['id'] ?? '';
         String username = userData['username'] ?? 'Unknown';
         String imageUser = userData['image_user'] ?? '';
-
+        String creditPostSuccess = userData['creditPostSuccess'].toString();
         // Navigate to ProfileScreen with user data
         Navigator.push(
           context,
@@ -84,6 +85,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
               username: username,
               id: id,
               imageUser: imageUser,
+              creditPostSuccess: creditPostSuccess,
             ),
           ),
         );
@@ -94,8 +96,6 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
       print('Error fetching user data: $error');
     });
   }
-
-
 
   Future<List<Map<dynamic, dynamic>>> fetchPostItemData(String uidPost) async {
     DatabaseEvent postRef = await FirebaseDatabase.instance
@@ -295,8 +295,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                         Column(
                                           children: [
                                             const Padding(
-                                              padding:
-                                                  EdgeInsets.all(8.0),
+                                              padding: EdgeInsets.all(8.0),
                                               child: Text(
                                                 'ข้อเสนอของคุณ',
                                                 style: TextStyle(fontSize: 20),
@@ -322,8 +321,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                           width:
                                                               8), // ระยะห่างระหว่างไอคอนและข้อความ
                                                       Text(
-                                                        "สถานะ : ${selectedOffer![
-                                                                    'statusOffers']}",
+                                                        "สถานะ : ${selectedOffer!['statusOffers']}",
                                                         style: myTextStyle(),
                                                       ),
                                                     ],
@@ -340,8 +338,7 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                           width:
                                                               8), // ระยะห่างระหว่างไอคอนและข้อความ
                                                       Text(
-                                                        "หมายเลขยื่นข้อเสนอ : ${selectedOffer![
-                                                                    'offerNumber']}",
+                                                        "หมายเลขยื่นข้อเสนอ : ${selectedOffer!['offerNumber']}",
                                                         style: myTextStyle(),
                                                       ),
                                                     ],
@@ -498,8 +495,10 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
                                                   ),
                                                   const SizedBox(width: 2),
                                                   GestureDetector(
-                                                    onTap:(){
-                                                      fetchUserData(postItemData['uid'], context);
+                                                    onTap: () {
+                                                      fetchUserData(
+                                                          postItemData['uid'],
+                                                          context);
                                                     },
                                                     child: Row(
                                                       children: [

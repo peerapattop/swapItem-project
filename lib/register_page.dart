@@ -185,6 +185,7 @@ class _RegisterPageState extends State<RegisterPage> {
           .child(userCredential.user!.uid);
 
       Map userDataMap = {
+        'creditPostSuccess': 0,
         'remainingTime': '',
         'uid': uid,
         'lastPostDate': '',

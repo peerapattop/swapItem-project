@@ -4,12 +4,14 @@ class ProfileScreen extends StatefulWidget {
   final String username;
   final String id;
   final String imageUser;
+  final String creditPostSuccess;
 
   const ProfileScreen(
       {Key? key,
       required this.username,
       required this.id,
-      required this.imageUser,})
+      required this.imageUser,
+      required this.creditPostSuccess})
       : super(key: key);
 
   @override
@@ -85,9 +87,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           fontSize: 19,
                           color: Color.fromARGB(255, 124, 1, 124),
                           decoration: TextDecoration.underline)),
-                  Text('แลกเปลี่ยนสำเร็จ : 999999',
-                      style: TextStyle(fontSize: 19)),
-                  
+                  Text(
+                    'แลกเปลี่ยนสำเร็จ : ${widget.creditPostSuccess}',
+                    style: TextStyle(fontSize: 19),
+                  ),
                   SizedBox(height: 20),
                   Text('เครดิตการยื่นข้อเสนอ',
                       style: TextStyle(
