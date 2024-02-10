@@ -408,19 +408,34 @@ class _offerCome2State extends State<offerCome2> {
           .child('postitem')
           .child(widget.postUid);
       DatabaseReference offerRef = FirebaseDatabase.instance
-      .ref()
-      .child('offer')
-      .child(selectedOffer!['offer_uid']);
+          .ref()
+          .child('offer')
+          .child(selectedOffer!['offer_uid']);
+
+      DatabaseReference userRef =
+      FirebaseDatabase.instance.ref().child('users').child(_user.uid);
 
       await postRef.update({
         'user_id_confirm': selectedOffer?['offer_uid'],
         'statusPosts': "สำเร็จ",
       });
 
-      await offerRef.update({
-        'statusOffers' : 'สำเร็จ'
+      await offerRef.update({'statusOffers': 'สำเร็จ'});
+
+      // ดึงค่าเครดิตปัจจุบันของผู้ใช้
+      DataSnapshot dataSnapshot =
+      await userRef.once().then((snapshot) => snapshot.snapshot);
+      Map<dynamic, dynamic> userData =
+      dataSnapshot.value as Map<dynamic, dynamic>;
+      int currentCredit = userData['creditPostSuccess'] ?? 0;
+      int updatedCredit = currentCredit + 1;
+      await userRef.update({
+        'creditPostSuccess': updatedCredit,
       });
 
+      /* อัพเดตข้อมูลของผู้ใช้ที่ถูกเลือก */
+
+      /* อัพเดตข้อมูลของผู้ใช้ทีไม่ได้่ถูกเลือก */
     } catch (e) {
       // Handle error if necessary
     }
