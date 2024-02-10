@@ -77,6 +77,8 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
         String username = userData['username'] ?? 'Unknown';
         String imageUser = userData['image_user'] ?? '';
         String creditPostSuccess = userData['creditPostSuccess'].toString();
+        String  creditOfferSuccess = userData['creditOfferSuccess'].toString();
+        String  creditOfferFailure = userData['creditOfferFailure'].toString();
         // Navigate to ProfileScreen with user data
         Navigator.push(
           context,
@@ -86,6 +88,8 @@ class _HistoryMakeOfferState extends State<HistoryMakeOffer> {
               id: id,
               imageUser: imageUser,
               creditPostSuccess: creditPostSuccess,
+              creditOfferFailure: creditOfferFailure,
+              creditOfferSuccess: creditOfferSuccess,
             ),
           ),
         );

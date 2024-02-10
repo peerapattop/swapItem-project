@@ -67,6 +67,8 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
             Map<String, dynamic>.from(databaseEvent.snapshot.value as Map);
         String id = userData['id'];
         String creditPostSuccess = userData['creditPostSuccess'].toString();
+        String  creditOfferSuccess = userData['creditOfferSuccess'].toString();
+        String  creditOfferFailure = userData['creditOfferFailure'].toString();
         // Navigate to ProfileScreen with user data
         Navigator.push(
           context,
@@ -76,6 +78,8 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
               id: id,
               imageUser: postData['imageUser'],
               creditPostSuccess: creditPostSuccess,
+              creditOfferSuccess: creditOfferSuccess,
+              creditOfferFailure: creditOfferFailure,
             ),
           ),
         );

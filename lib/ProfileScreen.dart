@@ -5,13 +5,17 @@ class ProfileScreen extends StatefulWidget {
   final String id;
   final String imageUser;
   final String creditPostSuccess;
+  final String creditOfferSuccess;
+  final String creditOfferFailure;
 
   const ProfileScreen(
       {Key? key,
       required this.username,
       required this.id,
       required this.imageUser,
-      required this.creditPostSuccess})
+      required this.creditPostSuccess,
+      required this.creditOfferSuccess,
+      required this.creditOfferFailure})
       : super(key: key);
 
   @override
@@ -97,9 +101,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           fontSize: 19,
                           color: Color.fromARGB(255, 124, 1, 124),
                           decoration: TextDecoration.underline)),
-                  Text('แลกเปลี่ยนสำเร็จ : 999999',
+                  Text('แลกเปลี่ยนสำเร็จ : ${widget.creditOfferSuccess}',
                       style: TextStyle(fontSize: 19)),
-                  Text('ถูกปฎิเสธ : 999999', style: TextStyle(fontSize: 19)),
+                  Text('ถูกปฎิเสธ : ${widget.creditOfferFailure}', style: TextStyle(fontSize: 19)),
                 ],
               ),
             ),

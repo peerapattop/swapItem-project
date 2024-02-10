@@ -347,6 +347,8 @@ class _offerCome2State extends State<offerCome2> {
         String imageUser = userData['image_user'];
         String username = userData['username'];
         String  creditPostSuccess = userData['creditPostSuccess'].toString();
+        String  creditOfferSuccess = userData['creditOfferSuccess'].toString();
+        String  creditOfferFailure = userData['creditOfferFailure'].toString();
 
         Navigator.push(
           context,
@@ -356,6 +358,8 @@ class _offerCome2State extends State<offerCome2> {
               id: id,
               imageUser: imageUser,
                 creditPostSuccess: creditPostSuccess,
+              creditOfferSuccess: creditOfferSuccess,
+              creditOfferFailure: creditOfferFailure,
             ),
           ),
         );
