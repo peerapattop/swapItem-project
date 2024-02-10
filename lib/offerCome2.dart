@@ -422,7 +422,7 @@ class _offerCome2State extends State<offerCome2> {
 
       await offerRef.update({'statusOffers': 'สำเร็จ'});
 
-      // ดึงค่าเครดิตปัจจุบันของผู้ใช้
+      // อัพเดตเครดิตปัจจุบันของผู้ใช้
       DataSnapshot dataSnapshot =
       await userRef.once().then((snapshot) => snapshot.snapshot);
       Map<dynamic, dynamic> userData =
