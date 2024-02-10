@@ -34,261 +34,266 @@ class _offerCome2State extends State<offerCome2> {
     _offerRef = FirebaseDatabase.instance.ref().child('offer');
     selectedOffer = null;
 
-    _offerRef.orderByChild('uidUserpost').equalTo(_user.uid).onValue.listen(
-        (event) {
-      if (event.snapshot.value != null) {
-        Map<dynamic, dynamic> data =
-            Map<dynamic, dynamic>.from(event.snapshot.value as Map);
+    _loadOffers();
+  }
 
-        setState(() {
-          postsList.clear();
-          data.forEach((key, value) {
-            postsList.add(Map<dynamic, dynamic>.from(value));
+  // Method to load offers based on post UID
+  void _loadOffers() {
+    _offerRef.orderByChild('post_uid').equalTo(widget.postUid).onValue.listen(
+          (event) {
+        if (event.snapshot.value != null) {
+          Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
+              event.snapshot.value as Map);
+
+          setState(() {
+            postsList.clear();
+            data.forEach((key, value) {
+              postsList.add(Map<dynamic, dynamic>.from(value));
+            });
+
+            if (postsList.isNotEmpty) {
+              selectedOffer = postsList.last;
+              _selectedIndex = 0;
+            }
           });
-
-          if (postsList.isNotEmpty) {
-            selectedOffer = postsList.last;
-            _selectedIndex = 0;
-            print("look at me" + selectedOffer.toString());
-          }
-        });
-      }
-    }, onError: (error) {
-      print("Error fetching data: $error");
-    });
+        }
+      },
+      onError: (error) {
+        print("Error fetching data: $error");
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: StreamBuilder(
-        stream:
-            _offerRef.orderByChild('post_uid').equalTo(widget.postUid).onValue,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: Column(
-                children: [],
+    return StreamBuilder(
+      stream:
+          _offerRef.orderByChild('post_uid').equalTo(widget.postUid).onValue,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: Column(
+              children: [],
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return const Center(
+            child: Text('Error loading data'),//888
+          );
+        } else if (snapshot.hasData &&
+            snapshot.data!.snapshot.value != null) {
+          // Your existing code for handling data without clearing postsList
+          Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
+              snapshot.data!.snapshot.value as Map);
+          postsList.clear(); // Clearing here if new data is coming
+          data.forEach((key, value) {
+            postsList.add(Map<dynamic, dynamic>.from(value));
+          });
+          print('testtttttttt : '+widget.postUid);
+          return Column(
+            children: [//888
+              SizedBox(
+                height: 50,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: postsList.reversed
+                        .toList()
+                        .asMap()
+                        .entries
+                        .map((entry) {
+                      int idx = entry.key;
+                      Map<dynamic, dynamic> postData = entry.value;
+                      image_post =
+                          List<String>.from(selectedOffer!['imageUrls']);
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: buildCircularNumberButton(idx, postData),
+                      );
+                    }).toList(),
+                  ),
+                ),
               ),
-            );
-          } else if (snapshot.hasError) {
-            return const Center(
-              child: Text('Error loading data'),//888
-            );
-          } else if (snapshot.hasData &&
-              snapshot.data!.snapshot.value != null) {
-            // Your existing code for handling data without clearing postsList
-            Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
-                snapshot.data!.snapshot.value as Map);
-            postsList.clear(); // Clearing here if new data is coming
-            data.forEach((key, value) {
-              postsList.add(Map<dynamic, dynamic>.from(value));
-            });
-            return Column(
-              children: [//888
-                SizedBox(
-                  height: 50,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'ข้อเสนอที่เข้ามา',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              ImageGalleryWidget(
+                imageUrls: image_post,
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  const Icon(Icons.tag, color: Colors.blue),
+                  const SizedBox(width: 5),
+                  Text(
+                    'หมายเลขการยื่นข้อเสนอ : ${selectedOffer?['offerNumber']}',
+                    style: const TextStyle(fontSize: 19),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  const Icon(Icons.person, color: Colors.blue),
+                  const SizedBox(width: 5),
+                  const Text(
+                    'ชื่อผู้ใช้ : ',
+                    style: TextStyle(fontSize: 19),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      fetchUserData(selectedOffer?['uid'], context);
+                    },
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: postsList.reversed
-                          .toList()
-                          .asMap()
-                          .entries
-                          .map((entry) {
-                        int idx = entry.key;
-                        Map<dynamic, dynamic> postData = entry.value;
-                        image_post =
-                            List<String>.from(selectedOffer!['imageUrls']);
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: buildCircularNumberButton(idx, postData),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    'ข้อเสนอที่เข้ามา',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-                ImageGalleryWidget(
-                  imageUrls: image_post,
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    const Icon(Icons.tag, color: Colors.blue),
-                    const SizedBox(width: 5),
-                    Text(
-                      'หมายเลขการยื่นข้อเสนอ : ${selectedOffer?['offerNumber']}',
-                      style: const TextStyle(fontSize: 19),
-                    )
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.person, color: Colors.blue),
-                    const SizedBox(width: 5),
-                    const Text(
-                      'ชื่อผู้ใช้ : ',
-                      style: TextStyle(fontSize: 19),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        fetchUserData(selectedOffer?['uid'], context);
-                      },
-                      child: Row(
-                        children: [
-                          Text(
-                            selectedOffer?['username'],
-                            style: const TextStyle(
-                                fontSize: 19, color: Colors.purple),
-                          ),
-                          const Icon(
-                            Icons.search,
-                            color: Colors.purple,
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.date_range, color: Colors.blue),
-                    const SizedBox(width: 5),
-                    Text(
-                      'วันที่ : ${convertDateFormat(selectedOffer?['date'])}',
-                      style: const TextStyle(fontSize: 19),
-                    )
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.lock_clock, color: Colors.blue),
-                    const SizedBox(width: 5),
-                    Text(
-                      'เวลา : ${selectedOffer?['time']} น.',
-                      style: const TextStyle(fontSize: 19),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  width: 437,
-                  height: 272,
-                  decoration: ShapeDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment(0.00, -1.00),
-                      end: Alignment(0, 1),
-                      colors: [Color(0x9B419FB3), Color(0x008B47C1)],
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(19),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(11.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'ชื่อสิ่งของ : ' + selectedOffer!['nameitem1'],
-                          style: const TextStyle(fontSize: 19),
+                          selectedOffer?['username'],
+                          style: const TextStyle(
+                              fontSize: 19, color: Colors.purple),
                         ),
-                        Text(
-                          'ยี่ห้อ : ' + selectedOffer!['brand1'],
-                          style: const TextStyle(fontSize: 19),
-                        ),
-                        Text(
-                          'รุ่น : ' + selectedOffer!['model1'],
-                          style: const TextStyle(fontSize: 19),
-                        ),
-                        Text(
-                          'รายละเอียด : ' + selectedOffer!['detail1'],
-                          style: const TextStyle(fontSize: 19),
-                        ),
+                        const Icon(
+                          Icons.search,
+                          color: Colors.purple,
+                        )
                       ],
                     ),
                   ),
-                ),
-                Row(
-                  children: [
-                    const SizedBox(width: 7),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        minimumSize: const Size(120, 45),
-                      ),
-                      icon: const Icon(
-                        Icons.chat,
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ChatDetail(
-                              receiverUid: selectedOffer?['uid'],
-                            ),
-                          ),
-                        );
-                      },
-                      label: const Text(
-                        'แชท',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    const SizedBox(width: 150),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green),
-                      onPressed: () {
-                        if (selectedOffer != null &&
-                            selectedOffer!.containsKey('post_uid')) {
-                          showUpdateConfirmation(
-                              context, selectedOffer!['post_uid']);
-                        } else {
-                          print('No post selected for deletion.');
-                          // Debug: Print the current state of selectedPost
-                          print('Current selectedPost: $selectedOffer');
-                        }
-                      },
-                      icon: const Icon(Icons.check, color: Colors.white),
-                      label: const Text('ยืนยัน',
-                          style: TextStyle(color: Colors.white)),
-                    ),
-                  ],
-                ),
-              ],
-            );
-          } else {
-            return Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+                ],
+              ),
+              Row(
                 children: [
-                  Image.network(
-                    'https://cdn-icons-png.flaticon.com/256/11191/11191755.png',
-                    width: 100,
+                  const Icon(Icons.date_range, color: Colors.blue),
+                  const SizedBox(width: 5),
+                  Text(
+                    'วันที่ : ${convertDateFormat(selectedOffer?['date'])}',
+                    style: const TextStyle(fontSize: 19),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  const Icon(Icons.lock_clock, color: Colors.blue),
+                  const SizedBox(width: 5),
+                  Text(
+                    'เวลา : ${selectedOffer?['time']} น.',
+                    style: const TextStyle(fontSize: 19),
+                  )
+                ],
+              ),
+              const SizedBox(height: 10),
+              Container(
+                width: 437,
+                height: 272,
+                decoration: ShapeDecoration(
+                  gradient: const LinearGradient(
+                    begin: Alignment(0.00, -1.00),
+                    end: Alignment(0, 1),
+                    colors: [Color(0x9B419FB3), Color(0x008B47C1)],
                   ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'ยังไม่มีข้อเสนอที่เข้ามาให้แลกเปลี่ยน',
-                    style: TextStyle(fontSize: 20),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(19),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(11.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'ชื่อสิ่งของ : ' + selectedOffer!['nameitem1'],
+                        style: const TextStyle(fontSize: 19),
+                      ),
+                      Text(
+                        'ยี่ห้อ : ' + selectedOffer!['brand1'],
+                        style: const TextStyle(fontSize: 19),
+                      ),
+                      Text(
+                        'รุ่น : ' + selectedOffer!['model1'],
+                        style: const TextStyle(fontSize: 19),
+                      ),
+                      Text(
+                        'รายละเอียด : ' + selectedOffer!['detail1'],
+                        style: const TextStyle(fontSize: 19),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  const SizedBox(width: 7),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      minimumSize: const Size(120, 45),
+                    ),
+                    icon: const Icon(
+                      Icons.chat,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatDetail(
+                            receiverUid: selectedOffer?['uid'],
+                          ),
+                        ),
+                      );
+                    },
+                    label: const Text(
+                      'แชท',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  const SizedBox(width: 150),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green),
+                    onPressed: () {
+                      if (selectedOffer != null &&
+                          selectedOffer!.containsKey('post_uid')) {
+                        showUpdateConfirmation(
+                            context, selectedOffer!['post_uid']);
+                      } else {
+                        print('No post selected for deletion.');
+                        // Debug: Print the current state of selectedPost
+                        print('Current selectedPost: $selectedOffer');
+                      }
+                    },
+                    icon: const Icon(Icons.check, color: Colors.white),
+                    label: const Text('ยืนยัน',
+                        style: TextStyle(color: Colors.white)),
                   ),
                 ],
               ),
-            );
-          }
-        },
-      ),
+            ],
+          );
+        } else {
+          return Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.network(
+                  'https://cdn-icons-png.flaticon.com/256/11191/11191755.png',
+                  width: 100,
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'ยังไม่มีข้อเสนอที่เข้ามาให้แลกเปลี่ยน',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -408,11 +413,11 @@ class _offerCome2State extends State<offerCome2> {
 
   Future<void> _performUpdateOffer() async {
     try {
-      DatabaseReference postRef = FirebaseDatabase.instance
+      DatabaseReference postRef1 = FirebaseDatabase.instance
           .ref()
           .child('postitem')
           .child(widget.postUid);
-      DatabaseReference offerRef = FirebaseDatabase.instance
+      DatabaseReference offerRef1 = FirebaseDatabase.instance
           .ref()
           .child('offer')
           .child(selectedOffer!['offer_uid']);
@@ -420,12 +425,12 @@ class _offerCome2State extends State<offerCome2> {
       DatabaseReference userRef =
       FirebaseDatabase.instance.ref().child('users').child(_user.uid);
 
-      await postRef.update({
+      await postRef1.update({
         'user_id_confirm': selectedOffer?['offer_uid'],
         'statusPosts': "สำเร็จ",
       });
 
-      await offerRef.update({'statusOffers': 'สำเร็จ'});
+      await offerRef1.update({'statusOffers': 'สำเร็จ'});
 
       // อัพเดตเครดิตปัจจุบันของผู้ใช้
       DataSnapshot dataSnapshot =

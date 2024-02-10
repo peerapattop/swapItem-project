@@ -98,38 +98,6 @@ class _offerComeState extends State<offerCome> {
                 // Return content when there are posts with "รอการยืนยัน" status
                 return Column(
                   children: [
-                    SizedBox(
-                      height: 50,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: postsList.asMap().entries.map((entry) {
-                            int idx = entry.key;
-                            Map<dynamic, dynamic> postData = entry.value;
-                            image_post =
-                                List<String>.from(selectedPost!['imageUrls']);
-                            latitude = double.tryParse(
-                                selectedPost!['latitude'].toString());
-                            longitude = double.tryParse(
-                                selectedPost!['longitude'].toString());
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: buildCircularNumberButton(idx, postData),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: const Text(
-                        'โพสต์ของคุณ',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
                     selectedPost != null
                         ? Expanded(
                             child: ListView(
@@ -139,7 +107,37 @@ class _offerComeState extends State<offerCome> {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
+
                                         children: [
+                                          SizedBox(
+                                            height: 50,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: postsList.asMap().entries.map((entry) {
+                                                int idx = entry.key;
+                                                Map<dynamic, dynamic> postData = entry.value;
+                                                image_post =
+                                                List<String>.from(selectedPost!['imageUrls']);
+                                                latitude = double.tryParse(
+                                                    selectedPost!['latitude'].toString());
+                                                longitude = double.tryParse(
+                                                    selectedPost!['longitude'].toString());
+                                                return Padding(
+                                                  padding:
+                                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                                                  child: buildCircularNumberButton(idx, postData),
+                                                );
+                                              }).toList(),
+                                            ),
+                                          ),
+                                          const Divider(),
+                                          const Padding(
+                                            padding: EdgeInsets.all(10.0),
+                                            child: Text(
+                                              'โพสต์ของคุณ',
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                          ),
                                           ImageGalleryWidget(
                                             imageUrls: image_post,
                                           ),
