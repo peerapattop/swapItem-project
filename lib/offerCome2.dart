@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:swapitem/ProfileScreen.dart';
 import 'package:swapitem/widget/chat_detail.dart';
 import 'package:swapitem/widget/offer_imageshow.dart';
-//หน้าประวัติการโพสต์
 
 class offerCome2 extends StatefulWidget {
   final String postUid;
@@ -442,6 +441,7 @@ class _offerCome2State extends State<offerCome2> {
       /* อัพเดตข้อมูลของผู้ใช้ที่ถูกเลือก */
 
       /* อัพเดตข้อมูลของผู้ใช้ทีไม่ได้่ถูกเลือก */
+
     } catch (e) {
       // Handle error if necessary
     }
