@@ -46,6 +46,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
   final picker = ImagePicker();
   DateTime now = DateTime.now();
   String? username;
+  late int offerNumber;
 
   bool _isSubmitting = false;
   List<File> _images = [];
@@ -66,16 +67,10 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
       });
     }
 
-    String date1 = now.year.toString() +
-        "-" +
-        now.month.toString().padLeft(2, '0') +
-        "-" +
-        now.day.toString().padLeft(2, '0');
-    String time1 = now.hour.toString().padLeft(2, '0') +
-        ":" +
-        now.minute.toString().padLeft(2, '0') +
-        ":" +
-        now.second.toString().padLeft(2, '0');
+    String date1 =
+        "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+    String time1 =
+        "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -209,9 +204,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                         Icon(Icons.shopping_bag), // Icon inside the TextField
                   ),
                 ),
-                SizedBox(
-                  height: 17,
-                ),
+                const SizedBox(height: 17),
                 TextField(
                   controller: _brand1,
                   decoration: InputDecoration(
@@ -220,12 +213,10 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                     prefixIcon: Icon(Icons.branding_watermark),
                   ),
                 ),
-                SizedBox(
-                  height: 17,
-                ),
+                const SizedBox(height: 17),
                 TextField(
                   controller: _model1,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'รุ่น', // Label text
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.model_training),
@@ -236,7 +227,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                 ),
                 TextField(
                   controller: _detail1,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'รายละเอียด', // Label text
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.details),
@@ -294,7 +285,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                                           offer_id: offerId,
                                           date: date1,
                                           time: time1,
-                                          offerNumber: generateRandomNumber(),
+                                          offerNumber: offerNumber,
                                         ),
                                       ),
                                     );
@@ -311,7 +302,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                               }
                             }
                           : null,
-                      child: Text(
+                      child: const Text(
                         "ยื่นข้อเสนอ",
                         style: TextStyle(
                           color: Colors.white,
@@ -415,7 +406,6 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
         String postUid = widget.postUid;
         String imageUser = widget.imageUser;
 
-// Use the `username` variable as needed
 
         String uid = FirebaseAuth.instance.currentUser!.uid;
         DatabaseReference itemRef =
@@ -423,13 +413,13 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
         String? offerUid = itemRef.key;
         // First, upload images and collect their URLs.
         List<String> imageUrls = await _uploadImages();
-        // Then, set the data with image URLs in the Realtime Database.
+        offerNumber = generateRandomNumber();
         Map<String, dynamic> dataRef = {
           'username': username,
           'imageUser': imageUser,
           'statusOffers': 'รอการยืนยัน',
           'offer_uid': offerUid,
-          'offerNumber': generateRandomNumber(),
+          'offerNumber': offerNumber,
           'uid': uid,
           'uidUserpost': widget.uidUserpost,
           'type1': dropdownValue,
@@ -546,9 +536,9 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     return imageUrls;
   }
 
-
   Future<void> fetchTimestampFromFirebase() async {
-    DatabaseReference timeRef = FirebaseDatabase.instance.reference().child('Time');
+    DatabaseReference timeRef =
+        FirebaseDatabase.instance.reference().child('Time');
     print('perm');
 
     // Listen for changes on the "Time" node in Firebase Realtime Database
@@ -565,7 +555,8 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
 
         // Store the numeric timestamp in the 'timeclick' variable
         setState(() {
-          timeclick = numericValue.toString(); // บันทึกจาก Firebase ในเครื่องเรา
+          timeclick =
+              numericValue.toString(); // บันทึกจาก Firebase ในเครื่องเรา
         });
 
         // Use the 'timeclick' variable as needed
@@ -573,7 +564,6 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
       }
     });
   }
-
 
   Future<void> saveTimestampToFirebase() async {
     DatabaseReference reference = FirebaseDatabase.instance.ref().child('Time');

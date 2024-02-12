@@ -10,7 +10,7 @@ class MakeAnOfferSuccess extends StatelessWidget {
   final String time;
   final int offerNumber;
   const MakeAnOfferSuccess(
-      {required this.offer_id,
+      {super.key, required this.offer_id,
       required this.date,
       required this.time,
       required this.offerNumber});
