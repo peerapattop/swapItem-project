@@ -159,6 +159,8 @@ class _NewPostState extends State<NewPost> {
           DatabaseReference itemRef =
               FirebaseDatabase.instance.ref().child('postitem').push();
           List<String> imageUrls = await uploadImages(images);
+          String postNumber = generateRandomPostNumber();
+
 
           // Generate uid for the post
           String? postUid = itemRef.key;
@@ -179,7 +181,7 @@ class _NewPostState extends State<NewPost> {
             'imageUser': imageUser,
             'post_uid': postUid,
             'email': email,
-            'postNumber': generateRandomPostNumber(),
+            'postNumber': postNumber,
             'imageUrls': imageUrls,
             'type': dropdownValue,
             'latitude': selectedLatitude.toString(),
@@ -208,7 +210,7 @@ class _NewPostState extends State<NewPost> {
             MaterialPageRoute(builder: (BuildContext context) => PostSuccess(
               time: time,
               date: date,
-              postNumber: generateRandomPostNumber(),
+              postNumber: postNumber,
             )),
           );
         }
