@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:swapitem/offerCome2.dart';
 import 'package:swapitem/widget/chat_detail.dart';
 import 'package:swapitem/widget/offer_imageshow.dart';
@@ -79,7 +80,7 @@ class _offerComeState extends State<offerCome> {
           stream: _postRef.orderByChild('uid').equalTo(_user.uid).onValue,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             } else if (snapshot.hasData &&
@@ -107,25 +108,34 @@ class _offerComeState extends State<offerCome> {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
-
                                         children: [
                                           SizedBox(
                                             height: 50,
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: postsList.asMap().entries.map((entry) {
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: postsList
+                                                  .asMap()
+                                                  .entries
+                                                  .map((entry) {
                                                 int idx = entry.key;
-                                                Map<dynamic, dynamic> postData = entry.value;
-                                                image_post =
-                                                List<String>.from(selectedPost!['imageUrls']);
+                                                Map<dynamic, dynamic> postData =
+                                                    entry.value;
+                                                image_post = List<String>.from(
+                                                    selectedPost!['imageUrls']);
                                                 latitude = double.tryParse(
-                                                    selectedPost!['latitude'].toString());
+                                                    selectedPost!['latitude']
+                                                        .toString());
                                                 longitude = double.tryParse(
-                                                    selectedPost!['longitude'].toString());
+                                                    selectedPost!['longitude']
+                                                        .toString());
                                                 return Padding(
-                                                  padding:
-                                                  const EdgeInsets.symmetric(horizontal: 4.0),
-                                                  child: buildCircularNumberButton(idx, postData),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 4.0),
+                                                  child:
+                                                      buildCircularNumberButton(
+                                                          idx, postData),
                                                 );
                                               }).toList(),
                                             ),
@@ -143,37 +153,28 @@ class _offerComeState extends State<offerCome> {
                                           ),
                                           Row(
                                             children: [
-                                              Icon(
-                                                Icons
-                                                    .tag, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                                color: Colors
-                                                    .blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                                              const Icon(
+                                                Icons.tag,
+                                                color: Colors.blue,
                                               ),
-                                              SizedBox(
-                                                  width:
-                                                      8), // ระยะห่างระหว่างไอคอนและข้อความ
+                                              const SizedBox(width: 8),
                                               Text(
                                                 'หมายเลขโพสต์ : ' +
                                                     selectedPost!['postNumber'],
-                                                style: TextStyle(fontSize: 18),
+                                                style: const TextStyle(fontSize: 18),
                                               ),
                                             ],
                                           ),
                                           Row(
                                             children: [
-                                              Icon(
-                                                Icons
-                                                    .date_range, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                                color: Colors
-                                                    .blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                                              const Icon(
+                                                Icons.date_range,
+                                                color: Colors.blue,
                                               ),
-                                              SizedBox(
-                                                  width:
-                                                      8), // ระยะห่างระหว่างไอคอนและข้อความ
+                                              const SizedBox(width: 8),
                                               Text(
-                                                'วันที่ : ' +
-                                                    selectedPost!['date'],
-                                                style: TextStyle(fontSize: 18),
+                                                "วันที่ : ${DateFormat('dd MMMM yyyy', 'th_TH').format(DateTime.parse(selectedPost!['date']))}",
+                                                style: const TextStyle(fontSize: 18),
                                               ),
                                             ],
                                           ),
@@ -204,7 +205,7 @@ class _offerComeState extends State<offerCome> {
                                               width: 437,
                                               height: 360,
                                               decoration: ShapeDecoration(
-                                                gradient: LinearGradient(
+                                                gradient: const LinearGradient(
                                                   begin: Alignment(0.00, -1.00),
                                                   end: Alignment(0, 1),
                                                   colors: [
