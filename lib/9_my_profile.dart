@@ -63,8 +63,6 @@ class _ProfileState extends State<Profile> {
       setState(() {
         selectedDate = pickedDate;
         _birthdayController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
-
-        _userRef.update({'birthday': _birthdayController.text});
       });
     }
   }
@@ -79,7 +77,7 @@ class _ProfileState extends State<Profile> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               // Display a loading indicator while waiting for the update to complete
-              return AlertDialog(
+              return const AlertDialog(
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -92,7 +90,7 @@ class _ProfileState extends State<Profile> {
             } else if (snapshot.hasError) {
               // Display an error message if the update encounters an error
               return AlertDialog(
-                title: Text('เกิดข้อผิดพลาด'),
+                title: const Text('เกิดข้อผิดพลาด'),
                 content:
                     Text('เกิดข้อผิดพลาดในการบันทึกข้อมูล: ${snapshot.error}'),
                 actions: [
@@ -100,14 +98,14 @@ class _ProfileState extends State<Profile> {
                     onPressed: () {
                       Navigator.of(context).pop(); // Close the AlertDialog
                     },
-                    child: Text('ตกลง'),
+                    child: const Text('ตกลง'),
                   ),
                 ],
               );
             } else {
               // Display a success message when the update is successful
               return AlertDialog(
-                title: Text('บันทึกข้อมูลสำเร็จ'),
+                title: const Text('บันทึกข้อมูลสำเร็จ'),
                 actions: [
                   ElevatedButton(
                     style:
@@ -115,7 +113,7 @@ class _ProfileState extends State<Profile> {
                     onPressed: () {
                       Navigator.of(context).pop(); // Close the AlertDialog
                     },
-                    child: Text(
+                    child: const Text(
                       'ตกลง',
                       style: TextStyle(color: Colors.white),
                     ),
@@ -210,7 +208,7 @@ class _ProfileState extends State<Profile> {
                       Navigator.of(context).pop();
                       signOut();
                     },
-                    child: Text(
+                    child: const Text(
                       'ยืนยัน',
                       style: TextStyle(color: Colors.white),
                     ),
@@ -317,7 +315,7 @@ class _ProfileState extends State<Profile> {
                                             style:
                                                 const TextStyle(fontSize: 18),
                                           )
-                                        : SizedBox()
+                                        : const SizedBox()
                                   ],
                                 )
                               ],
@@ -347,9 +345,7 @@ class _ProfileState extends State<Profile> {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(
-                                          width:
-                                              15), // Adds space between the two TextFields
+                                      const SizedBox(width: 15),
                                       Expanded(
                                         child: TextField(
                                           readOnly: true,
@@ -368,9 +364,7 @@ class _ProfileState extends State<Profile> {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
+                                  const SizedBox(height: 15),
                                   Row(
                                     children: <Widget>[
                                       Expanded(
@@ -387,13 +381,11 @@ class _ProfileState extends State<Profile> {
                                                   .drive_file_rename_outline)),
                                         ),
                                       ),
-                                      const SizedBox(
-                                          width:
-                                              15), // Space between the two TextFields
+                                      const SizedBox(width: 15),
                                       Expanded(
                                         child: TextField(
                                           controller: _lastNameController,
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                               label: Text(
                                                 "นามสกุล",
                                                 style: TextStyle(fontSize: 20),
@@ -406,16 +398,14 @@ class _ProfileState extends State<Profile> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
+                                  const SizedBox(height: 15),
                                   Row(
                                     children: <Widget>[
                                       Expanded(
                                         child: TextField(
                                           readOnly: true,
                                           controller: _genderController,
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                             label: Text(
                                               "เพศ",
                                               style: TextStyle(fontSize: 20),
@@ -425,21 +415,19 @@ class _ProfileState extends State<Profile> {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(
-                                          width:
-                                              15), // Space between the two TextFields
+                                      const SizedBox(width: 15),
                                       Expanded(
                                         child: TextField(
                                           controller: _birthdayController,
-                                          style: TextStyle(fontSize: 15),
+                                          style: const TextStyle(fontSize: 15),
                                           onTap: () => _selectDate(context),
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                             border: OutlineInputBorder(),
                                             labelText: 'วันเกิด',
-                                            labelStyle: const TextStyle(
+                                            labelStyle: TextStyle(
                                               fontSize: 20,
                                             ),
-                                            hintStyle: const TextStyle(
+                                            hintStyle: TextStyle(
                                               fontStyle: FontStyle.italic,
                                             ),
                                             fillColor: Colors.white,
@@ -452,14 +440,12 @@ class _ProfileState extends State<Profile> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
+                                  const SizedBox(height: 15),
                                   TextField(
                                     readOnly: true,
                                     controller: TextEditingController(
                                         text: _user.email!),
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                         label: Text(
                                           'อีเมล',
                                           style: TextStyle(fontSize: 20),
@@ -467,9 +453,7 @@ class _ProfileState extends State<Profile> {
                                         border: OutlineInputBorder(),
                                         prefixIcon: Icon(Icons.email)),
                                   ),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
+                                  const SizedBox(height: 15),
                                 ],
                               ),
                             ),
@@ -487,7 +471,7 @@ class _ProfileState extends State<Profile> {
                                   },
                                 ),
                                 GradientButton(
-                                    colors: [
+                                    colors: const [
                                       Color(0xFFf6a5c1),
                                       Color(0xFF5fadcf)
                                     ],
@@ -507,7 +491,7 @@ class _ProfileState extends State<Profile> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
                                 GradientButton(
-                                    colors: [
+                                    colors: const [
                                       Color(0xFFf6a5c1),
                                       Color(0xFF5fadcf)
                                     ],
@@ -515,12 +499,13 @@ class _ProfileState extends State<Profile> {
                                     onPressed: () {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (context) => HistoryPost(),
+                                          builder: (context) =>
+                                              const HistoryPost(),
                                         ),
                                       );
                                     }),
                                 GradientButton(
-                                    colors: [
+                                    colors: const [
                                       Color(0xFFf6a5c1),
                                       Color(0xFF5fadcf)
                                     ],
@@ -529,7 +514,7 @@ class _ProfileState extends State<Profile> {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              HistoryMakeOffer(),
+                                              const HistoryMakeOffer(),
                                         ),
                                       );
                                     }),
@@ -538,7 +523,7 @@ class _ProfileState extends State<Profile> {
                             Row(
                               children: <Widget>[
                                 GradientButton(
-                                  colors: [
+                                  colors: const [
                                     Color(0xFFf6a5c1),
                                     Color(0xFF5fadcf)
                                   ],
@@ -546,7 +531,8 @@ class _ProfileState extends State<Profile> {
                                   onPressed: () {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
-                                        builder: (context) => HistoryPayment(),
+                                        builder: (context) =>
+                                            const HistoryPayment(),
                                       ),
                                     );
                                   },
@@ -571,54 +557,55 @@ class _ProfileState extends State<Profile> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.email,
                                   color: Color.fromARGB(255, 191, 19, 243),
                                   size: 25,
                                 ),
-                                SizedBox(width: 10),
-                                Text(
+                                const SizedBox(width: 10),
+                                const Text(
                                   'peerapatza401@gmail.com',
                                   style: TextStyle(fontSize: 17),
                                 ),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          Color.fromARGB(255, 101, 191, 247),
-                                    ),
-                                    onPressed: () async {
-                                      encodeQueryParameters(
-                                          Map<String, String> params) {
-                                        return params.entries
-                                            .map((MapEntry<String, String> e) =>
-                                                '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-                                            .join('&');
-                                      }
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color.fromARGB(
+                                        255, 101, 191, 247),
+                                  ),
+                                  onPressed: () async {
+                                    encodeQueryParameters(
+                                        Map<String, String> params) {
+                                      return params.entries
+                                          .map((MapEntry<String, String> e) =>
+                                              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+                                          .join('&');
+                                    }
 
-                                      final Uri emailUri = Uri(
-                                        scheme: 'mailto',
-                                        path: 'smith@example.com',
-                                        query: encodeQueryParameters(<String,
-                                            String>{
-                                          'subject':
-                                              'Example Subject & Symbols are allowed!',
-                                          'body': 'test1'
-                                        }),
-                                      );
-                                      if (await canLaunchUrl(emailUri)) {
-                                        launchUrl(emailUri);
-                                      } else {
-                                        throw Exception(
-                                            'Could not launch $emailUri');
-                                      }
-                                    },
-                                    child: const Text(
-                                      'ติดต่อเรา',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ))
+                                    final Uri emailUri = Uri(
+                                      scheme: 'mailto',
+                                      path: 'smith@example.com',
+                                      query: encodeQueryParameters(<String,
+                                          String>{
+                                        'subject':
+                                            'Example Subject & Symbols are allowed!',
+                                        'body': 'test1'
+                                      }),
+                                    );
+                                    if (await canLaunchUrl(emailUri)) {
+                                      launchUrl(emailUri);
+                                    } else {
+                                      throw Exception(
+                                          'Could not launch $emailUri');
+                                    }
+                                  },
+                                  child: const Text(
+                                    'ติดต่อเรา',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ],
                             )
                           ],
@@ -749,21 +736,19 @@ class _ProfileState extends State<Profile> {
     return Container(
       height: 100.0,
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
         horizontal: 20,
         vertical: 20,
       ),
       child: Column(
         children: <Widget>[
-          Text(
+          const Text(
             "เลือกรูปภาพของคุณ",
             style: TextStyle(
               fontSize: 20,
             ),
           ),
-          SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -771,15 +756,15 @@ class _ProfileState extends State<Profile> {
                 onPressed: () {
                   takePhoto(ImageSource.camera);
                 },
-                icon: Icon(Icons.camera),
-                label: Text('กล้อง'),
+                icon: const Icon(Icons.camera),
+                label: const Text('กล้อง'),
               ),
               TextButton.icon(
                 onPressed: () {
                   takePhoto(ImageSource.gallery);
                 },
-                icon: Icon(Icons.camera),
-                label: Text('แกลลอรี่'),
+                icon: const Icon(Icons.camera),
+                label: const Text('แกลลอรี่'),
               ),
             ],
           )
