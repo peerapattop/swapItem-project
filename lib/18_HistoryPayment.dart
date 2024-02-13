@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class HistoryPayment extends StatefulWidget {
   const HistoryPayment({Key? key}) : super(key: key);
@@ -24,36 +25,38 @@ class _HistoryPaymentState extends State<HistoryPayment> {
     _requestVipRef = FirebaseDatabase.instance.ref().child('requestvip');
     selectedPayment = null;
 
+    _listenToPayments(); // Call function to listen to payment updates
+  }
+
+  void _listenToPayments() {
     _requestVipRef
         .orderByChild('user_uid')
         .equalTo(_user.uid)
-        .limitToLast(1)
         .onValue
         .listen((event) {
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic> data =
-            Map<dynamic, dynamic>.from(event.snapshot.value as Map);
-        var lastKey = data.keys.last;
-        var lastPayment = Map<dynamic, dynamic>.from(data[lastKey]);
-
-        // Since we are listening to the last payment, we clear the list to ensure
-        // it only contains the latest payment and corresponds to the first button.
+        Map<dynamic, dynamic>.from(event.snapshot.value as Map);
         paymentsList.clear();
-
-        setState(() {
-          paymentsList.insert(
-              0, lastPayment); // Insert at the start of the list
-          selectedPayment = lastPayment;
-          _selectedIndex = 0; // This ensures the first button is selected
+        data.forEach((key, value) {
+          paymentsList.add(Map<dynamic, dynamic>.from(value));
         });
+
+        // Set selectedPayment and selectedIndex to show latest data immediately
+        if (paymentsList.isNotEmpty) {
+          setState(() {
+            selectedPayment = paymentsList.first;
+            _selectedIndex = 0;
+          });
+        }
       }
     });
   }
 
-  void selectPayment(Map<dynamic, dynamic> paymentData) {
+  void selectPayment(Map<dynamic, dynamic> paymentData, int index) {
     setState(() {
-      selectedPayment =
-          paymentData; // Update selectedPayment with the chosen data
+      selectedPayment = paymentData;
+      _selectedIndex = index;
     });
   }
 
@@ -94,7 +97,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
               );
             } else if (snapshot.hasError) {
               // Handle errors
-              return Center(
+              return const Center(
                 child: Text('Error loading data'),
               );
             } else if (snapshot.hasData &&
@@ -155,8 +158,8 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                                                             1)
                                                     : null,
                                               ),
-                                              SizedBox(height: 8),
-                                              Text(
+                                              const SizedBox(height: 8),
+                                              const Text(
                                                 'กำลังดาวน์โหลดรูปภาพ...',
                                                 style: TextStyle(fontSize: 16),
                                               ),
@@ -171,16 +174,16 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color:
-                                            Color.fromARGB(255, 217, 217, 216),
+                                            const Color.fromARGB(255, 217, 217, 216),
                                         borderRadius:
                                             BorderRadius.circular(12.0),
                                       ),
-                                      padding: EdgeInsets.all(16.0),
+                                      padding: const EdgeInsets.all(16.0),
                                       child: Column(
                                         children: [
                                           Row(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.tag,
                                                 color: Colors.blue,
                                               ),
@@ -195,34 +198,33 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                                           ),
                                           Row(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.date_range,
                                                 color: Colors.blue,
                                               ),
                                               const SizedBox(width: 5),
                                               Text(
-                                                ' วันที่ : ' +
-                                                    selectedPayment!['date'],
-                                                style: TextStyle(fontSize: 18),
-                                              )
+                                                "วันที่ : ${DateFormat('dd MMMM yyyy', 'th_TH').format(DateTime.parse(selectedPayment!['date']))}",
+                                                style: const TextStyle(fontSize: 18),
+                                              ),
                                             ],
                                           ),
                                           Row(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.access_time_outlined,
                                                 color: Colors.blue,
                                               ),
                                               const SizedBox(width: 5),
                                               Text(
                                                 ' เวลา : ${selectedPayment!['time']} น.',
-                                                style: TextStyle(fontSize: 18),
+                                                style: const TextStyle(fontSize: 18),
                                               )
                                             ],
                                           ),
                                           Row(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.list,
                                                 color: Colors.blue,
                                               ),
@@ -236,7 +238,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                                           ),
                                           Row(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.safety_check,
                                                 color: Colors.blue,
                                               ),
@@ -244,7 +246,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                                               Text(
                                                 ' สถานะ : ' +
                                                     selectedPayment!['status'],
-                                                style: TextStyle(fontSize: 18),
+                                                style: const TextStyle(fontSize: 18),
                                               )
                                             ],
                                           ),
@@ -257,10 +259,11 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                             ],
                           ),
                         )
-                      : Expanded(
+                      : const Expanded(
                           child: Center(
-                              child: Text(
-                                  'Please select a payment to view the details')),
+                            child: Text(
+                                'Please select a payment to view the details'),
+                          ),
                         ),
                 ],
               );
@@ -275,7 +278,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                       width: 100,
                     ),
                     const SizedBox(height: 20),
-                    Text(
+                    const Text(
                       'ไม่มีประวัติการชำระเงิน',
                       style: TextStyle(fontSize: 20),
                     ),
@@ -301,7 +304,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
       child: Container(
         width: 40,
         height: 40,
-        margin: EdgeInsets.all(4),
+        margin: const EdgeInsets.all(4),
         decoration: BoxDecoration(
           color: _selectedIndex == index
               ? Colors.blue
@@ -315,7 +318,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
         child: Center(
           child: Text(
             '${index + 1}',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.white,
