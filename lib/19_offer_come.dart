@@ -28,6 +28,7 @@ class _offerComeState extends State<offerCome> {
   int? mySlideindex;
   List<String> image_post = [];
   @override
+  //เรียงข้องมูลโดยที่ใน firbasr มี "timestamp" เป็นตัวเลือกให้คุ
   void initState() {
     super.initState();
     _user = FirebaseAuth.instance.currentUser!;
@@ -43,9 +44,12 @@ class _offerComeState extends State<offerCome> {
 
         data.forEach((key, value) {
           if (value['statusPosts'] == "รอการยืนยัน") {
-            postsList.insert(0, value);
+            postsList.add(value);
           }
         });
+
+        // Sort postsList by 'timestamp' in descending order
+        postsList.sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
 
         if (postsList.isNotEmpty) {
           setState(() {
@@ -161,7 +165,8 @@ class _offerComeState extends State<offerCome> {
                                               Text(
                                                 'หมายเลขโพสต์ : ' +
                                                     selectedPost!['postNumber'],
-                                                style: const TextStyle(fontSize: 18),
+                                                style: const TextStyle(
+                                                    fontSize: 18),
                                               ),
                                             ],
                                           ),
@@ -174,7 +179,8 @@ class _offerComeState extends State<offerCome> {
                                               const SizedBox(width: 8),
                                               Text(
                                                 "วันที่ : ${DateFormat('dd MMMM yyyy', 'th_TH').format(DateTime.parse(selectedPost!['date']))}",
-                                                style: const TextStyle(fontSize: 18),
+                                                style: const TextStyle(
+                                                    fontSize: 18),
                                               ),
                                             ],
                                           ),

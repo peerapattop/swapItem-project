@@ -31,6 +31,7 @@ class NewPost extends StatefulWidget {
 }
 
 class _NewPostState extends State<NewPost> {
+  String timeclick = '';
   final item_name = TextEditingController();
   final brand = TextEditingController();
   final model = TextEditingController();
@@ -161,7 +162,6 @@ class _NewPostState extends State<NewPost> {
           List<String> imageUrls = await uploadImages(images);
           String postNumber = generateRandomPostNumber();
 
-
           // Generate uid for the post
           String? postUid = itemRef.key;
           String time = now.hour.toString().padLeft(2, '0') +
@@ -174,9 +174,8 @@ class _NewPostState extends State<NewPost> {
               now.month.toString().padLeft(2, '0') +
               "-" +
               now.day.toString().padLeft(2, '0');
-
-          // บันทึก URL รูปภาพพร้อมกับข้อมูลอื่น ๆ ในฐานข้อมูล
           Map userDataMap = {
+            'timestamp': timeclick,
             'statusPosts': "รอการยืนยัน",
             'imageUser': imageUser,
             'post_uid': postUid,
@@ -207,11 +206,12 @@ class _NewPostState extends State<NewPost> {
 
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (BuildContext context) => PostSuccess(
-              time: time,
-              date: date,
-              postNumber: postNumber,
-            )),
+            MaterialPageRoute(
+                builder: (BuildContext context) => PostSuccess(
+                      time: time,
+                      date: date,
+                      postNumber: postNumber,
+                    )),
           );
         }
       }
@@ -427,6 +427,8 @@ class _NewPostState extends State<NewPost> {
                       ),
                     ),
                     onPressed: () {
+                      saveTimestampToFirebase();
+                      fetchTimestampFromFirebase();
                       completer.complete(true);
                       Navigator.pop(context);
                     },
@@ -780,6 +782,43 @@ class _NewPostState extends State<NewPost> {
         ),
       ),
     ));
+  }
+
+  Future<void> saveTimestampToFirebase() async {
+    DatabaseReference reference = FirebaseDatabase.instance.ref().child('Time');
+
+    // Set the data with the server timestamp in the Realtime Database
+    await reference.set({
+      'timestamp': ServerValue.timestamp,
+    });
+  }
+
+  Future<void> fetchTimestampFromFirebase() async {
+    DatabaseReference timeRef =
+        FirebaseDatabase.instance.reference().child('Time');
+
+    // Listen for changes on the "Time" node in Firebase Realtime Database
+    timeRef.onValue.listen((event) {
+      if (event.snapshot.value != null) {
+        // Convert the server timestamp to a String
+        String timestamp = event.snapshot.value.toString();
+
+        // Remove non-numeric characters
+        String numericTimestamp = timestamp.replaceAll(RegExp(r'[^0-9]'), '');
+
+        // Convert to integer
+        int numericValue = int.parse(numericTimestamp);
+
+        // Store the numeric timestamp in the 'timeclick' variable
+        setState(() {
+          timeclick =
+              numericValue.toString(); // บันทึกจาก Firebase ในเครื่องเรา
+        });
+
+        // Use the 'timeclick' variable as needed
+        print('Numeric Timestamp from Firebase: $timeclick');
+      }
+    });
   }
 
   takePicture() async {

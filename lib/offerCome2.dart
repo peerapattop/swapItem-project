@@ -17,6 +17,7 @@ class offerCome2 extends StatefulWidget {
 }
 
 class _offerCome2State extends State<offerCome2> {
+  String timeclick = '';
   late String? idPost;
   late User _user;
   late DatabaseReference _offerRef;
@@ -30,6 +31,7 @@ class _offerCome2State extends State<offerCome2> {
   @override
   void initState() {
     super.initState();
+    saveTimestampToFirebase();
     _user = FirebaseAuth.instance.currentUser!;
     _offerRef = FirebaseDatabase.instance.ref().child('offer');
     selectedOffer = null;
@@ -40,10 +42,10 @@ class _offerCome2State extends State<offerCome2> {
   // Method to load offers based on post UID
   void _loadOffers() {
     _offerRef.orderByChild('post_uid').equalTo(widget.postUid).onValue.listen(
-          (event) {
+      (event) {
         if (event.snapshot.value != null) {
-          Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
-              event.snapshot.value as Map);
+          Map<dynamic, dynamic> data =
+              Map<dynamic, dynamic>.from(event.snapshot.value as Map);
 
           setState(() {
             postsList.clear();
@@ -78,20 +80,20 @@ class _offerCome2State extends State<offerCome2> {
           );
         } else if (snapshot.hasError) {
           return const Center(
-            child: Text('Error loading data'),//888
+            child: Text('Error loading data'), //888
           );
-        } else if (snapshot.hasData &&
-            snapshot.data!.snapshot.value != null) {
+        } else if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
           // Your existing code for handling data without clearing postsList
-          Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
-              snapshot.data!.snapshot.value as Map);
+          Map<dynamic, dynamic> data =
+              Map<dynamic, dynamic>.from(snapshot.data!.snapshot.value as Map);
           postsList.clear(); // Clearing here if new data is coming
           data.forEach((key, value) {
             postsList.add(Map<dynamic, dynamic>.from(value));
           });
-          print('testtttttttt : '+widget.postUid);
+          print('testtttttttt : ' + widget.postUid);
           return Column(
-            children: [//888
+            children: [
+              //888
               SizedBox(
                 height: 50,
                 child: SingleChildScrollView(
@@ -253,8 +255,8 @@ class _offerCome2State extends State<offerCome2> {
                   ),
                   const SizedBox(width: 150),
                   ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.green),
                     onPressed: () {
                       if (selectedOffer != null &&
                           selectedOffer!.containsKey('post_uid')) {
@@ -350,9 +352,9 @@ class _offerCome2State extends State<offerCome2> {
         String id = userData['id'] ?? '';
         String imageUser = userData['image_user'];
         String username = userData['username'];
-        String  creditPostSuccess = userData['creditPostSuccess'].toString();
-        String  creditOfferSuccess = userData['creditOfferSuccess'].toString();
-        String  creditOfferFailure = userData['creditOfferFailure'].toString();
+        String creditPostSuccess = userData['creditPostSuccess'].toString();
+        String creditOfferSuccess = userData['creditOfferSuccess'].toString();
+        String creditOfferFailure = userData['creditOfferFailure'].toString();
 
         Navigator.push(
           context,
@@ -361,7 +363,7 @@ class _offerCome2State extends State<offerCome2> {
               username: username,
               id: id,
               imageUser: imageUser,
-                creditPostSuccess: creditPostSuccess,
+              creditPostSuccess: creditPostSuccess,
               creditOfferSuccess: creditOfferSuccess,
               creditOfferFailure: creditOfferFailure,
             ),
@@ -411,6 +413,43 @@ class _offerCome2State extends State<offerCome2> {
     );
   }
 
+  Future<void> saveTimestampToFirebase() async {
+    DatabaseReference reference = FirebaseDatabase.instance.ref().child('Time');
+
+    // Set the data with the server timestamp in the Realtime Database
+    await reference.set({
+      'timestamp': ServerValue.timestamp,
+    });
+  }
+
+  Future<void> fetchTimestampFromFirebase() async {
+    DatabaseReference timeRef =
+        FirebaseDatabase.instance.reference().child('Time');
+
+    // Listen for changes on the "Time" node in Firebase Realtime Database
+    timeRef.onValue.listen((event) {
+      if (event.snapshot.value != null) {
+        // Convert the server timestamp to a String
+        String timestamp = event.snapshot.value.toString();
+
+        // Remove non-numeric characters
+        String numericTimestamp = timestamp.replaceAll(RegExp(r'[^0-9]'), '');
+
+        // Convert to integer
+        int numericValue = int.parse(numericTimestamp);
+
+        // Store the numeric timestamp in the 'timeclick' variable
+        setState(() {
+          timeclick =
+              numericValue.toString(); // บันทึกจาก Firebase ในเครื่องเรา
+        });
+
+        // Use the 'timeclick' variable as needed
+        print('Numeric Timestamp from Firebase: $timeclick');
+      }
+    });
+  }
+
   Future<void> _performUpdateOffer() async {
     try {
       DatabaseReference postRef1 = FirebaseDatabase.instance
@@ -423,7 +462,7 @@ class _offerCome2State extends State<offerCome2> {
           .child(selectedOffer!['offer_uid']);
 
       DatabaseReference userRef =
-      FirebaseDatabase.instance.ref().child('users').child(_user.uid);
+          FirebaseDatabase.instance.ref().child('users').child(_user.uid);
 
       await postRef1.update({
         'user_id_confirm': selectedOffer?['offer_uid'],
@@ -434,9 +473,9 @@ class _offerCome2State extends State<offerCome2> {
 
       // อัพเดตเครดิตปัจจุบันของผู้ใช้
       DataSnapshot dataSnapshot =
-      await userRef.once().then((snapshot) => snapshot.snapshot);
+          await userRef.once().then((snapshot) => snapshot.snapshot);
       Map<dynamic, dynamic> userData =
-      dataSnapshot.value as Map<dynamic, dynamic>;
+          dataSnapshot.value as Map<dynamic, dynamic>;
       int currentCredit = userData['creditPostSuccess'] ?? 0;
       int updatedCredit = currentCredit + 1;
       await userRef.update({
@@ -446,7 +485,6 @@ class _offerCome2State extends State<offerCome2> {
       /* อัพเดตข้อมูลของผู้ใช้ที่ถูกเลือก */
 
       /* อัพเดตข้อมูลของผู้ใช้ทีไม่ได้่ถูกเลือก */
-
     } catch (e) {
       // Handle error if necessary
     }
