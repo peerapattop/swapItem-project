@@ -164,7 +164,8 @@ class _HomePageState extends State<HomePage> {
                         dataUser, postCount, makeofferCount),
                     const Divider(),
                     searchItem(), //ค้นหา
-                    showItemSearch(), //แสดงสิ่งของที่ค้นหา
+                    showItemSearch(),
+
                   ],
                 );
               }

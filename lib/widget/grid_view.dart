@@ -101,10 +101,10 @@ class _GridView2State extends State<GridView2> {
                       return Card(
                         clipBehavior: Clip.antiAlias,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(6),
                         ),
                         elevation: 5,
-                        margin: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(0.1),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -201,6 +201,8 @@ class _GridView2State extends State<GridView2> {
                         ),
                       );
                     },
+                  ),
+                  SizedBox(height: 200
                   ),
                 ],
               ),

@@ -52,7 +52,7 @@ class _offerCome2State extends State<offerCome2> {
             data.forEach((key, value) {
               postsList.add(Map<dynamic, dynamic>.from(value));
             });
-
+            //postsList.sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
             if (postsList.isNotEmpty) {
               selectedOffer = postsList.last;
               _selectedIndex = 0;
