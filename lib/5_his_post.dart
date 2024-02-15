@@ -41,28 +41,31 @@ class _HistoryPostState extends State<HistoryPost> {
     offerRef = FirebaseDatabase.instance.ref().child('offer');
     selectedPost = null;
 
-    _postRef
-        .orderByChild('uid')
-        .equalTo(_user.uid)
-        .limitToLast(1)
-        .onValue
-        .listen((event) {
+    _postRef.orderByChild('uid').equalTo(_user.uid).onValue.listen((event) {
+      postsList.clear();
+
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic> data =
             Map<dynamic, dynamic>.from(event.snapshot.value as Map);
-        var lastKey = data.keys.last;
-        var lastPayment = Map<dynamic, dynamic>.from(data[lastKey]);
 
-        // Since we are listening to the last payment, we clear the list to ensure
-        // it only contains the latest payment and corresponds to the first button.
-        postsList.clear();
-
-        setState(() {
-          postsList.insert(0, lastPayment); // Insert at the start of the list
-          selectedPost = lastPayment;
-          _selectedIndex = 0; // This ensures the first button is selected
+        data.forEach((key, value) {
+          if (true) {
+            postsList.add(value);
+          }
         });
+
+        // Sort postsList by 'timestamp' in descending order
+        postsList.sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
+
+        if (postsList.isNotEmpty) {
+          setState(() {
+            selectedPost = postsList.first;
+            _selectedIndex = 0;
+          });
+        }
       }
+    }).onError((error) {
+      print("Error fetching data: $error");
     });
   }
 
@@ -146,28 +149,19 @@ class _HistoryPostState extends State<HistoryPost> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 10),
-                    Text('กำลังดาวน์โหลดข้อมูล....'),
-                  ],
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return const Center(
-                child: Text('Error loading data'),
+                child: CircularProgressIndicator(),
               );
             } else if (snapshot.hasData &&
                 snapshot.data!.snapshot.value != null) {
-              // Your existing code for handling data
-              postsList.clear();
               Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
                   snapshot.data!.snapshot.value as Map);
-              data.forEach((key, value) {
-                postsList.add(Map<dynamic, dynamic>.from(value));
-              });
+
+              // bool hasPendingPosts = false;
+              // data.forEach((key, value) {
+              //   if (value['statusPosts'] == "รอการยืนยัน") {
+              //     hasPendingPosts = true;
+              //   }
+              // });
 
               return Column(
                 children: [
@@ -660,8 +654,8 @@ class _HistoryPostState extends State<HistoryPost> {
         String username = userData['username'] ?? 'Unknown';
         String imageUser = userData['image_user'] ?? '';
         String creditPostSuccess = userData['creditPostSuccess'].toString();
-        String  creditOfferSuccess = userData['creditOfferSuccess'].toString();
-        String  creditOfferFailure = userData['creditOfferFailure'].toString();
+        String creditOfferSuccess = userData['creditOfferSuccess'].toString();
+        String creditOfferFailure = userData['creditOfferFailure'].toString();
 
         // Navigate to ProfileScreen with user data
         Navigator.push(
@@ -671,7 +665,7 @@ class _HistoryPostState extends State<HistoryPost> {
               username: username,
               id: id,
               imageUser: imageUser,
-                creditPostSuccess: creditPostSuccess,
+              creditPostSuccess: creditPostSuccess,
               creditOfferSuccess: creditOfferSuccess,
               creditOfferFailure: creditOfferFailure,
             ),

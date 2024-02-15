@@ -41,29 +41,34 @@ class _offerCome2State extends State<offerCome2> {
 
   // Method to load offers based on post UID
   void _loadOffers() {
-    _offerRef.orderByChild('post_uid').equalTo(widget.postUid).onValue.listen(
-      (event) {
-        if (event.snapshot.value != null) {
-          Map<dynamic, dynamic> data =
-              Map<dynamic, dynamic>.from(event.snapshot.value as Map);
+    _offerRef
+        .orderByChild('post_uid')
+        .equalTo(widget.postUid)
+        .onValue
+        .listen((event) {
+      if (event.snapshot.value != null) {
+        Map<dynamic, dynamic> data =
+            Map<dynamic, dynamic>.from(event.snapshot.value as Map);
 
+        data.forEach((key, value) {
+          if (true) {
+            postsList.add(value);
+          }
+        });
+
+        // Sort postsList by 'timestamp' in descending order
+        postsList.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
+
+        if (postsList.isNotEmpty) {
           setState(() {
-            postsList.clear();
-            data.forEach((key, value) {
-              postsList.add(Map<dynamic, dynamic>.from(value));
-            });
-            //postsList.sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
-            if (postsList.isNotEmpty) {
-              selectedOffer = postsList.last;
-              _selectedIndex = 0;
-            }
+            selectedOffer = postsList.reversed.toList()[0];
+            _selectedIndex = 0;
           });
         }
-      },
-      onError: (error) {
-        print("Error fetching data: $error");
-      },
-    );
+      }
+    }).onError((error) {
+      print("Error fetching data: $error");
+    });
   }
 
   @override
@@ -74,23 +79,18 @@ class _offerCome2State extends State<offerCome2> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
-            child: Column(
-              children: [],
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return const Center(
-            child: Text('Error loading data'), //888
+            child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
-          // Your existing code for handling data without clearing postsList
           Map<dynamic, dynamic> data =
               Map<dynamic, dynamic>.from(snapshot.data!.snapshot.value as Map);
-          postsList.clear(); // Clearing here if new data is coming
-          data.forEach((key, value) {
-            postsList.add(Map<dynamic, dynamic>.from(value));
-          });
-          print('testtttttttt : ' + widget.postUid);
+
+          // bool hasPendingPosts = false;
+          // data.forEach((key, value) {
+          //   if (true) {
+          //     hasPendingPosts = true;
+          //   }
+          // });
           return Column(
             children: [
               //888
