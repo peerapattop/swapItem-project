@@ -60,6 +60,39 @@ class _His_Make_off2State extends State<His_Make_off2> {
     });
   }
 
+  void fetchUserData(String uid, BuildContext context) {
+    FirebaseDatabase.instance.ref('users/$uid').once().then((databaseEvent) {
+      if (databaseEvent.snapshot.value != null) {
+        Map<String, dynamic> userData =
+        Map<String, dynamic>.from(databaseEvent.snapshot.value as Map);
+        String id = userData['id'] ?? '';
+        String imageUser = userData['image_user'];
+        String username = userData['username'];
+        String creditPostSuccess = userData['creditPostSuccess'].toString();
+        String creditOfferSuccess = userData['creditOfferSuccess'].toString();
+        String creditOfferFailure = userData['creditOfferFailure'].toString();
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProfileScreen(
+              username: username,
+              id: id,
+              imageUser: imageUser,
+              creditPostSuccess: creditPostSuccess,
+              creditOfferSuccess: creditOfferSuccess,
+              creditOfferFailure: creditOfferFailure,
+            ),
+          ),
+        );
+      } else {
+        print('User data not found for UID: $uid');
+      }
+    }).catchError((error) {
+      print('Error fetching user data: $error');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -94,6 +127,35 @@ class _His_Make_off2State extends State<His_Make_off2> {
               Row(
                 children: [
                   const Icon(
+                    Icons.person,
+                    color: Colors.blue,
+                  ),
+                  const SizedBox(width: 8),
+                  const Text(
+                    "ชื่อผู้ใช้ : ",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  const SizedBox(width: 8),
+                  GestureDetector(
+                    onTap: () {
+                      fetchUserData(selectedOffer!['uid'],context);
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          selectedOffer!['username'],
+                          style: const TextStyle(
+                              fontSize: 18, color: Colors.purple),
+                        ),
+                        const Icon(Icons.search, color: Colors.purple),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Icon(
                     Icons.date_range,
                     color: Colors.blue,
                   ),
@@ -107,8 +169,8 @@ class _His_Make_off2State extends State<His_Make_off2> {
               Row(
                 children: [
                   const Icon(
-                    Icons.punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                    color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                    Icons.punch_clock,
+                    color: Colors.blue,
                   ),
                   Text(
                     " เวลา :" + selectedOffer!['time'] + ' น.',
@@ -121,7 +183,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
                     left: 2, right: 2, top: 10, bottom: 10),
                 child: Container(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       begin: Alignment(0.00, -1.00),
                       end: Alignment(0, 1),
                       colors: [Color(0x66482A1D), Color(0x00E86B36)],
@@ -181,12 +243,34 @@ class _His_Make_off2State extends State<His_Make_off2> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
-              SizedBox(height: 10),
+              ElevatedButton.icon(
+                icon: const Icon(
+                  Icons.chat,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ChatDetail(receiverUid: selectedOffer!['uid']),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  minimumSize: const Size(500, 50),
+                ),
+                label: const Text(
+                  'แชท',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              ),
+              const SizedBox(height: 20),
             ],
           );
         } else {
-          return Center(
+          return const Center(
             child: Text('No data available'),
           );
         }
