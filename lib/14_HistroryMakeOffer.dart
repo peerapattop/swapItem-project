@@ -69,7 +69,7 @@ class _His_MakeofferState extends State<His_Makeoffer> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("ข้อเสนอที่เข้ามา"),
+          title: const Text("ประวัติการยื่นข้อเสนอ"),
           toolbarHeight: 40,
           centerTitle: true,
           flexibleSpace: Container(
@@ -109,34 +109,39 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                         children: [
                                           SizedBox(
                                             height: 50,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: postsList
-                                                  .asMap()
-                                                  .entries
-                                                  .map((entry) {
-                                                int idx = entry.key;
-                                                Map<dynamic, dynamic> postData =
-                                                    entry.value;
-                                                image_post = List<String>.from(
-                                                    selectedPost!['imageUrls']);
-                                                return Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 4.0),
-                                                  child:
-                                                      buildCircularNumberButton(
-                                                          idx, postData),
-                                                );
-                                              }).toList(),
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: postsList
+                                                    .asMap()
+                                                    .entries
+                                                    .map((entry) {
+                                                  int idx = entry.key;
+                                                  Map<dynamic, dynamic>
+                                                      postData = entry.value;
+                                                  image_post =
+                                                      List<String>.from(
+                                                          selectedPost![
+                                                              'imageUrls']);
+                                                  return Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 4.0),
+                                                    child:
+                                                        buildCircularNumberButton(
+                                                            idx, postData),
+                                                  );
+                                                }).toList(),
+                                              ),
                                             ),
                                           ),
                                           const Divider(),
                                           const Padding(
                                             padding: EdgeInsets.all(10.0),
                                             child: Text(
-                                              'โพสต์ของคุณ',
+                                              'ข้อเสนอที่คุณสร้าง',
                                               style: TextStyle(fontSize: 20),
                                             ),
                                           ),
@@ -152,7 +157,8 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                               const SizedBox(width: 8),
                                               Text(
                                                 'หมายเลขโพสต์ : ' +
-                                                    selectedPost!['uid'],
+                                                    selectedPost!['offerNumber']
+                                                        .toString(),
                                                 style: const TextStyle(
                                                     fontSize: 18),
                                               ),
@@ -191,119 +197,100 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                           const SizedBox(height: 10),
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                                left: 2,
-                                                right: 15,
-                                                top: 10,
-                                                bottom: 10),
-                                            child: Container(
-                                              width: 437,
-                                              height: 360,
-                                              decoration: ShapeDecoration(
-                                                gradient: const LinearGradient(
-                                                  begin: Alignment(0.00, -1.00),
-                                                  end: Alignment(0, 1),
-                                                  colors: [
-                                                    Color(0x60414DB3),
-                                                    Color(0x008B47C1)
-                                                  ],
+                                                left: 2, right: 2, top: 10, bottom: 10),
+                                            child: SingleChildScrollView(
+                                              child: Container(
+                                                width: 437,
+                                                height: 200,
+                                                decoration: ShapeDecoration(
+                                                  gradient:
+                                                      const LinearGradient(
+                                                    begin:
+                                                        Alignment(0.00, -1.00),
+                                                    end: Alignment(0, 1),
+                                                    colors: [
+                                                      Color(0x60414DB3),
+                                                      Color(0x008B47C1)
+                                                    ],
+                                                  ),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            19),
+                                                  ),
                                                 ),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(19),
-                                                ),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(11.0),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'ชื่อสิ่งของ : ' +
-                                                          selectedPost![
-                                                              'uid'],
-                                                      style: TextStyle(
-                                                          fontSize: 18),
+                                                child: SingleChildScrollView(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            11.0),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          'ชื่อสิ่งของ : ' +
+                                                              selectedPost![
+                                                                  'nameitem1'],
+                                                          style: TextStyle(
+                                                              fontSize: 18),
+                                                        ),
+                                                        Text(
+                                                          'หมวดหมู่ : ' +
+                                                              selectedPost![
+                                                                  'type1'],
+                                                          style: TextStyle(
+                                                              fontSize: 18),
+                                                        ),
+                                                        Text(
+                                                          'ยี่ห้อ : ' +
+                                                              selectedPost![
+                                                                  'brand1'],
+                                                          style: TextStyle(
+                                                              fontSize: 18),
+                                                        ),
+                                                        Text(
+                                                          'รุ่น : ' +
+                                                              selectedPost![
+                                                                  'model1'],
+                                                          style: TextStyle(
+                                                              fontSize: 18),
+                                                        ),
+                                                        Text(
+                                                          'รายละเอียด : ' +
+                                                              selectedPost![
+                                                                  'detail1'],
+                                                          style: TextStyle(
+                                                              fontSize: 18),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                      ],
                                                     ),
-                                                    Text(
-                                                      'หมวดหมู่ : ' +
-                                                          selectedPost!['uid'],
-                                                      style: TextStyle(
-                                                          fontSize: 18),
-                                                    ),
-                                                    Text(
-                                                      'ยี่ห้อ : ' +
-                                                          selectedPost![
-                                                              'uid'],
-                                                      style: TextStyle(
-                                                          fontSize: 18),
-                                                    ),
-                                                    Text(
-                                                      'รุ่น : ' +
-                                                          selectedPost![
-                                                              'uid'],
-                                                      style: TextStyle(
-                                                          fontSize: 18),
-                                                    ),
-                                                    Text(
-                                                      'รายละเอียด : ' +
-                                                          selectedPost![
-                                                              'uid'],
-                                                      style: TextStyle(
-                                                          fontSize: 18),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Center(
-                                                        child: Image.asset(
-                                                      'assets/images/swap.png',
-                                                      width: 20,
-                                                    )),
-                                                    SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Text(
-                                                      'ชื่อสิ่งของ : ' +
-                                                          selectedPost![
-                                                              'uid'],
-                                                      style: TextStyle(
-                                                          fontSize: 18),
-                                                    ),
-                                                    Text(
-                                                      'ยี่ห้อ : ' +
-                                                          selectedPost![
-                                                              'uid'],
-                                                      style: TextStyle(
-                                                          fontSize: 18),
-                                                    ),
-                                                    Text(
-                                                      'รุ่น : ' +
-                                                          selectedPost![
-                                                              'uid'],
-                                                      style: TextStyle(
-                                                          fontSize: 18),
-                                                    ),
-                                                    Text(
-                                                      'รายละเอียด : ' +
-                                                          selectedPost![
-                                                              'uid'],
-                                                      style: TextStyle(
-                                                          fontSize: 18),
-                                                    ),
-                                                  ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
+                                          Center(
+                                              child: Image.asset(
+                                            'assets/icons/improve.png',
+                                            height: 50,
+                                            width: 50,
+                                          )),
                                           const Divider(),
+                                          Padding(
+                                            padding: const EdgeInsets.all(12.0),
+                                            child: Text(
+                                              'โพสต์ที่คุณยื่นข้อเสนอ',
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                          ),
                                           His_Make_off2(
                                               postUid:
-                                                  selectedPost!['offer_uid']),
+                                                  selectedPost!['post_uid']),
                                         ],
                                       ),
                                     ),

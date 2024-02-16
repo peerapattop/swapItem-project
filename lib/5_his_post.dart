@@ -25,7 +25,7 @@ class _HistoryPostState extends State<HistoryPost> {
   late DatabaseReference _postRef, offerRef;
   List<Map<dynamic, dynamic>> postsList = [];
   int _selectedIndex = -1;
-  Map<dynamic, dynamic>? selectedPost;
+  Map<dynamic, dynamic>? selectedOffer;
   late GoogleMapController mapController;
   int? mySlideindex;
   List<String> image_post = [];
@@ -39,7 +39,7 @@ class _HistoryPostState extends State<HistoryPost> {
     _user = FirebaseAuth.instance.currentUser!;
     _postRef = FirebaseDatabase.instance.ref().child('postitem');
     offerRef = FirebaseDatabase.instance.ref().child('offer');
-    selectedPost = null;
+    selectedOffer = null;
 
     _postRef.orderByChild('uid').equalTo(_user.uid).onValue.listen((event) {
       postsList.clear();
@@ -59,7 +59,7 @@ class _HistoryPostState extends State<HistoryPost> {
 
         if (postsList.isNotEmpty) {
           setState(() {
-            selectedPost = postsList.first;
+            selectedOffer = postsList.first;
             _selectedIndex = 0;
           });
         }
@@ -77,8 +77,8 @@ class _HistoryPostState extends State<HistoryPost> {
         // Remove the post from the list to update the UI
         postsList.removeWhere((post) => post['post_uid'] == postKey);
         // Reset selectedPost if it's the one being deleted
-        if (selectedPost != null && selectedPost!['post_uid'] == postKey) {
-          selectedPost = null;
+        if (selectedOffer != null && selectedOffer!['post_uid'] == postKey) {
+          selectedOffer = null;
         }
       });
     }).catchError((error) {
@@ -123,7 +123,7 @@ class _HistoryPostState extends State<HistoryPost> {
 
   void selectPayment(Map<dynamic, dynamic> postData) {
     setState(() {
-      selectedPost = postData; // Update selectedPost with the chosen data
+      selectedOffer = postData; // Update selectedPost with the chosen data
     });
   }
 
@@ -175,12 +175,12 @@ class _HistoryPostState extends State<HistoryPost> {
                           int idx = entry.key;
                           Map<dynamic, dynamic> postData = entry.value;
                           image_post =
-                              List<String>.from(selectedPost!['imageUrls']);
+                              List<String>.from(selectedOffer!['imageUrls']);
                           latitude = double.tryParse(
-                              selectedPost!['latitude'].toString());
+                              selectedOffer!['latitude'].toString());
                           longitude = double.tryParse(
-                              selectedPost!['longitude'].toString());
-                          checkPost = selectedPost!['statusPosts'] == 'สำเร็จ'
+                              selectedOffer!['longitude'].toString());
+                          checkPost = selectedOffer!['statusPosts'] == 'สำเร็จ'
                               ? true
                               : false;
                           return Padding(
@@ -193,7 +193,7 @@ class _HistoryPostState extends State<HistoryPost> {
                     ),
                   ),
                   const Divider(),
-                  selectedPost != null
+                  selectedOffer != null
                       ? Expanded(
                           child: ListView(
                             children: [
@@ -214,7 +214,7 @@ class _HistoryPostState extends State<HistoryPost> {
                                             ),
                                             const SizedBox(width: 8),
                                             Text(
-                                              "หมายเลขโพสต์ : ${selectedPost!['postNumber']}",
+                                              "หมายเลขโพสต์ : ${selectedOffer!['postNumber']}",
                                               style:
                                                   const TextStyle(fontSize: 18),
                                             ),
@@ -228,7 +228,7 @@ class _HistoryPostState extends State<HistoryPost> {
                                             ),
                                             const SizedBox(width: 8),
                                             Text(
-                                              "วันที่ : ${convertDateFormat(selectedPost!['date'])}",
+                                              "วันที่ : ${convertDateFormat(selectedOffer!['date'])}",
                                               style:
                                                   const TextStyle(fontSize: 18),
                                             ),
@@ -244,7 +244,7 @@ class _HistoryPostState extends State<HistoryPost> {
                                             ),
                                             Text(
                                               " เวลา :" +
-                                                  selectedPost!['time'] +
+                                                  selectedOffer!['time'] +
                                                   ' น.',
                                               style:
                                                   const TextStyle(fontSize: 18),
@@ -274,32 +274,32 @@ class _HistoryPostState extends State<HistoryPost> {
                                                 children: [
                                                   Text(
                                                     'ชื่อสิ่งของ : ' +
-                                                        selectedPost![
+                                                        selectedOffer![
                                                             'item_name'],
                                                     style:
                                                         TextStyle(fontSize: 18),
                                                   ),
                                                   Text(
                                                     'หมวดหมู่ : ' +
-                                                        selectedPost!['type'],
+                                                        selectedOffer!['type'],
                                                     style:
                                                         TextStyle(fontSize: 18),
                                                   ),
                                                   Text(
                                                     'ยี่ห้อ : ' +
-                                                        selectedPost!['brand'],
+                                                        selectedOffer!['brand'],
                                                     style:
                                                         TextStyle(fontSize: 18),
                                                   ),
                                                   Text(
                                                     'รุ่น : ' +
-                                                        selectedPost!['model'],
+                                                        selectedOffer!['model'],
                                                     style:
                                                         TextStyle(fontSize: 18),
                                                   ),
                                                   Text(
                                                     'รายละเอียด : ' +
-                                                        selectedPost!['detail'],
+                                                        selectedOffer!['detail'],
                                                     style: const TextStyle(
                                                         fontSize: 18),
                                                   ),
@@ -311,23 +311,23 @@ class _HistoryPostState extends State<HistoryPost> {
                                                   )),
                                                   const SizedBox(height: 10),
                                                   Text(
-                                                    'ชื่อสิ่งของ : ${selectedPost!['item_name1']}',
+                                                    'ชื่อสิ่งของ : ${selectedOffer!['item_name1']}',
                                                     style:
                                                         TextStyle(fontSize: 18),
                                                   ),
                                                   Text(
                                                     'ยี่ห้อ : ' +
-                                                        selectedPost!['brand1'],
+                                                        selectedOffer!['brand1'],
                                                     style: const TextStyle(
                                                         fontSize: 18),
                                                   ),
                                                   Text(
-                                                    'รุ่น : ${selectedPost!['model1']}',
+                                                    'รุ่น : ${selectedOffer!['model1']}',
                                                     style: const TextStyle(
                                                         fontSize: 18),
                                                   ),
                                                   Text(
-                                                    'รายละเอียด : ${selectedPost!['details1']}',
+                                                    'รายละเอียด : ${selectedOffer!['details1']}',
                                                     style: const TextStyle(
                                                         fontSize: 18),
                                                   ),
@@ -374,19 +374,19 @@ class _HistoryPostState extends State<HistoryPost> {
                                                     backgroundColor:
                                                         Colors.red),
                                                 onPressed: () {
-                                                  if (selectedPost != null &&
-                                                      selectedPost!.containsKey(
+                                                  if (selectedOffer != null &&
+                                                      selectedOffer!.containsKey(
                                                           'post_uid')) {
                                                     showDeleteConfirmation(
                                                         context,
-                                                        selectedPost![
+                                                        selectedOffer![
                                                             'post_uid']);
                                                   } else {
                                                     print(
                                                         'No post selected for deletion.');
                                                     // Debug: Print the current state of selectedPost
                                                     print(
-                                                        'Current selectedPost: $selectedPost');
+                                                        'Current selectedPost: $selectedOffer');
                                                   }
                                                 },
                                                 icon: const Icon(Icons.delete,
@@ -442,7 +442,7 @@ class _HistoryPostState extends State<HistoryPost> {
     return StreamBuilder(
       stream: offerRef
           .orderByChild('offer_uid')
-          .equalTo(selectedPost!['user_id_confirm'])
+          .equalTo(selectedOffer!['user_id_confirm'])
           .onValue,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -684,7 +684,7 @@ class _HistoryPostState extends State<HistoryPost> {
       onTap: () {
         setState(() {
           _selectedIndex = index; // Update the selected index
-          selectedPost = postData; // Update the selected payment data
+          selectedOffer = postData; // Update the selected payment data
         });
       },
       child: Container(
