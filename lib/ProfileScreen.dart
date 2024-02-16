@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -86,24 +87,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                   const SizedBox(height: 30),
-                  const Text('เครดิตการโพสต์',
-                      style: TextStyle(
-                          fontSize: 19,
-                          color: Color.fromARGB(255, 124, 1, 124),
-                          decoration: TextDecoration.underline)),
+                  const Text(
+                    'เครดิตการโพสต์',
+                    style: TextStyle(
+                        fontSize: 19,
+                        color: Color.fromARGB(255, 124, 1, 124),
+                        decoration: TextDecoration.underline),
+                  ),
+
+
                   Text(
                     'แลกเปลี่ยนสำเร็จ : ${widget.creditPostSuccess}',
+                    style: const TextStyle(fontSize: 19),
+                  ),
+                  const Text(
+                    'ปฎิเสธผู้แลกเปลี่ยน : 999',
                     style: TextStyle(fontSize: 19),
                   ),
-                  SizedBox(height: 20),
-                  Text('เครดิตการยื่นข้อเสนอ',
-                      style: TextStyle(
-                          fontSize: 19,
-                          color: Color.fromARGB(255, 124, 1, 124),
-                          decoration: TextDecoration.underline)),
+                  const Text(
+                    'ถูกปฎิเสธโดยผู้ยื่นข้อเสนอ : 999',
+                    style: TextStyle(fontSize: 19),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'เครดิตการยื่นข้อเสนอ',
+                    style: TextStyle(
+                        fontSize: 19,
+                        color: Color.fromARGB(255, 124, 1, 124),
+                        decoration: TextDecoration.underline),
+                  ),
                   Text('แลกเปลี่ยนสำเร็จ : ${widget.creditOfferSuccess}',
+                      style: const TextStyle(fontSize: 19)),
+                  const Text('ปฎิเสธผู้โพสต์ : 999',
                       style: TextStyle(fontSize: 19)),
-                  Text('ถูกปฎิเสธ : ${widget.creditOfferFailure}', style: TextStyle(fontSize: 19)),
+                  const Text('ถูกปฎิเสธโดยผู้โพสต์ : 999',
+                      style: TextStyle(fontSize: 19)),
                 ],
               ),
             ),
