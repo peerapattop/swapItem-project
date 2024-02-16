@@ -17,15 +17,10 @@ class His_Make_off2 extends StatefulWidget {
 }
 
 class _His_Make_off2State extends State<His_Make_off2> {
-  String timeclick = '';
-  late String? idPost;
   late User _user;
   late DatabaseReference _postRef;
   List<Map<dynamic, dynamic>> postsList = [];
-  int _selectedIndex = -1;
   Map<dynamic, dynamic>? selectedOffer;
-  late GoogleMapController mapController;
-  int? mySlideindex;
   List<String> image_post = [];
 
   @override
@@ -33,18 +28,14 @@ class _His_Make_off2State extends State<His_Make_off2> {
     super.initState();
     _user = FirebaseAuth.instance.currentUser!;
     _postRef = FirebaseDatabase.instance.ref().child('postitem');
-    selectedOffer = null;
 
     _loadOffers();
   }
 
   // Method to load offers based on post UID
   void _loadOffers() {
-    _postRef
-        .orderByChild('post_uid')
-        .equalTo(widget.postUid)
-        .onValue
-        .listen((event) {
+    _postRef.orderByChild('post_uid').equalTo(widget.postUid).onValue.listen(
+        (event) {
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic> data =
             Map<dynamic, dynamic>.from(event.snapshot.value as Map);
@@ -61,11 +52,10 @@ class _His_Make_off2State extends State<His_Make_off2> {
         if (postsList.isNotEmpty) {
           setState(() {
             selectedOffer = postsList.reversed.toList()[0];
-            _selectedIndex = 0;
           });
         }
       }
-    }).onError((error) {
+    }, onError: (error) {
       print("Error fetching data: $error");
     });
   }
@@ -76,183 +66,131 @@ class _His_Make_off2State extends State<His_Make_off2> {
       stream: _postRef.orderByChild('post_uid').equalTo(widget.postUid).onValue,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
+          return Center(
             child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
           Map<dynamic, dynamic> data =
               Map<dynamic, dynamic>.from(snapshot.data!.snapshot.value as Map);
-
-          // bool hasPendingPosts = false;
-          // data.forEach((key, value) {
-          //   if (true) {
-          //     hasPendingPosts = true;
-          //   }
-          // });
+          image_post = List<String>.from(selectedOffer!['imageUrls']);
           return Column(
             children: [
-              //888
-              SizedBox(
-                height: 50,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: postsList.reversed
-                        .toList()
-                        .asMap()
-                        .entries
-                        .map((entry) {
-                      int idx = entry.key;
-                      Map<dynamic, dynamic> postData = entry.value;
-                      image_post =
-                          List<String>.from(selectedOffer!['username']);
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: buildCircularNumberButton(idx, postData),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'ข้อเสนอที่เข้ามา',
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
               ImageGalleryWidget(
                 imageUrls: image_post,
               ),
-              const SizedBox(height: 10),
               Row(
                 children: [
-                  const Icon(Icons.tag, color: Colors.blue),
-                  const SizedBox(width: 5),
-                  Text(
-                    'หมายเลขการยื่นข้อเสนอ : ${selectedOffer?['username']}',
-                    style: const TextStyle(fontSize: 19),
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  const Icon(Icons.date_range, color: Colors.blue),
-                  const SizedBox(width: 5),
-                  Text(
-                    'วันที่ : ${convertDateFormat(selectedOffer?['username'])}',
-                    style: const TextStyle(fontSize: 19),
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  const Icon(Icons.lock_clock, color: Colors.blue),
-                  const SizedBox(width: 5),
-                  Text(
-                    'เวลา : ${selectedOffer?['username']} น.',
-                    style: const TextStyle(fontSize: 19),
-                  )
-                ],
-              ),
-              const SizedBox(height: 10),
-              Container(
-                width: 437,
-                height: 272,
-                decoration: ShapeDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment(0.00, -1.00),
-                    end: Alignment(0, 1),
-                    colors: [Color(0x9B419FB3), Color(0x008B47C1)],
+                  const Icon(
+                    Icons.tag,
+                    color: Colors.blue,
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(19),
+                  const SizedBox(width: 8),
+                  Text(
+                    "หมายเลขโพสต์ : ${selectedOffer!['postNumber']}",
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.date_range,
+                    color: Colors.blue,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    "วันที่ : ${convertDateFormat(selectedOffer!['date'])}",
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                    color: Colors.blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                  ),
+                  Text(
+                    " เวลา :" + selectedOffer!['time'] + ' น.',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 2, right: 2, top: 10, bottom: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment(0.00, -1.00),
+                      end: Alignment(0, 1),
+                      colors: [Color(0x66482A1D), Color(0x00E86B36)],
+                    ),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(11.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'ชื่อสิ่งของ : ' + selectedOffer!['item_name'],
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Text(
+                          'หมวดหมู่ : ' + selectedOffer!['type'],
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Text(
+                          'ยี่ห้อ : ' + selectedOffer!['brand'],
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Text(
+                          'รุ่น : ' + selectedOffer!['model'],
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Text(
+                          'รายละเอียด : ' + selectedOffer!['detail'],
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                        const SizedBox(height: 10),
+                        Center(
+                            child: Image.asset(
+                          'assets/images/swap.png',
+                          width: 20,
+                        )),
+                        const SizedBox(height: 10),
+                        Text(
+                          'ชื่อสิ่งของ : ${selectedOffer!['item_name1']}',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Text(
+                          'ยี่ห้อ : ' + selectedOffer!['brand1'],
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                        Text(
+                          'รุ่น : ${selectedOffer!['model1']}',
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                        Text(
+                          'รายละเอียด : ${selectedOffer!['details1']}',
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(11.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'ชื่อสิ่งของ : ' + selectedOffer!['username'],
-                        style: const TextStyle(fontSize: 19),
-                      ),
-                      Text(
-                        'ยี่ห้อ : ' + selectedOffer!['username'],
-                        style: const TextStyle(fontSize: 19),
-                      ),
-                      Text(
-                        'รุ่น : ' + selectedOffer!['username'],
-                        style: const TextStyle(fontSize: 19),
-                      ),
-                      Text(
-                        'รายละเอียด : ' + selectedOffer!['username'],
-                        style: const TextStyle(fontSize: 19),
-                      ),
-                    ],
-                  ),
-                ),
               ),
+              SizedBox(height: 10),
+              SizedBox(height: 10),
             ],
           );
         } else {
           return Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.network(
-                  'https://cdn-icons-png.flaticon.com/256/11191/11191755.png',
-                  width: 100,
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'ยังไม่มีข้อเสนอที่เข้ามาให้แลกเปลี่ยน',
-                  style: TextStyle(fontSize: 20),
-                ),
-              ],
-            ),
+            child: Text('No data available'),
           );
         }
       },
-    );
-  }
-
-  Widget buildCircularNumberButton(int index, Map<dynamic, dynamic> postData) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          _selectedIndex = index; // Update the selected index
-          selectedOffer = postData; // Update the selected payment data
-        });
-      },
-      child: Container(
-        width: 40,
-        height: 40,
-        margin: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          color: _selectedIndex == index
-              ? Colors.blue
-              : Colors.grey, // Highlight if selected
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: Colors.black,
-            width: 1.0,
-          ),
-        ),
-        child: Center(
-          child: Text(
-            '${index + 1}',
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
     );
   }
 
