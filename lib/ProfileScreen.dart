@@ -8,15 +8,14 @@ class ProfileScreen extends StatefulWidget {
   final String creditPostSuccess;
   final String creditOfferSuccess;
 
-  const ProfileScreen(
-      {Key? key,
-      required this.username,
-      required this.id,
-      required this.imageUser,
-      required this.creditPostSuccess,
-      required this.creditOfferSuccess,
-      })
-      : super(key: key);
+  const ProfileScreen({
+    Key? key,
+    required this.username,
+    required this.id,
+    required this.imageUser,
+    required this.creditPostSuccess,
+    required this.creditOfferSuccess,
+  }) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -85,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           style: TextStyle(fontSize: 19)),
                     ],
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   const Text(
                     'เครดิตการโพสต์',
                     style: TextStyle(
@@ -93,11 +92,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         color: Color.fromARGB(255, 124, 1, 124),
                         decoration: TextDecoration.underline),
                   ),
-
-
-                  Text(
-                    'แลกเปลี่ยนสำเร็จ : ${widget.creditPostSuccess}',
-                    style: const TextStyle(fontSize: 19),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 180,
+                        height: 180,
+                        child: PieChart(
+                          PieChartData(
+                            sections: [
+                              PieChartSectionData(
+                                value: 30,
+                                color: Colors.green,
+                                title: '50%',
+                                radius: 50,
+                              ),
+                              PieChartSectionData(
+                                value: 30,
+                                color: Colors.red,
+                                title: '50%',
+                                radius: 50,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 40),
+                      // Text(
+                      //   'อัตราการแลกเปลี่ยน : ${widget.creditPostSuccess}',
+                      //   style: const TextStyle(fontSize: 18),
+                      // ),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.circle,
+                                size: 20,
+                                color: Colors.green,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                'สำเร็จ',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.circle,
+                                size: 20,
+                                color: Colors.red,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                'ไม่สำเร็จ',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 20),
                   const Text(
@@ -107,8 +170,78 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         color: Color.fromARGB(255, 124, 1, 124),
                         decoration: TextDecoration.underline),
                   ),
-                  Text('แลกเปลี่ยนสำเร็จ : ${widget.creditOfferSuccess}',
-                      style: const TextStyle(fontSize: 19)),
+                  // Text('แลกเปลี่ยนสำเร็จ : ${widget.creditOfferSuccess}',
+                  //     style: const TextStyle(fontSize: 19)),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 180,
+                        height: 180,
+                        child: PieChart(
+                          PieChartData(
+                            sections: [
+                              PieChartSectionData(
+                                value: 30,
+                                color: Colors.green,
+                                title: '50%',
+                                radius: 50,
+                              ),
+                              PieChartSectionData(
+                                value: 30,
+                                color: Colors.red,
+                                title: '50%',
+                                radius: 50,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 40),
+                      // Text(
+                      //   'อัตราการแลกเปลี่ยน : ${widget.creditPostSuccess}',
+                      //   style: const TextStyle(fontSize: 18),
+                      // ),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.circle,
+                                size: 20,
+                                color: Colors.green,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                'สำเร็จ',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.circle,
+                                size: 20,
+                                color: Colors.red,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                'ไม่สำเร็จ',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
