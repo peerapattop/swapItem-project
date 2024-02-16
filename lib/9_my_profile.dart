@@ -513,7 +513,7 @@ class _ProfileState extends State<Profile> {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              const HistoryMakeOffer(),
+                                              const His_Makeoffer(),
                                         ),
                                       );
                                     }),

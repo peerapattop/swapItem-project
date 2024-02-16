@@ -10,7 +10,8 @@ class MakeAnOfferSuccess extends StatelessWidget {
   final String time;
   final int offerNumber;
   const MakeAnOfferSuccess(
-      {super.key, required this.offer_id,
+      {super.key,
+      required this.offer_id,
       required this.date,
       required this.time,
       required this.offerNumber});
@@ -70,7 +71,7 @@ class MakeAnOfferSuccess extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => HistoryMakeOffer(),
+                            builder: (context) => His_Makeoffer(),
                           ),
                         );
                       },
@@ -89,7 +90,8 @@ class MakeAnOfferSuccess extends StatelessWidget {
                       onPressed: () {
                         Navigator.popUntil(context, (route) => route.isFirst);
                       },
-                      child: const Text('หน้าแรก', style: TextStyle(fontSize: 20)),
+                      child:
+                          const Text('หน้าแรก', style: TextStyle(fontSize: 20)),
                     ),
                   ],
                 ),
