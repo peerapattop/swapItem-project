@@ -320,9 +320,8 @@ class _ProfileState extends State<Profile> {
                                 )
                               ],
                             ),
-                            const SizedBox(
-                              height: 20,
-                            ),
+                            const SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             Container(
                               alignment: Alignment.centerLeft,
                               child: Column(
