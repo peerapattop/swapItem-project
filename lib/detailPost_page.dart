@@ -79,7 +79,6 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
               imageUser: postData['imageUser'],
               creditPostSuccess: creditPostSuccess,
               creditOfferSuccess: creditOfferSuccess,
-              creditOfferFailure: creditOfferFailure,
             ),
           ),
         );

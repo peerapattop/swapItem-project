@@ -365,7 +365,6 @@ class _offerCome2State extends State<offerCome2> {
               imageUser: imageUser,
               creditPostSuccess: creditPostSuccess,
               creditOfferSuccess: creditOfferSuccess,
-              creditOfferFailure: creditOfferFailure,
             ),
           ),
         );

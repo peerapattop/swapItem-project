@@ -667,7 +667,6 @@ class _HistoryPostState extends State<HistoryPost> {
               imageUser: imageUser,
               creditPostSuccess: creditPostSuccess,
               creditOfferSuccess: creditOfferSuccess,
-              creditOfferFailure: creditOfferFailure,
             ),
           ),
         );

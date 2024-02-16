@@ -7,7 +7,6 @@ class ProfileScreen extends StatefulWidget {
   final String imageUser;
   final String creditPostSuccess;
   final String creditOfferSuccess;
-  final String creditOfferFailure;
 
   const ProfileScreen(
       {Key? key,
@@ -16,7 +15,7 @@ class ProfileScreen extends StatefulWidget {
       required this.imageUser,
       required this.creditPostSuccess,
       required this.creditOfferSuccess,
-      required this.creditOfferFailure})
+      })
       : super(key: key);
 
   @override
@@ -100,14 +99,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     'แลกเปลี่ยนสำเร็จ : ${widget.creditPostSuccess}',
                     style: const TextStyle(fontSize: 19),
                   ),
-                  const Text(
-                    'ปฎิเสธผู้แลกเปลี่ยน : 999',
-                    style: TextStyle(fontSize: 19),
-                  ),
-                  const Text(
-                    'ถูกปฎิเสธโดยผู้ยื่นข้อเสนอ : 999',
-                    style: TextStyle(fontSize: 19),
-                  ),
                   const SizedBox(height: 20),
                   const Text(
                     'เครดิตการยื่นข้อเสนอ',
@@ -118,10 +109,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Text('แลกเปลี่ยนสำเร็จ : ${widget.creditOfferSuccess}',
                       style: const TextStyle(fontSize: 19)),
-                  const Text('ปฎิเสธผู้โพสต์ : 999',
-                      style: TextStyle(fontSize: 19)),
-                  const Text('ถูกปฎิเสธโดยผู้โพสต์ : 999',
-                      style: TextStyle(fontSize: 19)),
                 ],
               ),
             ),

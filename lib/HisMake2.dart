@@ -81,7 +81,6 @@ class _His_Make_off2State extends State<His_Make_off2> {
               imageUser: imageUser,
               creditPostSuccess: creditPostSuccess,
               creditOfferSuccess: creditOfferSuccess,
-              creditOfferFailure: creditOfferFailure,
             ),
           ),
         );
