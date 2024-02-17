@@ -43,7 +43,7 @@ class _offerComeState extends State<offerCome> {
             Map<dynamic, dynamic>.from(event.snapshot.value as Map);
 
         data.forEach((key, value) {
-          if (value['statusPosts'] == "รอการยืนยัน") {
+          if (value['statusPosts'] == "สามารถยื่นข้อเสนอได้") {
             postsList.add(value);
           }
         });
@@ -94,7 +94,7 @@ class _offerComeState extends State<offerCome> {
 
               bool hasPendingPosts = false;
               data.forEach((key, value) {
-                if (value['statusPosts'] == "รอการยืนยัน") {
+                if (value['statusPosts'] == "สามารถยื่นข้อเสนอได้") {
                   hasPendingPosts = true;
                 }
               });
