@@ -468,10 +468,10 @@ class _offerCome2State extends State<offerCome2> {
 
       await postRef1.update({
         'user_id_confirm': selectedOffer?['offer_uid'],
-        'statusPosts': "จอง",
+        'statusPosts': "รอดำเนินการ",
       });
 
-      await offerRef1.update({'statusOffers': 'ถูกเลือกโดยผู้โพสต์'});
+      await offerRef1.update({'statusOffers': 'รอดำเนินการ'});
 
       // อัพเดตเครดิตปัจจุบันของผู้ใช้
       // DataSnapshot dataSnapshot =

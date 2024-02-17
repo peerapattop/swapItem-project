@@ -180,7 +180,7 @@ class _HistoryPostState extends State<HistoryPost> {
                               selectedOffer!['latitude'].toString());
                           longitude = double.tryParse(
                               selectedOffer!['longitude'].toString());
-                          checkPost = selectedOffer!['statusPosts'] == 'จอง'
+                          checkPost = selectedOffer!['statusPosts'] == 'รอดำเนินการ'
                               ? true
                               : false;
                           return Padding(

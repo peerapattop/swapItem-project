@@ -270,7 +270,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
                 ),
               ),
               const SizedBox(height: 10),
-              selectedOffer!['statusPosts'] == 'จอง'
+              selectedOffer!['statusPosts'] == 'กำลังดำเนินการ'
                   ? Row(
                       children: [
                         ElevatedButton.icon(
@@ -312,7 +312,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
                         ),
                       ],
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
               const SizedBox(height: 20),
             ],
           );

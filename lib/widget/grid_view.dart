@@ -94,6 +94,7 @@ class _GridView2State extends State<GridView2> {
                       String latitude = userData['latitude'].toString();
                       String longitude = userData['longitude'].toString();
                       String imageUser = userData['imageUser'];
+                      String statusPost = userData['statusPosts'];
                       String userUid = userData['uid'];
                       bool isVip = userData['status_user'] == 'ผู้ใช้พรีเมี่ยม';
 
@@ -161,7 +162,9 @@ class _GridView2State extends State<GridView2> {
                                 ),
                               ),
                             ),
-                            const Spacer(),
+                            const Divider(),
+                            Center(child: Text('สถานะ: $statusPost')),
+                            const SizedBox(height: 5),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: user?.uid != userUid

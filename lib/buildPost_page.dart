@@ -186,7 +186,7 @@ class _NewPostState extends State<NewPost> {
           String date = "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
           Map userDataMap = {
             'timestamp': timeclick,
-            'statusPosts': "รอการยืนยัน",
+            'statusPosts': "สามารถยื่นข้อเสนอได้",
             'imageUser': imageUser,
             'post_uid': postUid,
             'email': email,
