@@ -141,13 +141,77 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                           const Padding(
                                             padding: EdgeInsets.all(10.0),
                                             child: Text(
-                                              'ข้อเสนอที่คุณสร้าง',
+                                              'ข้อเสนอของคุณ',
                                               style: TextStyle(fontSize: 20),
                                             ),
                                           ),
                                           ImageGalleryWidget(
                                             imageUrls: image_post,
                                           ),
+                                          selectedPost != null &&
+                                                  selectedPost![
+                                                          'statusOffers'] ==
+                                                      'ถูกเลือกโดยผู้โพสต์'
+                                              ? Row(
+                                                  children: [
+                                                    const Icon(Icons.add_alert,
+                                                        color: Colors.blue),
+                                                    const SizedBox(width: 5),
+                                                    Text(
+                                                      'สถานะ : ${selectedPost!['statusOffers']}',
+                                                      style: const TextStyle(
+                                                          fontSize: 19),
+                                                    ),
+                                                    const SizedBox(width: 5),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext context) {
+                                                            return AlertDialog(
+                                                              title: const Row(
+                                                                children: [
+                                                                  Icon(Icons.alarm_on_sharp,color: Colors.red,size: 25,),
+                                                                   Text("แจ้งเตือน"),
+                                                                ],
+                                                              ),
+                                                              content: const Text("กรุณาติดต่อผู้โพสต์เพื่อทำการแลกเปลี่ยนสิ่งของ"),
+                                                              actions: <Widget>[
+                                                                TextButton(
+                                                                  onPressed: () {
+                                                                    Navigator.of(context).pop();
+                                                                  },
+                                                                  style: TextButton.styleFrom(
+                                                                    backgroundColor: Colors.green,
+                                                                  ),
+                                                                  child: const Text(
+                                                                    "ยืนยัน",
+                                                                    style: TextStyle(color: Colors.white),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            );
+                                                          },
+                                                        );
+
+                                                      },
+                                                      child: const Icon(Icons.info, size: 20,color: Colors.purple,),
+                                                    ),
+
+                                                  ],
+                                                )
+                                              : Row(
+                                                  children: [
+                                                    const Icon(Icons.tag,
+                                                        color: Colors.blue),
+                                                    const SizedBox(width: 5),
+                                                    Text(
+                                                      'สถานะ : ${selectedPost!['statusOffers']}',
+                                                      style: const TextStyle(
+                                                          fontSize: 19),
+                                                    )
+                                                  ],
+                                                ),
                                           Row(
                                             children: [
                                               const Icon(
@@ -197,7 +261,10 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                           const SizedBox(height: 10),
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                                left: 2, right: 2, top: 10, bottom: 10),
+                                                left: 2,
+                                                right: 2,
+                                                top: 10,
+                                                bottom: 10),
                                             child: SingleChildScrollView(
                                               child: Container(
                                                 width: 437,

@@ -268,6 +268,47 @@ class _His_Make_off2State extends State<His_Make_off2> {
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  ElevatedButton.icon(
+                    icon: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      // Add your onPressed logic here
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    ),
+                    label: const Text(
+                      'ปฎิเสธการแลกเปลี่ยน',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton.icon(
+                    icon: const Icon(
+                      Icons.check,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      // Add your onPressed logic here
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                    ),
+                    label: const Text(
+                      'ยืนยันการแลกเปลี่ยน',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ),
+                ],
+              ),
+
               const SizedBox(height: 20),
             ],
           );

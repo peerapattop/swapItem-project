@@ -253,7 +253,7 @@ class _offerCome2State extends State<offerCome2> {
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
-                  const SizedBox(width: 150),
+                  const SizedBox(width: 100),
                   ElevatedButton.icon(
                     style:
                         ElevatedButton.styleFrom(backgroundColor: Colors.green),
@@ -269,7 +269,7 @@ class _offerCome2State extends State<offerCome2> {
                       }
                     },
                     icon: const Icon(Icons.check, color: Colors.white),
-                    label: const Text('ยืนยัน',
+                    label: const Text('เลือกข้อเสนอนี้',
                         style: TextStyle(color: Colors.white)),
                   ),
                 ],
@@ -426,7 +426,7 @@ class _offerCome2State extends State<offerCome2> {
 
   Future<void> fetchTimestampFromFirebase() async {
     DatabaseReference timeRef =
-        FirebaseDatabase.instance.reference().child('Time');
+        FirebaseDatabase.instance.ref().child('Time');
 
     // Listen for changes on the "Time" node in Firebase Realtime Database
     timeRef.onValue.listen((event) {
@@ -468,21 +468,21 @@ class _offerCome2State extends State<offerCome2> {
 
       await postRef1.update({
         'user_id_confirm': selectedOffer?['offer_uid'],
-        'statusPosts': "สำเร็จ",
+        'statusPosts': "จอง",
       });
 
-      await offerRef1.update({'statusOffers': 'สำเร็จ'});
+      await offerRef1.update({'statusOffers': 'ถูกเลือกโดยผู้โพสต์'});
 
       // อัพเดตเครดิตปัจจุบันของผู้ใช้
-      DataSnapshot dataSnapshot =
-          await userRef.once().then((snapshot) => snapshot.snapshot);
-      Map<dynamic, dynamic> userData =
-          dataSnapshot.value as Map<dynamic, dynamic>;
-      int currentCredit = userData['creditPostSuccess'] ?? 0;
-      int updatedCredit = currentCredit + 1;
-      await userRef.update({
-        'creditPostSuccess': updatedCredit,
-      });
+      // DataSnapshot dataSnapshot =
+      //     await userRef.once().then((snapshot) => snapshot.snapshot);
+      // Map<dynamic, dynamic> userData =
+      //     dataSnapshot.value as Map<dynamic, dynamic>;
+      // int currentCredit = userData['creditPostSuccess'] ?? 0;
+      // int updatedCredit = currentCredit + 1;
+      // await userRef.update({
+      //   'creditPostSuccess': updatedCredit,
+      // });
 
       /* อัพเดตข้อมูลของผู้ใช้ที่ถูกเลือก */
 
