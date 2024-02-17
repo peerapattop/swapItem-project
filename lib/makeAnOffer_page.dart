@@ -348,6 +348,23 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     return int.parse(randomNumber);
   }
 
+  Future<void> updateTotalOffer() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(user!.uid);
+    DatabaseEvent event = await userRef.once();
+    Map<dynamic, dynamic>? datamap = event.snapshot.value as Map?;
+    if (datamap != null) {
+      int totalOffer = int.tryParse(datamap['totalOffer'].toString()) ?? 0;
+      totalOffer++; // Increment totalPost by 1
+      await userRef.update({
+        'totalOffer': totalOffer, // Update totalPost in Firebase
+      });
+    } else {
+      print('User data not found');
+    }
+  }
+
   Future<String?> _submitOffer() async {
     try {
       if (_nameItem1.text.isEmpty ||
@@ -393,6 +410,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
           userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
       int currentOfferCount = datamap['makeofferCount'] as int? ?? 0;
       String? username = datamap['username'];
+      updateTotalOffer();
 
       if (currentOfferCount > 0 || canPostAfter30Days(userRef, datamap)) {
         // ลดค่า postCount
@@ -430,16 +448,8 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
           'imageUrls': imageUrls,
           'timestamp': timeclick, //เอาเวลาขึ้น
           'post_uid': postUid,
-          "date": now.year.toString() +
-              "-" +
-              now.month.toString().padLeft(2, '0') +
-              "-" +
-              now.day.toString().padLeft(2, '0'),
-          "time": now.hour.toString().padLeft(2, '0') +
-              ":" +
-              now.minute.toString().padLeft(2, '0') +
-              ":" +
-              now.second.toString().padLeft(2, '0'),
+          "date": "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}",
+          "time": "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}",
         };
 
         await itemRef.set(dataRef);
