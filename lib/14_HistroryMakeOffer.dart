@@ -151,7 +151,7 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                           selectedPost != null &&
                                                   selectedPost![
                                                           'statusOffers'] ==
-                                                      'กำลังดำเนินการ'
+                                                      'รอดำเนินการ'
                                               ? Row(
                                                   children: [
                                                     const Icon(Icons.add_alert,
