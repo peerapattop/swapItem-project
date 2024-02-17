@@ -64,7 +64,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
     FirebaseDatabase.instance.ref('users/$uid').once().then((databaseEvent) {
       if (databaseEvent.snapshot.value != null) {
         Map<String, dynamic> userData =
-        Map<String, dynamic>.from(databaseEvent.snapshot.value as Map);
+            Map<String, dynamic>.from(databaseEvent.snapshot.value as Map);
         String id = userData['id'] ?? '';
         String imageUser = userData['image_user'];
         String username = userData['username'];
@@ -101,13 +101,14 @@ class _His_Make_off2State extends State<His_Make_off2> {
       stream: _postRef.orderByChild('post_uid').equalTo(widget.postUid).onValue,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
           Map<dynamic, dynamic> data =
               Map<dynamic, dynamic>.from(snapshot.data!.snapshot.value as Map);
           image_post = List<String>.from(selectedOffer!['imageUrls']);
+          print(selectedOffer!['statusOffers']);
           return Column(
             children: [
               ImageGalleryWidget(
@@ -140,7 +141,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
                   const SizedBox(width: 8),
                   GestureDetector(
                     onTap: () {
-                      fetchUserData(selectedOffer!['uid'],context);
+                      fetchUserData(selectedOffer!['uid'], context);
                     },
                     child: Row(
                       children: [
@@ -269,46 +270,49 @@ class _His_Make_off2State extends State<His_Make_off2> {
                 ),
               ),
               const SizedBox(height: 10),
-              Row(
-                children: [
-                  ElevatedButton.icon(
-                    icon: const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      // Add your onPressed logic here
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    ),
-                    label: const Text(
-                      'ปฎิเสธการแลกเปลี่ยน',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  ElevatedButton.icon(
-                    icon: const Icon(
-                      Icons.check,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      // Add your onPressed logic here
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                    ),
-                    label: const Text(
-                      'ยืนยันการแลกเปลี่ยน',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  ),
-                ],
-              ),
-
+              selectedOffer!['statusPosts'] == 'จอง'
+                  ? Row(
+                      children: [
+                        ElevatedButton.icon(
+                          icon: const Icon(
+                            Icons.close,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            // Add your onPressed logic here
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                          ),
+                          label: const Text(
+                            'ปฎิเสธการแลกเปลี่ยน',
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        ElevatedButton.icon(
+                          icon: const Icon(
+                            Icons.check,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            // Add your onPressed logic here
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 10),
+                          ),
+                          label: const Text(
+                            'ยืนยันการแลกเปลี่ยน',
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                        ),
+                      ],
+                    )
+                  : SizedBox.shrink(),
               const SizedBox(height: 20),
             ],
           );
