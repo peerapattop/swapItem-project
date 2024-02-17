@@ -186,7 +186,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
       Map userDataMap = {
         'creditOfferSuccess':0,
+        'totalOffer':0,
         'creditPostSuccess': 0,
+        'totalPost':0,
         'remainingTime': '',
         'uid': uid,
         'lastPostDate': '',

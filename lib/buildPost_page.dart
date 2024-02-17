@@ -110,6 +110,24 @@ class _NewPostState extends State<NewPost> {
     return postNumber;
   }
 
+  Future<void> updateTotalPost() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(user!.uid);
+    DatabaseEvent event = await userRef.once();
+    Map<dynamic, dynamic>? datamap = event.snapshot.value as Map?;
+    if (datamap != null) {
+      int totalPost = int.tryParse(datamap['totalPost'].toString()) ?? 0;
+      totalPost++; // Increment totalPost by 1
+      await userRef.update({
+        'totalPost': totalPost, // Update totalPost in Firebase
+      });
+    } else {
+      print('User data not found');
+    }
+  }
+
+
   Future<void> buildPost(BuildContext context, List<File> images) async {
     try {
       bool confirmed = await _showPostConfirmationDialog();
@@ -141,6 +159,7 @@ class _NewPostState extends State<NewPost> {
             userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
         int currentPostCount =
             int.tryParse(datamap['postCount'].toString()) ?? 0;
+        updateTotalPost();
 
         // ตรวจสอบว่ายังมีโอกาสโพสต์หรือไม่
         if (currentPostCount > 0 || canPostAfter30Days(userRef, datamap)) {
@@ -152,7 +171,6 @@ class _NewPostState extends State<NewPost> {
             });
           }
 
-          // ... ส่วนที่เหลือของโค้ดสำหรับการโพสต์
           String username = datamap['username'];
           String email = datamap['email'];
           String imageUser = datamap['image_user'];
@@ -164,16 +182,8 @@ class _NewPostState extends State<NewPost> {
 
           // Generate uid for the post
           String? postUid = itemRef.key;
-          String time = now.hour.toString().padLeft(2, '0') +
-              ":" +
-              now.minute.toString().padLeft(2, '0') +
-              ":" +
-              now.second.toString().padLeft(2, '0');
-          String date = now.year.toString() +
-              "-" +
-              now.month.toString().padLeft(2, '0') +
-              "-" +
-              now.day.toString().padLeft(2, '0');
+          String time = "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
+          String date = "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
           Map userDataMap = {
             'timestamp': timeclick,
             'statusPosts': "รอการยืนยัน",
