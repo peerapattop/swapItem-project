@@ -180,7 +180,7 @@ class _HistoryPostState extends State<HistoryPost> {
                               selectedOffer!['latitude'].toString());
                           longitude = double.tryParse(
                               selectedOffer!['longitude'].toString());
-                          checkPost = selectedOffer!['statusPosts'] == 'สำเร็จ'
+                          checkPost = selectedOffer!['statusPosts'] == 'จอง'
                               ? true
                               : false;
                           return Padding(
@@ -299,7 +299,8 @@ class _HistoryPostState extends State<HistoryPost> {
                                                   ),
                                                   Text(
                                                     'รายละเอียด : ' +
-                                                        selectedOffer!['detail'],
+                                                        selectedOffer![
+                                                            'detail'],
                                                     style: const TextStyle(
                                                         fontSize: 18),
                                                   ),
@@ -317,7 +318,8 @@ class _HistoryPostState extends State<HistoryPost> {
                                                   ),
                                                   Text(
                                                     'ยี่ห้อ : ' +
-                                                        selectedOffer!['brand1'],
+                                                        selectedOffer![
+                                                            'brand1'],
                                                     style: const TextStyle(
                                                         fontSize: 18),
                                                   ),
@@ -375,8 +377,9 @@ class _HistoryPostState extends State<HistoryPost> {
                                                         Colors.red),
                                                 onPressed: () {
                                                   if (selectedOffer != null &&
-                                                      selectedOffer!.containsKey(
-                                                          'post_uid')) {
+                                                      selectedOffer!
+                                                          .containsKey(
+                                                              'post_uid')) {
                                                     showDeleteConfirmation(
                                                         context,
                                                         selectedOffer![
@@ -602,7 +605,11 @@ class _HistoryPostState extends State<HistoryPost> {
                 height: 50,
                 width: double
                     .infinity, // Make the button expand to the full width available
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.chat,
+                    color: Colors.white,
+                  ),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                   onPressed: () {
                     Navigator.push(
@@ -614,11 +621,53 @@ class _HistoryPostState extends State<HistoryPost> {
                       ),
                     );
                   },
-                  child: const Text(
+                  label: const Text(
                     'แชท',
                     style: TextStyle(color: Colors.white, fontSize: 19),
                   ),
                 ),
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  ElevatedButton.icon(
+                    icon: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      // Add your onPressed logic here
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                    ),
+                    label: const Text(
+                      'ปฎิเสธการแลกเปลี่ยน',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton.icon(
+                    icon: const Icon(
+                      Icons.check,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      // Add your onPressed logic here
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 10),
+                    ),
+                    label: const Text(
+                      'ยืนยันการแลกเปลี่ยน',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ),
+                ],
               ),
               ...offerWidgets, // Spread the list of offerWidgets here
             ],
