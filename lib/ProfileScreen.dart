@@ -77,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const Icon(Icons.tag, color: Colors.blue),
                       const SizedBox(width: 5),
                       Text('หมายเลขผู้ใช้ : ${widget.id}',
-                          style: TextStyle(fontSize: 19)),
+                          style: const TextStyle(fontSize: 19)),
                     ],
                   ),
                   Row(
@@ -85,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const Icon(Icons.person, color: Colors.blue),
                       const SizedBox(width: 5),
                       Text('ชื่อผู้ใช้: ${widget.username}',
-                          style: TextStyle(fontSize: 19)),
+                          style: const TextStyle(fontSize: 19)),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -109,8 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 value:
                                     double.tryParse(widget.creditPostSuccess),
                                 color: Colors.green,
-                                title:
-                                    '${widget.creditPostSuccess}%',
+                                title: '${widget.creditPostSuccess}%',
                                 radius: 50,
                                 titleStyle: const TextStyle(
                                   fontSize: 15,
@@ -138,10 +137,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       const SizedBox(width: 40),
-                      // Text(
-                      //   'อัตราการแลกเปลี่ยน : ${widget.creditPostSuccess}',
-                      //   style: const TextStyle(fontSize: 18),
-                      // ),
                       const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -190,8 +185,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         color: Color.fromARGB(255, 124, 1, 124),
                         decoration: TextDecoration.underline),
                   ),
-                  // Text('แลกเปลี่ยนสำเร็จ : ${widget.creditOfferSuccess}',
-                  //     style: const TextStyle(fontSize: 19)),
                   const SizedBox(height: 20),
                   Row(
                     children: [
@@ -202,26 +195,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           PieChartData(
                             sections: [
                               PieChartSectionData(
-                                value: 30,
+                                value:
+                                double.tryParse(widget.creditOfferSuccess),
                                 color: Colors.green,
-                                title: '50%',
+                                title: '${widget.creditOfferSuccess}%',
                                 radius: 50,
+                                titleStyle: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                               PieChartSectionData(
-                                value: 30,
+                                value: double.tryParse((double.parse(
+                                    widget.totalOffer) -
+                                    double.parse(widget.creditOfferSuccess))
+                                    .toString()),
                                 color: Colors.red,
-                                title: '50%',
+                                title:
+                                '${(100 - double.parse(widget.creditOfferSuccess)).toStringAsFixed(2)}%',
                                 radius: 50,
+                                titleStyle: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ),
                       const SizedBox(width: 40),
-                      // Text(
-                      //   'อัตราการแลกเปลี่ยน : ${widget.creditPostSuccess}',
-                      //   style: const TextStyle(fontSize: 18),
-                      // ),
                       const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
