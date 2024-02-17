@@ -178,6 +178,7 @@ class _GridView2State extends State<GridView2> {
                                           longti: longitude,
                                           lati: latitude,
                                           imageUser: imageUser,
+                                            statusPost:statusPost,
                                         ),
                                       ),
                                     );

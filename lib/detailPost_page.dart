@@ -12,12 +12,15 @@ class ShowDetailAll extends StatefulWidget {
   final String longti;
   final String lati;
   final String imageUser;
+  final String statusPost;
 
-  ShowDetailAll(
-      {required this.postUid,
-      required this.longti,
-      required this.lati,
-      required this.imageUser});
+  ShowDetailAll({
+    required this.postUid,
+    required this.longti,
+    required this.lati,
+    required this.imageUser,
+    required this.statusPost,
+  });
 
   @override
   _ShowDetailAllState createState() => _ShowDetailAllState();
@@ -67,7 +70,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
             Map<String, dynamic>.from(databaseEvent.snapshot.value as Map);
         String id = userData['id'];
         String creditPostSuccess = userData['creditPostSuccess'].toString();
-        String  creditOfferSuccess = userData['creditOfferSuccess'].toString();
+        String creditOfferSuccess = userData['creditOfferSuccess'].toString();
         String totalOffer = userData['totalOffer'].toString();
         String totalPost = userData['totalPost'].toString();
 
@@ -368,9 +371,9 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                         ),
                         markers: <Marker>{
                           Marker(
-                            markerId: MarkerId('initialPosition'),
+                            markerId: const MarkerId('initialPosition'),
                             position: LatLng(latitude!, longitude!),
-                            infoWindow: InfoWindow(
+                            infoWindow: const InfoWindow(
                               title: 'Marker Title',
                               snippet: 'Marker Snippet',
                             ),
@@ -378,38 +381,51 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                         },
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 15, 239, 19),
-                          ),
-                          onPressed: () {
-                            String send_uid = postData['post_uid'];
-                            String username = postData['username'];
-                            String imageUser = postData['imageUser'];
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => MakeAnOffer(
-                                      postUid: send_uid,
+                    const SizedBox(height: 10),
+                    Center(
+                      child: (postData['statusPosts'] == 'รอดำเนินการ')
+                          ? ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                              ),
+                              onPressed: () {},
+                              child: const Text(
+                                "ไม่สามารถแลกเปลี่ยนได้",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            )
+                          : ElevatedButton(
+                              onPressed: () {
+                                String sendUid = postData['post_uid'];
+                                String username = postData['username'];
+                                String imageUser = postData['imageUser'];
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => MakeAnOffer(
+                                      postUid: sendUid,
                                       username: username,
                                       imageUser: imageUser,
-                                      uidUserpost: postData['uid'])),
-                            );
-                          },
-                          child: const Text(
-                            "ยื่นข้อเสนอ",
-                            style: TextStyle(
-                                color: Colors.white, // ตั้งค่าสีข้อความเป็นสีดำ
-                                fontSize: 18,
-                                fontWeight:
-                                    FontWeight.bold // ตั้งค่าขนาดข้อความ
+                                      uidUserpost: postData['uid'],
+                                    ),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green),
+                              child: const Text(
+                                "ยื่นข้อเสนอ",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                          ),
-                        ),
-                      ),
-                    ),
+                              ),
+                            ),
+                    )
                   ],
                 ),
               ],
