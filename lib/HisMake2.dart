@@ -70,7 +70,8 @@ class _His_Make_off2State extends State<His_Make_off2> {
         String username = userData['username'];
         String creditPostSuccess = userData['creditPostSuccess'].toString();
         String creditOfferSuccess = userData['creditOfferSuccess'].toString();
-        String creditOfferFailure = userData['creditOfferFailure'].toString();
+        String totalOffer = userData['totalOffer'].toString();
+        String totalPost = userData['totalPost'].toString();
 
         Navigator.push(
           context,
@@ -81,6 +82,8 @@ class _His_Make_off2State extends State<His_Make_off2> {
               imageUser: imageUser,
               creditPostSuccess: creditPostSuccess,
               creditOfferSuccess: creditOfferSuccess,
+              totalPost: totalPost,
+              totalOffer: totalOffer,
             ),
           ),
         );

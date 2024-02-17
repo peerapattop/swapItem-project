@@ -68,8 +68,9 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
         String id = userData['id'];
         String creditPostSuccess = userData['creditPostSuccess'].toString();
         String  creditOfferSuccess = userData['creditOfferSuccess'].toString();
-        String  creditOfferFailure = userData['creditOfferFailure'].toString();
-        // Navigate to ProfileScreen with user data
+        String totalOffer = userData['totalOffer'].toString();
+        String totalPost = userData['totalPost'].toString();
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -79,6 +80,8 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
               imageUser: postData['imageUser'],
               creditPostSuccess: creditPostSuccess,
               creditOfferSuccess: creditOfferSuccess,
+              totalOffer: totalOffer,
+              totalPost: totalPost,
             ),
           ),
         );

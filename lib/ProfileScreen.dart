@@ -7,6 +7,8 @@ class ProfileScreen extends StatefulWidget {
   final String imageUser;
   final String creditPostSuccess;
   final String creditOfferSuccess;
+  final String totalOffer;
+  final String totalPost;
 
   const ProfileScreen({
     Key? key,
@@ -15,6 +17,8 @@ class ProfileScreen extends StatefulWidget {
     required this.imageUser,
     required this.creditPostSuccess,
     required this.creditOfferSuccess,
+    required this.totalOffer,
+    required this.totalPost,
   }) : super(key: key);
 
   @override
@@ -102,16 +106,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           PieChartData(
                             sections: [
                               PieChartSectionData(
-                                value: 30,
+                                value:
+                                    double.tryParse(widget.creditPostSuccess),
                                 color: Colors.green,
-                                title: '50%',
+                                title:
+                                    '${widget.creditPostSuccess}%',
                                 radius: 50,
+                                titleStyle: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                               PieChartSectionData(
-                                value: 30,
+                                value: double.tryParse((double.parse(
+                                            widget.totalPost) -
+                                        double.parse(widget.creditPostSuccess))
+                                    .toString()),
                                 color: Colors.red,
-                                title: '50%',
+                                title:
+                                    '${(100 - double.parse(widget.creditPostSuccess)).toStringAsFixed(2)}%',
                                 radius: 50,
+                                titleStyle: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                             ],
                           ),

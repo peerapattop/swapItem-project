@@ -655,9 +655,9 @@ class _HistoryPostState extends State<HistoryPost> {
         String imageUser = userData['image_user'] ?? '';
         String creditPostSuccess = userData['creditPostSuccess'].toString();
         String creditOfferSuccess = userData['creditOfferSuccess'].toString();
-        String creditOfferFailure = userData['creditOfferFailure'].toString();
+        String totalOffer = userData['totalOffer'].toString();
+        String totalPost = userData['totalPost'].toString();
 
-        // Navigate to ProfileScreen with user data
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -667,6 +667,8 @@ class _HistoryPostState extends State<HistoryPost> {
               imageUser: imageUser,
               creditPostSuccess: creditPostSuccess,
               creditOfferSuccess: creditOfferSuccess,
+              totalOffer: totalOffer,
+              totalPost: totalPost,
             ),
           ),
         );
