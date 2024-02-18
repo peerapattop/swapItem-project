@@ -22,6 +22,7 @@ class _PaymentState extends State<Payment> {
   late String dropdownValue;
   String status = 'รอการตรวจสอบ';
   String? paymentNumber;
+  String timeclick = '';
 
   String generateFourDigitNumber() {
     var random = Random();
@@ -73,7 +74,9 @@ class _PaymentState extends State<Payment> {
       // ดึง URL ของรูปภาพที่อัปโหลด
       String imageUrl = await storageRef.getDownloadURL();
       String paymentNumber = generateFourDigitNumber();
+
       Map<String, dynamic> requestData = {
+        'timestamp': timeclick,
         'user_uid': uid,
         'status': status,
         'image_payment': imageUrl,
@@ -217,6 +220,8 @@ class _PaymentState extends State<Payment> {
       'แพ็คเก็จ 3 เดือน : 150 บาท',
     ];
     dropdownValue = package.first;
+    fetchTimestampFromFirebase();
+    saveTimestampToFirebase();
   }
 
   @override
@@ -290,7 +295,7 @@ class _PaymentState extends State<Payment> {
         GestureDetector(
           onTap: () {
             showModalBottomSheet(
-                context: context, builder: ((Builder) => bottomSheet()));
+                context: context, builder: ((context) => bottomSheet()));
           },
           child: Container(
             width: 350,
@@ -385,5 +390,32 @@ class _PaymentState extends State<Payment> {
         style: TextStyle(fontSize: 20, color: Colors.white),
       ),
     );
+  }
+
+  Future<void> fetchTimestampFromFirebase() async {
+    DatabaseReference timeRef = FirebaseDatabase.instance.ref().child('Time');
+
+    timeRef.onValue.listen((event) {
+      if (event.snapshot.value != null) {
+        // Convert the server timestamp to a String
+        String timestamp = event.snapshot.value.toString();
+
+        String numericTimestamp = timestamp.replaceAll(RegExp(r'[^0-9]'), '');
+
+        int numericValue = int.parse(numericTimestamp);
+
+        setState(() {
+          timeclick = numericValue.toString();
+        });
+      }
+    });
+  }
+  Future<void> saveTimestampToFirebase() async {
+    DatabaseReference reference = FirebaseDatabase.instance.ref().child('Time');
+
+    // Set the data with the server timestamp in the Realtime Database
+    await reference.set({
+      'timestamp': ServerValue.timestamp,
+    });
   }
 }

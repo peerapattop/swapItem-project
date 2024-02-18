@@ -23,40 +23,38 @@ class _HistoryPaymentState extends State<HistoryPayment> {
     super.initState();
     _user = FirebaseAuth.instance.currentUser!;
     _requestVipRef = FirebaseDatabase.instance.ref().child('requestvip');
-    selectedPayment = null;
 
     _listenToPayments(); // Call function to listen to payment updates
   }
 
   void _listenToPayments() {
+    selectedPayment = null;
     _requestVipRef
         .orderByChild('user_uid')
         .equalTo(_user.uid)
         .onValue
         .listen((event) {
+      paymentsList.clear();
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic> data =
         Map<dynamic, dynamic>.from(event.snapshot.value as Map);
-        paymentsList.clear();
+
         data.forEach((key, value) {
-          paymentsList.add(Map<dynamic, dynamic>.from(value));
+          if (true) {
+            paymentsList.add(value);
+          }
         });
+
+        paymentsList.sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
 
         // Set selectedPayment and selectedIndex to show latest data immediately
         if (paymentsList.isNotEmpty) {
           setState(() {
-            selectedPayment = paymentsList.first;
+            selectedPayment = paymentsList.last;
             _selectedIndex = 0;
           });
         }
       }
-    });
-  }
-
-  void selectPayment(Map<dynamic, dynamic> paymentData, int index) {
-    setState(() {
-      selectedPayment = paymentData;
-      _selectedIndex = index;
     });
   }
 

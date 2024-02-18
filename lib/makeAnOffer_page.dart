@@ -351,7 +351,8 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
   Future<void> updateTotalOffer() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
-    DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(user!.uid);
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.ref().child('users').child(user!.uid);
     DatabaseEvent event = await userRef.once();
     Map<dynamic, dynamic>? datamap = event.snapshot.value as Map?;
     if (datamap != null) {
@@ -424,7 +425,6 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
         String postUid = widget.postUid;
         String imageUser = widget.imageUser;
 
-
         String uid = FirebaseAuth.instance.currentUser!.uid;
         DatabaseReference itemRef =
             FirebaseDatabase.instance.ref().child('offer').push();
@@ -448,8 +448,10 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
           'imageUrls': imageUrls,
           'timestamp': timeclick, //เอาเวลาขึ้น
           'post_uid': postUid,
-          "date": "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}",
-          "time": "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}",
+          "date":
+              "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}",
+          "time":
+              "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}",
         };
 
         await itemRef.set(dataRef);
@@ -547,30 +549,20 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
   }
 
   Future<void> fetchTimestampFromFirebase() async {
-    DatabaseReference timeRef =
-        FirebaseDatabase.instance.reference().child('Time');
-    print('perm');
+    DatabaseReference timeRef = FirebaseDatabase.instance.ref().child('Time');
 
-    // Listen for changes on the "Time" node in Firebase Realtime Database
     timeRef.onValue.listen((event) {
       if (event.snapshot.value != null) {
         // Convert the server timestamp to a String
         String timestamp = event.snapshot.value.toString();
 
-        // Remove non-numeric characters
         String numericTimestamp = timestamp.replaceAll(RegExp(r'[^0-9]'), '');
 
-        // Convert to integer
         int numericValue = int.parse(numericTimestamp);
 
-        // Store the numeric timestamp in the 'timeclick' variable
         setState(() {
-          timeclick =
-              numericValue.toString(); // บันทึกจาก Firebase ในเครื่องเรา
+          timeclick = numericValue.toString();
         });
-
-        // Use the 'timeclick' variable as needed
-        print('Numeric Timestamp from Firebase: $timeclick');
       }
     });
   }
