@@ -45,12 +45,12 @@ class _HistoryPaymentState extends State<HistoryPayment> {
           }
         });
 
-        paymentsList.sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
+        paymentsList.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
 
         // Set selectedPayment and selectedIndex to show latest data immediately
         if (paymentsList.isNotEmpty) {
           setState(() {
-            selectedPayment = paymentsList.last;
+            selectedPayment = paymentsList.first;
             _selectedIndex = 0;
           });
         }
