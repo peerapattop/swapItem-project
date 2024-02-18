@@ -33,6 +33,8 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
   Map postData = {};
   List<String> image_post = [];
   final PageController _pageController = PageController();
+  bool _isLoading = true;
+
   @override
   void initState() {
     _buildImageSlider();
@@ -60,7 +62,16 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
           }
         });
       }
-    }).catchError((error) {});
+      // Data loading finished, set isLoading to false
+      setState(() {
+        _isLoading = false;
+      });
+    }).catchError((error) {
+      // Handle error
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
   void fetchUserData(String uid) {
@@ -163,260 +174,279 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
             ),
           ),
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 20),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+        body: _isLoading
+            ? const Center(
+                child: Column(
                   children: [
-                    _buildImageSlider(),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.numbers,
-                          color: Colors.blue,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          'หมายเลขโพสต์ : ${postData['postNumber']}',
-                          style: const TextStyle(fontSize: 20),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.person,
-                          color: Colors.blue,
-                        ),
-                        const SizedBox(width: 5),
-                        GestureDetector(
-                          onTap: () {
-                            fetchUserData(postData['uid']);
-                          },
-                          child: Row(
+                    CircularProgressIndicator(),
+                    SizedBox(height: 10),
+                    Text('กำลังดาวน์โหลด...')
+                  ],
+                ),
+              )
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 20),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildImageSlider(),
+                          Row(
                             children: [
-                              const Text(
-                                "ชื่อผู้โพสต์ : ",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                              Text(
-                                postData['username'],
-                                style: const TextStyle(
-                                    color: Colors.purple, fontSize: 20),
-                              ),
                               const Icon(
-                                Icons.search,
-                                color: Colors.purple,
+                                Icons.numbers,
+                                color: Colors.blue,
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                'หมายเลขโพสต์ : ${postData['postNumber']}',
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.person,
+                                color: Colors.blue,
+                              ),
+                              const SizedBox(width: 5),
+                              GestureDetector(
+                                onTap: () {
+                                  fetchUserData(postData['uid']);
+                                },
+                                child: Row(
+                                  children: [
+                                    const Text(
+                                      "ชื่อผู้โพสต์ : ",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    Text(
+                                      postData['username'],
+                                      style: const TextStyle(
+                                          color: Colors.purple, fontSize: 20),
+                                    ),
+                                    const Icon(
+                                      Icons.search,
+                                      color: Colors.purple,
+                                    )
+                                  ],
+                                ),
                               )
                             ],
                           ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.date_range,
-                          color: Colors.blue,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          "วันที่ : ${postData['date']}",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.lock_clock,
-                          color: Colors.blue,
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          "เวลา : ${postData['time']}",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 2, right: 15, top: 10, bottom: 10),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width -
-                            17, // Subtract 17 to account for padding and margin
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 214, 214, 212),
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment
-                              .start, // Align text to the left
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                        "ชื่อสิ่งของ : ${postData['item_name']}",
-                                        style: TextStyle(fontSize: 20)),
-                                    Text("หมวดหมู่ : ${postData['type']}",
-                                        style: TextStyle(fontSize: 20)),
-                                    Text("ยี่ห้อ : ${postData['brand']}",
-                                        style: TextStyle(fontSize: 20)),
-                                    Text("รุ่น : ${postData['model']}",
-                                        style: TextStyle(fontSize: 20)),
-                                    Text("รายละเอียด : ${postData['detail']}",
-                                        style: TextStyle(fontSize: 20)),
-                                  ],
-                                ),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.date_range,
+                                color: Colors.blue,
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                "วันที่ : ${postData['date']}",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.lock_clock,
+                                color: Colors.blue,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                "เวลา : ${postData['time']}",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 2, right: 15, top: 10, bottom: 10),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width -
+                                  17, // Subtract 17 to account for padding and margin
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 214, 214, 212),
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment
+                                    .start, // Align text to the left
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                              "ชื่อสิ่งของ : ${postData['item_name']}",
+                                              style: TextStyle(fontSize: 20)),
+                                          Text("หมวดหมู่ : ${postData['type']}",
+                                              style: TextStyle(fontSize: 20)),
+                                          Text("ยี่ห้อ : ${postData['brand']}",
+                                              style: TextStyle(fontSize: 20)),
+                                          Text("รุ่น : ${postData['model']}",
+                                              style: TextStyle(fontSize: 20)),
+                                          Text(
+                                              "รายละเอียด : ${postData['detail']}",
+                                              style: TextStyle(fontSize: 20)),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.asset("assets/images/swap.png"),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width -
-                                17, // Subtract 17 to account for padding and margin
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 214, 214, 212),
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Align(
+                            alignment: Alignment.center,
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment
-                                  .start, // Align text to the left
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            "ชื่อสิ่งของ : ${postData['item_name1']}",
-                                            style: TextStyle(fontSize: 20)),
-                                        Text("ยี่ห้อ : ${postData['brand1']}",
-                                            style: TextStyle(fontSize: 20)),
-                                        Text("รุ่น : ${postData['model1']}",
-                                            style: TextStyle(fontSize: 20)),
-                                        Text(
-                                            "รายละเอียด : ${postData['details1']}",
-                                            style: TextStyle(fontSize: 20)),
-                                      ],
-                                    ),
+                                Image.asset("assets/images/swap.png"),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: MediaQuery.of(context).size.width -
+                                      17, // Subtract 17 to account for padding and margin
+                                  decoration: BoxDecoration(
+                                    color: const Color.fromARGB(
+                                        255, 214, 214, 212),
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start, // Align text to the left
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(15.0),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  "ชื่อสิ่งของ : ${postData['item_name1']}",
+                                                  style:
+                                                      TextStyle(fontSize: 20)),
+                                              Text(
+                                                  "ยี่ห้อ : ${postData['brand1']}",
+                                                  style:
+                                                      TextStyle(fontSize: 20)),
+                                              Text(
+                                                  "รุ่น : ${postData['model1']}",
+                                                  style:
+                                                      TextStyle(fontSize: 20)),
+                                              Text(
+                                                  "รายละเอียด : ${postData['details1']}",
+                                                  style:
+                                                      TextStyle(fontSize: 20)),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    Container(
-                      decoration: BoxDecoration(border: Border.all()),
-                      height: 300,
-                      width: 380,
-                      child: GoogleMap(
-                        onMapCreated: (GoogleMapController controller) {
-                          mapController = controller;
-                        },
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(latitude!, longitude!),
-                          zoom: 12.0,
-                        ),
-                        markers: <Marker>{
-                          Marker(
-                            markerId: const MarkerId('initialPosition'),
-                            position: LatLng(latitude!, longitude!),
-                            infoWindow: const InfoWindow(
-                              title: 'Marker Title',
-                              snippet: 'Marker Snippet',
+                          const SizedBox(height: 15),
+                          Container(
+                            decoration: BoxDecoration(border: Border.all()),
+                            height: 300,
+                            width: 380,
+                            child: GoogleMap(
+                              onMapCreated: (GoogleMapController controller) {
+                                mapController = controller;
+                              },
+                              initialCameraPosition: CameraPosition(
+                                target: LatLng(latitude!, longitude!),
+                                zoom: 12.0,
+                              ),
+                              markers: <Marker>{
+                                Marker(
+                                  markerId: const MarkerId('initialPosition'),
+                                  position: LatLng(latitude!, longitude!),
+                                  infoWindow: const InfoWindow(
+                                    title: 'Marker Title',
+                                    snippet: 'Marker Snippet',
+                                  ),
+                                ),
+                              },
                             ),
                           ),
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Center(
-                      child: (postData['statusPosts'] == 'รอดำเนินการ')
-                          ? ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                              ),
-                              onPressed: () {},
-                              child: const Text(
-                                "ไม่สามารถแลกเปลี่ยนได้",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            )
-                          : ElevatedButton(
-                              onPressed: () {
-                                String sendUid = postData['post_uid'];
-                                String username = postData['username'];
-                                String imageUser = postData['imageUser'];
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => MakeAnOffer(
-                                      postUid: sendUid,
-                                      username: username,
-                                      imageUser: imageUser,
-                                      uidUserpost: postData['uid'],
+                          const SizedBox(height: 10),
+                          Center(
+                            child: (postData['statusPosts'] == 'รอดำเนินการ')
+                                ? ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue,
+                                    ),
+                                    onPressed: () {},
+                                    child: const Text(
+                                      "ไม่สามารถแลกเปลี่ยนได้",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  )
+                                : ElevatedButton(
+                                    onPressed: () {
+                                      String sendUid = postData['post_uid'];
+                                      String username = postData['username'];
+                                      String imageUser = postData['imageUser'];
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => MakeAnOffer(
+                                            postUid: sendUid,
+                                            username: username,
+                                            imageUser: imageUser,
+                                            uidUserpost: postData['uid'],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.green),
+                                    child: const Text(
+                                      "ยื่นข้อเสนอ",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green),
-                              child: const Text(
-                                "ยื่นข้อเสนอ",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                    )
-                  ],
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-          ),
-        ),
+              ),
       ),
     );
   }
