@@ -297,7 +297,16 @@ class _His_Make_off2State extends State<His_Make_off2> {
                             Icons.check,
                             color: Colors.white,
                           ),
-                          onPressed: () {
+                          onPressed: () async {
+                            late DatabaseReference _offerRef;
+                            _offerRef = FirebaseDatabase.instance
+                                .ref()
+                                .child('offer')
+                                .child(selectedOffer!['offer_uid']);
+                            await _offerRef.update({
+                              'statusOfferAns': 'เจ้าของยืนยัน',
+                            });
+
                             // Add your onPressed logic here
                           },
                           style: ElevatedButton.styleFrom(

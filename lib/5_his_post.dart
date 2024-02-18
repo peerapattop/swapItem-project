@@ -19,6 +19,7 @@ class HistoryPost extends StatefulWidget {
 }
 
 class _HistoryPostState extends State<HistoryPost> {
+  late String StatusPost = '';
   late User _user;
   double? latitude;
   double? longitude;
@@ -67,6 +68,42 @@ class _HistoryPostState extends State<HistoryPost> {
     }).onError((error) {
       print("Error fetching data: $error");
     });
+  }
+
+  void Show_Confirmation_Dialog_Status(BuildContext context, String postKey) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('ยืนยันการตัดสินใจ'),
+          content: const Text(
+              '**คำเตือน** รอการยืนยันการตัดสินใจจาก ผู้แลกเปลี่ยนของคุณก่อน ถึงจะสำเร็จ'),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text(
+                'ยกเลิก',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () async {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: const Text(
+                'ยันยัน',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                _performUpdateOffer();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void deletePost(String postKey) {
@@ -127,6 +164,27 @@ class _HistoryPostState extends State<HistoryPost> {
     });
   }
 
+  void logicStatus(String statusOffer) {
+    String selectedStatus = selectedOffer!['statusPosts'];
+
+    if (selectedStatus == "เจ้าของโพสต์ปฏิเสษ" || statusOffer == "ผู้เสนอปฏิเสธ") {
+      StatusPost = "การแลกเปลี่ยนล้มเหลว เจ้าของโพสต์ปฏิเสษ";
+    } else if (statusOffer == "ผู้เสนอปฏิเสธ") {
+      StatusPost = "การแลกเปลี่ยนล้มเหลว ผู้เสนอปฏิเสธ";
+    } else if (selectedStatus == "เจ้าของโพสต์ยืนยัน" && statusOffer == "ผู้เสนอยืนยัน") {
+      StatusPost = "การแลกเปลี่ยนสำเร็จ";
+    } else if (selectedStatus == "รอดำเนินการ" && statusOffer == "ผู้เสนอยืนยัน") {
+      StatusPost = "รอการยืนยัน";
+    } else if (selectedStatus == "เจ้าของโพสต์ยืนยัน" && statusOffer == "รอดำเนินการ") {
+      StatusPost = "รอผู้เสนอยืนยัน";
+    } else if (selectedStatus == "รอดำเนินการ" && statusOffer == "ผู้เสนอยืนยัน") {
+      StatusPost = "รอการยืนยัน";
+    } else {
+      StatusPost = "การแลกเปลี่ยนล้มเหลว ทั้งสองฝ่ายทำการปฏิเสษ";
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -180,9 +238,10 @@ class _HistoryPostState extends State<HistoryPost> {
                               selectedOffer!['latitude'].toString());
                           longitude = double.tryParse(
                               selectedOffer!['longitude'].toString());
-                          checkPost = selectedOffer!['statusPosts'] == 'รอดำเนินการ'
-                              ? true
-                              : false;
+                          checkPost =
+                              selectedOffer!['statusPosts'] == 'รอดำเนินการ'
+                                  ? true
+                                  : false;
                           return Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 4.0),
@@ -215,6 +274,20 @@ class _HistoryPostState extends State<HistoryPost> {
                                             const SizedBox(width: 8),
                                             Text(
                                               "หมายเลขโพสต์ : ${selectedOffer!['postNumber']}",
+                                              style:
+                                                  const TextStyle(fontSize: 18),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.wallet_giftcard,
+                                              color: Colors.blue,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              "$StatusPost",
                                               style:
                                                   const TextStyle(fontSize: 18),
                                             ),
@@ -445,7 +518,7 @@ class _HistoryPostState extends State<HistoryPost> {
     return StreamBuilder(
       stream: offerRef
           .orderByChild('offer_uid')
-          .equalTo(selectedOffer!['user_id_confirm'])
+          .equalTo(selectedOffer!['user_offer_id_confirm'])
           .onValue,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -461,6 +534,7 @@ class _HistoryPostState extends State<HistoryPost> {
           String offerNumber = '';
           String date = '';
           String time = '';
+          String statusOffers = '';
           String username = '';
           List<Widget> offerWidgets = [];
           String itemname = '';
@@ -472,6 +546,7 @@ class _HistoryPostState extends State<HistoryPost> {
 
           data.forEach((key, value) {
             username = value['username'];
+            statusOffers = value['statusOffers'].toString();
             offerNumber = value['offerNumber'].toString();
             date = value['date'].toString();
             time = value['time'].toString();
@@ -482,6 +557,7 @@ class _HistoryPostState extends State<HistoryPost> {
             detail1 = value['detail1'].toString();
             imageOffer = List<String>.from(value['imageUrls']);
             uid = value['uid'].toString();
+            logicStatus(statusOffers);
           });
 
           return Column(
@@ -635,7 +711,7 @@ class _HistoryPostState extends State<HistoryPost> {
                       Icons.close,
                       color: Colors.white,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       // Add your onPressed logic here
                     },
                     style: ElevatedButton.styleFrom(
@@ -654,7 +730,9 @@ class _HistoryPostState extends State<HistoryPost> {
                       Icons.check,
                       color: Colors.white,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      Show_Confirmation_Dialog_Status(
+                          context, selectedOffer!['post_uid']);
                       // Add your onPressed logic here
                     },
                     style: ElevatedButton.styleFrom(
@@ -688,6 +766,22 @@ class _HistoryPostState extends State<HistoryPost> {
         }
       },
     );
+  }
+
+  Future<void> _performUpdateOffer() async {
+    try {
+      DatabaseReference postRef1 = FirebaseDatabase.instance
+          .ref()
+          .child('postitem')
+          .child(selectedOffer!['post_uid']);
+
+      await postRef1.update({
+        //post
+        'statusPosts': "เจ้าของโพสต์ยืนยัน",
+      });
+    } catch (e) {
+      // Handle error if necessary
+    }
   }
 
   void fetchUserData(String uid, BuildContext context) {
