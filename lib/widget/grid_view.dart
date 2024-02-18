@@ -50,7 +50,9 @@ class _GridView2State extends State<GridView2> {
                   (widget.searchString == null ||
                       widget.searchString!.isEmpty ||
                       userData['item_name'].toString().toLowerCase().contains(widget.searchString!.toLowerCase()) ||
-                      userData['item_name1'].toString().toLowerCase().contains(widget.searchString!.toLowerCase()));
+                      userData['item_name1'].toString().toLowerCase().contains(widget.searchString!.toLowerCase()) ||
+                      userData['type'].toString().toLowerCase().contains(widget.searchString!.toLowerCase())
+                  );
             }).toList();
 
 

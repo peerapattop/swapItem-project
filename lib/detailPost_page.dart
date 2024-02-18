@@ -222,11 +222,11 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                     ),
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.date_range,
                           color: Colors.blue,
                         ),
-                        SizedBox(width: 5),
+                        const SizedBox(width: 5),
                         Text(
                           "วันที่ : ${postData['date']}",
                           style: TextStyle(fontSize: 20),
@@ -235,26 +235,13 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                     ),
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.lock_clock,
                           color: Colors.blue,
                         ),
                         SizedBox(width: 5),
                         Text(
                           "เวลา : ${postData['time']}",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.list,
-                          color: Colors.blue,
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          "รายละเอียด : ${postData['detail']}",
                           style: TextStyle(fontSize: 20),
                         ),
                       ],
@@ -354,9 +341,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     Container(
                       decoration: BoxDecoration(border: Border.all()),
                       height: 300,
