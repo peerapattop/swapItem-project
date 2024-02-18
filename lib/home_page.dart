@@ -73,8 +73,7 @@ class _HomePageState extends State<HomePage> {
               icon: StreamBuilder<int>(
                 stream: getUnreadNotificationCountStream(),
                 builder: (context, snapshot) {
-                  int notificationCount = snapshot.data ??
-                      0; // Use null-aware operator to handle null data
+                  int notificationCount = snapshot.data ?? 0;
                   return Stack(
                     children: <Widget>[
                       const Icon(
@@ -83,7 +82,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                       if (notificationCount > 0)
                         Positioned(
-                          // Badge position
                           right: 0,
                           child: Container(
                             padding: const EdgeInsets.all(1),
