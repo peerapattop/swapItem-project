@@ -97,86 +97,98 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         decoration: TextDecoration.underline),
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 180,
-                        height: 180,
-                        child: PieChart(
-                          PieChartData(
-                            sections: [
-                              PieChartSectionData(
-                                value:
-                                    double.tryParse(widget.creditPostSuccess),
-                                color: Colors.green,
-                                title: '${widget.creditPostSuccess}%',
-                                radius: 50,
-                                titleStyle: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                  (widget.creditPostSuccess.isNotEmpty &&
+                          widget.totalPost.isNotEmpty &&
+                          double.tryParse(widget.creditPostSuccess) != 0)
+                      ? Row(
+                          children: [
+                            SizedBox(
+                              width: 180,
+                              height: 180,
+                              child: PieChart(
+                                PieChartData(
+                                  sections: [
+                                    PieChartSectionData(
+                                      value: double.tryParse(
+                                              widget.creditPostSuccess) ??
+                                          0,
+                                      color: Colors.green,
+                                      title: '${widget.creditPostSuccess}%',
+                                      radius: 50,
+                                      titleStyle: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    PieChartSectionData(
+                                      value: double.tryParse((double.parse(
+                                                      widget.totalPost) -
+                                                  double.parse(
+                                                      widget.creditPostSuccess))
+                                              .toString()) ??
+                                          0,
+                                      color: Colors.red,
+                                      title:
+                                          '${(100 - double.parse(widget.creditPostSuccess)).toStringAsFixed(2)}%',
+                                      radius: 50,
+                                      titleStyle: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              PieChartSectionData(
-                                value: double.tryParse((double.parse(
-                                            widget.totalPost) -
-                                        double.parse(widget.creditPostSuccess))
-                                    .toString()),
-                                color: Colors.red,
-                                title:
-                                    '${(100 - double.parse(widget.creditPostSuccess)).toStringAsFixed(2)}%',
-                                radius: 50,
-                                titleStyle: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                            ),
+                            const SizedBox(width: 40),
+                            const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.circle,
+                                      size: 20,
+                                      color: Colors.green,
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      'สำเร็จ',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.circle,
+                                      size: 20,
+                                      color: Colors.red,
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      'ไม่สำเร็จ',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        )
+                      : const Center(
+                          child: Text(
+                            'ยังไม่มีเครดิตการโพสต์',
+                            style: TextStyle(fontSize: 20),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 40),
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.circle,
-                                size: 20,
-                                color: Colors.green,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                'สำเร็จ',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.circle,
-                                size: 20,
-                                color: Colors.red,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                'ไม่สำเร็จ',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
                   const SizedBox(height: 20),
                   const Text(
                     'เครดิตการยื่นข้อเสนอ',
@@ -186,86 +198,96 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         decoration: TextDecoration.underline),
                   ),
                   const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 180,
-                        height: 180,
-                        child: PieChart(
-                          PieChartData(
-                            sections: [
-                              PieChartSectionData(
-                                value:
-                                double.tryParse(widget.creditOfferSuccess),
-                                color: Colors.green,
-                                title: '${widget.creditOfferSuccess}%',
-                                radius: 50,
-                                titleStyle: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                  (widget.creditOfferSuccess.isNotEmpty &&
+                          widget.totalOffer.isNotEmpty &&
+                          double.tryParse(widget.creditOfferSuccess) != 0)
+                      ? Row(
+                          children: [
+                            SizedBox(
+                              width: 180,
+                              height: 180,
+                              child: PieChart(
+                                PieChartData(
+                                  sections: [
+                                    PieChartSectionData(
+                                      value: double.tryParse(
+                                          widget.creditOfferSuccess),
+                                      color: Colors.green,
+                                      title: '${widget.creditOfferSuccess}%',
+                                      radius: 50,
+                                      titleStyle: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    PieChartSectionData(
+                                      value: double.tryParse((double.parse(
+                                                  widget.totalOffer) -
+                                              double.parse(
+                                                  widget.creditOfferSuccess))
+                                          .toString()),
+                                      color: Colors.red,
+                                      title:
+                                          '${(100 - double.parse(widget.creditOfferSuccess)).toStringAsFixed(2)}%',
+                                      radius: 50,
+                                      titleStyle: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              PieChartSectionData(
-                                value: double.tryParse((double.parse(
-                                    widget.totalOffer) -
-                                    double.parse(widget.creditOfferSuccess))
-                                    .toString()),
-                                color: Colors.red,
-                                title:
-                                '${(100 - double.parse(widget.creditOfferSuccess)).toStringAsFixed(2)}%',
-                                radius: 50,
-                                titleStyle: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                            ),
+                            const SizedBox(width: 40),
+                            const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.circle,
+                                      size: 20,
+                                      color: Colors.green,
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      'สำเร็จ',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.circle,
+                                      size: 20,
+                                      color: Colors.red,
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      'ไม่สำเร็จ',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        )
+                      : const Center(
+                          child: Text(
+                            'ยังไม่มีเครดิตการยื่นข้อเสนอ',
+                            style: TextStyle(fontSize: 20),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 40),
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.circle,
-                                size: 20,
-                                color: Colors.green,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                'สำเร็จ',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.circle,
-                                size: 20,
-                                color: Colors.red,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                'ไม่สำเร็จ',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
