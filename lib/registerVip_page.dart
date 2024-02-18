@@ -85,16 +85,10 @@ class _PaymentState extends State<Payment> {
         'username': username,
         'email': email,
         'vipuid': documentId,
-        "date": now.year.toString() +
-            "-" +
-            now.month.toString().padLeft(2, '0') +
-            "-" +
-            now.day.toString().padLeft(2, '0'),
-        "time": now.hour.toString().padLeft(2, '0') +
-            ":" +
-            now.minute.toString().padLeft(2, '0') +
-            ":" +
-            now.second.toString().padLeft(2, '0'),
+        "date":
+            "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}",
+        "time":
+            "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}",
       };
 
       // ทำการส่งข้อมูลไปยัง "requestvip" ใน Realtime Database
@@ -191,12 +185,14 @@ class _PaymentState extends State<Payment> {
                       Navigator.of(context).pop();
                       createRequestVip();
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PaymentSuccess(
-                                    date: DateTime.now(),
-                                    time: DateTime.now(),
-                                  )));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PaymentSuccess(
+                            date: DateTime.now(),
+                            time: DateTime.now(),
+                          ),
+                        ),
+                      );
                     },
                     child: const Text(
                       'ยืนยัน',
@@ -325,21 +321,19 @@ class _PaymentState extends State<Payment> {
     return Container(
       height: 100.0,
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
         horizontal: 20,
         vertical: 20,
       ),
       child: Column(
         children: <Widget>[
-          Text(
+          const Text(
             "เลือกรูปภาพของคุณ",
             style: TextStyle(
               fontSize: 20,
             ),
           ),
-          SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -347,15 +341,15 @@ class _PaymentState extends State<Payment> {
                 onPressed: () {
                   takePhoto(ImageSource.camera);
                 },
-                icon: Icon(Icons.camera),
-                label: Text('กล้อง'),
+                icon: const Icon(Icons.camera),
+                label: const Text('กล้อง'),
               ),
               TextButton.icon(
                 onPressed: () {
                   takePhoto(ImageSource.gallery);
                 },
-                icon: Icon(Icons.camera),
-                label: Text('แกลลอรี่'),
+                icon: const Icon(Icons.camera),
+                label: const Text('แกลลอรี่'),
               ),
             ],
           )
