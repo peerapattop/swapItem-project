@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swapitem/registerVip_page.dart';
 import 'package:swapitem/buildPost_page.dart';
-import 'package:swapitem/widget/GridView.dart';
 import 'package:swapitem/widget/grid_view.dart';
 import 'package:swapitem/notification_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,7 +19,6 @@ class _HomePageState extends State<HomePage> {
   late DatabaseReference _userRef;
   String? _searchString;
   TextEditingController searchController = TextEditingController();
-  int _unreadNotificationCount = 0;
 
   @override
   void initState() {
@@ -116,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const NotificationD(),
+                    builder: (context) => NotificationD(),
                   ),
                 );
               },
@@ -159,13 +157,11 @@ class _HomePageState extends State<HomePage> {
 
                 return Column(
                   children: [
-                    //ส่วนบนของหน้าหลัก
                     buildUserProfileSection(
                         dataUser, postCount, makeofferCount),
                     const Divider(),
-                    searchItem(), //ค้นหา
+                    searchItem(),
                     showItemSearch(),
-
                   ],
                 );
               }
@@ -201,15 +197,15 @@ class _HomePageState extends State<HomePage> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          'โควตาการโพสต์ ${postCount}/5 เดือน',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          'โควตาการโพสต์ $postCount/5 เดือน',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 6.0),
+                  padding: const EdgeInsets.only(top: 6.0),
                   child: ClipRRect(
                     child: Container(
                       decoration: BoxDecoration(
@@ -217,25 +213,25 @@ class _HomePageState extends State<HomePage> {
                         border: Border.all(
                           width: 1.0,
                           color: Colors.black,
-                        ), // เส้นขอบ
+                        ),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          'โควตาการยื่นข้อเสนอ ${makeofferCount}/5 เดือน',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          'โควตาการยื่นข้อเสนอ $makeofferCount/5 เดือน',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 6.0),
+                  padding: const EdgeInsets.only(top: 6.0),
                   child: InkWell(
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => Payment(),
+                          builder: (context) => const Payment(),
                         ),
                       );
                     },
@@ -252,10 +248,10 @@ class _HomePageState extends State<HomePage> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Wrap(
-                              spacing: 5.0, // ระยะห่างระหว่างไอคอนและข้อความ
+                              spacing: 5.0,
                               children: [
                                 Image.asset('assets/images/vip.png'),
-                                Text(
+                                const Text(
                                   'เติม VIP',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
@@ -263,9 +259,9 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Padding(
-                          padding: EdgeInsets.only(top: 6.0),
+                          padding: const EdgeInsets.only(top: 6.0),
                           child: ElevatedButton.icon(
                             icon: const Icon(
                               Icons.create,
@@ -274,7 +270,7 @@ class _HomePageState extends State<HomePage> {
                             onPressed: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => NewPost(),
+                                  builder: (context) => const NewPost(),
                                 ),
                               );
                             },
@@ -282,12 +278,12 @@ class _HomePageState extends State<HomePage> {
                               side: const BorderSide(
                                 width: 1.0,
                                 color: Colors.black,
-                              ), // เส้นขอบ
+                              ),
                               padding: const EdgeInsets.symmetric(
                                 vertical: 10.0,
                                 horizontal: 20.0,
-                              ), // ระยะห่างภายในปุ่ม
-                              backgroundColor: Colors.red, // สีข้างใน
+                              ),
+                              backgroundColor: Colors.red,
                             ),
                             label: const Text(
                               'สร้างโพสต์',
@@ -321,7 +317,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 5),
               Text(
                 dataUser['username'],
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -335,12 +331,13 @@ class _HomePageState extends State<HomePage> {
 
   Widget showItemSearch() {
     return Padding(
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
         child: SizedBox(
-            height: 600,
-            width: double.infinity,
-            child: GridView2(searchString: _searchString)),
+          height: 600,
+          width: double.infinity,
+          child: GridView2(searchString: _searchString),
+        ),
       ),
     );
   }
@@ -358,7 +355,7 @@ class _HomePageState extends State<HomePage> {
                   borderRadius: BorderRadius.circular(20.0),
                   borderSide: const BorderSide(width: 0.8),
                 ),
-                hintText: "ค้นหา",
+                hintText: "ชื่อสิ่งของ,ประเภท",
               ),
             ),
           ),
