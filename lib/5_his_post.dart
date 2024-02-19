@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,7 +20,6 @@ class HistoryPost extends StatefulWidget {
 }
 
 class _HistoryPostState extends State<HistoryPost> {
-  late String StatusPost = '';
   late User _user;
   double? latitude;
   double? longitude;
@@ -164,29 +164,9 @@ class _HistoryPostState extends State<HistoryPost> {
     });
   }
 
-  void logicStatus(String statusOffer) {
-    String selectedStatus = selectedOffer!['statusPosts'];
-
-    if (selectedStatus == "เจ้าของโพสต์ปฏิเสษ" || statusOffer == "ผู้เสนอปฏิเสธ") {
-      StatusPost = "การแลกเปลี่ยนล้มเหลว เจ้าของโพสต์ปฏิเสษ";
-    } else if (statusOffer == "ผู้เสนอปฏิเสธ") {
-      StatusPost = "การแลกเปลี่ยนล้มเหลว ผู้เสนอปฏิเสธ";
-    } else if (selectedStatus == "เจ้าของโพสต์ยืนยัน" && statusOffer == "ผู้เสนอยืนยัน") {
-      StatusPost = "การแลกเปลี่ยนสำเร็จ";
-    } else if (selectedStatus == "รอดำเนินการ" && statusOffer == "ผู้เสนอยืนยัน") {
-      StatusPost = "รอการยืนยัน";
-    } else if (selectedStatus == "เจ้าของโพสต์ยืนยัน" && statusOffer == "รอดำเนินการ") {
-      StatusPost = "รอผู้เสนอยืนยัน";
-    } else if (selectedStatus == "รอดำเนินการ" && statusOffer == "ผู้เสนอยืนยัน") {
-      StatusPost = "รอการยืนยัน";
-    } else {
-      StatusPost = "การแลกเปลี่ยนล้มเหลว ทั้งสองฝ่ายทำการปฏิเสษ";
-    }
-  }
-
-
   @override
   Widget build(BuildContext context) {
+    print("55664" + selectedOffer!['statusPosts']);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -287,7 +267,7 @@ class _HistoryPostState extends State<HistoryPost> {
                                             ),
                                             const SizedBox(width: 8),
                                             Text(
-                                              "$StatusPost",
+                                              selectedOffer!['statusPosts'],
                                               style:
                                                   const TextStyle(fontSize: 18),
                                             ),
@@ -515,6 +495,7 @@ class _HistoryPostState extends State<HistoryPost> {
   }
 
   Widget offerCome() {
+    print("55664" + selectedOffer!['statusPosts']);
     return StreamBuilder(
       stream: offerRef
           .orderByChild('offer_uid')
@@ -557,7 +538,6 @@ class _HistoryPostState extends State<HistoryPost> {
             detail1 = value['detail1'].toString();
             imageOffer = List<String>.from(value['imageUrls']);
             uid = value['uid'].toString();
-            logicStatus(statusOffers);
           });
 
           return Column(
@@ -672,6 +652,166 @@ class _HistoryPostState extends State<HistoryPost> {
                           'รายละเอียด : $detail1',
                           style: const TextStyle(fontSize: 18),
                         ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 600,
+                  height: 300,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 214, 214, 212),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(11.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          'สถานะการแลกเปลี่ยน',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 19,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w400,
+                            height: 0,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 30.0, bottom: 10.0, right: 15.0),
+                                child: Text(
+                                  'ผู้โพสต์',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 45,
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 21.0, bottom: 10.0),
+                                child: Text(
+                                  'ผู้ยื่นข้อเสนอ',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Container(
+                                width: 150,
+                                height: 50,
+                                decoration: ShapeDecoration(
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(width: 1),
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 5.0, right: 10.0, left: 10.0),
+                                  child: Center(
+                                    child: Text(
+                                      selectedOffer!['statusPosts'],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Transform.rotate(
+                                angle: -pi /
+                                    2, // หมุนทางซ้าย 90 องศา (ในรูปแบบ radian)
+                                child: Image.asset(
+                                  'assets/images/swap.png',
+                                  width: 20,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Container(
+                                width: 150,
+                                height: 50,
+                                decoration: ShapeDecoration(
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(width: 1),
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 5.0, right: 10.0, left: 10.0),
+                                  child: Center(
+                                    child: Text(
+                                      statusOffers,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0),
+                          child: Container(
+                            width: 150,
+                            height: 50,
+                            decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(width: 1),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 5.0, right: 10.0, left: 10.0),
+                              child: Center(
+                                child: buildStatus(
+                                    selectedOffer!['statusPosts'],
+                                    statusOffers),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text(
+                            'ผลการแลกเปลี่ยน',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w400,
+                              height: 0,
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -866,5 +1006,29 @@ class _HistoryPostState extends State<HistoryPost> {
     String formattedDate =
         formatter.format(dateTime); // แปลงวันที่เป็นรูปแบบที่ต้องการ
     return formattedDate; // คืนค่าวันที่ที่ถูกแปลง
+  }
+
+  Widget buildStatus(String statusPost, String statusOffer) {
+    String Ans = "";
+    if (statusPost == "รอการยืนยัน" && statusOffer == "รอการยืนยัน") {
+      Ans = "รอการยืนยัน"; //
+    } else if (statusPost == "ยืนยัน" && statusOffer == "รอการยืนยัน") {
+      Ans = "รอการยืนยัน"; //
+    } else if (statusPost== "รอการยืนยัน" && statusOffer == "ยืนยัน") {
+      Ans = "รอการยืนยัน"; //
+    } else if (statusPost == "ยืนยัน" && statusOffer == "ยืนยัน") {
+      Ans = "แลกเปลี่ยนสำเร็จ"; //
+    } else if (statusPost == "ยืนยัน" && statusOffer == "ปฏิเสธ") {
+      Ans = "ล้มเหลว"; //
+    } else if (statusPost== "ปฏิเสธ" && statusOffer == "ยืนยัน") {
+      Ans = "ล้มเหลว"; //
+    } else if (statusPost == "ปฏิเสธ" && statusOffer == "ปฏิเสธ") {
+      Ans = "ล้มเหลว"; //
+    } else if (statusPost == "ปฏิเสธ" && statusOffer == "รอการยืนยัน") {
+      Ans = "ล้มเหลว"; //
+    } else if (statusPost == "รอการยืนยัน" && statusOffer == "ปฏิเสธ") {
+      Ans = "ล้มเหลว"; //
+    }
+    return Text(Ans);
   }
 }
