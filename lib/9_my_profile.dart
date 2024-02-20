@@ -335,8 +335,23 @@ class _ProfileState extends State<Profile> {
                             const SizedBox(height: 20),
                             Row(
                               children: [
-                                pieChart(creditOfferSuccess!, totalOffer!,
-                                    creditPostSuccess!, totalPost!)
+                                (totalOffer.toString() != "0" ||
+                                        totalPost.toString() != "0")
+                                    ? pieChart(creditOfferSuccess!, totalOffer!,
+                                        creditPostSuccess!, totalPost!)
+                                    : Row(
+                                        children: [
+                                          Image.network(
+                                              'https://cdn-icons-png.flaticon.com/128/3476/3476248.png',
+                                              width: 40),
+                                          Text(
+                                            'ไม่มีเครดิตการโพสต์และการยื่นข้อเสนอ',
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      )
                               ],
                             ),
                             const Divider(),
@@ -798,8 +813,10 @@ class _ProfileState extends State<Profile> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('เครดิตการยื่นข้อเสนอ',
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+            const Text(
+              'เครดิตการยื่นข้อเสนอ',
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 10),
             SizedBox(
               width: 120,
@@ -810,7 +827,8 @@ class _ProfileState extends State<Profile> {
                     PieChartSectionData(
                       value: double.tryParse(creditOfferSuccess),
                       color: Colors.green,
-                      title: '$creditOfferSuccess%',
+                      title:
+                          '${(100 - double.parse(creditOfferSuccess)).toStringAsFixed(2)}%',
                       radius: 50,
                       titleStyle: const TextStyle(
                         fontSize: 15,
@@ -823,8 +841,7 @@ class _ProfileState extends State<Profile> {
                               double.parse(creditOfferSuccess))
                           .toString()),
                       color: Colors.red,
-                      title:
-                          '${(100 - double.parse(creditOfferSuccess)).toStringAsFixed(2)}%',
+                      title: '$creditOfferSuccess%',
                       radius: 50,
                       titleStyle: const TextStyle(
                         fontSize: 14,
@@ -841,7 +858,8 @@ class _ProfileState extends State<Profile> {
         const SizedBox(width: 10),
         Column(
           children: [
-            const Text('เครดิตการโพสต์', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+            const Text('เครดิตการโพสต์',
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             SizedBox(
               width: 120,
@@ -852,7 +870,8 @@ class _ProfileState extends State<Profile> {
                     PieChartSectionData(
                       value: double.tryParse(creditPostSuccess),
                       color: Colors.green,
-                      title: '$creditPostSuccess%',
+                      title:
+                          '${(100 - double.parse(creditPostSuccess)).toStringAsFixed(2)}%',
                       radius: 50,
                       titleStyle: const TextStyle(
                         fontSize: 15,
@@ -865,8 +884,7 @@ class _ProfileState extends State<Profile> {
                               double.parse(creditPostSuccess))
                           .toString()),
                       color: Colors.red,
-                      title:
-                          '${(100 - double.parse(creditPostSuccess)).toStringAsFixed(2)}%',
+                      title: '$creditPostSuccess%',
                       radius: 50,
                       titleStyle: const TextStyle(
                         fontSize: 14,
