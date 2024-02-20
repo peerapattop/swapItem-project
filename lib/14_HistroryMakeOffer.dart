@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -18,6 +20,7 @@ class His_Makeoffer extends StatefulWidget {
 }
 
 class _His_MakeofferState extends State<His_Makeoffer> {
+  late String gg = '';
   late User _user;
   double? latitude;
   double? longitude;
@@ -125,6 +128,7 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                                       List<String>.from(
                                                           selectedPost![
                                                               'imageUrls']);
+
                                                   return Padding(
                                                     padding: const EdgeInsets
                                                         .symmetric(
@@ -167,37 +171,57 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                                       onTap: () {
                                                         showDialog(
                                                           context: context,
-                                                          builder: (BuildContext context) {
+                                                          builder: (BuildContext
+                                                              context) {
                                                             return AlertDialog(
                                                               title: const Row(
                                                                 children: [
-                                                                  Icon(Icons.alarm_on_sharp,color: Colors.red,size: 25,),
-                                                                   Text("แจ้งเตือน"),
+                                                                  Icon(
+                                                                    Icons
+                                                                        .alarm_on_sharp,
+                                                                    color: Colors
+                                                                        .red,
+                                                                    size: 25,
+                                                                  ),
+                                                                  Text(
+                                                                      "แจ้งเตือน"),
                                                                 ],
                                                               ),
-                                                              content: const Text("กรุณาติดต่อผู้โพสต์เพื่อทำการแลกเปลี่ยนสิ่งของ"),
+                                                              content: const Text(
+                                                                  "กรุณาติดต่อผู้โพสต์เพื่อทำการแลกเปลี่ยนสิ่งของ"),
                                                               actions: <Widget>[
                                                                 TextButton(
-                                                                  onPressed: () {
-                                                                    Navigator.of(context).pop();
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
                                                                   },
-                                                                  style: TextButton.styleFrom(
-                                                                    backgroundColor: Colors.green,
+                                                                  style: TextButton
+                                                                      .styleFrom(
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .green,
                                                                   ),
-                                                                  child: const Text(
+                                                                  child:
+                                                                      const Text(
                                                                     "ยืนยัน",
-                                                                    style: TextStyle(color: Colors.white),
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white),
                                                                   ),
                                                                 ),
                                                               ],
                                                             );
                                                           },
                                                         );
-
                                                       },
-                                                      child: const Icon(Icons.info, size: 20,color: Colors.purple,),
+                                                      child: const Icon(
+                                                        Icons.info,
+                                                        size: 20,
+                                                        color: Colors.purple,
+                                                      ),
                                                     ),
-
                                                   ],
                                                 )
                                               : Row(
@@ -208,7 +232,7 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                                     Text(
                                                       'สถานะ : ${selectedPost!['statusOffers']}',
                                                       style: const TextStyle(
-                                                          fontSize: 19),
+                                                          fontSize: 26),
                                                     )
                                                   ],
                                                 ),
@@ -357,7 +381,10 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                           ),
                                           His_Make_off2(
                                               postUid:
-                                                  selectedPost!['post_uid']),
+                                                  selectedPost!['post_uid'],
+                                              statusOffer: selectedPost!['statusOffers'],
+                                          ),
+
                                         ],
                                       ),
                                     ),
@@ -418,6 +445,10 @@ class _His_MakeofferState extends State<His_Makeoffer> {
       ),
     );
   }
+
+
+
+
 
   Widget buildCircularNumberButton(int index, Map<dynamic, dynamic> postData) {
     print("look at me" + selectedPost.toString());

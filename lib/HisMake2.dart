@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -9,18 +11,22 @@ import 'package:swapitem/widget/offer_imageshow.dart';
 
 class His_Make_off2 extends StatefulWidget {
   final String postUid;
+  final String statusOffer; //offer
 
-  const His_Make_off2({Key? key, required this.postUid}) : super(key: key);
+  const His_Make_off2(
+      {Key? key, required this.postUid, required this.statusOffer})
+      : super(key: key);
 
   @override
   State<His_Make_off2> createState() => _His_Make_off2State();
 }
 
 class _His_Make_off2State extends State<His_Make_off2> {
+  late String statusOffer = widget.statusOffer;
   late User _user;
   late DatabaseReference _postRef;
   List<Map<dynamic, dynamic>> postsList = [];
-  Map<dynamic, dynamic>? selectedOffer;
+  Map<dynamic, dynamic>? selectedPost;
   List<String> image_post = [];
 
   @override
@@ -51,7 +57,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
 
         if (postsList.isNotEmpty) {
           setState(() {
-            selectedOffer = postsList.reversed.toList()[0];
+            selectedPost = postsList.reversed.toList()[0];
           });
         }
       }
@@ -107,8 +113,8 @@ class _His_Make_off2State extends State<His_Make_off2> {
         } else if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
           Map<dynamic, dynamic> data =
               Map<dynamic, dynamic>.from(snapshot.data!.snapshot.value as Map);
-          image_post = List<String>.from(selectedOffer!['imageUrls']);
-          print(selectedOffer!['statusOffers']);
+          image_post = List<String>.from(selectedPost!['imageUrls']);
+          print(selectedPost!['statusOffers']);
           return Column(
             children: [
               ImageGalleryWidget(
@@ -122,7 +128,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    "หมายเลขโพสต์ : ${selectedOffer!['postNumber']}",
+                    "หมายเลขโพสต์ : ${selectedPost!['postNumber']}",
                     style: const TextStyle(fontSize: 18),
                   ),
                 ],
@@ -141,12 +147,12 @@ class _His_Make_off2State extends State<His_Make_off2> {
                   const SizedBox(width: 8),
                   GestureDetector(
                     onTap: () {
-                      fetchUserData(selectedOffer!['uid'], context);
+                      fetchUserData(selectedPost!['uid'], context);
                     },
                     child: Row(
                       children: [
                         Text(
-                          selectedOffer!['username'],
+                          selectedPost!['username'],
                           style: const TextStyle(
                               fontSize: 18, color: Colors.purple),
                         ),
@@ -164,7 +170,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    "วันที่ : ${convertDateFormat(selectedOffer!['date'])}",
+                    "วันที่ : ${convertDateFormat(selectedPost!['date'])}",
                     style: const TextStyle(fontSize: 18),
                   ),
                 ],
@@ -176,7 +182,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
                     color: Colors.blue,
                   ),
                   Text(
-                    " เวลา :" + selectedOffer!['time'] + ' น.',
+                    " เวลา :" + selectedPost!['time'] + ' น.',
                     style: const TextStyle(fontSize: 18),
                   ),
                 ],
@@ -199,23 +205,23 @@ class _His_Make_off2State extends State<His_Make_off2> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'ชื่อสิ่งของ : ' + selectedOffer!['item_name'],
+                          'ชื่อสิ่งของ : ' + selectedPost!['item_name'],
                           style: TextStyle(fontSize: 18),
                         ),
                         Text(
-                          'หมวดหมู่ : ' + selectedOffer!['type'],
+                          'หมวดหมู่ : ' + selectedPost!['type'],
                           style: TextStyle(fontSize: 18),
                         ),
                         Text(
-                          'ยี่ห้อ : ' + selectedOffer!['brand'],
+                          'ยี่ห้อ : ' + selectedPost!['brand'],
                           style: TextStyle(fontSize: 18),
                         ),
                         Text(
-                          'รุ่น : ' + selectedOffer!['model'],
+                          'รุ่น : ' + selectedPost!['model'],
                           style: TextStyle(fontSize: 18),
                         ),
                         Text(
-                          'รายละเอียด : ' + selectedOffer!['detail'],
+                          'รายละเอียด : ' + selectedPost!['detail'],
                           style: const TextStyle(fontSize: 18),
                         ),
                         const SizedBox(height: 10),
@@ -226,21 +232,181 @@ class _His_Make_off2State extends State<His_Make_off2> {
                         )),
                         const SizedBox(height: 10),
                         Text(
-                          'ชื่อสิ่งของ : ${selectedOffer!['item_name1']}',
+                          'ชื่อสิ่งของ : ${selectedPost!['item_name1']}',
                           style: TextStyle(fontSize: 18),
                         ),
                         Text(
-                          'ยี่ห้อ : ' + selectedOffer!['brand1'],
+                          'ยี่ห้อ : ' + selectedPost!['brand1'],
                           style: const TextStyle(fontSize: 18),
                         ),
                         Text(
-                          'รุ่น : ${selectedOffer!['model1']}',
+                          'รุ่น : ${selectedPost!['model1']}',
                           style: const TextStyle(fontSize: 18),
                         ),
                         Text(
-                          'รายละเอียด : ${selectedOffer!['details1']}',
+                          'รายละเอียด : ${selectedPost!['details1']}',
                           style: const TextStyle(fontSize: 18),
                         ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 600,
+                  height: 300,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 214, 214, 212),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(11.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          'สถานะการแลกเปลี่ยน',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 19,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w400,
+                            height: 0,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 30.0, bottom: 10.0, right: 15.0),
+                                child: Text(
+                                  'ผู้โพสต์',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 45,
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 21.0, bottom: 10.0),
+                                child: Text(
+                                  'ผู้ยื่นข้อเสนอ',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Container(
+                                width: 150,
+                                height: 50,
+                                decoration: ShapeDecoration(
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(width: 1),
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 5.0, right: 10.0, left: 10.0),
+                                  child: Center(
+                                    child: Text(selectedPost!['statusPosts']),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Transform.rotate(
+                                angle: -pi /
+                                    2, // หมุนทางซ้าย 90 องศา (ในรูปแบบ radian)
+                                child: Image.asset(
+                                  'assets/images/swap.png',
+                                  width: 20,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Container(
+                                width: 150,
+                                height: 50,
+                                decoration: ShapeDecoration(
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(width: 1),
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 5.0, right: 10.0, left: 10.0),
+                                  child: Center(
+                                    child: Text(
+                                      statusOffer,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0),
+                          child: Container(
+                            width: 150,
+                            height: 50,
+                            decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(width: 1),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 5.0, right: 10.0, left: 10.0),
+                              child: Center(
+                                  child: buildStatus(
+                                      selectedPost![
+                                          'statusPosts'].toString(),
+                                      widget.statusOffer.toString()),
+                              //     String statusPost = selectedPost!['statusPosts'];
+                              // String statusOffer = widget.statusOffer;
+                                  ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text(
+                            'ผลการแลกเปลี่ยน',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w400,
+                              height: 0,
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -256,7 +422,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          ChatDetail(receiverUid: selectedOffer!['uid']),
+                          ChatDetail(receiverUid: selectedPost!['uid']),
                     ),
                   );
                 },
@@ -270,7 +436,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
                 ),
               ),
               const SizedBox(height: 10),
-              selectedOffer!['statusPosts'] == 'รอดำเนินการ'
+              selectedPost!['statusPosts'] == 'รอดำเนินการ'
                   ? Row(
                       children: [
                         ElevatedButton.icon(
@@ -302,7 +468,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
                             _offerRef = FirebaseDatabase.instance
                                 .ref()
                                 .child('offer')
-                                .child(selectedOffer!['offer_uid']);
+                                .child(selectedPost!['offer_uid']);
                             await _offerRef.update({
                               'statusOfferAns': 'เจ้าของยืนยัน',
                             });
@@ -332,6 +498,31 @@ class _His_Make_off2State extends State<His_Make_off2> {
         }
       },
     );
+  }
+
+  Widget buildStatus(String statusPost, String statusOffer) {
+
+    String Ans = "";
+    if (statusPost == "รอการยืนยัน" && statusOffer == "รอการยืนยัน") {
+      Ans = "รอการยืนยัน"; //
+    } else if (statusPost == "ยืนยัน" && statusOffer == "รอการยืนยัน") {
+      Ans = "รอการยืนยัน"; //
+    } else if (statusPost == "รอการยืนยัน" && statusOffer == "ยืนยัน") {
+      Ans = "รอการยืนยัน"; //
+    } else if (statusPost == "ยืนยัน" && statusOffer == "ยืนยัน") {
+      Ans = "แลกเปลี่ยนสำเร็จ"; //
+    } else if (statusPost == "ยืนยัน" && statusOffer == "ปฏิเสธ") {
+      Ans = "ล้มเหลว"; //
+    } else if (statusPost == "ปฏิเสธ" && statusOffer == "ยืนยัน") {
+      Ans = "ล้มเหลว"; //
+    } else if (statusPost == "ปฏิเสธ" && statusOffer == "ปฏิเสธ") {
+      Ans = "ล้มเหลว"; //
+    } else if (statusPost == "ปฏิเสธ" && statusOffer == "รอการยืนยัน") {
+      Ans = "ล้มเหลว"; //
+    } else if (statusPost == "รอการยืนยัน" && statusOffer == "ปฏิเสธ") {
+      Ans = "ล้มเหลว"; //
+    }
+    return Text(Ans);
   }
 
   String convertDateFormat(String inputDate) {
