@@ -1,4 +1,5 @@
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:swapitem/CheckOffercome.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io' as io;
@@ -34,6 +35,10 @@ class _ProfileState extends State<Profile> {
   late DatabaseReference _userRef;
   DateTime? selectedDate;
   PickedFile? _image;
+  String? creditOfferSuccess;
+  String? totalOffer;
+  String? creditPostSuccess;
+  String? totalPost;
 
   bool isTextFieldEnabled = false;
   @override
@@ -275,6 +280,12 @@ class _ProfileState extends State<Profile> {
                           dataUser['birthday'].toString();
                       statusUser = dataUser['status_user'];
                       remainingTime = dataUser['remainingTime'];
+                      creditOfferSuccess =
+                          dataUser['creditOfferSuccess'].toString();
+                      totalOffer = dataUser['totalOffer'].toString();
+                      creditPostSuccess =
+                          dataUser['creditPostSuccess'].toString();
+                      totalPost = dataUser['totalPost'].toString();
                       bool isPremiumUser =
                           (statusUser == 'ผู้ใช้พรีเมี่ยม') ? true : false;
                       return Padding(
@@ -320,7 +331,15 @@ class _ProfileState extends State<Profile> {
                                 )
                               ],
                             ),
+                            const Divider(),
                             const SizedBox(height: 20),
+                            Row(
+                              children: [
+                                pieChart(creditOfferSuccess!, totalOffer!,
+                                    creditPostSuccess!, totalPost!)
+                              ],
+                            ),
+                            const Divider(),
                             const SizedBox(height: 20),
                             Container(
                               alignment: Alignment.centerLeft,
@@ -769,6 +788,138 @@ class _ProfileState extends State<Profile> {
           )
         ],
       ),
+    );
+  }
+
+  Widget pieChart(String creditOfferSuccess, String totalOffer,
+      String creditPostSuccess, String totalPost) {
+    return Row(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('เครดิตการยื่นข้อเสนอ',
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: 120,
+              height: 120,
+              child: PieChart(
+                PieChartData(
+                  sections: [
+                    PieChartSectionData(
+                      value: double.tryParse(creditOfferSuccess),
+                      color: Colors.green,
+                      title: '$creditOfferSuccess%',
+                      radius: 50,
+                      titleStyle: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    PieChartSectionData(
+                      value: double.tryParse((double.parse(totalOffer) -
+                              double.parse(creditOfferSuccess))
+                          .toString()),
+                      color: Colors.red,
+                      title:
+                          '${(100 - double.parse(creditOfferSuccess)).toStringAsFixed(2)}%',
+                      radius: 50,
+                      titleStyle: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(width: 10),
+        Column(
+          children: [
+            const Text('เครดิตการโพสต์', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: 120,
+              height: 120,
+              child: PieChart(
+                PieChartData(
+                  sections: [
+                    PieChartSectionData(
+                      value: double.tryParse(creditPostSuccess),
+                      color: Colors.green,
+                      title: '$creditPostSuccess%',
+                      radius: 50,
+                      titleStyle: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    PieChartSectionData(
+                      value: double.tryParse((double.parse(totalPost) -
+                              double.parse(creditPostSuccess))
+                          .toString()),
+                      color: Colors.red,
+                      title:
+                          '${(100 - double.parse(creditPostSuccess)).toStringAsFixed(2)}%',
+                      radius: 50,
+                      titleStyle: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(width: 1),
+        const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.circle,
+                  size: 20,
+                  color: Colors.green,
+                ),
+                SizedBox(width: 5),
+                Text(
+                  'สำเร็จ',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Icon(
+                  Icons.circle,
+                  size: 20,
+                  color: Colors.red,
+                ),
+                SizedBox(width: 5),
+                Text(
+                  'ไม่สำเร็จ',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      ],
     );
   }
 }
