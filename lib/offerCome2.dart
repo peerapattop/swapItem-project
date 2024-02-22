@@ -50,8 +50,7 @@ class _offerCome2State extends State<offerCome2> {
         Map<dynamic, dynamic> data =
             Map<dynamic, dynamic>.from(event.snapshot.value as Map);
         data.forEach((key, value) {
-          if (value['statusOffers'] == "รอการยืนยัน" ||
-              value['statusOffers'] == "รอดำเนินการ") {
+          if (value['statusOffers'] == "รอการยืนยัน") {
             postsList.add(value);
           }
         });
@@ -93,7 +92,8 @@ class _offerCome2State extends State<offerCome2> {
 
           bool hasPendingPosts = false;
           data.forEach((key, value) {
-            if (value['statusOffers'] == "รอการยืนยัน" || value['statusOffers'] == "รอดำเนินการ") {
+            if (value['statusOffers'] == "รอการยืนยัน" ||
+                value['statusOffers'] == "รอดำเนินการ") {
               hasPendingPosts = true;
             }
           });
@@ -116,7 +116,7 @@ class _offerCome2State extends State<offerCome2> {
                         int idx = entry.key;
                         Map<dynamic, dynamic> postData = entry.value;
                         image_post =
-                        List<String>.from(selectedOffer!['imageUrls']);
+                            List<String>.from(selectedOffer!['imageUrls']);
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4.0),
                           child: buildCircularNumberButton(idx, postData),
@@ -459,22 +459,9 @@ class _offerCome2State extends State<offerCome2> {
           .child('postitem')
           .child(widget.postUid);
 
-      DatabaseReference offerRef1 = FirebaseDatabase.instance
-          .ref()
-          .child('offer')
-          .child(selectedOffer!['offer_uid']);
-
-      DatabaseReference userRef =
-          FirebaseDatabase.instance.ref().child('users').child(_user.uid);
-
       await postRef1.update({ //post
         'user_offer_id_confirm': selectedOffer?['offer_uid'],
         'statusPosts': "รอการยืนยัน",
-      });
-
-      await offerRef1.update({ //offer
-        'user_post_id_confirm': widget.postUid,
-        'statusOffers': 'รอดำเนินการ'
       });
     } catch (e) {
       // Handle error if necessary

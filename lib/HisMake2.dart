@@ -384,13 +384,12 @@ class _His_Make_off2State extends State<His_Make_off2> {
                               padding: const EdgeInsets.only(
                                   top: 5.0, right: 10.0, left: 10.0),
                               child: Center(
-                                  child: buildStatus(
-                                      selectedPost![
-                                          'statusPosts'].toString(),
-                                      widget.statusOffer.toString()),
-                              //     String statusPost = selectedPost!['statusPosts'];
-                              // String statusOffer = widget.statusOffer;
-                                  ),
+                                child: buildStatus(
+                                    selectedPost!['statusPosts'].toString(),
+                                    widget.statusOffer.toString()),
+                                //     String statusPost = selectedPost!['statusPosts'];
+                                // String statusOffer = widget.statusOffer;
+                              ),
                             ),
                           ),
                         ),
@@ -412,83 +411,6 @@ class _His_Make_off2State extends State<His_Make_off2> {
                   ),
                 ),
               ),
-              ElevatedButton.icon(
-                icon: const Icon(
-                  Icons.chat,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ChatDetail(receiverUid: selectedPost!['uid']),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  minimumSize: const Size(500, 50),
-                ),
-                label: const Text(
-                  'แชท',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-              ),
-              const SizedBox(height: 10),
-              selectedPost!['statusPosts'] == 'รอดำเนินการ'
-                  ? Row(
-                      children: [
-                        ElevatedButton.icon(
-                          icon: const Icon(
-                            Icons.close,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            // Add your onPressed logic here
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                          ),
-                          label: const Text(
-                            'ปฎิเสธการแลกเปลี่ยน',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        ElevatedButton.icon(
-                          icon: const Icon(
-                            Icons.check,
-                            color: Colors.white,
-                          ),
-                          onPressed: () async {
-                            late DatabaseReference _offerRef;
-                            _offerRef = FirebaseDatabase.instance
-                                .ref()
-                                .child('offer')
-                                .child(selectedPost!['offer_uid']);
-                            await _offerRef.update({
-                              'statusOfferAns': 'เจ้าของยืนยัน',
-                            });
-
-                            // Add your onPressed logic here
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 5, vertical: 10),
-                          ),
-                          label: const Text(
-                            'ยืนยันการแลกเปลี่ยน',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                        ),
-                      ],
-                    )
-                  : const SizedBox.shrink(),
-              const SizedBox(height: 20),
             ],
           );
         } else {
@@ -501,7 +423,6 @@ class _His_Make_off2State extends State<His_Make_off2> {
   }
 
   Widget buildStatus(String statusPost, String statusOffer) {
-
     String Ans = "";
     if (statusPost == "รอการยืนยัน" && statusOffer == "รอการยืนยัน") {
       Ans = "รอการยืนยัน"; //

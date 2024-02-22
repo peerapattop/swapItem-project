@@ -495,7 +495,6 @@ class _HistoryPostState extends State<HistoryPost> {
   }
 
   Widget offerCome() {
-    print("55664" + selectedOffer!['statusPosts']);
     return StreamBuilder(
       stream: offerRef
           .orderByChild('offer_uid')
@@ -506,7 +505,8 @@ class _HistoryPostState extends State<HistoryPost> {
           return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
-        } else if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
+        }
+        else if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
           // Extract data from the snapshot
           Map<dynamic, dynamic> data =
               Map<dynamic, dynamic>.from(snapshot.data!.snapshot.value as Map);
@@ -917,7 +917,7 @@ class _HistoryPostState extends State<HistoryPost> {
 
       await postRef1.update({
         //post
-        'statusPosts': "เจ้าของโพสต์ยืนยัน",
+        'statusPosts': "ยืนยัน",
       });
     } catch (e) {
       // Handle error if necessary
@@ -1014,13 +1014,13 @@ class _HistoryPostState extends State<HistoryPost> {
       Ans = "รอการยืนยัน"; //
     } else if (statusPost == "ยืนยัน" && statusOffer == "รอการยืนยัน") {
       Ans = "รอการยืนยัน"; //
-    } else if (statusPost== "รอการยืนยัน" && statusOffer == "ยืนยัน") {
+    } else if (statusPost == "รอการยืนยัน" && statusOffer == "ยืนยัน") {
       Ans = "รอการยืนยัน"; //
     } else if (statusPost == "ยืนยัน" && statusOffer == "ยืนยัน") {
       Ans = "แลกเปลี่ยนสำเร็จ"; //
     } else if (statusPost == "ยืนยัน" && statusOffer == "ปฏิเสธ") {
       Ans = "ล้มเหลว"; //
-    } else if (statusPost== "ปฏิเสธ" && statusOffer == "ยืนยัน") {
+    } else if (statusPost == "ปฏิเสธ" && statusOffer == "ยืนยัน") {
       Ans = "ล้มเหลว"; //
     } else if (statusPost == "ปฏิเสธ" && statusOffer == "ปฏิเสธ") {
       Ans = "ล้มเหลว"; //
