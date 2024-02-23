@@ -11,10 +11,14 @@ import 'package:swapitem/widget/offer_imageshow.dart';
 
 class His_Make_off2 extends StatefulWidget {
   final String postUid;
+  final String offer_uid;
   final String statusOffer; //offer
 
   const His_Make_off2(
-      {Key? key, required this.postUid, required this.statusOffer})
+      {Key? key,
+      required this.postUid,
+      required this.statusOffer,
+      required this.offer_uid})
       : super(key: key);
 
   @override
@@ -405,12 +409,39 @@ class _His_Make_off2State extends State<His_Make_off2> {
                               height: 0,
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
+              SizedBox(
+                height: 50,
+                width: double
+                    .infinity, // Make the button expand to the full width available
+                child: ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.chat,
+                    color: Colors.white,
+                  ),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatDetail(
+                          receiverUid: selectedPost!['uid'],
+                        ),
+                      ),
+                    );
+                  },
+                  label: const Text(
+                    'แชท',
+                    style: TextStyle(color: Colors.white, fontSize: 19),
+                  ),
+                ),
+              ),
+              confirmBtn()
             ],
           );
         } else {
@@ -420,6 +451,117 @@ class _His_Make_off2State extends State<His_Make_off2> {
         }
       },
     );
+  }
+
+  Widget confirmBtn() {
+    if (statusOffer == 'รอการยืนยัน') {
+      return Row(
+        children: [
+          ElevatedButton.icon(
+            icon: const Icon(
+              Icons.close,
+              color: Colors.white,
+            ),
+            onPressed: () async {
+              try {
+                DatabaseReference postRef1 = FirebaseDatabase.instance
+                    .ref()
+                    .child('offer')
+                    .child(widget.offer_uid.toString());
+
+                await postRef1.update({
+                  'statusOffers': "ปฎิเสธ",
+                });
+              } catch (e) {
+                // Handle error if necessary
+              }
+
+              // Add your onPressed logic here
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            ),
+            label: const Text(
+              'ปฎิเสธการแลกเปลี่ยน',
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+          const SizedBox(width: 10),
+          ElevatedButton.icon(
+            icon: const Icon(
+              Icons.check,
+              color: Colors.white,
+            ),
+            onPressed: () async {
+              Show_Confirmation_Dialog_Status(context);
+              // Add your onPressed logic here
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+            ),
+            label: const Text(
+              'ยืนยันการแลกเปลี่ยน',
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        ],
+      );
+    }
+    return SizedBox.shrink();
+  }
+
+  void Show_Confirmation_Dialog_Status(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('ยืนยันการตัดสินใจ'),
+          content: const Text(
+              '**คำเตือน** รอการยืนยันการตัดสินใจจาก ผู้แลกเปลี่ยนของคุณก่อน ถึงจะสำเร็จ'),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text(
+                'ยกเลิก',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () async {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: const Text(
+                'ยันยัน',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                _performUpdateOffer();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _performUpdateOffer() async {
+    try {
+      DatabaseReference postRef1 = FirebaseDatabase.instance
+          .ref()
+          .child('offer')
+          .child(widget.offer_uid.toString());
+
+      await postRef1.update({
+        //post
+        'statusOffers': "ยืนยัน",
+      });
+    } catch (e) {
+      // Handle error if necessary
+    }
   }
 
   Widget buildStatus(String statusPost, String statusOffer) {

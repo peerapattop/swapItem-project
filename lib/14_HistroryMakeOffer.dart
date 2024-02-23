@@ -380,11 +380,12 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                             ),
                                           ),
                                           His_Make_off2(
-                                              postUid:
-                                                  selectedPost!['post_uid'],
-                                              statusOffer: selectedPost!['statusOffers'],
+                                            postUid: selectedPost!['post_uid'],
+                                            statusOffer:
+                                                selectedPost!['statusOffers'],
+                                            offer_uid:
+                                                selectedPost!['offer_uid'],
                                           ),
-
                                         ],
                                       ),
                                     ),
@@ -445,10 +446,6 @@ class _His_MakeofferState extends State<His_Makeoffer> {
       ),
     );
   }
-
-
-
-
 
   Widget buildCircularNumberButton(int index, Map<dynamic, dynamic> postData) {
     print("look at me" + selectedPost.toString());
