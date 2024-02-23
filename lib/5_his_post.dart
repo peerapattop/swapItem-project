@@ -505,8 +505,7 @@ class _HistoryPostState extends State<HistoryPost> {
           return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
-        }
-        else if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
+        } else if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
           // Extract data from the snapshot
           Map<dynamic, dynamic> data =
               Map<dynamic, dynamic>.from(snapshot.data!.snapshot.value as Map);
@@ -844,49 +843,7 @@ class _HistoryPostState extends State<HistoryPost> {
                 ),
               ),
               SizedBox(height: 10),
-              Row(
-                children: [
-                  ElevatedButton.icon(
-                    icon: const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                    ),
-                    onPressed: () async {
-                      // Add your onPressed logic here
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
-                    ),
-                    label: const Text(
-                      'ปฎิเสธการแลกเปลี่ยน',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  ElevatedButton.icon(
-                    icon: const Icon(
-                      Icons.check,
-                      color: Colors.white,
-                    ),
-                    onPressed: () async {
-                      Show_Confirmation_Dialog_Status(
-                          context, selectedOffer!['post_uid']);
-                      // Add your onPressed logic here
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 5, vertical: 10),
-                    ),
-                    label: const Text(
-                      'ยืนยันการแลกเปลี่ยน',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  ),
-                ],
-              ),
+              confirmBtn(),
               ...offerWidgets, // Spread the list of offerWidgets here
             ],
           );
@@ -906,6 +863,53 @@ class _HistoryPostState extends State<HistoryPost> {
         }
       },
     );
+  }
+
+  Widget confirmBtn() {
+    if (selectedOffer!['statusPosts'] == 'รอการยืนยัน') {
+      return Row(
+        children: [
+          ElevatedButton.icon(
+            icon: const Icon(
+              Icons.close,
+              color: Colors.white,
+            ),
+            onPressed: () async {
+              // Add your onPressed logic here
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            ),
+            label: const Text(
+              'ปฎิเสธการแลกเปลี่ยน',
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+          const SizedBox(width: 10),
+          ElevatedButton.icon(
+            icon: const Icon(
+              Icons.check,
+              color: Colors.white,
+            ),
+            onPressed: () async {
+              Show_Confirmation_Dialog_Status(
+                  context, selectedOffer!['post_uid']);
+              // Add your onPressed logic here
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+            ),
+            label: const Text(
+              'ยืนยันการแลกเปลี่ยน',
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        ],
+      );
+    }
+    return SizedBox.shrink();
   }
 
   Future<void> _performUpdateOffer() async {
