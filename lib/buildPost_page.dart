@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,7 +39,7 @@ class _NewPostState extends State<NewPost> {
   final model = TextEditingController();
   final details = TextEditingController();
   final exchange_location = TextEditingController();
-
+  late final double percentage;
   final item_name1 = TextEditingController();
   final brand1 = TextEditingController();
   final model1 = TextEditingController();
@@ -113,7 +115,8 @@ class _NewPostState extends State<NewPost> {
   Future<void> updateTotalPost() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
-    DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(user!.uid);
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.ref().child('users').child(user!.uid);
     DatabaseEvent event = await userRef.once();
     Map<dynamic, dynamic>? datamap = event.snapshot.value as Map?;
     if (datamap != null) {
@@ -126,7 +129,6 @@ class _NewPostState extends State<NewPost> {
       print('User data not found');
     }
   }
-
 
   Future<void> buildPost(BuildContext context, List<File> images) async {
     try {
@@ -182,10 +184,13 @@ class _NewPostState extends State<NewPost> {
 
           // Generate uid for the post
           String? postUid = itemRef.key;
-          String time = "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
-          String date = "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+          String time =
+              "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
+          String date =
+              "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
           Map userDataMap = {
             'timestamp': timeclick,
+            //'timestamp': ServerValue.timestamp,
             'statusPosts': "สามารถยื่นข้อเสนอได้",
             'imageUser': imageUser,
             'post_uid': postUid,
@@ -604,6 +609,14 @@ class _NewPostState extends State<NewPost> {
                             Icon(Icons.shopping_bag), // Add your desired icon
                       ),
                     ),
+                    exampleUsage(),
+                    Center(
+                      child: expTime(
+                        "2024-02-24 10:10:44.096075",
+                        "2024-03-10 12:00:00.000000",
+                      ),
+                    ),
+                    buildss(percentage: 0.1),
                     const SizedBox(
                       height: 15,
                     ),
@@ -795,17 +808,159 @@ class _NewPostState extends State<NewPost> {
   }
 
   Future<void> saveTimestampToFirebase() async {
-    DatabaseReference reference = FirebaseDatabase.instance.ref().child('Time');
-
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.ref().child('users').child(user!.uid);
     // Set the data with the server timestamp in the Realtime Database
-    await reference.set({
+    await userRef.update({
       'timestamp': ServerValue.timestamp,
     });
   }
 
+  // Widget expTime(String current, String endtime) {
+  //   DateTime currentTime = DateTime.parse(current);
+  //   DateTime expirationTime = DateTime.parse(endtime);
+  //   Duration difference = expirationTime.difference(currentTime);
+  //
+  //   return Container(
+  //     child: difference.inSeconds > 0
+  //         ? Text(
+  //       'Time left: ${difference.inDays} days, ${difference.inHours.remainder(24)} hours, ${difference.inMinutes.remainder(60)} minutes',
+  //       style: TextStyle(fontSize: 20),
+  //     )
+  //         : Text(
+  //       'Expired!',
+  //       style: TextStyle(fontSize: 20, color: Colors.red),
+  //     ),
+  //   );
+  // }
+
+  Widget expTime(String current, String endtime) {
+    DateTime currentTime = DateTime.parse(current);
+    DateTime expirationTime = DateTime.parse(endtime);
+    Duration difference = expirationTime.difference(currentTime);
+
+    Stream<DateTime> timerStream() async* {
+      while (difference.inSeconds > 0) {
+        await Future.delayed(Duration(seconds: 1));
+        yield DateTime.now();
+      }
+    }
+
+    return StreamBuilder<DateTime>(
+      stream: timerStream(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          DateTime now = snapshot.data!;
+          difference = expirationTime.difference(now);
+          if (difference.inSeconds <= 0) {
+            return Text(
+              'Expired!',
+              style: TextStyle(fontSize: 20, color: Colors.red),
+            );
+          } else {
+            return Text(
+              'Time left: ${difference.inDays} days, ${difference.inHours.remainder(24)} hours, ${difference.inMinutes.remainder(60)} minutes',
+              style: TextStyle(fontSize: 20),
+            );
+          }
+        } else {
+          return Container(); // สามารถแสดง Indicator หรือข้อความ "Loading" ได้ตามต้องการ
+        }
+      },
+    );
+  }
+
+  Widget buildss({required double percentage}) {
+    return Container(
+      height: 40.0, // ความสูงของหลอดเลือด
+      decoration: BoxDecoration(
+        color: Colors.grey[200], // สีพื้นหลังของหลอดเลือด
+      ),
+      child: Stack(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width * percentage,
+            decoration: BoxDecoration(
+              color: Colors.blue, // สีของเลือด (เปลี่ยนเป็นสีฟ้า)
+            ),
+          ),
+          Positioned(
+            top: 0,
+            bottom: 0,
+            left: 0,
+            child: Container(
+              width: 2.0, // ความกว้างของเส้นที่แสดงเปอร์เซนต์
+              color: Colors.black,
+            ),
+          ),
+          Center(
+            child: Text(
+              '${(percentage * 100).toStringAsFixed(0)}%',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget exampleUsage() {
+    // สร้าง Timestamp จาก Firebase Firestore
+    Timestamp firestoreTimestamp = Timestamp.now();
+    DateTime dateTime = firestoreTimestamp.toDate();
+    print('ghjo');
+    print(dateTime);
+    // สร้างโซนเวลาของเอเชีย (Asia/Bangkok)
+    DateTime asiaTime = dateTime.toUtc().add(Duration(hours: 7));
+
+    // สร้างรูปแบบการแสดงวันที่และเวลาภาษาไทย
+    var formatter = DateFormat('EEEE, dd MMMM yyyy HH:mm:ss', 'th_TH');
+    String formattedTime = formatter.format(asiaTime);
+
+    // แสดงผลลัพธ์เป็น Widget Text
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        formattedTime,
+        // กําหนดขนาดตัวอักษร
+        style: TextStyle(fontSize: 16),
+      ),
+    );
+  }
+
+  // Widget exampleUsage2() { กาก
+  //   // สร้าง Timestamp จาก Firebase Firestore
+  //   Timestamp firestoreTimestamp = Timestamp.now();
+  //   DateTime dateTime = firestoreTimestamp.toDate();
+  //
+  //   // แปลงเวลาไปยังโซนเวลาของเอเชีย (Asia/Bangkok)
+  //   DateTime asiaTime = dateTime.toLocal();
+  //
+  //   // สร้างรูปแบบการแสดงเวลา
+  //   DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+  //   String formattedTime = formatter.format(asiaTime);
+  //
+  //   // แสดงผลลัพธ์เป็น Widget Text
+  //   return Text(
+  //     formattedTime,
+  //     // กําหนดขนาดตัวอักษร
+  //     style: TextStyle(fontSize: 16),
+  //   );
+  // }
+
   Future<void> fetchTimestampFromFirebase() async {
-    DatabaseReference timeRef =
-        FirebaseDatabase.instance.reference().child('Time');
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    DatabaseReference timeRef = FirebaseDatabase.instance
+        .ref()
+        .child('users')
+        .child(user!.uid)
+        .child('timestamp');
 
     // Listen for changes on the "Time" node in Firebase Realtime Database
     timeRef.onValue.listen((event) {

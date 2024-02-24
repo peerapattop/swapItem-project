@@ -226,18 +226,18 @@ class _HistoryPostState extends State<HistoryPost> {
                           int idx = entry.key;
                           Map<dynamic, dynamic> postData = entry.value;
                           image_post =
-                          List<String>.from(selectedOffer!['imageUrls']);
+                              List<String>.from(selectedOffer!['imageUrls']);
                           latitude = double.tryParse(
                               selectedOffer!['latitude'].toString());
                           longitude = double.tryParse(
                               selectedOffer!['longitude'].toString());
                           checkPost =
-                          selectedOffer!['statusPosts'] == 'รอดำเนินการ'
-                              ? true
-                              : false;
+                              selectedOffer!['statusPosts'] == 'รอดำเนินการ'
+                                  ? true
+                                  : false;
                           return Padding(
                             padding:
-                            const EdgeInsets.symmetric(horizontal: 4.0),
+                                const EdgeInsets.symmetric(horizontal: 4.0),
                             child: buildCircularNumberButton(idx, postData),
                           );
                         }).toList(),
@@ -247,244 +247,260 @@ class _HistoryPostState extends State<HistoryPost> {
                   const Divider(),
                   selectedOffer != null
                       ? Expanded(
-                    child: ListView(
-                      children: [
-                        Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
+                          child: ListView(
+                            children: [
+                              Column(
                                 children: [
-                                  ImageGalleryWidget(
-                                    imageUrls: image_post,
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.tag,
-                                        color: Colors.blue,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        "หมายเลขโพสต์ : ${selectedOffer!['postNumber']}",
-                                        style:
-                                        const TextStyle(fontSize: 18),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.wallet_giftcard,
-                                        color: Colors.blue,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        selectedOffer!['statusPosts'],
-                                        style:
-                                        const TextStyle(fontSize: 18),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.date_range,
-                                        color: Colors.blue,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        "วันที่ : ${convertDateFormat(selectedOffer!['date'])}",
-                                        style:
-                                        const TextStyle(fontSize: 18),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons
-                                            .punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                        color: Colors
-                                            .blue, // เปลี่ยนสีไอคอนตามความต้องการ
-                                      ),
-                                      Text(
-                                        " เวลา :" +
-                                            selectedOffer!['time'] +
-                                            ' น.',
-                                        style:
-                                        const TextStyle(fontSize: 18),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 2,
-                                        right: 15,
-                                        top: 10,
-                                        bottom: 10),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: const Color.fromARGB(
-                                            255, 214, 214, 212),
-                                        borderRadius:
-                                        BorderRadius.circular(12.0),
-                                      ),
-                                      child: Padding(
-                                        padding:
-                                        const EdgeInsets.all(11.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        ImageGalleryWidget(
+                                          imageUrls: image_post,
+                                        ),
+                                        Row(
                                           children: [
+                                            const Icon(
+                                              Icons.tag,
+                                              color: Colors.blue,
+                                            ),
+                                            const SizedBox(width: 8),
                                             Text(
-                                              'ชื่อสิ่งของ : ' +
-                                                  selectedOffer![
-                                                  'item_name'],
+                                              "หมายเลขโพสต์ : ${selectedOffer!['postNumber']}",
                                               style:
-                                              TextStyle(fontSize: 18),
-                                            ),
-                                            Text(
-                                              'หมวดหมู่ : ' +
-                                                  selectedOffer!['type'],
-                                              style:
-                                              TextStyle(fontSize: 18),
-                                            ),
-                                            Text(
-                                              'ยี่ห้อ : ' +
-                                                  selectedOffer!['brand'],
-                                              style:
-                                              TextStyle(fontSize: 18),
-                                            ),
-                                            Text(
-                                              'รุ่น : ' +
-                                                  selectedOffer!['model'],
-                                              style:
-                                              TextStyle(fontSize: 18),
-                                            ),
-                                            Text(
-                                              'รายละเอียด : ' +
-                                                  selectedOffer![
-                                                  'detail'],
-                                              style: const TextStyle(
-                                                  fontSize: 18),
-                                            ),
-                                            const SizedBox(height: 10),
-                                            Center(
-                                                child: Image.asset(
-                                                  'assets/images/swap.png',
-                                                  width: 20,
-                                                )),
-                                            const SizedBox(height: 10),
-                                            Text(
-                                              'ชื่อสิ่งของ : ${selectedOffer!['item_name1']}',
-                                              style:
-                                              TextStyle(fontSize: 18),
-                                            ),
-                                            Text(
-                                              'ยี่ห้อ : ' +
-                                                  selectedOffer![
-                                                  'brand1'],
-                                              style: const TextStyle(
-                                                  fontSize: 18),
-                                            ),
-                                            Text(
-                                              'รุ่น : ${selectedOffer!['model1']}',
-                                              style: const TextStyle(
-                                                  fontSize: 18),
-                                            ),
-                                            Text(
-                                              'รายละเอียด : ${selectedOffer!['details1']}',
-                                              style: const TextStyle(
-                                                  fontSize: 18),
+                                                  const TextStyle(fontSize: 18),
                                             ),
                                           ],
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        border: Border.all()),
-                                    height: 300,
-                                    width: 380,
-                                    child: GoogleMap(
-                                      onMapCreated: (GoogleMapController
-                                      controller) {
-                                        mapController = controller;
-                                      },
-                                      initialCameraPosition:
-                                      CameraPosition(
-                                        target:
-                                        LatLng(latitude!, longitude!),
-                                        zoom: 12.0,
-                                      ),
-                                      markers: <Marker>{
-                                        Marker(
-                                          markerId: const MarkerId(
-                                              'initialPosition'),
-                                          position: LatLng(
-                                              latitude!, longitude!),
-                                          infoWindow: const InfoWindow(
-                                            title: 'Marker Title',
-                                            snippet: 'Marker Snippet',
+                                        Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.wallet_giftcard,
+                                              color: Colors.blue,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              selectedOffer!['statusPosts'],
+                                              style:
+                                                  const TextStyle(fontSize: 18),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.date_range,
+                                              color: Colors.blue,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              "วันที่ : ${convertDateFormat(selectedOffer!['date'])}",
+                                              style:
+                                                  const TextStyle(fontSize: 18),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Icon(
+                                              Icons
+                                                  .punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                                              color: Colors
+                                                  .blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                                            ),
+                                            Text(
+                                              " เวลา :" +
+                                                  selectedOffer!['time'] +
+                                                  ' น.',
+                                              style:
+                                                  const TextStyle(fontSize: 18),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 2,
+                                              right: 15,
+                                              top: 10,
+                                              bottom: 10),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromARGB(
+                                                  255, 214, 214, 212),
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(11.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'ชื่อสิ่งของ : ' +
+                                                        selectedOffer![
+                                                            'item_name'],
+                                                    style:
+                                                        TextStyle(fontSize: 18),
+                                                  ),
+                                                  Text(
+                                                    'หมวดหมู่ : ' +
+                                                        selectedOffer!['type'],
+                                                    style:
+                                                        TextStyle(fontSize: 18),
+                                                  ),
+                                                  Text(
+                                                    'ยี่ห้อ : ' +
+                                                        selectedOffer!['brand'],
+                                                    style:
+                                                        TextStyle(fontSize: 18),
+                                                  ),
+                                                  Text(
+                                                    'รุ่น : ' +
+                                                        selectedOffer!['model'],
+                                                    style:
+                                                        TextStyle(fontSize: 18),
+                                                  ),
+                                                  Text(
+                                                    'รายละเอียด : ' +
+                                                        selectedOffer![
+                                                            'detail'],
+                                                    style: const TextStyle(
+                                                        fontSize: 18),
+                                                  ),
+                                                  const SizedBox(height: 10),
+                                                  Center(
+                                                      child: Image.asset(
+                                                    'assets/images/swap.png',
+                                                    width: 20,
+                                                  )),
+                                                  const SizedBox(height: 10),
+                                                  Text(
+                                                    'ชื่อสิ่งของ : ${selectedOffer!['item_name1']}',
+                                                    style:
+                                                        TextStyle(fontSize: 18),
+                                                  ),
+                                                  Text(
+                                                    'ยี่ห้อ : ' +
+                                                        selectedOffer![
+                                                            'brand1'],
+                                                    style: const TextStyle(
+                                                        fontSize: 18),
+                                                  ),
+                                                  Text(
+                                                    'รุ่น : ${selectedOffer!['model1']}',
+                                                    style: const TextStyle(
+                                                        fontSize: 18),
+                                                  ),
+                                                  Text(
+                                                    'รายละเอียด : ${selectedOffer!['details1']}',
+                                                    style: const TextStyle(
+                                                        fontSize: 18),
+                                                  ),
+                                                  buildtimeShow(context, selectedOffer!['timestamp'])
+                                                ],
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      },
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              border: Border.all()),
+                                          height: 300,
+                                          width: 380,
+                                          child: GoogleMap(
+                                            onMapCreated: (GoogleMapController
+                                                controller) {
+                                              mapController = controller;
+                                            },
+                                            initialCameraPosition:
+                                                CameraPosition(
+                                              target:
+                                                  LatLng(latitude!, longitude!),
+                                              zoom: 12.0,
+                                            ),
+                                            markers: <Marker>{
+                                              Marker(
+                                                markerId: const MarkerId(
+                                                    'initialPosition'),
+                                                position: LatLng(
+                                                    latitude!, longitude!),
+                                                infoWindow: const InfoWindow(
+                                                  title: 'Marker Title',
+                                                  snippet: 'Marker Snippet',
+                                                ),
+                                              ),
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        checkPost
+                                            ? SizedBox()
+                                            : ElevatedButton.icon(
+                                                style: ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        Colors.red),
+                                                onPressed: () {
+                                                  if (selectedOffer != null &&
+                                                      selectedOffer!
+                                                          .containsKey(
+                                                              'post_uid')) {
+                                                    showDeleteConfirmation(
+                                                        context,
+                                                        selectedOffer![
+                                                            'post_uid']);
+                                                  } else {
+                                                    print(
+                                                        'No post selected for deletion.');
+                                                    // Debug: Print the current state of selectedPost
+                                                    print(
+                                                        'Current selectedPost: $selectedOffer');
+                                                  }
+                                                },
+                                                icon: const Icon(Icons.delete,
+                                                    color: Colors.white),
+                                                label: const Text('ลบโพสต์',
+                                                    style: TextStyle(
+                                                        color: Colors.white)),
+                                              ),
+                                        const Divider(),
+                                        offerCome(),
+                                      ],
                                     ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  checkPost
-                                      ? SizedBox()
-                                      : ElevatedButton.icon(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                        Colors.red),
-                                    onPressed: () {
-                                      if (selectedOffer != null &&
-                                          selectedOffer!
-                                              .containsKey(
-                                              'post_uid')) {
-                                        showDeleteConfirmation(
-                                            context,
-                                            selectedOffer![
-                                            'post_uid']);
-                                      } else {
-                                        print(
-                                            'No post selected for deletion.');
-                                        // Debug: Print the current state of selectedPost
-                                        print(
-                                            'Current selectedPost: $selectedOffer');
-                                      }
-                                    },
-                                    icon: const Icon(Icons.delete,
-                                        color: Colors.white),
-                                    label: const Text('ลบโพสต์',
-                                        style: TextStyle(
-                                            color: Colors.white)),
-                                  ),
-                                  const Divider(),
-                                  offerCome(),
+                                  )
                                 ],
                               ),
-                            )
+                            ],
+                          ),
+                        )
+                      : const Column(
+                          children: [
+                            CircularProgressIndicator(),
+                            Text('กำลังโหลด..'),
                           ],
                         ),
-                      ],
-                    ),
-                  )
-                      : const Column(
-                    children: [
-                      CircularProgressIndicator(),
-                      Text('กำลังโหลด..'),
-                    ],
-                  ),
                 ],
               );
             }
           },
         ),
+      ),
+    );
+  }
+
+  Widget buildtimeShow(BuildContext context, String timeGG) {
+    // Timestamp in milliseconds
+    int timestamp = int.parse(timeGG);
+
+    // Convert timestamp to DateTime
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
+
+    return Center(
+      child: Text(
+        'Date and Time: ${dateTime.toString()}',
+        style: TextStyle(fontSize: 20),
       ),
     );
   }

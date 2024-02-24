@@ -29,7 +29,7 @@ class _ProfileState extends State<Profile> {
       _genderController,
       _birthdayController;
   late String statusUser, remainingTime;
-
+  late final double percentage;
   Map dataUser = {};
   late User _user;
   late DatabaseReference _userRef;
@@ -333,27 +333,35 @@ class _ProfileState extends State<Profile> {
                             ),
                             const Divider(),
                             const SizedBox(height: 20),
-                            Row(
-                              children: [
-                                (totalOffer.toString() != "0" ||
-                                        totalPost.toString() != "0")
-                                    ? pieChart(creditOfferSuccess!, totalOffer!,
-                                        creditPostSuccess!, totalPost!)
-                                    : Row(
-                                        children: [
-                                          Image.network(
-                                              'https://cdn-icons-png.flaticon.com/128/3476/3476248.png',
-                                              width: 40),
-                                          Text(
-                                            'ไม่มีเครดิตการโพสต์และการยื่นข้อเสนอ',
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      )
-                              ],
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'อัตราการแลกเปลี่ยนสำเร็จ',
+                                style: const TextStyle(fontSize: 18),
+                              ),
                             ),
+                            buildss(percentage: 0.1),
+                            // Row(
+                            //   children: [
+                            //     (totalOffer.toString() != "0" ||
+                            //             totalPost.toString() != "0")
+                            //         ? pieChart(creditOfferSuccess!, totalOffer!,
+                            //             creditPostSuccess!, totalPost!)
+                            //         : Row(
+                            //             children: [
+                            //               Image.network(
+                            //                   'https://cdn-icons-png.flaticon.com/128/3476/3476248.png',
+                            //                   width: 40),
+                            //               Text(
+                            //                 'ไม่มีเครดิตการโพสต์และการยื่นข้อเสนอ',
+                            //                 style: TextStyle(
+                            //                     fontSize: 18,
+                            //                     fontWeight: FontWeight.bold),
+                            //               ),
+                            //             ],
+                            //           )
+                            //   ],
+                            // ),
                             const Divider(),
                             const SizedBox(height: 20),
                             Container(
@@ -806,138 +814,174 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget pieChart(String creditOfferSuccess, String totalOffer,
-      String creditPostSuccess, String totalPost) {
-    return Row(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'เครดิตการยื่นข้อเสนอ',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+  Widget buildss({required double percentage}) {
+    return Container(
+      height: 40.0, // ความสูงของหลอดเลือด
+      decoration: BoxDecoration(
+        color: Colors.grey[200], // สีพื้นหลังของหลอดเลือด
+      ),
+      child: Stack(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width * percentage,
+            decoration: BoxDecoration(
+              color: Colors.blue, // สีของเลือด (เปลี่ยนเป็นสีฟ้า)
             ),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: 120,
-              height: 120,
-              child: PieChart(
-                PieChartData(
-                  sections: [
-                    PieChartSectionData(
-                      value: double.tryParse(creditOfferSuccess),
-                      color: Colors.green,
-                      title:
-                          '${(100 - double.parse(creditOfferSuccess)).toStringAsFixed(2)}%',
-                      radius: 50,
-                      titleStyle: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    PieChartSectionData(
-                      value: double.tryParse((double.parse(totalOffer) -
-                              double.parse(creditOfferSuccess))
-                          .toString()),
-                      color: Colors.red,
-                      title: '$creditOfferSuccess%',
-                      radius: 50,
-                      titleStyle: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
+          ),
+          Positioned(
+            top: 0,
+            bottom: 0,
+            left: 0,
+            child: Container(
+              width: 2.0, // ความกว้างของเส้นที่แสดงเปอร์เซนต์
+              color: Colors.black,
+            ),
+          ),
+          Center(
+            child: Text(
+              '${(percentage * 100).toStringAsFixed(0)}%',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ],
-        ),
-        const SizedBox(width: 10),
-        Column(
-          children: [
-            const Text('เครดิตการโพสต์',
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: 120,
-              height: 120,
-              child: PieChart(
-                PieChartData(
-                  sections: [
-                    PieChartSectionData(
-                      value: double.tryParse(creditPostSuccess),
-                      color: Colors.green,
-                      title:
-                          '${(100 - double.parse(creditPostSuccess)).toStringAsFixed(2)}%',
-                      radius: 50,
-                      titleStyle: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    PieChartSectionData(
-                      value: double.tryParse((double.parse(totalPost) -
-                              double.parse(creditPostSuccess))
-                          .toString()),
-                      color: Colors.red,
-                      title: '$creditPostSuccess%',
-                      radius: 50,
-                      titleStyle: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(width: 1),
-        const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.circle,
-                  size: 20,
-                  color: Colors.green,
-                ),
-                SizedBox(width: 5),
-                Text(
-                  'สำเร็จ',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Icon(
-                  Icons.circle,
-                  size: 20,
-                  color: Colors.red,
-                ),
-                SizedBox(width: 5),
-                Text(
-                  'ไม่สำเร็จ',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
+//   Widget pieChart(String creditOfferSuccess, String totalOffer,
+//       String creditPostSuccess, String totalPost) {
+//     return Row(
+//       children: [
+//         Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             const Text(
+//               'เครดิตการยื่นข้อเสนอ',
+//               style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+//             ),
+//             const SizedBox(height: 10),
+//             SizedBox(
+//               width: 120,
+//               height: 120,
+//               child: PieChart(
+//                 PieChartData(
+//                   sections: [
+//                     PieChartSectionData(
+//                       value: double.tryParse(creditOfferSuccess),
+//                       color: Colors.green,
+//                       title:
+//                           '${(100 - double.parse(creditOfferSuccess)).toStringAsFixed(2)}%',
+//                       radius: 50,
+//                       titleStyle: const TextStyle(
+//                         fontSize: 15,
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.white,
+//                       ),
+//                     ),
+//                     PieChartSectionData(
+//                       value: double.tryParse((double.parse(totalOffer) -
+//                               double.parse(creditOfferSuccess))
+//                           .toString()),
+//                       color: Colors.red,
+//                       title: '$creditOfferSuccess%',
+//                       radius: 50,
+//                       titleStyle: const TextStyle(
+//                         fontSize: 14,
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.white,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//         const SizedBox(width: 10),
+//         Column(
+//           children: [
+//             const Text('เครดิตการโพสต์',
+//                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+//             const SizedBox(height: 10),
+//             SizedBox(
+//               width: 120,
+//               height: 120,
+//               child: PieChart(
+//                 PieChartData(
+//                   sections: [
+//                     PieChartSectionData(
+//                       value: double.tryParse(creditPostSuccess),
+//                       color: Colors.green,
+//                       title:
+//                           '${(100 - double.parse(creditPostSuccess)).toStringAsFixed(2)}%',
+//                       radius: 50,
+//                       titleStyle: const TextStyle(
+//                         fontSize: 15,
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.white,
+//                       ),
+//                     ),
+//                     PieChartSectionData(
+//                       value: double.tryParse((double.parse(totalPost) -
+//                               double.parse(creditPostSuccess))
+//                           .toString()),
+//                       color: Colors.red,
+//                       title: '$creditPostSuccess%',
+//                       radius: 50,
+//                       titleStyle: const TextStyle(
+//                         fontSize: 14,
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.white,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//         const SizedBox(width: 1),
+//         const Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Row(
+//               children: [
+//                 Icon(
+//                   Icons.circle,
+//                   size: 20,
+//                   color: Colors.green,
+//                 ),
+//                 SizedBox(width: 5),
+//                 Text(
+//                   'สำเร็จ',
+//                   style: TextStyle(
+//                     fontSize: 14,
+//                   ),
+//                 ),
+//               ],
+//             ),
+//             Row(
+//               children: [
+//                 Icon(
+//                   Icons.circle,
+//                   size: 20,
+//                   color: Colors.red,
+//                 ),
+//                 SizedBox(width: 5),
+//                 Text(
+//                   'ไม่สำเร็จ',
+//                   style: TextStyle(
+//                     fontSize: 14,
+//                   ),
+//                 ),
+//               ],
+//             )
+//           ],
+//         ),
+//       ],
+//     );
+//   }
 }
