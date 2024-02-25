@@ -806,30 +806,23 @@ class _ProfileState extends State<Profile> {
 
   Widget slideBar(int totalPost, int creditPostSuccess) {
     double percentage = creditPostSuccess / totalPost;
-    double containerWidth = 100.0;
+    double containerWidth = 300;
 
     return Container(
       height: 40.0,
+      width: containerWidth,
       decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.black12,
+          width: 1,
+        ),
         color: Colors.grey[200],
       ),
       child: Stack(
         children: [
           Positioned(
-            left: 0,
             child: Container(
-              width: containerWidth,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
-            ),
-          ),
-          Positioned(
-            top: 0,
-            bottom: 0,
-            left: 0,
-            child: Container(
-              width: containerWidth * percentage,
+              width: containerWidth*percentage,
               color: Colors.green,
             ),
           ),
@@ -860,7 +853,7 @@ class _ProfileState extends State<Profile> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Text(
                       'จำนวนการโพสต์ฺ : $totalPost',
                       style: TextStyle(fontSize: 18),
@@ -869,6 +862,7 @@ class _ProfileState extends State<Profile> {
                       'อัตราการแลกเปลี่ยนสำเร็จ',
                       style: TextStyle(fontSize: 18),
                     ),
+                    const SizedBox(height: 10),
                     slideBar(totalPost!, creditPostSuccess!),
                     const SizedBox(height: 30),
                     Text(
@@ -879,6 +873,7 @@ class _ProfileState extends State<Profile> {
                       'อัตราการแลกเปลี่ยนสำเร็จ',
                       style: TextStyle(fontSize: 18),
                     ),
+                    const SizedBox(height: 10),
                     slideBar(totalOffer!, creditOfferSuccess!),
                   ],
                 ),
