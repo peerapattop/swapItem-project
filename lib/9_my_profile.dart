@@ -822,7 +822,7 @@ class _ProfileState extends State<Profile> {
         children: [
           Positioned(
             child: Container(
-              width: containerWidth*percentage,
+              width: containerWidth * percentage,
               color: Colors.green,
             ),
           ),
@@ -839,7 +839,6 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-
 
   Widget buttonShowCredit() {
     return ElevatedButton(
@@ -863,7 +862,22 @@ class _ProfileState extends State<Profile> {
                       style: TextStyle(fontSize: 18),
                     ),
                     const SizedBox(height: 10),
-                    slideBar(totalPost!, creditPostSuccess!),
+                    totalPost == 0
+                        ? Container(
+                            height: 30,
+                            width: 70,
+                            decoration: BoxDecoration(
+                              color: Colors.orange,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: const Center(
+                              child: Text(
+                                "ไม่มีข้อมูล",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          )
+                        : slideBar(totalPost!, creditPostSuccess!),
                     const SizedBox(height: 30),
                     Text(
                       'จำนวนการยื่นข้อเสนอ : $totalOffer',
@@ -874,7 +888,22 @@ class _ProfileState extends State<Profile> {
                       style: TextStyle(fontSize: 18),
                     ),
                     const SizedBox(height: 10),
-                    slideBar(totalOffer!, creditOfferSuccess!),
+                    totalOffer == 0
+                        ? Container(
+                            height: 30,
+                            width: 70,
+                            decoration: BoxDecoration(
+                              color: Colors.orange,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: const Center(
+                              child: Text(
+                                "ไม่มีข้อมูล",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          )
+                        : slideBar(totalOffer!, creditOfferSuccess!),
                   ],
                 ),
               ),
