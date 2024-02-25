@@ -806,7 +806,7 @@ class _ProfileState extends State<Profile> {
 
   Widget slideBar(int totalPost, int creditPostSuccess) {
     double percentage = creditPostSuccess / totalPost;
-    double containerWidth = MediaQuery.of(context).size.width * 0.5;
+    double containerWidth = MediaQuery.of(context).size.width;
 
     return Container(
       height: 40.0,
@@ -818,9 +818,9 @@ class _ProfileState extends State<Profile> {
           Positioned(
             left: 0,
             child: Container(
-              width: containerWidth * percentage,
-              decoration: BoxDecoration(
-                color: Colors.green.withOpacity(percentage),
+              width: containerWidth ,
+              decoration: const BoxDecoration(
+                color: Colors.white,
               ),
             ),
           ),
@@ -829,8 +829,8 @@ class _ProfileState extends State<Profile> {
             bottom: 0,
             left: 0,
             child: Container(
-              width: 2.0,
-              color: Colors.black,
+              width: containerWidth*percentage,
+              color: Colors.green,
             ),
           ),
           Center(
