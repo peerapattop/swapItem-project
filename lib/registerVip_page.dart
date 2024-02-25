@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:intl/intl.dart';
 import 'paymentSuccess_page.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -76,7 +78,7 @@ class _PaymentState extends State<Payment> {
       String paymentNumber = generateFourDigitNumber();
 
       Map<String, dynamic> requestData = {
-        'timestamp': timeclick,
+        'timestamp': timestamp(),
         'user_uid': uid,
         'status': status,
         'image_payment': imageUrl,
@@ -88,10 +90,8 @@ class _PaymentState extends State<Payment> {
         'username': username,
         'email': email,
         'vipuid': documentId,
-        "date":
-            "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}",
-        "time":
-            "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}",
+        "date": exampleUsage(),
+        "time": exampleUsageTime(),
       };
 
       // ทำการส่งข้อมูลไปยัง "requestvip" ใน Realtime Database
@@ -101,6 +101,54 @@ class _PaymentState extends State<Payment> {
     } else {
       print('ไม่พบข้อมูลชื่อผู้ใช้');
     }
+  }
+
+  String timestamp() {
+    // สร้าง Timestamp จาก Firebase Firestore
+    Timestamp firestoreTimestamp = Timestamp.now();
+    DateTime dateTime = firestoreTimestamp.toDate();
+
+    // ใช้ฟังก์ชัน format เพื่อกำหนดรูปแบบของ Timestamp
+    String formattedTimestamp =
+        "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}.${dateTime.millisecond.toString().padLeft(3, '0')}";
+
+    // แสดงผลลัพธ์เป็น String
+    return formattedTimestamp;
+  }
+
+  String exampleUsage() {
+    // สร้าง Timestamp จาก Firebase Firestore
+    Timestamp firestoreTimestamp = Timestamp.now();
+    DateTime dateTime = firestoreTimestamp.toDate();
+    print('ghjo');
+    print(dateTime);
+    // สร้างโซนเวลาของเอเชีย (Asia/Bangkok)
+    DateTime asiaTime = dateTime.toUtc().add(Duration(hours: 7));
+
+    // สร้างรูปแบบการแสดงวันที่และเวลาภาษาไทย
+    var formatter = DateFormat('EEEE, dd MMMM yyyy', 'th_TH');
+    String formattedDate = formatter.format(asiaTime);
+
+    // แสดงผลลัพธ์เป็น Widget Text
+    return formattedDate;
+  }
+
+  String exampleUsageTime() {
+    // สร้าง Timestamp จาก Firebase Firestore
+    Timestamp firestoreTimestamp = Timestamp.now();
+    DateTime dateTime = firestoreTimestamp.toDate();
+    print('ghjo');
+    print(dateTime);
+    // สร้างโซนเวลาของเอเชีย (Asia/Bangkok)
+    DateTime asiaTime = dateTime.toUtc().add(Duration(hours: 7));
+
+    // สร้างรูปแบบการแสดงวันที่และเวลาภาษาไทย
+    var formatter = DateFormat('EEEE, dd MMMM yyyy HH:mm:ss', 'th_TH');
+
+    String formattedTime = formatter.format(asiaTime);
+    var formattedDate1 = formattedTime.split(' ');
+    // แสดงผลลัพธ์เป็น Widget Text
+    return formattedDate1[4];
   }
 
   Future<void> _showPaymentConfirmationDialog(BuildContext context) async {
@@ -410,6 +458,7 @@ class _PaymentState extends State<Payment> {
       }
     });
   }
+
   Future<void> saveTimestampToFirebase() async {
     DatabaseReference reference = FirebaseDatabase.instance.ref().child('Time');
 

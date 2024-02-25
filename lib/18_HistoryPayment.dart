@@ -45,7 +45,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
           }
         });
 
-        paymentsList.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
+        paymentsList.sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
 
         // Set selectedPayment and selectedIndex to show latest data immediately
         if (paymentsList.isNotEmpty) {
@@ -100,12 +100,8 @@ class _HistoryPaymentState extends State<HistoryPayment> {
               );
             } else if (snapshot.hasData &&
                 snapshot.data!.snapshot.value != null) {
-              paymentsList.clear();
               Map<dynamic, dynamic> data = Map<dynamic, dynamic>.from(
                   snapshot.data!.snapshot.value as Map);
-              data.forEach((key, value) {
-                paymentsList.add(Map<dynamic, dynamic>.from(value));
-              });
 
               return Column(
                 children: [
@@ -202,7 +198,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                                               ),
                                               const SizedBox(width: 5),
                                               Text(
-                                                "วันที่ : ${DateFormat('dd MMMM yyyy', 'th_TH').format(DateTime.parse(selectedPayment!['date']))}",
+                                                "วันที่ : ${selectedPayment!['date']}",
                                                 style: const TextStyle(fontSize: 18),
                                               ),
                                             ],
@@ -290,13 +286,12 @@ class _HistoryPaymentState extends State<HistoryPayment> {
     );
   }
 
-  Widget buildCircularNumberButton(
-      int index, Map<dynamic, dynamic> paymentData) {
+  Widget buildCircularNumberButton(int index, Map<dynamic, dynamic>paymentData) {
     return InkWell(
       onTap: () {
         setState(() {
           _selectedIndex = index; // Update the selected index
-          selectedPayment = paymentData; // Update the selected payment data
+          selectedPayment = paymentData; /// Update the selected payment data
         });
       },
       child: Container(
@@ -326,4 +321,6 @@ class _HistoryPaymentState extends State<HistoryPayment> {
       ),
     );
   }
+
+
 }

@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:swapitem/13_MakeAnOfferSuccess.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -439,6 +441,8 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
           'offer_uid': offerUid,
           'offerNumber': offerNumber,
           'uid': uid,
+          'time': exampleUsageTime(),
+          'date': exampleUsage(),
           'uidUserpost': widget.uidUserpost,
           'type1': dropdownValue,
           'nameitem1': _nameItem1.text.trim(),
@@ -448,10 +452,6 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
           'imageUrls': imageUrls,
           'timestamp': timeclick, //เอาเวลาขึ้น
           'post_uid': postUid,
-          "date":
-              "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}",
-          "time":
-              "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}",
         };
 
         await itemRef.set(dataRef);
@@ -461,6 +461,41 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
       Navigator.pop(context);
     }
     return null;
+  }
+
+  String exampleUsage() {
+    // สร้าง Timestamp จาก Firebase Firestore
+    Timestamp firestoreTimestamp = Timestamp.now();
+    DateTime dateTime = firestoreTimestamp.toDate();
+    print('ghjo');
+    print(dateTime);
+    // สร้างโซนเวลาของเอเชีย (Asia/Bangkok)
+    DateTime asiaTime = dateTime.toUtc().add(Duration(hours: 7));
+
+    // สร้างรูปแบบการแสดงวันที่และเวลาภาษาไทย
+    var formatter = DateFormat('EEEE, dd MMMM yyyy', 'th_TH');
+    String formattedDate = formatter.format(asiaTime);
+
+    // แสดงผลลัพธ์เป็น Widget Text
+    return formattedDate;
+  }
+
+  String exampleUsageTime() {
+    // สร้าง Timestamp จาก Firebase Firestore
+    Timestamp firestoreTimestamp = Timestamp.now();
+    DateTime dateTime = firestoreTimestamp.toDate();
+    print('ghjo');
+    print(dateTime);
+    // สร้างโซนเวลาของเอเชีย (Asia/Bangkok)
+    DateTime asiaTime = dateTime.toUtc().add(Duration(hours: 7));
+
+    // สร้างรูปแบบการแสดงวันที่และเวลาภาษาไทย
+    var formatter = DateFormat('EEEE, dd MMMM yyyy HH:mm:ss', 'th_TH');
+
+    String formattedTime = formatter.format(asiaTime);
+    var formattedDate1 = formattedTime.split(' ');
+    // แสดงผลลัพธ์เป็น Widget Text
+    return formattedDate1[4];
   }
 
   bool canPostAfter30Days(
