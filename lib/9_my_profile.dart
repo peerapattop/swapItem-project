@@ -326,21 +326,14 @@ class _ProfileState extends State<Profile> {
                                             style:
                                                 const TextStyle(fontSize: 18),
                                           )
-                                        : const SizedBox()
+                                        : const SizedBox(),
+                                    const SizedBox(height: 10),
+                                    buttonShowCredit(),
+
                                   ],
                                 )
                               ],
                             ),
-                            const Divider(),
-                            const SizedBox(height: 20),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'อัตราการแลกเปลี่ยนสำเร็จ',
-                                style: const TextStyle(fontSize: 18),
-                              ),
-                            ),
-                            buildss(percentage: 0.1),
                             // Row(
                             //   children: [
                             //     (totalOffer.toString() != "0" ||
@@ -814,18 +807,18 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget buildss({required double percentage}) {
+  Widget slideBar({required double percentage}) {
     return Container(
-      height: 40.0, // ความสูงของหลอดเลือด
+      height: 40.0,
       decoration: BoxDecoration(
-        color: Colors.grey[200], // สีพื้นหลังของหลอดเลือด
+        color: Colors.grey[200],
       ),
       child: Stack(
         children: [
           Container(
             width: MediaQuery.of(context).size.width * percentage,
-            decoration: BoxDecoration(
-              color: Colors.blue, // สีของเลือด (เปลี่ยนเป็นสีฟ้า)
+            decoration: const BoxDecoration(
+              color: Colors.blue,
             ),
           ),
           Positioned(
@@ -833,20 +826,87 @@ class _ProfileState extends State<Profile> {
             bottom: 0,
             left: 0,
             child: Container(
-              width: 2.0, // ความกว้างของเส้นที่แสดงเปอร์เซนต์
+              width: 2.0,
               color: Colors.black,
             ),
           ),
           Center(
             child: Text(
               '${(percentage * 100).toStringAsFixed(0)}%',
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+  Widget buttonShowCredit(){
+    return ElevatedButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("เครดิตของฉัน"),
+              content: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'จำนวนการโพสต์ฺ : $totalPost',
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'อัตราการแลกเปลี่ยนสำเร็จ',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  slideBar(percentage: 0.1),
+                  const SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'จำนวนการยื่นข้อเสนอ : $totalOffer',
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'อัตราการแลกเปลี่ยนสำเร็จ',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  slideBar(percentage: 0.1),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("ปิด"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size(80, 30),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+      ),
+      child: const Text(
+        'เครดิตของฉัน',
+        style: TextStyle(color: Colors.white),
       ),
     );
   }
