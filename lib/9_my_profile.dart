@@ -615,12 +615,12 @@ class _ProfileState extends State<Profile> {
 
                                     final Uri emailUri = Uri(
                                       scheme: 'mailto',
-                                      path: 'smith@example.com',
+                                      path: 'swapitem@gmail.com',
                                       query: encodeQueryParameters(<String,
                                           String>{
                                         'subject':
-                                            'Example Subject & Symbols are allowed!',
-                                        'body': 'test1'
+                                            'ติดต่อผู้ดูแลระบบ!',
+                                        'body': ''
                                       }),
                                     );
                                     if (await canLaunchUrl(emailUri)) {

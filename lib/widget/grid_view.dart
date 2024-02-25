@@ -44,7 +44,7 @@ class _GridView2State extends State<GridView2> {
             filteredData = dataMap.values.where((userData) {
               // เช็คว่าสถานะของโพสต์เป็น 'แลกเปลี่ยนสำเร็จ' หรือไม่
               bool isPostSuccess = userData['statusPosts'] == 'แลกเปลี่ยนสำเร็จ';
-              
+
               return !isPostSuccess &&
                   (widget.searchString == null ||
                       widget.searchString!.isEmpty ||
