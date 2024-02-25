@@ -200,8 +200,8 @@ class _NewPostState extends State<NewPost> {
             'type': dropdownValue,
             'latitude': selectedLatitude.toString(),
             'longitude': selectedLongitude.toString(),
-            'time': time,
-            'date': date,
+            'time': exampleUsageTime(),
+            'date': exampleUsage(),
             'username': username,
             'item_name': item_name.text.trim(),
             'brand': brand.text.trim(),
@@ -609,13 +609,6 @@ class _NewPostState extends State<NewPost> {
                             Icon(Icons.shopping_bag), // Add your desired icon
                       ),
                     ),
-                    exampleUsage(),
-                    Center(
-                      child: expTime(
-                        "2024-02-24 10:10:44.096075",
-                        "2024-03-10 12:00:00.000000",
-                      ),
-                    ),
                     buildss(percentage: 0.1),
                     const SizedBox(
                       height: 15,
@@ -779,6 +772,7 @@ class _NewPostState extends State<NewPost> {
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.density_medium_sharp)),
                     ),
+                    // Text(exampleUsageTime()),
                     const SizedBox(height: 15),
                     SizedBox(
                       height: 50,
@@ -909,7 +903,24 @@ class _NewPostState extends State<NewPost> {
     );
   }
 
-  Widget exampleUsage() {
+  String exampleUsage() {
+    // สร้าง Timestamp จาก Firebase Firestore
+    Timestamp firestoreTimestamp = Timestamp.now();
+    DateTime dateTime = firestoreTimestamp.toDate();
+    print('ghjo');
+    print(dateTime);
+    // สร้างโซนเวลาของเอเชีย (Asia/Bangkok)
+    DateTime asiaTime = dateTime.toUtc().add(Duration(hours: 7));
+
+    // สร้างรูปแบบการแสดงวันที่และเวลาภาษาไทย
+    var formatter = DateFormat('EEEE, dd MMMM yyyy', 'th_TH');
+    String formattedDate = formatter.format(asiaTime);
+
+    // แสดงผลลัพธ์เป็น Widget Text
+    return formattedDate;
+  }
+
+  String exampleUsageTime() {
     // สร้าง Timestamp จาก Firebase Firestore
     Timestamp firestoreTimestamp = Timestamp.now();
     DateTime dateTime = firestoreTimestamp.toDate();
@@ -920,17 +931,11 @@ class _NewPostState extends State<NewPost> {
 
     // สร้างรูปแบบการแสดงวันที่และเวลาภาษาไทย
     var formatter = DateFormat('EEEE, dd MMMM yyyy HH:mm:ss', 'th_TH');
-    String formattedTime = formatter.format(asiaTime);
 
+    String formattedTime = formatter.format(asiaTime);
+    var formattedDate1 = formattedTime.split(' ');
     // แสดงผลลัพธ์เป็น Widget Text
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Text(
-        formattedTime,
-        // กําหนดขนาดตัวอักษร
-        style: TextStyle(fontSize: 16),
-      ),
-    );
+    return formattedDate1[4];
   }
 
   // Widget exampleUsage2() { กาก

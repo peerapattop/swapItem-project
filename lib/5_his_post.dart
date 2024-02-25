@@ -294,7 +294,7 @@ class _HistoryPostState extends State<HistoryPost> {
                                             ),
                                             const SizedBox(width: 8),
                                             Text(
-                                              "วันที่ : ${convertDateFormat(selectedOffer!['date'])}",
+                                              "วันที่ : ${selectedOffer!['date']}",
                                               style:
                                                   const TextStyle(fontSize: 18),
                                             ),
@@ -309,8 +309,8 @@ class _HistoryPostState extends State<HistoryPost> {
                                                   .blue, // เปลี่ยนสีไอคอนตามความต้องการ
                                             ),
                                             Text(
-                                              " เวลา :" +
-                                                  selectedOffer!['time'] +
+                                              " เวลา : " +
+                                                   selectedOffer!['time'] +
                                                   ' น.',
                                               style:
                                                   const TextStyle(fontSize: 18),
