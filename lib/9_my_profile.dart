@@ -35,10 +35,10 @@ class _ProfileState extends State<Profile> {
   late DatabaseReference _userRef;
   DateTime? selectedDate;
   PickedFile? _image;
-  String? creditOfferSuccess;
-  String? totalOffer;
-  String? creditPostSuccess;
-  String? totalPost;
+  int? creditOfferSuccess;
+  int? totalOffer;
+  int? creditPostSuccess;
+  int? totalPost;
 
   bool isTextFieldEnabled = false;
   @override
@@ -281,11 +281,11 @@ class _ProfileState extends State<Profile> {
                       statusUser = dataUser['status_user'];
                       remainingTime = dataUser['remainingTime'];
                       creditOfferSuccess =
-                          dataUser['creditOfferSuccess'].toString();
-                      totalOffer = dataUser['totalOffer'].toString();
+                          dataUser['creditOfferSuccess'];
+                      totalOffer = dataUser['totalOffer'];
                       creditPostSuccess =
-                          dataUser['creditPostSuccess'].toString();
-                      totalPost = dataUser['totalPost'].toString();
+                          dataUser['creditPostSuccess'];
+                      totalPost = dataUser['totalPost'];
                       bool isPremiumUser =
                           (statusUser == 'ผู้ใช้พรีเมี่ยม') ? true : false;
                       return Padding(
@@ -807,7 +807,8 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget slideBar({required double percentage}) {
+  Widget slideBar(int totalPost,int creditPostSuccess) {
+    double percentage = creditPostSuccess / totalPost;
     return Container(
       height: 40.0,
       decoration: BoxDecoration(
@@ -834,7 +835,7 @@ class _ProfileState extends State<Profile> {
             child: Text(
               '${(percentage * 100).toStringAsFixed(0)}%',
               style: const TextStyle(
-                color: Colors.white,
+                color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -868,7 +869,8 @@ class _ProfileState extends State<Profile> {
                       style: TextStyle(fontSize: 18),
                     ),
                   ),
-                  slideBar(percentage: 0.1),
+                  const SizedBox(height: 5),
+                  slideBar(totalPost!,creditPostSuccess!),
                   const SizedBox(height: 10),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -877,6 +879,7 @@ class _ProfileState extends State<Profile> {
                       style: const TextStyle(fontSize: 18),
                     ),
                   ),
+                  const SizedBox(height: 5),
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -884,7 +887,7 @@ class _ProfileState extends State<Profile> {
                       style: TextStyle(fontSize: 18),
                     ),
                   ),
-                  slideBar(percentage: 0.1),
+                   slideBar(totalOffer!,creditOfferSuccess!),
                 ],
               ),
               actions: <Widget>[
