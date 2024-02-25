@@ -31,7 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("โปรไฟล์ผู้ใช้"),
+          title: const Text("โปรไฟล์ผู้ใช้"),
           toolbarHeight: 40,
           centerTitle: true,
           flexibleSpace: Container(
@@ -54,8 +54,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Colors.black, // สีของเส้นกรอบ
-                    width: 3.0, // ความกว้างของเส้นกรอบ
+                    color: Colors.black,
+                    width: 3.0,
                   ),
                 ),
                 child: ClipOval(
@@ -90,209 +90,107 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: 20),
                   const Text(
-                    'เครดิตการโพสต์',
+                    'เครดิตของผู้ใช้งาน',
                     style: TextStyle(
                         fontSize: 19,
                         color: Color.fromARGB(255, 124, 1, 124),
                         decoration: TextDecoration.underline),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'จำนวนการโพสต์ฺ : ${widget.totalPost}',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  const Text(
+                    'อัตราการแลกเปลี่ยนสำเร็จ',
+                    style: TextStyle(fontSize: 18),
                   ),
                   const SizedBox(height: 10),
-                  (widget.creditPostSuccess.isNotEmpty &&
-                          widget.totalPost.isNotEmpty &&
-                          double.tryParse(widget.creditPostSuccess) != 0)
-                      ? Row(
-                          children: [
-                            SizedBox(
-                              width: 180,
-                              height: 180,
-                              child: PieChart(
-                                PieChartData(
-                                  sections: [
-                                    PieChartSectionData(
-                                      value: double.tryParse(
-                                              widget.creditPostSuccess) ??
-                                          0,
-                                      color: Colors.green,
-                                      title: '${widget.creditPostSuccess}%',
-                                      radius: 50,
-                                      titleStyle: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    PieChartSectionData(
-                                      value: double.tryParse((double.parse(
-                                                      widget.totalPost) -
-                                                  double.parse(
-                                                      widget.creditPostSuccess))
-                                              .toString()) ??
-                                          0,
-                                      color: Colors.red,
-                                      title:
-                                          '${(100 - double.parse(widget.creditPostSuccess)).toStringAsFixed(2)}%',
-                                      radius: 50,
-                                      titleStyle: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 40),
-                            const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.circle,
-                                      size: 20,
-                                      color: Colors.green,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      'สำเร็จ',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.circle,
-                                      size: 20,
-                                      color: Colors.red,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      'ไม่สำเร็จ',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ],
-                        )
-                      : const Center(
-                          child: Text(
-                            'ยังไม่มีเครดิตการโพสต์',
-                            style: TextStyle(fontSize: 20),
+                  widget.totalPost == '0'
+                      ? Container(
+                          height: 30,
+                          width: 70,
+                          decoration: BoxDecoration(
+                            color: Colors.orange,
+                            borderRadius: BorderRadius.circular(15),
                           ),
-                        ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'เครดิตการยื่นข้อเสนอ',
-                    style: TextStyle(
-                        fontSize: 19,
-                        color: Color.fromARGB(255, 124, 1, 124),
-                        decoration: TextDecoration.underline),
+                          child: const Center(
+                            child: Text(
+                              "ไม่มีข้อมูล",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        )
+                      : slideBar(int.parse(widget.totalPost),
+                          int.parse(widget.creditPostSuccess)),
+                  const SizedBox(height: 30),
+                  Text(
+                    'จำนวนการยื่นข้อเสนอ : ${widget.totalOffer}',
+                    style: const TextStyle(fontSize: 18),
                   ),
-                  const SizedBox(height: 20),
-                  (widget.creditOfferSuccess.isNotEmpty &&
-                          widget.totalOffer.isNotEmpty &&
-                          double.tryParse(widget.creditOfferSuccess) != 0)
-                      ? Row(
-                          children: [
-                            SizedBox(
-                              width: 180,
-                              height: 180,
-                              child: PieChart(
-                                PieChartData(
-                                  sections: [
-                                    PieChartSectionData(
-                                      value: double.tryParse(
-                                          widget.creditOfferSuccess),
-                                      color: Colors.green,
-                                      title: '${widget.creditOfferSuccess}%',
-                                      radius: 50,
-                                      titleStyle: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    PieChartSectionData(
-                                      value: double.tryParse((double.parse(
-                                                  widget.totalOffer) -
-                                              double.parse(
-                                                  widget.creditOfferSuccess))
-                                          .toString()),
-                                      color: Colors.red,
-                                      title:
-                                          '${(100 - double.parse(widget.creditOfferSuccess)).toStringAsFixed(2)}%',
-                                      radius: 50,
-                                      titleStyle: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 40),
-                            const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.circle,
-                                      size: 20,
-                                      color: Colors.green,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      'สำเร็จ',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.circle,
-                                      size: 20,
-                                      color: Colors.red,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      'ไม่สำเร็จ',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ],
-                        )
-                      : const Center(
-                          child: Text(
-                            'ยังไม่มีเครดิตการยื่นข้อเสนอ',
-                            style: TextStyle(fontSize: 20),
+                  const Text(
+                    'อัตราการแลกเปลี่ยนสำเร็จ',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  const SizedBox(height: 10),
+                  widget.totalOffer == '0'
+                      ? Container(
+                          height: 30,
+                          width: 70,
+                          decoration: BoxDecoration(
+                            color: Colors.orange,
+                            borderRadius: BorderRadius.circular(15),
                           ),
-                        ),
+                          child: const Center(
+                            child: Text(
+                              "ไม่มีข้อมูล",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        )
+                      : slideBar(int.parse(widget.totalOffer),
+                          int.parse(widget.creditOfferSuccess)),
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget slideBar(int totalPost, int creditPostSuccess) {
+    double percentage = creditPostSuccess / totalPost;
+    double containerWidth = 300;
+
+    return Container(
+      height: 40.0,
+      width: containerWidth,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.black12,
+          width: 1,
+        ),
+        color: Colors.grey[200],
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            child: Container(
+              width: containerWidth * percentage,
+              color: Colors.green,
+            ),
+          ),
+          Center(
+            child: Text(
+              '${(percentage * 100)}%',
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
