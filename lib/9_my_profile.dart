@@ -280,11 +280,9 @@ class _ProfileState extends State<Profile> {
                           dataUser['birthday'].toString();
                       statusUser = dataUser['status_user'];
                       remainingTime = dataUser['remainingTime'];
-                      creditOfferSuccess =
-                          dataUser['creditOfferSuccess'];
+                      creditOfferSuccess = dataUser['creditOfferSuccess'];
                       totalOffer = dataUser['totalOffer'];
-                      creditPostSuccess =
-                          dataUser['creditPostSuccess'];
+                      creditPostSuccess = dataUser['creditPostSuccess'];
                       totalPost = dataUser['totalPost'];
                       bool isPremiumUser =
                           (statusUser == 'ผู้ใช้พรีเมี่ยม') ? true : false;
@@ -329,7 +327,6 @@ class _ProfileState extends State<Profile> {
                                         : const SizedBox(),
                                     const SizedBox(height: 10),
                                     buttonShowCredit(),
-
                                   ],
                                 )
                               ],
@@ -807,8 +804,10 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget slideBar(int totalPost,int creditPostSuccess) {
+  Widget slideBar(int totalPost, int creditPostSuccess) {
     double percentage = creditPostSuccess / totalPost;
+    double containerWidth = MediaQuery.of(context).size.width * 0.5;
+
     return Container(
       height: 40.0,
       decoration: BoxDecoration(
@@ -816,10 +815,13 @@ class _ProfileState extends State<Profile> {
       ),
       child: Stack(
         children: [
-          Container(
-            width: MediaQuery.of(context).size.width * percentage,
-            decoration: const BoxDecoration(
-              color: Colors.blue,
+          Positioned(
+            left: 0,
+            child: Container(
+              width: containerWidth * percentage,
+              decoration: BoxDecoration(
+                color: Colors.green.withOpacity(percentage),
+              ),
             ),
           ),
           Positioned(
@@ -844,7 +846,8 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-  Widget buttonShowCredit(){
+
+  Widget buttonShowCredit() {
     return ElevatedButton(
       onPressed: () {
         showDialog(
@@ -852,46 +855,41 @@ class _ProfileState extends State<Profile> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text("เครดิตของฉัน"),
-              content: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
+              content: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10),
+                    Text(
                       'จำนวนการโพสต์ฺ : $totalPost',
-                      style: const TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 18),
                     ),
-                  ),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
+                    const Text(
                       'อัตราการแลกเปลี่ยนสำเร็จ',
                       style: TextStyle(fontSize: 18),
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  slideBar(totalPost!,creditPostSuccess!),
-                  const SizedBox(height: 10),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
+                    slideBar(totalPost!, creditPostSuccess!),
+                    const SizedBox(height: 30),
+                    Text(
                       'จำนวนการยื่นข้อเสนอ : $totalOffer',
-                      style: const TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 18),
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
+                    const Text(
                       'อัตราการแลกเปลี่ยนสำเร็จ',
                       style: TextStyle(fontSize: 18),
                     ),
-                  ),
-                   slideBar(totalOffer!,creditOfferSuccess!),
-                ],
+                    slideBar(totalOffer!, creditOfferSuccess!),
+                  ],
+                ),
               ),
               actions: <Widget>[
                 TextButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.red),
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.white),
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -905,7 +903,6 @@ class _ProfileState extends State<Profile> {
       style: ElevatedButton.styleFrom(
         minimumSize: const Size(80, 30),
         backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
       ),
       child: const Text(
         'เครดิตของฉัน',
@@ -913,6 +910,7 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
+
 //   Widget pieChart(String creditOfferSuccess, String totalOffer,
 //       String creditPostSuccess, String totalPost) {
 //     return Row(
