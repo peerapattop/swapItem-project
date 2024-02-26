@@ -33,6 +33,7 @@ class _HistoryPostState extends State<HistoryPost> {
   List<String> imageOffer = [];
   late String offerConfirm;
   late bool checkPost;
+  String Ans = "";
 
   @override
   void initState() {
@@ -68,6 +69,19 @@ class _HistoryPostState extends State<HistoryPost> {
     }).onError((error) {
       print("Error fetching data: $error");
     });
+  }
+
+  void fetchData() async {
+    try {
+      DatabaseReference postRef = FirebaseDatabase.instance
+          .ref()
+          .child('postitem')
+          .child(selectedOffer!['post_uid']);
+
+      await postRef.update({'answerStatus': Ans});
+    } catch (e) {
+      // Handle errors
+    }
   }
 
   void Show_Confirmation_Dialog_Status(BuildContext context, String postKey) {
@@ -231,10 +245,10 @@ class _HistoryPostState extends State<HistoryPost> {
                               selectedOffer!['latitude'].toString());
                           longitude = double.tryParse(
                               selectedOffer!['longitude'].toString());
-                          checkPost =
-                              selectedOffer!['statusPosts'] == 'แลกเปลี่ยนสำเร็จ'
-                                  ? true
-                                  : false;
+                          checkPost = selectedOffer!['answerStatus'] ==
+                                  'แลกเปลี่ยนสำเร็จ'
+                              ? true
+                              : false;
                           return Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 4.0),
@@ -275,20 +289,6 @@ class _HistoryPostState extends State<HistoryPost> {
                                         Row(
                                           children: [
                                             const Icon(
-                                              Icons.wallet_giftcard,
-                                              color: Colors.blue,
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Text(
-                                              selectedOffer!['statusPosts'],
-                                              style:
-                                                  const TextStyle(fontSize: 18),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            const Icon(
                                               Icons.date_range,
                                               color: Colors.blue,
                                             ),
@@ -307,8 +307,7 @@ class _HistoryPostState extends State<HistoryPost> {
                                               color: Colors.blue,
                                             ),
                                             Text(
-                                              '${" เวลา : " +
-                                                  selectedOffer!['time']} น.',
+                                              '${" เวลา : " + selectedOffer!['time']} น.',
                                               style:
                                                   const TextStyle(fontSize: 18),
                                             ),
@@ -1023,7 +1022,6 @@ class _HistoryPostState extends State<HistoryPost> {
   }
 
   Widget buildStatus(String statusPost, String statusOffer) {
-    String Ans = "";
     if (statusPost == "รอการยืนยัน" && statusOffer == "รอการยืนยัน") {
       Ans = "รอการยืนยัน"; //
     } else if (statusPost == "ยืนยัน" && statusOffer == "รอการยืนยัน") {
@@ -1042,6 +1040,10 @@ class _HistoryPostState extends State<HistoryPost> {
       Ans = "ล้มเหลว"; //
     } else if (statusPost == "รอการยืนยัน" && statusOffer == "ปฏิเสธ") {
       Ans = "ล้มเหลว"; //
+    }
+
+    if (Ans == 'แลกเปลี่ยนสำเร็จ') {
+      fetchData();
     }
     return Text(Ans);
   }
