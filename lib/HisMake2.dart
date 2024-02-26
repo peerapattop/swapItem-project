@@ -174,7 +174,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    "วันที่ : ${convertDateFormat(selectedPost!['date'])}",
+                    "วันที่ : ${(selectedPost!['date'])}",
                     style: const TextStyle(fontSize: 18),
                   ),
                 ],
@@ -323,7 +323,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
                                 decoration: ShapeDecoration(
                                   color: Colors.white,
                                   shape: RoundedRectangleBorder(
-                                    side: BorderSide(width: 1),
+                                    side: const BorderSide(width: 1),
                                     borderRadius: BorderRadius.circular(2),
                                   ),
                                 ),
@@ -339,8 +339,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Transform.rotate(
-                                angle: -pi /
-                                    2, // หมุนทางซ้าย 90 องศา (ในรูปแบบ radian)
+                                angle: -pi / 2,
                                 child: Image.asset(
                                   'assets/images/swap.png',
                                   width: 20,
@@ -355,7 +354,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
                                 decoration: ShapeDecoration(
                                   color: Colors.white,
                                   shape: RoundedRectangleBorder(
-                                    side: BorderSide(width: 1),
+                                    side: const BorderSide(width: 1),
                                     borderRadius: BorderRadius.circular(2),
                                   ),
                                 ),
@@ -380,7 +379,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
                             decoration: ShapeDecoration(
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
-                                side: BorderSide(width: 1),
+                                side: const BorderSide(width: 1),
                                 borderRadius: BorderRadius.circular(2),
                               ),
                             ),
@@ -441,7 +440,8 @@ class _His_Make_off2State extends State<His_Make_off2> {
                   ),
                 ),
               ),
-              confirmBtn()
+              const SizedBox(height: 10),
+              confirmBtn(),
             ],
           );
         } else {

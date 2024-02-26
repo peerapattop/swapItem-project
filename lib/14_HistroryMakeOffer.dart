@@ -232,7 +232,7 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                                     Text(
                                                       'สถานะ : ${selectedPost!['statusOffers']}',
                                                       style: const TextStyle(
-                                                          fontSize: 26),
+                                                          fontSize: 18),
                                                     )
                                                   ],
                                                 ),
@@ -244,9 +244,7 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                               ),
                                               const SizedBox(width: 8),
                                               Text(
-                                                'หมายเลขโพสต์ : ' +
-                                                    selectedPost!['offerNumber']
-                                                        .toString(),
+                                                'หมายเลขโพสต์ : ${selectedPost!['offerNumber']}',
                                                 style: const TextStyle(
                                                     fontSize: 18),
                                               ),
@@ -260,7 +258,7 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                               ),
                                               const SizedBox(width: 8),
                                               Text(
-                                                "วันที่ : ${DateFormat('dd MMMM yyyy', 'th_TH').format(DateTime.parse(selectedPost!['date']))}",
+                                                "วันที่ : ${(selectedPost!['date'])}",
                                                 style: const TextStyle(
                                                     fontSize: 18),
                                               ),
@@ -270,9 +268,9 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                             children: [
                                               const Icon(
                                                 Icons
-                                                    .punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
+                                                    .punch_clock,
                                                 color: Colors
-                                                    .blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                                                    .blue,
                                               ),
                                               Text(
                                                 " เวลา :" +
@@ -355,9 +353,7 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                                           style: TextStyle(
                                                               fontSize: 18),
                                                         ),
-                                                        SizedBox(
-                                                          height: 10,
-                                                        ),
+                                                        const SizedBox(height: 10),
                                                       ],
                                                     ),
                                                   ),
@@ -372,8 +368,8 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                             width: 50,
                                           )),
                                           const Divider(),
-                                          Padding(
-                                            padding: const EdgeInsets.all(12.0),
+                                          const Padding(
+                                            padding: EdgeInsets.all(12.0),
                                             child: Text(
                                               'โพสต์ที่คุณยื่นข้อเสนอ',
                                               style: TextStyle(fontSize: 20),
@@ -448,7 +444,6 @@ class _His_MakeofferState extends State<His_Makeoffer> {
   }
 
   Widget buildCircularNumberButton(int index, Map<dynamic, dynamic> postData) {
-    print("look at me" + selectedPost.toString());
     return InkWell(
       onTap: () {
         setState(() {
