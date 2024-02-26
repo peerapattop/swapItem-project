@@ -609,7 +609,6 @@ class _NewPostState extends State<NewPost> {
                             Icon(Icons.shopping_bag), // Add your desired icon
                       ),
                     ),
-                    buildss(percentage: 0.1),
                     const SizedBox(
                       height: 15,
                     ),
@@ -863,43 +862,6 @@ class _NewPostState extends State<NewPost> {
           return Container(); // สามารถแสดง Indicator หรือข้อความ "Loading" ได้ตามต้องการ
         }
       },
-    );
-  }
-
-  Widget buildss({required double percentage}) {
-    return Container(
-      height: 40.0, // ความสูงของหลอดเลือด
-      decoration: BoxDecoration(
-        color: Colors.grey[200], // สีพื้นหลังของหลอดเลือด
-      ),
-      child: Stack(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width * percentage,
-            decoration: BoxDecoration(
-              color: Colors.blue, // สีของเลือด (เปลี่ยนเป็นสีฟ้า)
-            ),
-          ),
-          Positioned(
-            top: 0,
-            bottom: 0,
-            left: 0,
-            child: Container(
-              width: 2.0, // ความกว้างของเส้นที่แสดงเปอร์เซนต์
-              color: Colors.black,
-            ),
-          ),
-          Center(
-            child: Text(
-              '${(percentage * 100).toStringAsFixed(0)}%',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
