@@ -54,11 +54,6 @@ class _offerCome2State extends State<offerCome2> {
             postsList.add(value);
           }
         });
-        data.forEach((key, value) {
-          if (true) {
-            postsList.add(value);
-          }
-        });
 
         // Sort postsList by 'timestamp' in descending order
         postsList.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));

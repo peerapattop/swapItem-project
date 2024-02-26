@@ -12,7 +12,7 @@ import 'package:swapitem/widget/offer_imageshow.dart';
 class His_Make_off2 extends StatefulWidget {
   final String postUid;
   final String offer_uid;
-  final String statusOffer; //offer
+  final String statusOffer;
 
   const His_Make_off2(
       {Key? key,
@@ -441,7 +441,9 @@ class _His_Make_off2State extends State<His_Make_off2> {
                 ),
               ),
               const SizedBox(height: 10),
-              confirmBtn(),
+              statusOffer != 'รอการยืนยัน'
+              ? const SizedBox()
+              : confirmBtn(),
             ],
           );
         } else {
@@ -564,36 +566,37 @@ class _His_Make_off2State extends State<His_Make_off2> {
     }
   }
 
-  Widget buildStatus(String statusPost, String statusOffer) {
-    String Ans = "";
-    if (statusPost == "รอการยืนยัน" && statusOffer == "รอการยืนยัน") {
-      Ans = "รอการยืนยัน"; //
-    } else if (statusPost == "ยืนยัน" && statusOffer == "รอการยืนยัน") {
-      Ans = "รอการยืนยัน"; //
-    } else if (statusPost == "รอการยืนยัน" && statusOffer == "ยืนยัน") {
-      Ans = "รอการยืนยัน"; //
-    } else if (statusPost == "ยืนยัน" && statusOffer == "ยืนยัน") {
-      Ans = "แลกเปลี่ยนสำเร็จ"; //
-    } else if (statusPost == "ยืนยัน" && statusOffer == "ปฏิเสธ") {
-      Ans = "ล้มเหลว"; //
-    } else if (statusPost == "ปฏิเสธ" && statusOffer == "ยืนยัน") {
-      Ans = "ล้มเหลว"; //
-    } else if (statusPost == "ปฏิเสธ" && statusOffer == "ปฏิเสธ") {
-      Ans = "ล้มเหลว"; //
-    } else if (statusPost == "ปฏิเสธ" && statusOffer == "รอการยืนยัน") {
-      Ans = "ล้มเหลว"; //
-    } else if (statusPost == "รอการยืนยัน" && statusOffer == "ปฏิเสธ") {
-      Ans = "ล้มเหลว"; //
+  Widget buildStatus(String statusPosts, String statusOffers) {
+    String ans = "";
+    if (statusPosts == "รอการยืนยัน" && statusOffers == "รอการยืนยัน") {
+      ans = "รอการยืนยัน"; //
+    } else if (statusPosts == "ยืนยัน" && statusOffers == "รอการยืนยัน") {
+      ans = "รอการยืนยัน"; //
+    } else if (statusPosts == "รอการยืนยัน" && statusOffers == "ยืนยัน") {
+      ans = "รอการยืนยัน"; //
+    } else if (statusPosts == "ยืนยัน" && statusOffers == "ยืนยัน") {
+      ans = "แลกเปลี่ยนสำเร็จ";
+      statusPosts = ans;
+    } else if (statusPosts == "ยืนยัน" && statusOffers == "ปฏิเสธ") {
+      ans = "ล้มเหลว"; //
+    } else if (statusPosts == "ปฏิเสธ" && statusOffers == "ยืนยัน") {
+      ans = "ล้มเหลว"; //
+    } else if (statusPosts == "ปฏิเสธ" && statusOffers == "ปฏิเสธ") {
+      ans = "ล้มเหลว"; //
+    } else if (statusPosts == "ปฏิเสธ" && statusOffers == "รอการยืนยัน") {
+      ans = "ล้มเหลว"; //
+    } else if (statusPosts == "รอการยืนยัน" && statusOffers == "ปฏิเสธ") {
+      ans = "ล้มเหลว"; //
     }
-    return Text(Ans);
+    return Text(ans);
   }
 
   String convertDateFormat(String inputDate) {
-    DateTime dateTime = DateTime.parse(inputDate); // แปลงสตริงเป็นวันที่
+    DateTime dateTime = DateTime.parse(inputDate);
     DateFormat formatter =
-        DateFormat('d MMMM y', 'th'); // สร้างรูปแบบการแสดงวันที่ตามที่ต้องการ
+        DateFormat('d MMMM y', 'th');
     String formattedDate =
-        formatter.format(dateTime); // แปลงวันที่เป็นรูปแบบที่ต้องการ
-    return formattedDate; // คืนค่าวันที่ที่ถูกแปลง
+        formatter.format(dateTime);
+    return formattedDate;
   }
 }

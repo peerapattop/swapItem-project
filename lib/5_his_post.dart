@@ -303,15 +303,12 @@ class _HistoryPostState extends State<HistoryPost> {
                                         Row(
                                           children: [
                                             const Icon(
-                                              Icons
-                                                  .punch_clock, // เปลี่ยนเป็นไอคอนที่คุณต้องการ
-                                              color: Colors
-                                                  .blue, // เปลี่ยนสีไอคอนตามความต้องการ
+                                              Icons.punch_clock,
+                                              color: Colors.blue,
                                             ),
                                             Text(
-                                              " เวลา : " +
-                                                   selectedOffer!['time'] +
-                                                  ' น.',
+                                              '${" เวลา : " +
+                                                  selectedOffer!['time']} น.',
                                               style:
                                                   const TextStyle(fontSize: 18),
                                             ),
@@ -399,7 +396,10 @@ class _HistoryPostState extends State<HistoryPost> {
                                                     style: const TextStyle(
                                                         fontSize: 18),
                                                   ),
-                                                  buildtimeShow(context, selectedOffer!['timestamp'])
+                                                  buildtimeShow(
+                                                      context,
+                                                      selectedOffer![
+                                                          'timestamp'])
                                                 ],
                                               ),
                                             ),
@@ -611,7 +611,7 @@ class _HistoryPostState extends State<HistoryPost> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    "วันที่ : ${convertDateFormat(date)}",
+                    "วันที่ : ${(date)}",
                     style: const TextStyle(fontSize: 18),
                   ),
                 ],
