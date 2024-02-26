@@ -179,7 +179,7 @@ class _offerCome2State extends State<offerCome2> {
                     const Icon(Icons.date_range, color: Colors.blue),
                     const SizedBox(width: 5),
                     Text(
-                      'วันที่ : ${convertDateFormat(selectedOffer?['date'])}',
+                      'วันที่ : ${(selectedOffer?['date'])}',
                       style: const TextStyle(fontSize: 19),
                     )
                   ],

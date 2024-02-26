@@ -178,7 +178,7 @@ class _offerComeState extends State<offerCome> {
                                               ),
                                               const SizedBox(width: 8),
                                               Text(
-                                                "วันที่ : ${DateFormat('dd MMMM yyyy', 'th_TH').format(DateTime.parse(selectedPost!['date']))}",
+                                                "วันที่ : ${selectedPost!['date']}",
                                                 style: const TextStyle(
                                                     fontSize: 18),
                                               ),
