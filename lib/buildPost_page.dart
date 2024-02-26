@@ -155,16 +155,15 @@ class _NewPostState extends State<NewPost> {
 
         String uid = FirebaseAuth.instance.currentUser!.uid;
         DatabaseReference userRef =
-            FirebaseDatabase.instance.ref().child('users').child(uid);
+        FirebaseDatabase.instance.ref().child('users').child(uid);
         DatabaseEvent userDataSnapshot = await userRef.once();
         Map<dynamic, dynamic> datamap =
-            userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
+        userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
         int currentPostCount =
             int.tryParse(datamap['postCount'].toString()) ?? 0;
-        updateTotalPost();
 
         // ตรวจสอบว่ายังมีโอกาสโพสต์หรือไม่
-        if (currentPostCount > 0 || canPostAfter30Days(userRef, datamap)) {
+        if (currentPostCount > 0 || canPostAfter30Days(userRef, datamap, context)) {
           // ลดค่า postCount
           if (currentPostCount > 0) {
             await userRef.update({
@@ -178,7 +177,7 @@ class _NewPostState extends State<NewPost> {
           String imageUser = datamap['image_user'];
           String status_user = datamap['status_user'];
           DatabaseReference itemRef =
-              FirebaseDatabase.instance.ref().child('postitem').push();
+          FirebaseDatabase.instance.ref().child('postitem').push();
           List<String> imageUrls = await uploadImages(images);
           String postNumber = generateRandomPostNumber();
 
@@ -223,10 +222,10 @@ class _NewPostState extends State<NewPost> {
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) => PostSuccess(
-                      time: time,
-                      date: date,
-                      postNumber: postNumber,
-                    )),
+                  time: time,
+                  date: date,
+                  postNumber: postNumber,
+                )),
           );
         }
       }
@@ -237,11 +236,11 @@ class _NewPostState extends State<NewPost> {
   }
 
   bool canPostAfter30Days(
-      DatabaseReference userRef, Map<dynamic, dynamic> userData) {
+      DatabaseReference userRef, Map<dynamic, dynamic> userData, BuildContext context) {
     // Check if last post date is available
     if (userData.containsKey('lastPostDate')) {
       DateTime lastPostDate =
-          DateTime.parse(userData['lastPostDate'].toString());
+      DateTime.parse(userData['lastPostDate'].toString());
       DateTime currentDate = DateTime.now();
 
       // Check if 30 days have passed since the last post
@@ -254,48 +253,52 @@ class _NewPostState extends State<NewPost> {
         return true;
       } else {
         Duration remainingTime =
-            lastPostDate.add(Duration(days: 30)).difference(currentDate);
+        lastPostDate.add(Duration(days: 30)).difference(currentDate);
 
         // Extract days, hours, minutes, and seconds from the remaining time
         int daysRemaining = remainingTime.inDays;
         int hoursRemaining = remainingTime.inHours % 24;
         int minutesRemaining = remainingTime.inMinutes % 60;
 
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Row(
-                children: [
-                  Image.network(
-                    'https://cdn-icons-png.flaticon.com/128/9068/9068699.png',
-                    width: 40,
-                  ),
-                  Text(' ไม่สามารถโพสต์ได้'),
-                ],
-              ),
-              content: Text(
-                  'เนื่องจากครบจำนวนการโพสต์ 5 ครั้ง/เดือน \nโปรดรอ : $daysRemaining วัน $hoursRemaining ชั่วโมง $minutesRemaining นาที\nหรือสมัคร VIP เพื่อโพสต์หรือยื่นข้อเสนอได้ไม่จำกัด'),
-              actions: <Widget>[
-                ElevatedButton(
-                  style:
-                      ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'ยืนยัน',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
+        showPostErrorDialog(context, daysRemaining, hoursRemaining, minutesRemaining);
       }
     }
 
     return false;
+  }
+  Future<void> showPostErrorDialog(BuildContext context, int daysRemaining, int hoursRemaining, int minutesRemaining) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Image.network(
+                'https://cdn-icons-png.flaticon.com/128/9068/9068699.png',
+                width: 40,
+              ),
+              Text(' ไม่สามารถโพสต์ได้'),
+            ],
+          ),
+          content: Text(
+              'เนื่องจากครบจำนวนการโพสต์ 5 ครั้ง/เดือน \nโปรดรอ : $daysRemaining วัน $hoursRemaining ชั่วโมง $minutesRemaining นาที\nหรือสมัคร VIP เพื่อโพสต์หรือยื่นข้อเสนอได้ไม่จำกัด'),
+          actions: <Widget>[
+            ElevatedButton(
+              style:
+              ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'ยืนยัน',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<List<String>> uploadImages(List<File> images) async {
@@ -345,7 +348,7 @@ class _NewPostState extends State<NewPost> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text(
+            title: const Text(
               'แจ้งเตือน',
               style: TextStyle(color: Colors.red),
             ),
@@ -377,13 +380,13 @@ class _NewPostState extends State<NewPost> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('กรุณาแนบรูปภาพ'),
+            title: const Text('กรุณาแนบรูปภาพ'),
             actions: <Widget>[
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('ตกลง'),
+                child: const Text('ตกลง'),
               ),
             ],
           );
