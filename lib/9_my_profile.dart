@@ -279,7 +279,7 @@ class _ProfileState extends State<Profile> {
                       _birthdayController.text =
                           dataUser['birthday'].toString();
                       statusUser = dataUser['status_user'];
-                      remainingTime = dataUser['remainingTime'];
+                      remainingTime = dataUser['endTime'];
                       creditOfferSuccess = dataUser['creditOfferSuccess'];
                       totalOffer = dataUser['totalOffer'];
                       creditPostSuccess = dataUser['creditPostSuccess'];
@@ -319,10 +319,20 @@ class _ProfileState extends State<Profile> {
                                     ),
                                     const SizedBox(height: 10),
                                     isPremiumUser
-                                        ? Text(
-                                            'ใช้ได้ถึงวันที่ : ${formatExpiryDate(remainingTime)}',
-                                            style:
-                                                const TextStyle(fontSize: 18),
+                                        ? Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Text(
+                                                'ใช้ได้ถึงวันที่ : ',
+                                                style: TextStyle(fontSize: 18),
+                                              ),
+                                              Text(
+                                                ' $remainingTime น.',
+                                                style: const TextStyle(
+                                                    fontSize: 15),
+                                              )
+                                            ],
                                           )
                                         : const SizedBox(),
                                     const SizedBox(height: 10),
@@ -618,8 +628,7 @@ class _ProfileState extends State<Profile> {
                                       path: 'swapitem@gmail.com',
                                       query: encodeQueryParameters(<String,
                                           String>{
-                                        'subject':
-                                            'ติดต่อผู้ดูแลระบบ!',
+                                        'subject': 'ติดต่อผู้ดูแลระบบ!',
                                         'body': ''
                                       }),
                                     );
