@@ -28,7 +28,7 @@ class _ProfileState extends State<Profile> {
       _lastNameController,
       _genderController,
       _birthdayController;
-  late String statusUser, remainingTime;
+  late String statusUser, endTime;
   late final double percentage;
   Map dataUser = {};
   late User _user;
@@ -279,7 +279,7 @@ class _ProfileState extends State<Profile> {
                       _birthdayController.text =
                           dataUser['birthday'].toString();
                       statusUser = dataUser['status_user'];
-                      remainingTime = dataUser['endTime'];
+                      endTime = dataUser['endTime'] ?? '';
                       creditOfferSuccess = dataUser['creditOfferSuccess'];
                       totalOffer = dataUser['totalOffer'];
                       creditPostSuccess = dataUser['creditPostSuccess'];
@@ -328,7 +328,7 @@ class _ProfileState extends State<Profile> {
                                                 style: TextStyle(fontSize: 18),
                                               ),
                                               Text(
-                                                ' $remainingTime น.',
+                                                ' $endTime น.',
                                                 style: const TextStyle(
                                                     fontSize: 15),
                                               )
