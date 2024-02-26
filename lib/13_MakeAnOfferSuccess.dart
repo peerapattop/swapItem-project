@@ -5,13 +5,11 @@ import 'home_page.dart';
 //หน้ายื่นข้อเสนอสำเร็จ
 
 class MakeAnOfferSuccess extends StatelessWidget {
-  final String offer_id;
   final String date;
   final String time;
   final int offerNumber;
   const MakeAnOfferSuccess(
       {super.key,
-      required this.offer_id,
       required this.date,
       required this.time,
       required this.offerNumber});

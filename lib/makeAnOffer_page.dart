@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -49,6 +50,8 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
   DateTime now = DateTime.now();
   String? username;
   late int offerNumber;
+  String date1 ='';
+  String time1 ='';
 
   bool _isSubmitting = false;
   List<File> _images = [];
@@ -69,18 +72,18 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
       });
     }
 
-    String date1 =
+     date1 =
         "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
-    String time1 =
+     time1 =
         "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("ยื่นข้อเสนอ"),
+          title: const Text("ยื่นข้อเสนอ"),
           toolbarHeight: 40,
           centerTitle: true,
           flexibleSpace: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/images/image 40.png'),
                 fit: BoxFit.fill,
@@ -155,15 +158,15 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                         ),
                         Text(
                           '${_images.length}/5',
-                          style: TextStyle(fontSize: 18),
+                          style: const TextStyle(fontSize: 18),
                         ),
                       ],
                     ),
                   ),
                 ),
-                SizedBox(height: 17),
+                const SizedBox(height: 17),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
                     border: Border.all(
@@ -186,7 +189,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                         value: value,
                         child: Text(
                           value,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16.0,
                             color: Colors.black,
                           ),
@@ -195,22 +198,20 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                     }).toList(),
                   ),
                 ),
-                SizedBox(height: 17),
+                const SizedBox(height: 17),
                 TextField(
                   controller: _nameItem1,
-                  decoration: InputDecoration(
-                    labelText: 'ชื่อสิ่งของ', // Label text
-                    border:
-                        OutlineInputBorder(), // Creates a rounded border around the TextField
-                    prefixIcon:
-                        Icon(Icons.shopping_bag), // Icon inside the TextField
+                  decoration: const InputDecoration(
+                    labelText: 'ชื่อสิ่งของ',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.shopping_bag),
                   ),
                 ),
                 const SizedBox(height: 17),
                 TextField(
                   controller: _brand1,
-                  decoration: InputDecoration(
-                    labelText: 'ยี่ห้อ', // Label text
+                  decoration: const InputDecoration(
+                    labelText: 'ยี่ห้อ',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.branding_watermark),
                   ),
@@ -224,9 +225,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                     prefixIcon: Icon(Icons.model_training),
                   ),
                 ),
-                SizedBox(
-                  height: 17,
-                ),
+                const SizedBox(height: 17),
                 TextField(
                   controller: _detail1,
                   decoration: const InputDecoration(
@@ -236,8 +235,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                   ),
                   maxLines: null, // Allows for multi-line input
                 ),
-                SizedBox(height: 17),
-                SizedBox(height: 7),
+                const SizedBox(height: 24),
                 Center(
                   child: Container(
                     width: 360,
@@ -255,23 +253,6 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                                     _isSubmitting = true;
                                   });
 
-                                  // Show a loading dialog
-                                  showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        content: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            CircularProgressIndicator(),
-                                            SizedBox(height: 10),
-                                            Text("กำลังยื่นข้อเสนอ..."),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  );
 
                                   String? offerId = await _submitOffer();
 
@@ -280,17 +261,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                                     Navigator.pop(context);
 
                                     // Navigate to MakeAnOfferSuccess page
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            MakeAnOfferSuccess(
-                                          offer_id: offerId,
-                                          date: date1,
-                                          time: time1,
-                                          offerNumber: offerNumber,
-                                        ),
-                                      ),
-                                    );
+
                                   } else {
                                     // Handle the case where offerId is null before navigation
                                   }
@@ -359,108 +330,142 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     Map<dynamic, dynamic>? datamap = event.snapshot.value as Map?;
     if (datamap != null) {
       int totalOffer = int.tryParse(datamap['totalOffer'].toString()) ?? 0;
-      totalOffer++; // Increment totalPost by 1
+      totalOffer++;
       await userRef.update({
-        'totalOffer': totalOffer, // Update totalPost in Firebase
+        'totalOffer': totalOffer,
       });
     } else {
       print('User data not found');
     }
   }
 
+  Future<bool> _showOfferConfirmationDialog() async {
+    Completer<bool> completer = Completer<bool>();
+    if (_nameItem1.text.isEmpty ||
+        _brand1.text.isEmpty ||
+        _model1.text.isEmpty ||
+        _detail1.text.isEmpty ||
+        _images.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text(
+              'แจ้งเตือน',
+              style: TextStyle(color: Colors.red),
+            ),
+            content: const Text('กรุณากรอกข้อมูลให้ครบถ้วน'),
+            actions: <Widget>[
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                ),
+                child: const Text(
+                  'ตกลง',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+      return false;
+    }
+    return completer.future;
+  }
+
   Future<String?> _submitOffer() async {
     try {
-      if (_nameItem1.text.isEmpty ||
-          _brand1.text.isEmpty ||
-          _model1.text.isEmpty ||
-          _detail1.text.isEmpty ||
-          _images.isEmpty) {
+      bool confirmed = await _showOfferConfirmationDialog();
+
+      if (confirmed) {
         showDialog(
           context: context,
+          barrierDismissible: false,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text(
-                'แจ้งเตือน',
-                style: TextStyle(color: Colors.red),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 10),
+                  Text("กำลังยื่นข้อเสนอ..."),
+                ],
               ),
-              content: const Text('กรุณากรอกข้อมูลให้ครบถ้วน'),
-              actions: <Widget>[
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Colors.green, // Set the button color to green
-                  ),
-                  child: const Text(
-                    'ตกลง',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
             );
           },
         );
-        return null; // Prevent further processing
-      }
-
-      String uid = FirebaseAuth.instance.currentUser!.uid;
-      DatabaseReference userRef =
-          FirebaseDatabase.instance.ref().child('users').child(uid);
-      DatabaseEvent userDataSnapshot = await userRef.once();
-      Map<dynamic, dynamic> datamap =
-          userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
-      int currentOfferCount = datamap['makeofferCount'] as int? ?? 0;
-      String? username = datamap['username'];
-      updateTotalOffer();
-
-      if (currentOfferCount > 0 || canPostAfter30Days(userRef, datamap)) {
-        // ลดค่า postCount
-        if (currentOfferCount > 0) {
-          await userRef.update({
-            'makeofferCount': currentOfferCount - 1,
-            'lastOfferDate': DateTime.now().toString(),
-          });
-        }
-
-        String postUid = widget.postUid;
-        String imageUser = widget.imageUser;
 
         String uid = FirebaseAuth.instance.currentUser!.uid;
-        DatabaseReference itemRef =
-            FirebaseDatabase.instance.ref().child('offer').push();
-        String? offerUid = itemRef.key;
-        // First, upload images and collect their URLs.
-        List<String> imageUrls = await _uploadImages();
-        offerNumber = generateRandomNumber();
-        Map<String, dynamic> dataRef = {
-          'username': username,
-          'imageUser': imageUser,
-          'statusOffers': 'รอการยืนยัน',
-          'offer_uid': offerUid,
-          'offerNumber': offerNumber,
-          'uid': uid,
-          'time': exampleUsageTime(),
-          'date': exampleUsage(),
-          'uidUserpost': widget.uidUserpost,
-          'type1': dropdownValue,
-          'nameitem1': _nameItem1.text.trim(),
-          'brand1': _brand1.text.trim(),
-          'model1': _model1.text.trim(),
-          'detail1': _detail1.text.trim(),
-          'imageUrls': imageUrls,
-          'timestamp': timeclick, //เอาเวลาขึ้น
-          'post_uid': postUid,
-        };
+        DatabaseReference userRef =
+            FirebaseDatabase.instance.ref().child('users').child(uid);
+        DatabaseEvent userDataSnapshot = await userRef.once();
+        Map<dynamic, dynamic> datamap =
+            userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
+        int currentOfferCount = datamap['makeofferCount'] as int? ?? 0;
+        String? username = datamap['username'];
+        updateTotalOffer();
 
-        await itemRef.set(dataRef);
-        return itemRef.key;
+        if (currentOfferCount > 0 || canPostAfter30Days(userRef, datamap)) {
+          // ลดค่า postCount
+          if (currentOfferCount > 0) {
+            await userRef.update({
+              'makeofferCount': currentOfferCount - 1,
+              'lastOfferDate': DateTime.now().toString(),
+            });
+          }
+
+          String postUid = widget.postUid;
+          String imageUser = widget.imageUser;
+
+          String uid = FirebaseAuth.instance.currentUser!.uid;
+          DatabaseReference itemRef =
+              FirebaseDatabase.instance.ref().child('offer').push();
+          String? offerUid = itemRef.key;
+          // First, upload images and collect their URLs.
+          List<String> imageUrls = await _uploadImages();
+          offerNumber = generateRandomNumber();
+          Map<String, dynamic> dataRef = {
+            'username': username,
+            'imageUser': imageUser,
+            'statusOffers': 'รอการยืนยัน',
+            'offer_uid': offerUid,
+            'offerNumber': offerNumber,
+            'uid': uid,
+            'time': exampleUsageTime(),
+            'date': exampleUsage(),
+            'uidUserpost': widget.uidUserpost,
+            'type1': dropdownValue,
+            'nameitem1': _nameItem1.text.trim(),
+            'brand1': _brand1.text.trim(),
+            'model1': _model1.text.trim(),
+            'detail1': _detail1.text.trim(),
+            'imageUrls': imageUrls,
+            'timestamp': timeclick, //เอาเวลาขึ้น
+            'post_uid': postUid,
+          };
+
+          await itemRef.set(dataRef);
+
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  MakeAnOfferSuccess(
+                    date: date1,
+                    time: time1,
+                    offerNumber: offerNumber,
+                  ),
+            ),
+          );
+          return itemRef.key;
+        }
       }
     } catch (error) {
       Navigator.pop(context);
     }
-    return null;
   }
 
   String exampleUsage() {
@@ -523,42 +528,8 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
         int hoursRemaining = remainingTime.inHours % 24;
         int minutesRemaining = remainingTime.inMinutes % 60;
 
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Row(
-                children: [
-                  Image.network(
-                    'https://cdn-icons-png.flaticon.com/128/9068/9068699.png',
-                    width: 40,
-                  ),
-                  Text(
-                    ' ไม่สามารถยื่นข้อเสนอได้',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ],
-              ),
-              content: Text(
-                'เนื่องจากครบจำนวนการยื่นข้อเสนอ 5 ครั้ง/เดือน \nโปรดรอ : $daysRemaining วัน $hoursRemaining ชั่วโมง $minutesRemaining นาที\nหรือสมัคร VIP เพื่อโพสต์หรือยื่นข้อเสนอได้ไม่จำกัด',
-                style: TextStyle(fontSize: 18),
-              ),
-              actions: <Widget>[
-                ElevatedButton(
-                  style:
-                      ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'ยืนยัน',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
+        showPostErrorDialog(
+            context, daysRemaining, hoursRemaining, minutesRemaining);
       }
     }
 
@@ -570,8 +541,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     List<String> imageUrls = [];
 
     for (File image in _images) {
-      String imageName =
-          DateTime.now().millisecondsSinceEpoch.toString() + '.jpg';
+      String imageName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
       Reference storageRef =
           FirebaseStorage.instance.ref().child('images/$imageName');
 
@@ -624,7 +594,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
               onPressed: () {
                 Navigator.of(context).pop(false); // ยกเลิก
               },
-              child: Text(
+              child: const Text(
                 "ยกเลิก",
                 style: TextStyle(color: Colors.white),
               ),
@@ -636,8 +606,43 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                 fetchTimestampFromFirebase();
                 Navigator.of(context).pop(true);
               },
-              child: Text(
+              child: const Text(
                 "ยืนยัน",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> showPostErrorDialog(BuildContext context, int daysRemaining,
+      int hoursRemaining, int minutesRemaining) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Image.network(
+                'https://cdn-icons-png.flaticon.com/128/9068/9068699.png',
+                width: 40,
+              ),
+              Text(' ไม่สามารถยื่นข้อเสนอได้'),
+            ],
+          ),
+          content: Text(
+              'เนื่องจากครบจำนวนการยื่นข้อเสนอ 5 ครั้ง/เดือน \nโปรดรอ : $daysRemaining วัน $hoursRemaining ชั่วโมง $minutesRemaining นาที\nหรือสมัคร VIP เพื่อโพสต์หรือยื่นข้อเสนอได้ไม่จำกัด'),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'ยืนยัน',
                 style: TextStyle(color: Colors.white),
               ),
             ),
