@@ -50,7 +50,7 @@ class _offerCome2State extends State<offerCome2> {
         Map<dynamic, dynamic> data =
             Map<dynamic, dynamic>.from(event.snapshot.value as Map);
         data.forEach((key, value) {
-          if (value['statusOffers'] == "รอการยืนยัน") {
+          if (value['statusOffers'] == "ยังไม่ถูกเลือก") {
             postsList.add(value);
           }
         });
@@ -71,7 +71,6 @@ class _offerCome2State extends State<offerCome2> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream:
@@ -87,8 +86,7 @@ class _offerCome2State extends State<offerCome2> {
 
           bool hasPendingPosts = false;
           data.forEach((key, value) {
-            if (value['statusOffers'] == "รอการยืนยัน" ||
-                value['statusOffers'] == "รอดำเนินการ") {
+            if (value['statusOffers'] == "ยังไม่ถูกเลือก")  {
               hasPendingPosts = true;
             }
           });
@@ -448,15 +446,23 @@ class _offerCome2State extends State<offerCome2> {
   }
 
   Future<void> _performUpdateOffer() async {
+
     try {
       DatabaseReference postRef1 = FirebaseDatabase.instance
           .ref()
           .child('postitem')
           .child(widget.postUid);
+      DatabaseReference offerRef = FirebaseDatabase.instance
+          .ref()
+          .child('offer')
+          .child(selectedOffer?['offer_uid']);
 
       await postRef1.update({ //post
         'user_offer_id_confirm': selectedOffer?['offer_uid'],
         'statusPosts': "รอการยืนยัน",
+      });
+      await offerRef.update({
+        'statusOffers': "รอการยืนยัน",
       });
     } catch (e) {
       // Handle error if necessary

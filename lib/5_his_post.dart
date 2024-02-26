@@ -232,7 +232,7 @@ class _HistoryPostState extends State<HistoryPost> {
                           longitude = double.tryParse(
                               selectedOffer!['longitude'].toString());
                           checkPost =
-                              selectedOffer!['statusPosts'] == 'รอดำเนินการ'
+                              selectedOffer!['statusPosts'] == 'แลกเปลี่ยนสำเร็จ'
                                   ? true
                                   : false;
                           return Padding(
@@ -437,7 +437,7 @@ class _HistoryPostState extends State<HistoryPost> {
                                         ),
                                         const SizedBox(height: 10),
                                         checkPost
-                                            ? SizedBox()
+                                            ? const SizedBox()
                                             : ElevatedButton.icon(
                                                 style: ElevatedButton.styleFrom(
                                                     backgroundColor:
@@ -454,7 +454,6 @@ class _HistoryPostState extends State<HistoryPost> {
                                                   } else {
                                                     print(
                                                         'No post selected for deletion.');
-                                                    // Debug: Print the current state of selectedPost
                                                     print(
                                                         'Current selectedPost: $selectedOffer');
                                                   }
