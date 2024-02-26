@@ -155,15 +155,16 @@ class _NewPostState extends State<NewPost> {
 
         String uid = FirebaseAuth.instance.currentUser!.uid;
         DatabaseReference userRef =
-        FirebaseDatabase.instance.ref().child('users').child(uid);
+            FirebaseDatabase.instance.ref().child('users').child(uid);
         DatabaseEvent userDataSnapshot = await userRef.once();
         Map<dynamic, dynamic> datamap =
-        userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
+            userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
         int currentPostCount =
             int.tryParse(datamap['postCount'].toString()) ?? 0;
 
         // ตรวจสอบว่ายังมีโอกาสโพสต์หรือไม่
-        if (currentPostCount > 0 || canPostAfter30Days(userRef, datamap, context)) {
+        if (currentPostCount > 0 ||
+            canPostAfter30Days(userRef, datamap, context)) {
           // ลดค่า postCount
           if (currentPostCount > 0) {
             await userRef.update({
@@ -177,10 +178,10 @@ class _NewPostState extends State<NewPost> {
           String imageUser = datamap['image_user'];
           String status_user = datamap['status_user'];
           DatabaseReference itemRef =
-          FirebaseDatabase.instance.ref().child('postitem').push();
+              FirebaseDatabase.instance.ref().child('postitem').push();
           List<String> imageUrls = await uploadImages(images);
           String postNumber = generateRandomPostNumber();
-
+          updateTotalPost();
           // Generate uid for the post
           String? postUid = itemRef.key;
           String time =
@@ -221,11 +222,12 @@ class _NewPostState extends State<NewPost> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => PostSuccess(
-                  time: time,
-                  date: date,
-                  postNumber: postNumber,
-                )),
+              builder: (BuildContext context) => PostSuccess(
+                time: time,
+                date: date,
+                postNumber: postNumber,
+              ),
+            ),
           );
         }
       }
@@ -235,12 +237,12 @@ class _NewPostState extends State<NewPost> {
     }
   }
 
-  bool canPostAfter30Days(
-      DatabaseReference userRef, Map<dynamic, dynamic> userData, BuildContext context) {
+  bool canPostAfter30Days(DatabaseReference userRef,
+      Map<dynamic, dynamic> userData, BuildContext context) {
     // Check if last post date is available
     if (userData.containsKey('lastPostDate')) {
       DateTime lastPostDate =
-      DateTime.parse(userData['lastPostDate'].toString());
+          DateTime.parse(userData['lastPostDate'].toString());
       DateTime currentDate = DateTime.now();
 
       // Check if 30 days have passed since the last post
@@ -253,20 +255,23 @@ class _NewPostState extends State<NewPost> {
         return true;
       } else {
         Duration remainingTime =
-        lastPostDate.add(Duration(days: 30)).difference(currentDate);
+            lastPostDate.add(Duration(days: 30)).difference(currentDate);
 
         // Extract days, hours, minutes, and seconds from the remaining time
         int daysRemaining = remainingTime.inDays;
         int hoursRemaining = remainingTime.inHours % 24;
         int minutesRemaining = remainingTime.inMinutes % 60;
 
-        showPostErrorDialog(context, daysRemaining, hoursRemaining, minutesRemaining);
+        showPostErrorDialog(
+            context, daysRemaining, hoursRemaining, minutesRemaining);
       }
     }
 
     return false;
   }
-  Future<void> showPostErrorDialog(BuildContext context, int daysRemaining, int hoursRemaining, int minutesRemaining) async {
+
+  Future<void> showPostErrorDialog(BuildContext context, int daysRemaining,
+      int hoursRemaining, int minutesRemaining) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -284,8 +289,7 @@ class _NewPostState extends State<NewPost> {
               'เนื่องจากครบจำนวนการโพสต์ 5 ครั้ง/เดือน \nโปรดรอ : $daysRemaining วัน $hoursRemaining ชั่วโมง $minutesRemaining นาที\nหรือสมัคร VIP เพื่อโพสต์หรือยื่นข้อเสนอได้ไม่จำกัด'),
           actions: <Widget>[
             ElevatedButton(
-              style:
-              ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
