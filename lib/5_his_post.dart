@@ -73,12 +73,9 @@ class _HistoryPostState extends State<HistoryPost> {
 
   void fetchData() async {
     try {
-      DatabaseReference postRef = FirebaseDatabase.instance
-          .ref()
-          .child('postitem')
-          .child(selectedOffer!['post_uid']);
-
-      await postRef.update({'answerStatus': Ans});
+      await _postRef
+          .child(selectedOffer!['post_uid'])
+          .update({'answerStatus': Ans});
     } catch (e) {
       // Handle errors
     }
@@ -923,6 +920,7 @@ class _HistoryPostState extends State<HistoryPost> {
 
   Future<void> _performUpdateOffer() async {
     try {
+      // อัปเดตสถานะของโพสต์เป็น "ยืนยัน"
       DatabaseReference postRef1 = FirebaseDatabase.instance
           .ref()
           .child('postitem')
@@ -1042,7 +1040,7 @@ class _HistoryPostState extends State<HistoryPost> {
       Ans = "ล้มเหลว"; //
     }
 
-    if (Ans == 'แลกเปลี่ยนสำเร็จ') {
+    if (Ans == 'แลกเปลี่ยนสำเร็จ' || Ans == 'ล้มเหลว' || Ans == 'รอการยืนยัน') {
       fetchData();
     }
     return Text(Ans);

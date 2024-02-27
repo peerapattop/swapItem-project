@@ -43,17 +43,24 @@ class _GridView2State extends State<GridView2> {
 
             filteredData = dataMap.values.where((userData) {
               // เช็คว่าสถานะของโพสต์เป็น 'แลกเปลี่ยนสำเร็จ' หรือไม่
-              bool isPostSuccess = userData['answerStatus'] == 'แลกเปลี่ยนสำเร็จ';
-
+              bool isPostSuccess =
+                  userData['answerStatus'] == 'แลกเปลี่ยนสำเร็จ';
               return !isPostSuccess &&
                   (widget.searchString == null ||
                       widget.searchString!.isEmpty ||
-                      userData['item_name'].toString().toLowerCase().contains(widget.searchString!.toLowerCase()) ||
-                      userData['item_name1'].toString().toLowerCase().contains(widget.searchString!.toLowerCase()) ||
-                      userData['type'].toString().toLowerCase().contains(widget.searchString!.toLowerCase())
-                  );
+                      userData['item_name']
+                          .toString()
+                          .toLowerCase()
+                          .contains(widget.searchString!.toLowerCase()) ||
+                      userData['item_name1']
+                          .toString()
+                          .toLowerCase()
+                          .contains(widget.searchString!.toLowerCase()) ||
+                      userData['type']
+                          .toString()
+                          .toLowerCase()
+                          .contains(widget.searchString!.toLowerCase()));
             }).toList();
-
 
             filteredData.sort((a, b) {
               String statusA = a['status_user'] ??
@@ -80,7 +87,8 @@ class _GridView2State extends State<GridView2> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.all(10),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio: 3 / 6.5,
                       crossAxisSpacing: 10,
@@ -99,7 +107,8 @@ class _GridView2State extends State<GridView2> {
                       String userUid = userData['uid'];
                       bool isVip = userData['status_user'] == 'ผู้ใช้พรีเมี่ยม';
 
-                      List<String> imageUrls = List<String>.from(userData['imageUrls'] ?? []);
+                      List<String> imageUrls =
+                          List<String>.from(userData['imageUrls'] ?? []);
                       return Card(
                         clipBehavior: Clip.antiAlias,
                         shape: RoundedRectangleBorder(
@@ -116,7 +125,8 @@ class _GridView2State extends State<GridView2> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    if (isVip) Image.asset('assets/images/vip.png'),
+                                    if (isVip)
+                                      Image.asset('assets/images/vip.png'),
                                     Text(
                                       itemName,
                                       style: const TextStyle(
@@ -165,52 +175,57 @@ class _GridView2State extends State<GridView2> {
                             ),
                             const Divider(),
                             statusPost == 'ยืนยัน'
-                            ? const Center(child: Text('สถานะ: กำลังดำเนินการ'))
-                            : Center(child: Text('สถานะ: $statusPost')),
+                                ? const Center(
+                                    child: Text('สถานะ: กำลังดำเนินการ'))
+                                : Center(child: Text('สถานะ: $statusPost')),
                             const SizedBox(height: 5),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: user?.uid != userUid
                                   ? ElevatedButton(
-                                onPressed: () {
-                                  Future.delayed(const Duration(seconds: 1), () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => ShowDetailAll(
-                                          postUid: postUid,
-                                          longti: longitude,
-                                          lati: latitude,
-                                          imageUser: imageUser,
-                                            statusPost:statusPost,
+                                      onPressed: () {
+                                        Future.delayed(
+                                            const Duration(seconds: 1), () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ShowDetailAll(
+                                                postUid: postUid,
+                                                longti: longitude,
+                                                lati: latitude,
+                                                imageUser: imageUser,
+                                                statusPost: statusPost,
+                                              ),
+                                            ),
+                                          );
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            Theme.of(context).primaryColor,
+                                        foregroundColor: Colors.white,
+                                      ),
+                                      child: const Center(
+                                          child: Text('รายละเอียด')),
+                                    )
+                                  : const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Center(
+                                        child: Text(
+                                          'โพสต์ของฉัน',
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ),
-                                    );
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(context).primaryColor,
-                                  foregroundColor: Colors.white,
-                                ),
-                                child: const Center(child: Text('รายละเอียด')),
-                              )
-                                  : const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Center(
-                                  child: Text(
-                                    'โพสต์ของฉัน',
-                                    style: TextStyle(
-                                        fontSize: 18, fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
+                                    ),
                             ),
                           ],
                         ),
                       );
                     },
                   ),
-                  SizedBox(height: 200
-                  ),
+                  SizedBox(height: 200),
                 ],
               ),
             );
