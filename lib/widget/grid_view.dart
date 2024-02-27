@@ -164,7 +164,9 @@ class _GridView2State extends State<GridView2> {
                               ),
                             ),
                             const Divider(),
-                            Center(child: Text('สถานะ: $statusPost')),
+                            statusPost == 'ยืนยัน'
+                            ? const Center(child: Text('สถานะ: กำลังดำเนินการ'))
+                            : Center(child: Text('สถานะ: $statusPost')),
                             const SizedBox(height: 5),
                             Padding(
                               padding: const EdgeInsets.all(8.0),

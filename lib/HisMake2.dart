@@ -32,6 +32,7 @@ class _His_Make_off2State extends State<His_Make_off2> {
   List<Map<dynamic, dynamic>> postsList = [];
   Map<dynamic, dynamic>? selectedPost;
   List<String> image_post = [];
+  String Ans = '';
 
   @override
   void initState() {
@@ -68,6 +69,19 @@ class _His_Make_off2State extends State<His_Make_off2> {
     }, onError: (error) {
       print("Error fetching data: $error");
     });
+  }
+
+  void fetchData() async {
+    try {
+      DatabaseReference postRef = FirebaseDatabase.instance
+          .ref()
+          .child('postitem')
+          .child(selectedPost!['post_uid']);
+
+      await postRef.update({'answerStatus': Ans});
+    } catch (e) {
+      // Handle errors
+    }
   }
 
   void fetchUserData(String uid, BuildContext context) {
@@ -256,8 +270,8 @@ class _His_Make_off2State extends State<His_Make_off2> {
                   ),
                 ),
               ),
-              widget.statusOffer == 'รอการยืนยัน' &&
-                      selectedPost!['statusOffers'] == 'รอการยืนยัน'
+              widget.statusOffer == 'รอการยืนยัน'
+
                   ? showConfirmBtn()
                   : Container(),
             ],
@@ -575,29 +589,31 @@ class _His_Make_off2State extends State<His_Make_off2> {
     }
   }
 
-  Widget buildStatus(String statusPosts, String statusOffers) {
-    String ans = "";
-    if (statusPosts == "รอการยืนยัน" && statusOffers == "รอการยืนยัน") {
-      ans = "รอการยืนยัน"; //
-    } else if (statusPosts == "ยืนยัน" && statusOffers == "รอการยืนยัน") {
-      ans = "รอการยืนยัน"; //
-    } else if (statusPosts == "รอการยืนยัน" && statusOffers == "ยืนยัน") {
-      ans = "รอการยืนยัน"; //
-    } else if (statusPosts == "ยืนยัน" && statusOffers == "ยืนยัน") {
-      ans = "แลกเปลี่ยนสำเร็จ";
-      statusPosts = ans;
-    } else if (statusPosts == "ยืนยัน" && statusOffers == "ปฏิเสธ") {
-      ans = "ล้มเหลว"; //
-    } else if (statusPosts == "ปฏิเสธ" && statusOffers == "ยืนยัน") {
-      ans = "ล้มเหลว"; //
-    } else if (statusPosts == "ปฏิเสธ" && statusOffers == "ปฏิเสธ") {
-      ans = "ล้มเหลว"; //
-    } else if (statusPosts == "ปฏิเสธ" && statusOffers == "รอการยืนยัน") {
-      ans = "ล้มเหลว"; //
-    } else if (statusPosts == "รอการยืนยัน" && statusOffers == "ปฏิเสธ") {
-      ans = "ล้มเหลว"; //
+  Widget buildStatus(String statusPost, String statusOffer) {
+    if (statusPost == "รอการยืนยัน" && statusOffer == "รอการยืนยัน") {
+      Ans = "รอการยืนยัน"; //
+    } else if (statusPost == "ยืนยัน" && statusOffer == "รอการยืนยัน") {
+      Ans = "รอการยืนยัน"; //
+    } else if (statusPost == "รอการยืนยัน" && statusOffer == "ยืนยัน") {
+      Ans = "รอการยืนยัน"; //
+    } else if (statusPost == "ยืนยัน" && statusOffer == "ยืนยัน") {
+      Ans = "แลกเปลี่ยนสำเร็จ"; //
+    } else if (statusPost == "ยืนยัน" && statusOffer == "ปฏิเสธ") {
+      Ans = "ล้มเหลว"; //
+    } else if (statusPost == "ปฏิเสธ" && statusOffer == "ยืนยัน") {
+      Ans = "ล้มเหลว"; //
+    } else if (statusPost == "ปฏิเสธ" && statusOffer == "ปฏิเสธ") {
+      Ans = "ล้มเหลว"; //
+    } else if (statusPost == "ปฏิเสธ" && statusOffer == "รอการยืนยัน") {
+      Ans = "ล้มเหลว"; //
+    } else if (statusPost == "รอการยืนยัน" && statusOffer == "ปฏิเสธ") {
+      Ans = "ล้มเหลว"; //
     }
-    return Text(ans);
+
+    if (Ans == 'แลกเปลี่ยนสำเร็จ') {
+      fetchData();
+    }
+    return Text(Ans);
   }
 
   String convertDateFormat(String inputDate) {

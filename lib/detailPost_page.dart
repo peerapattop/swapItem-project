@@ -398,7 +398,7 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                           ),
                           const SizedBox(height: 10),
                           Center(
-                            child: (postData['statusPosts'] == 'รอการยืนยัน')
+                            child: (postData['statusPosts'] == 'รอการยืนยัน' ||postData['statusPosts'] == 'ยืนยัน')
                                 ? ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.blue,
