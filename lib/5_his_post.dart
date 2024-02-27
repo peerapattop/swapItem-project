@@ -928,12 +928,29 @@ class _HistoryPostState extends State<HistoryPost> {
           .child('postitem')
           .child(selectedOffer!['post_uid']);
 
+      // DatabaseReference userRef =
+      //     FirebaseDatabase.instance.ref().child('users').child(_user.uid);
+      //
+      // // ดึงค่าเดิมของ 'creditPostSuccess' จากฐานข้อมูล
+      // DatabaseEvent userDataEvent = await userRef.once();
+      // DataSnapshot userDataSnapshot = userDataEvent.snapshot;
+      // int oldCredit = (userDataSnapshot.value
+      //         as Map<String, dynamic>?)?['creditPostSuccess'] ??
+      //     0;
+      //
+      // // บวกค่าเดิมด้วย 1
+      // int newCredit = oldCredit + 1;
+      //
+      // await userRef.update({
+      //   'creditPostSuccess': newCredit,
+      // });
+
+      // อัปเดตสถานะของโพสต์เป็น "ยืนยัน"
       await postRef1.update({
-        //post
         'statusPosts': "ยืนยัน",
       });
     } catch (e) {
-      // Handle error if necessary
+      // จัดการข้อผิดพลาดตามความเหมาะสม
     }
   }
 

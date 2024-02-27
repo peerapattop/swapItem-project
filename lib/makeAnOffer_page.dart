@@ -53,7 +53,6 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
   String date1 ='';
   String time1 ='';
 
-  bool _isSubmitting = false;
   List<File> _images = [];
 
   @override
@@ -470,7 +469,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
           Map<String, dynamic> dataRef = {
             'username': username,
             'imageUser': imageUser,
-            'statusOffers': 'รอการยืนยัน',
+            'statusOffers': 'ยังไม่ถูกเลือก',
             'offer_uid': offerUid,
             'offerNumber': offerNumber,
             'uid': uid,
@@ -483,7 +482,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
             'model1': _model1.text.trim(),
             'detail1': _detail1.text.trim(),
             'imageUrls': imageUrls,
-            'timestamp': timeclick, //เอาเวลาขึ้น
+            'timestamp': timeclick,
             'post_uid': postUid,
           };
 
