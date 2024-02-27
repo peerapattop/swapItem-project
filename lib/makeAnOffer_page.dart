@@ -236,55 +236,23 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                   maxLines: null, // Allows for multi-line input
                 ),
                 const SizedBox(height: 24),
-                Center(
-                  child: Container(
-                    width: 360,
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                      ),
-                      onPressed: !_isSubmitting
-                          ? () async {
-                              bool? confirmed = await _showConfirmationDialog();
-                              if (confirmed ?? false) {
-                                try {
-                                  setState(() {
-                                    _isSubmitting = true;
-                                  });
-
-
-                                  String? offerId = await _submitOffer();
-
-                                  if (offerId != null) {
-                                    // Close the loading dialog
-                                    Navigator.pop(context);
-
-                                    // Navigate to MakeAnOfferSuccess page
-
-                                  } else {
-                                    // Handle the case where offerId is null before navigation
-                                  }
-                                } catch (e) {
-                                  print(e);
-                                } finally {
-                                  setState(() {
-                                    _isSubmitting = false;
-                                  });
-                                }
-                              }
-                            }
-                          : null,
-                      child: const Text(
-                        "ยื่นข้อเสนอ",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
-                      ),
+                SizedBox(
+                  height: 50,
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await submitOffer();
+                    },
+                    style: ButtonStyle(
+                      backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.green),
+                    ),
+                    child: const Text(
+                      "ยิ่นข้อเสนอ",
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
-                ),
+                )
               ],
             ),
           ),
@@ -341,6 +309,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
 
   Future<bool> _showOfferConfirmationDialog() async {
     Completer<bool> completer = Completer<bool>();
+
     if (_nameItem1.text.isEmpty ||
         _brand1.text.isEmpty ||
         _model1.text.isEmpty ||
@@ -374,10 +343,78 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
       );
       return false;
     }
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          title: const Text(
+            'ยืนยันการยื่นข้อเสนอ',
+            style: TextStyle(
+              color: Colors.blue,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text(
+                'คุณต้องการที่ยืนยันการยื่นข้อเสนอหรือไม่?',
+                style: TextStyle(color: Colors.black),
+              ),
+              const SizedBox(height: 20.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      completer.complete(false); // User canceled
+                    },
+                    child: const Text(
+                      'ยกเลิก',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    onPressed: () {
+                      saveTimestampToFirebase();
+                      fetchTimestampFromFirebase();
+                      completer.complete(true);
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'ยืนยัน',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
     return completer.future;
   }
 
-  Future<String?> _submitOffer() async {
+  Future<void> submitOffer() async {
     try {
       bool confirmed = await _showOfferConfirmationDialog();
 
@@ -460,7 +497,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                   ),
             ),
           );
-          return itemRef.key;
+
         }
       }
     } catch (error) {
@@ -528,7 +565,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
         int hoursRemaining = remainingTime.inHours % 24;
         int minutesRemaining = remainingTime.inMinutes % 60;
 
-        showPostErrorDialog(
+        showOfferErrorDialog(
             context, daysRemaining, hoursRemaining, minutesRemaining);
       }
     }
@@ -581,43 +618,8 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     });
   }
 
-  Future<bool?> _showConfirmationDialog() async {
-    return await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("ยืนยันการยื่นข้อเสนอ"),
-          content: Text("คุณแน่ใจหรือไม่ที่ต้องการยื่นข้อเสนอนี้?"),
-          actions: <Widget>[
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              onPressed: () {
-                Navigator.of(context).pop(false); // ยกเลิก
-              },
-              child: const Text(
-                "ยกเลิก",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              onPressed: () {
-                saveTimestampToFirebase();
-                fetchTimestampFromFirebase();
-                Navigator.of(context).pop(true);
-              },
-              child: const Text(
-                "ยืนยัน",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
-  Future<void> showPostErrorDialog(BuildContext context, int daysRemaining,
+  Future<void> showOfferErrorDialog(BuildContext context, int daysRemaining,
       int hoursRemaining, int minutesRemaining) async {
     showDialog(
       context: context,
@@ -629,7 +631,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                 'https://cdn-icons-png.flaticon.com/128/9068/9068699.png',
                 width: 40,
               ),
-              Text(' ไม่สามารถยื่นข้อเสนอได้'),
+              const Text(' ไม่สามารถยื่นข้อเสนอได้',style: TextStyle(fontSize: 20),),
             ],
           ),
           content: Text(
