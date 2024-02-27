@@ -230,7 +230,9 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                                         color: Colors.blue),
                                                     const SizedBox(width: 5),
                                                     Text(
-                                                      'สถานะ : ${selectedPost!['statusOffers']}',
+                                                      selectedPost!['statusOffers'] == 'ยืนยัน'
+                                                      ? 'สถานะ : แลกเปลี่ยนสำเร็จ'
+                                                      : 'สถานะ : ${selectedPost!['statusOffers']}',
                                                       style: const TextStyle(
                                                           fontSize: 18),
                                                     )
