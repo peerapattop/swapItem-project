@@ -270,33 +270,8 @@ class _His_Make_off2State extends State<His_Make_off2> {
                   ),
                 ),
               ),
+              showConfirmBtn(),
               SizedBox(height: 10),
-              SizedBox(
-                height: 50,
-                width: double
-                    .infinity, // Make the button expand to the full width available
-                child: ElevatedButton.icon(
-                  icon: const Icon(
-                    Icons.chat,
-                    color: Colors.white,
-                  ),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatDetail(
-                          receiverUid: selectedPost!['uid'],
-                        ),
-                      ),
-                    );
-                  },
-                  label: const Text(
-                    'แชท',
-                    style: TextStyle(color: Colors.white, fontSize: 19),
-                  ),
-                ),
-              ),
               confirmBtn()
             ],
           );
@@ -546,7 +521,6 @@ class _His_Make_off2State extends State<His_Make_off2> {
             ),
           ),
           const SizedBox(height: 10),
-          statusOffer != 'รอการยืนยัน' ? const SizedBox() : confirmBtn(),
         ],
       );
     } else {
