@@ -270,167 +270,6 @@ class _His_Make_off2State extends State<His_Make_off2> {
                   ),
                 ),
               ),
-
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  width: 600,
-                  height: 300,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 214, 214, 212),
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(11.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          'สถานะการแลกเปลี่ยน',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 19,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w400,
-                            height: 0,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 30.0, bottom: 10.0, right: 15.0),
-                                child: Text(
-                                  'ผู้โพสต์',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 45,
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 21.0, bottom: 10.0),
-                                child: Text(
-                                  'ผู้ยื่นข้อเสนอ',
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Container(
-                                width: 150,
-                                height: 50,
-                                decoration: ShapeDecoration(
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(width: 1),
-                                    borderRadius: BorderRadius.circular(2),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 5.0, right: 10.0, left: 10.0),
-                                  child: Center(
-                                    child: Text(
-                                      selectedPost!['statusPosts'],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Transform.rotate(
-                                angle: -pi /
-                                    2, // หมุนทางซ้าย 90 องศา (ในรูปแบบ radian)
-                                child: Image.asset(
-                                  'assets/images/swap.png',
-                                  width: 20,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: Container(
-                                width: 150,
-                                height: 50,
-                                decoration: ShapeDecoration(
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(width: 1),
-                                    borderRadius: BorderRadius.circular(2),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 5.0, right: 10.0, left: 10.0),
-                                  child: Center(
-                                    child: Text(
-                                      widget.statusOffer,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20.0),
-                          child: Container(
-                            width: 150,
-                            height: 50,
-                            decoration: ShapeDecoration(
-                              color: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(width: 1),
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 5.0, right: 10.0, left: 10.0),
-                              child: Center(
-                                child: buildStatus(
-                                    selectedPost!['statusPosts'],
-                                    widget.statusOffer),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Text(
-                            'ผลการแลกเปลี่ยน',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w400,
-                              height: 0,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
               SizedBox(height: 10),
               SizedBox(
                 height: 50,
@@ -519,196 +358,200 @@ class _His_Make_off2State extends State<His_Make_off2> {
   }
 
   Widget showConfirmBtn() {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            width: 600,
-            height: 300,
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 214, 214, 212),
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(11.0),
-              child: Column(
-                children: [
-                  Text(
-                    'สถานะการแลกเปลี่ยน',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 19,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                      height: 0,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 30.0, bottom: 10.0, right: 15.0),
-                          child: Text(
-                            'ผู้โพสต์',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 45,
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.only(left: 21.0, bottom: 10.0),
-                          child: Text(
-                            'ผู้ยื่นข้อเสนอ',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Container(
-                          width: 150,
-                          height: 50,
-                          decoration: ShapeDecoration(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(width: 1),
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 5.0, right: 10.0, left: 10.0),
-                            child: Center(
-                              child: Text(selectedPost!['statusPosts']),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Transform.rotate(
-                          angle: -pi / 2,
-                          child: Image.asset(
-                            'assets/images/swap.png',
-                            width: 20,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Container(
-                          width: 150,
-                          height: 50,
-                          decoration: ShapeDecoration(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(width: 1),
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 5.0, right: 10.0, left: 10.0),
-                            child: Center(
-                              child: Text(
-                                statusOffer,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Container(
-                      width: 150,
-                      height: 50,
-                      decoration: ShapeDecoration(
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          side: const BorderSide(width: 1),
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 5.0, right: 10.0, left: 10.0),
-                        child: Center(
-                          child: buildStatus(
-                              selectedPost!['statusPosts'].toString(),
-                              widget.statusOffer.toString()),
-                          //     String statusPost = selectedPost!['statusPosts'];
-                          // String statusOffer = widget.statusOffer;
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text(
-                      'ผลการแลกเปลี่ยน',
+    if (statusOffer != 'ยังไม่ถูกเลือก') {
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 600,
+              height: 300,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 214, 214, 212),
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(11.0),
+                child: Column(
+                  children: [
+                    Text(
+                      'สถานะการแลกเปลี่ยน',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 18,
+                        fontSize: 19,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w400,
                         height: 0,
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 30.0, bottom: 10.0, right: 15.0),
+                            child: Text(
+                              'ผู้โพสต์',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 45,
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.only(left: 21.0, bottom: 10.0),
+                            child: Text(
+                              'ผู้ยื่นข้อเสนอ',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Container(
+                            width: 150,
+                            height: 50,
+                            decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(width: 1),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 5.0, right: 10.0, left: 10.0),
+                              child: Center(
+                                child: Text(selectedPost!['statusPosts']),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Transform.rotate(
+                            angle: -pi / 2,
+                            child: Image.asset(
+                              'assets/images/swap.png',
+                              width: 20,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Container(
+                            width: 150,
+                            height: 50,
+                            decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(width: 1),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 5.0, right: 10.0, left: 10.0),
+                              child: Center(
+                                child: Text(
+                                  statusOffer,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: Container(
+                        width: 150,
+                        height: 50,
+                        decoration: ShapeDecoration(
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(width: 1),
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 5.0, right: 10.0, left: 10.0),
+                          child: Center(
+                            child: buildStatus(
+                                selectedPost!['statusPosts'].toString(),
+                                widget.statusOffer.toString()),
+                            //     String statusPost = selectedPost!['statusPosts'];
+                            // String statusOffer = widget.statusOffer;
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        'ผลการแลกเปลี่ยน',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w400,
+                          height: 0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        SizedBox(
-          height: 50,
-          width: double
-              .infinity, // Make the button expand to the full width available
-          child: ElevatedButton.icon(
-            icon: const Icon(
-              Icons.chat,
-              color: Colors.white,
-            ),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ChatDetail(
-                    receiverUid: selectedPost!['uid'],
+          SizedBox(
+            height: 50,
+            width: double
+                .infinity, // Make the button expand to the full width available
+            child: ElevatedButton.icon(
+              icon: const Icon(
+                Icons.chat,
+                color: Colors.white,
+              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChatDetail(
+                      receiverUid: selectedPost!['uid'],
+                    ),
                   ),
-                ),
-              );
-            },
-            label: const Text(
-              'แชท',
-              style: TextStyle(color: Colors.white, fontSize: 19),
+                );
+              },
+              label: const Text(
+                'แชท',
+                style: TextStyle(color: Colors.white, fontSize: 19),
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 10),
-        statusOffer != 'รอการยืนยัน' ? const SizedBox() : confirmBtn(),
-      ],
-    );
+          const SizedBox(height: 10),
+          statusOffer != 'รอการยืนยัน' ? const SizedBox() : confirmBtn(),
+        ],
+      );
+    } else {
+      return const SizedBox();
+    }
   }
 
   void Show_Confirmation_Dialog_Status(BuildContext context) {
