@@ -444,7 +444,6 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
             userDataSnapshot.snapshot.value as Map<dynamic, dynamic>;
         int currentOfferCount = datamap['makeofferCount'] as int? ?? 0;
         String? username = datamap['username'];
-        updateTotalOffer();
 
         if (currentOfferCount > 0 || canPostAfter30Days(userRef, datamap)) {
           // ลดค่า postCount
@@ -454,6 +453,9 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
               'lastOfferDate': DateTime.now().toString(),
             });
           }
+        updateTotalOffer();
+
+
 
           String postUid = widget.postUid;
           String imageUser = widget.imageUser;
