@@ -23,7 +23,7 @@ class _HistoryPostState extends State<HistoryPost> {
   late User _user;
   double? latitude;
   double? longitude;
-  late DatabaseReference _postRef, offerRef;
+  late DatabaseReference _postRef, offerRef,userRef;
   List<Map<dynamic, dynamic>> postsList = [];
   int _selectedIndex = -1;
   Map<dynamic, dynamic>? selectedOffer;
@@ -40,6 +40,7 @@ class _HistoryPostState extends State<HistoryPost> {
   void initState() {
     super.initState();
     _user = FirebaseAuth.instance.currentUser!;
+    userRef = FirebaseDatabase.instance.ref().child('users');
     _postRef = FirebaseDatabase.instance.ref().child('postitem');
     offerRef = FirebaseDatabase.instance.ref().child('offer');
     selectedOffer = null;
@@ -78,30 +79,34 @@ class _HistoryPostState extends State<HistoryPost> {
           .child(selectedOffer!['post_uid'])
           .update({'answerStatus': Ans});
 
-      updateCreditOfferSuccess(uid);
-      updateCreditPostSuccess(_user.uid);
+
+      updateCreditSuccess(uid, 'creditOfferSuccess');
+
+      updateCreditSuccess(_user.uid, 'creditPostSuccess');
+      //updateCreditOfferSuccess(uid);
+      //updateCreditPostSuccess(_user.uid);
     } catch (e) {
       // Handle errors
     }
   }
 
-  Future<void> updateCreditOfferSuccess(String uid) async {
+  Future<void> updateCreditSuccess(String uid, String creditType) async {
     try {
-      print('Updating creditPostSuccess for UID: $uid');
+      print('Updating $creditType for UID: $uid');
 
-      FirebaseDatabase.instance.ref('users/$uid').once().then((databaseEvent) async {
+      userRef.child(uid).once().then((databaseEvent) async {
         if (databaseEvent.snapshot.value != null) {
           DataSnapshot snapshot = databaseEvent.snapshot;
 
           Map<String, dynamic> userData = Map<String, dynamic>.from(snapshot.value as Map);
-          int currentCredit = userData['creditOfferSuccess'] ?? 0;
+          int currentCredit = userData[creditType] ?? 0;
           int newCredit = currentCredit + 1;
 
-          await FirebaseDatabase.instance.ref('users/$uid').update({
-            'creditOfferSuccess': newCredit,
+          await userRef.child(uid).update({
+            creditType: newCredit,
           });
 
-          print('creditPostSuccess updated successfully for UID: $uid');
+          print('$creditType updated successfully for UID: $uid');
         } else {
           print('User data not found for UID: $uid');
         }
@@ -109,37 +114,10 @@ class _HistoryPostState extends State<HistoryPost> {
         print('Error fetching user data: $error');
       });
     } catch (error) {
-      print('Error updating creditPostSuccess: $error');
+      print('Error updating $creditType: $error');
     }
   }
 
-  Future<void> updateCreditPostSuccess(String uid) async {
-    try {
-      print('Updating creditPostSuccess for UID: $uid');
-
-      FirebaseDatabase.instance.ref('users/$uid').once().then((databaseEvent) async {
-        if (databaseEvent.snapshot.value != null) {
-          DataSnapshot snapshot = databaseEvent.snapshot;
-
-          Map<String, dynamic> userData = Map<String, dynamic>.from(snapshot.value as Map);
-          int currentCredit = userData['creditPostSuccess'] ?? 0;
-          int newCredit = currentCredit + 1;
-
-          await FirebaseDatabase.instance.ref('users/$uid').update({
-            'creditPostSuccess': newCredit,
-          });
-
-          print('creditPostSuccess updated successfully for UID: $uid');
-        } else {
-          print('User data not found for UID: $uid');
-        }
-      }).catchError((error) {
-        print('Error fetching user data: $error');
-      });
-    } catch (error) {
-      print('Error updating creditPostSuccess: $error');
-    }
-  }
 
   void Show_Confirmation_Dialog_Status(BuildContext context, String postKey) {
     showDialog(
