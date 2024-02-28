@@ -1100,7 +1100,7 @@ class _HistoryPostState extends State<HistoryPost> {
       Ans = "ล้มเหลว"; //
     }
 
-    if (Ans == 'แลกเปลี่ยนสำเร็จ' || Ans == 'ล้มเหลว' || Ans == 'รอการยืนยัน') {
+    if (Ans == 'แลกเปลี่ยนสำเร็จ') {
       fetchData();
     }
     return Text(Ans);
