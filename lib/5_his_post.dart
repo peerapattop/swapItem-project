@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:math';
-
+import 'package:synchronized/synchronized.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -34,6 +34,7 @@ class _HistoryPostState extends State<HistoryPost> {
   late String offerConfirm;
   late bool checkPost;
   String Ans = "";
+  String uid = '';
 
   @override
   void initState() {
@@ -76,8 +77,67 @@ class _HistoryPostState extends State<HistoryPost> {
       await _postRef
           .child(selectedOffer!['post_uid'])
           .update({'answerStatus': Ans});
+
+      updateCreditOfferSuccess(uid);
+      updateCreditPostSuccess(_user.uid);
     } catch (e) {
       // Handle errors
+    }
+  }
+
+  Future<void> updateCreditOfferSuccess(String uid) async {
+    try {
+      print('Updating creditPostSuccess for UID: $uid');
+
+      FirebaseDatabase.instance.ref('users/$uid').once().then((databaseEvent) async {
+        if (databaseEvent.snapshot.value != null) {
+          DataSnapshot snapshot = databaseEvent.snapshot;
+
+          Map<String, dynamic> userData = Map<String, dynamic>.from(snapshot.value as Map);
+          int currentCredit = userData['creditOfferSuccess'] ?? 0;
+          int newCredit = currentCredit + 1;
+
+          await FirebaseDatabase.instance.ref('users/$uid').update({
+            'creditOfferSuccess': newCredit,
+          });
+
+          print('creditPostSuccess updated successfully for UID: $uid');
+        } else {
+          print('User data not found for UID: $uid');
+        }
+      }).catchError((error) {
+        print('Error fetching user data: $error');
+      });
+    } catch (error) {
+      print('Error updating creditPostSuccess: $error');
+    }
+  }
+
+  Future<void> updateCreditPostSuccess(String uid) async {
+    try {
+      print('Updating creditPostSuccess for UID: $uid');
+
+      FirebaseDatabase.instance.ref('users/$uid').once().then((databaseEvent) async {
+        if (databaseEvent.snapshot.value != null) {
+          DataSnapshot snapshot = databaseEvent.snapshot;
+
+          Map<String, dynamic> userData = Map<String, dynamic>.from(snapshot.value as Map);
+          int currentCredit = userData['creditPostSuccess'] ?? 0;
+          int newCredit = currentCredit + 1;
+
+          await FirebaseDatabase.instance.ref('users/$uid').update({
+            'creditPostSuccess': newCredit,
+          });
+
+          print('creditPostSuccess updated successfully for UID: $uid');
+        } else {
+          print('User data not found for UID: $uid');
+        }
+      }).catchError((error) {
+        print('Error fetching user data: $error');
+      });
+    } catch (error) {
+      print('Error updating creditPostSuccess: $error');
     }
   }
 
@@ -528,7 +588,7 @@ class _HistoryPostState extends State<HistoryPost> {
           String brand1 = '';
           String model1 = '';
           String detail1 = '';
-          String uid = '';
+           uid = '';
 
           data.forEach((key, value) {
             username = value['username'];
@@ -1045,4 +1105,6 @@ class _HistoryPostState extends State<HistoryPost> {
     }
     return Text(Ans);
   }
+
+
 }

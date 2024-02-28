@@ -54,6 +54,7 @@ dependencies:
   url_launcher: ^6.2.3
   number_paginator: ^0.4.1
   fl_chart: ^0.66.2
+  synchronized: ^3.1.0+1
 
 flutter_icons:
   android: true

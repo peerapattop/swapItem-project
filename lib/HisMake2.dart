@@ -14,12 +14,12 @@ class His_Make_off2 extends StatefulWidget {
   final String offer_uid;
   final String statusOffer;
 
-  const His_Make_off2(
-      {Key? key,
-      required this.postUid,
-      required this.statusOffer,
-      required this.offer_uid})
-      : super(key: key);
+  const His_Make_off2({
+    Key? key,
+    required this.postUid,
+    required this.statusOffer,
+    required this.offer_uid,
+  }) : super(key: key);
 
   @override
   State<His_Make_off2> createState() => _His_Make_off2State();
