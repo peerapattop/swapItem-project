@@ -23,7 +23,7 @@ class _HistoryPostState extends State<HistoryPost> {
   late User _user;
   double? latitude;
   double? longitude;
-  late DatabaseReference _postRef, offerRef,userRef;
+  late DatabaseReference _postRef, offerRef, userRef;
   List<Map<dynamic, dynamic>> postsList = [];
   int _selectedIndex = -1;
   Map<dynamic, dynamic>? selectedOffer;
@@ -34,7 +34,9 @@ class _HistoryPostState extends State<HistoryPost> {
   late String offerConfirm;
   late bool checkPost;
   String Ans = "";
+  String AnsUidOffer = "";
   String uid = '';
+  String postUid = "";
 
   @override
   void initState() {
@@ -65,6 +67,7 @@ class _HistoryPostState extends State<HistoryPost> {
           setState(() {
             selectedOffer = postsList.first;
             _selectedIndex = 0;
+            postUid = "${selectedOffer!['post_uid']}";
           });
         }
       }
@@ -78,7 +81,6 @@ class _HistoryPostState extends State<HistoryPost> {
       await _postRef
           .child(selectedOffer!['post_uid'])
           .update({'answerStatus': Ans});
-
 
       updateCreditSuccess(uid, 'creditOfferSuccess');
 
@@ -98,7 +100,8 @@ class _HistoryPostState extends State<HistoryPost> {
         if (databaseEvent.snapshot.value != null) {
           DataSnapshot snapshot = databaseEvent.snapshot;
 
-          Map<String, dynamic> userData = Map<String, dynamic>.from(snapshot.value as Map);
+          Map<String, dynamic> userData =
+              Map<String, dynamic>.from(snapshot.value as Map);
           int currentCredit = userData[creditType] ?? 0;
           int newCredit = currentCredit + 1;
 
@@ -117,7 +120,6 @@ class _HistoryPostState extends State<HistoryPost> {
       print('Error updating $creditType: $error');
     }
   }
-
 
   void Show_Confirmation_Dialog_Status(BuildContext context, String postKey) {
     showDialog(
@@ -566,10 +568,15 @@ class _HistoryPostState extends State<HistoryPost> {
           String brand1 = '';
           String model1 = '';
           String detail1 = '';
-           uid = '';
+          uid = '';
+
+          get() {
+            return AnsUidOffer;
+          }
 
           data.forEach((key, value) {
             username = value['username'];
+            AnsUidOffer = username = value['offer_uid'].toString();
             statusOffers = value['statusOffers'].toString();
             offerNumber = value['offerNumber'].toString();
             date = value['date'].toString();
@@ -959,14 +966,31 @@ class _HistoryPostState extends State<HistoryPost> {
   Future<void> _performUpdateOffer() async {
     try {
       // อัปเดตสถานะของโพสต์เป็น "ยืนยัน"
-      DatabaseReference postRef1 = FirebaseDatabase.instance
-          .ref()
-          .child('postitem')
-          .child(selectedOffer!['post_uid']);
+      DatabaseReference postRef1 =
+          FirebaseDatabase.instance.ref().child('postitem').child(postUid);
 
       // อัปเดตสถานะของโพสต์เป็น "ยืนยัน"
       await postRef1.update({
         'statusPosts': "ยืนยัน",
+        'statusPosts_With_Offer_uid': '$AnsUidOffer',
+      });
+    } catch (e) {
+      // จัดการข้อผิดพลาดตามความเหมาะสม
+    }
+  }
+
+  Future<void> ss() async {
+    var merge = "$Ans $AnsUidOffer ";
+    var merge2 = merge.split(' ');
+    merge2 = merge2[2] as List<String>;
+    try {
+      // อัปเดตสถานะของโพสต์เป็น "ยืนยัน"
+      DatabaseReference postRef1 =
+          FirebaseDatabase.instance.ref().child('postitem').child(postUid);
+
+      // อัปเดตสถานะของโพสต์เป็น "ยืนยัน"
+      await postRef1.update({
+        'statusPosts_With_Offer_uid': "กกก",
       });
     } catch (e) {
       // จัดการข้อผิดพลาดตามความเหมาะสม
@@ -1083,6 +1107,4 @@ class _HistoryPostState extends State<HistoryPost> {
     }
     return Text(Ans);
   }
-
-
 }

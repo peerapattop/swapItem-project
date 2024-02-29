@@ -377,7 +377,7 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                               style: TextStyle(fontSize: 20),
                                             ),
                                           ),
-                                          His_Make_off2(
+                                          His_MakeOffer_2(
                                             postUid: selectedPost!['post_uid'],
                                             statusOffer:
                                                 selectedPost!['statusOffers'],
