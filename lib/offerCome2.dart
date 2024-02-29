@@ -222,10 +222,6 @@ class _offerCome2State extends State<offerCome2> {
                           'รายละเอียด : ' + selectedOffer!['detail1'],
                           style: const TextStyle(fontSize: 19),
                         ),
-                        Text(
-                          'สถานะการยื่น : รอการยืนยัน',
-                          style: const TextStyle(fontSize: 19),
-                        ),
                       ],
                     ),
                   ),
