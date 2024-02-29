@@ -174,7 +174,7 @@ class _GridView2State extends State<GridView2> {
                               ),
                             ),
                             const Divider(),
-                            statusPost == 'ยืนยัน'
+                            statusPost == 'รอการยืนยัน'
                                 ? const Center(
                                     child: Text('สถานะ: กำลังดำเนินการ'))
                                 : Center(child: Text('สถานะ: $statusPost')),
