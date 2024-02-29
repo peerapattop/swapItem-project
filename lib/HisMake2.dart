@@ -288,7 +288,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
   }
 
   Widget confirmBtn() {
-    if (selectedPost!['statusPosts'] == 'รอการยืนยัน') {
+    if (selectedPost!['statusPosts'] == 'รอการยืนยัน'|| selectedPost!['statusPosts'] == 'ยืนยัน' ) {
       return Row(
         children: [
           ElevatedButton.icon(

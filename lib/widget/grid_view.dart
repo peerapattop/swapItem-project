@@ -174,10 +174,15 @@ class _GridView2State extends State<GridView2> {
                               ),
                             ),
                             const Divider(),
-                            statusPost == 'รอการยืนยัน'
+                            statusPost == 'รอการยืนยัน' || statusPost =='ยืนยัน'
                                 ? const Center(
                                     child: Text('สถานะ: กำลังดำเนินการ'))
-                                : Center(child: Text('สถานะ: $statusPost')),
+                                : Center(
+                                    child: Text(
+                                      'สถานะ: $statusPost',
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ),
                             const SizedBox(height: 5),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -225,7 +230,7 @@ class _GridView2State extends State<GridView2> {
                       );
                     },
                   ),
-                  SizedBox(height: 200),
+                  const SizedBox(height: 200),
                 ],
               ),
             );
