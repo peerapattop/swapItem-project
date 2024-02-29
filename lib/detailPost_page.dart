@@ -415,32 +415,35 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                                     ),
                                   )
                                 : ElevatedButton(
-                                    onPressed: () {
-                                      String sendUid = postData['post_uid'];
-                                      String username = postData['username'];
-                                      String imageUser = postData['imageUser'];
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => MakeAnOffer(
-                                            postUid: sendUid,
-                                            username: username,
-                                            imageUser: imageUser,
-                                            uidUserpost: postData['uid'],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.green),
-                                    child: const Text(
-                                      "ยื่นข้อเสนอ",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                              onPressed: () {
+                                String sendUid = postData['post_uid'];
+                                String username = postData['username'];
+                                String imageUser = postData['imageUser'];
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => MakeAnOffer(
+                                      postUid: sendUid,
+                                      username: username,
+                                      imageUser: imageUser,
+                                      uidUserpost: postData['uid'],
                                     ),
                                   ),
+                                );
+                              },
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(Colors.green),
+                                minimumSize: MaterialStateProperty.all(Size(double.infinity, 50)), // กำหนดความสูงของปุ่ม
+                              ),
+                              child: const Text(
+                                "ยื่นข้อเสนอ",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+
                           ),
                           const SizedBox(height: 10),
                         ],
