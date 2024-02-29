@@ -353,7 +353,7 @@ class _HomePageState extends State<HomePage> {
                   borderRadius: BorderRadius.circular(20.0),
                   borderSide: const BorderSide(width: 0.8),
                 ),
-                hintText: "ชื่อสิ่งของ,ประเภท",
+                hintText: "ชื่อสิ่งของ,ประเภท ที่ต้องการ",
               ),
             ),
           ),

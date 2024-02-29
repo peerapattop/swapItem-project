@@ -230,7 +230,7 @@ class _GridView2State extends State<GridView2> {
                       );
                     },
                   ),
-                  SizedBox(height: 200),
+                  const SizedBox(height: 200),
                 ],
               ),
             );
