@@ -152,92 +152,92 @@ class _His_MakeofferState extends State<His_Makeoffer> {
                                           ImageGalleryWidget(
                                             imageUrls: image_post,
                                           ),
-                                          selectedPost != null &&
-                                                  selectedPost![
-                                                          'statusOffers'] ==
-                                                      'รอดำเนินการ'
-                                              ? Row(
-                                                  children: [
-                                                    const Icon(Icons.add_alert,
-                                                        color: Colors.blue),
-                                                    const SizedBox(width: 5),
-                                                    Text(
-                                                      'สถานะ : ${selectedPost!['statusOffers']}',
-                                                      style: const TextStyle(
-                                                          fontSize: 19),
-                                                    ),
-                                                    const SizedBox(width: 5),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return AlertDialog(
-                                                              title: const Row(
-                                                                children: [
-                                                                  Icon(
-                                                                    Icons
-                                                                        .alarm_on_sharp,
-                                                                    color: Colors
-                                                                        .red,
-                                                                    size: 25,
-                                                                  ),
-                                                                  Text(
-                                                                      "แจ้งเตือน"),
-                                                                ],
-                                                              ),
-                                                              content: const Text(
-                                                                  "กรุณาติดต่อผู้โพสต์เพื่อทำการแลกเปลี่ยนสิ่งของ"),
-                                                              actions: <Widget>[
-                                                                TextButton(
-                                                                  onPressed:
-                                                                      () {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop();
-                                                                  },
-                                                                  style: TextButton
-                                                                      .styleFrom(
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .green,
-                                                                  ),
-                                                                  child:
-                                                                      const Text(
-                                                                    "ยืนยัน",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            );
-                                                          },
-                                                        );
-                                                      },
-                                                      child: const Icon(
-                                                        Icons.info,
-                                                        size: 20,
-                                                        color: Colors.purple,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )
-                                              : Row(
-                                                  children: [
-                                                    const Icon(Icons.tag,
-                                                        color: Colors.blue),
-                                                    const SizedBox(width: 5),
-                                                    Text(
-                                                      selectedPost!['statusOffers'] == 'ยืนยัน'
-                                                      ? 'สถานะ : แลกเปลี่ยนสำเร็จ'
-                                                      : 'สถานะ : ${selectedPost!['statusOffers']}',
-                                                      style: const TextStyle(
-                                                          fontSize: 18),
-                                                    )
-                                                  ],
-                                                ),
+                                          // selectedPost != null &&
+                                          //         selectedPost![
+                                          //                 'statusOffers'] ==
+                                          //             'รอดำเนินการ'
+                                          //     ? Row(
+                                          //         children: [
+                                          //           const Icon(Icons.add_alert,
+                                          //               color: Colors.blue),
+                                          //           const SizedBox(width: 5),
+                                          //           Text(
+                                          //             'สถานะ : ${selectedPost!['statusOffers']}',
+                                          //             style: const TextStyle(
+                                          //                 fontSize: 19),
+                                          //           ),
+                                          //           const SizedBox(width: 5),
+                                          //           GestureDetector(
+                                          //             onTap: () {
+                                          //               showDialog(
+                                          //                 context: context,
+                                          //                 builder: (BuildContext
+                                          //                     context) {
+                                          //                   return AlertDialog(
+                                          //                     title: const Row(
+                                          //                       children: [
+                                          //                         Icon(
+                                          //                           Icons
+                                          //                               .alarm_on_sharp,
+                                          //                           color: Colors
+                                          //                               .red,
+                                          //                           size: 25,
+                                          //                         ),
+                                          //                         Text(
+                                          //                             "แจ้งเตือน"),
+                                          //                       ],
+                                          //                     ),
+                                          //                     content: const Text(
+                                          //                         "กรุณาติดต่อผู้โพสต์เพื่อทำการแลกเปลี่ยนสิ่งของ"),
+                                          //                     actions: <Widget>[
+                                          //                       TextButton(
+                                          //                         onPressed:
+                                          //                             () {
+                                          //                           Navigator.of(
+                                          //                                   context)
+                                          //                               .pop();
+                                          //                         },
+                                          //                         style: TextButton
+                                          //                             .styleFrom(
+                                          //                           backgroundColor:
+                                          //                               Colors
+                                          //                                   .green,
+                                          //                         ),
+                                          //                         child:
+                                          //                             const Text(
+                                          //                           "ยืนยัน",
+                                          //                           style: TextStyle(
+                                          //                               color: Colors
+                                          //                                   .white),
+                                          //                         ),
+                                          //                       ),
+                                          //                     ],
+                                          //                   );
+                                          //                 },
+                                          //               );
+                                          //             },
+                                          //             child: const Icon(
+                                          //               Icons.info,
+                                          //               size: 20,
+                                          //               color: Colors.purple,
+                                          //             ),
+                                          //           ),
+                                          //         ],
+                                          //       )
+                                          //     : Row(
+                                          //         children: [
+                                          //           const Icon(Icons.tag,
+                                          //               color: Colors.blue),
+                                          //           const SizedBox(width: 5),
+                                          //           Text(
+                                          //             selectedPost!['statusOffers'] == 'ยืนยัน'
+                                          //             ? 'สถานะ : แลกเปลี่ยนสำเร็จ'
+                                          //             : 'สถานะ : ${selectedPost!['statusOffers']}',
+                                          //             style: const TextStyle(
+                                          //                 fontSize: 18),
+                                          //           )
+                                          //         ],
+                                          //       ),
                                           Row(
                                             children: [
                                               const Icon(
