@@ -86,7 +86,7 @@ class _offerCome2State extends State<offerCome2> {
 
           bool hasPendingPosts = false;
           data.forEach((key, value) {
-            if (value['statusOffers'] == "ยังไม่ถูกเลือก")  {
+            if (value['statusOffers'] == "ยังไม่ถูกเลือก") {
               hasPendingPosts = true;
             }
           });
@@ -283,7 +283,14 @@ class _offerCome2State extends State<offerCome2> {
           }
         } else {
           // Handle case when snapshot has no data
-          return Text('No data available.');
+          return Column(
+            children: [
+              Image.asset('assets/images/wait.png'),
+              const SizedBox(height: 10),
+              const Text('ยังไม่มีข้อเสนอเข้ามา',
+                  style: TextStyle(fontSize: 20)),
+            ],
+          );
         }
       },
     );
@@ -442,7 +449,6 @@ class _offerCome2State extends State<offerCome2> {
   }
 
   Future<void> _performUpdateOffer() async {
-
     try {
       DatabaseReference postRef1 = FirebaseDatabase.instance
           .ref()
@@ -453,7 +459,8 @@ class _offerCome2State extends State<offerCome2> {
           .child('offer')
           .child(selectedOffer?['offer_uid']);
 
-      await postRef1.update({ //post
+      await postRef1.update({
+        //post
         'user_offer_id_confirm': selectedOffer?['offer_uid'],
         'statusPosts': "รอการยืนยัน",
       });
