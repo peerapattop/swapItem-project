@@ -945,7 +945,8 @@ class _HistoryPostState extends State<HistoryPost> {
                 // อัปเดตสถานะของโพสต์เป็น "ยืนยัน"
                 await postRef1.update({
                   'statusPosts': "ปฏิเสธ",
-                  'statusPosts_With_Offer_uid': '$AnsUidOffer',
+                  'answerStatus' : "ล้มเหลว",
+                  'statusPosts_With_Offer_uid': AnsUidOffer,
                 });
               } catch (e) {
                 // จัดการข้อผิดพลาดตามความเหมาะสม
