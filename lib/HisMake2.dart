@@ -523,7 +523,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
           ),
         ),
         const SizedBox(height: 10),
-        selectedPost!['statusPosts'] == 'รอการยืนยัน' && statusOffer == 'รอการยืนยัน' ? confirmBtn() : Container(),
+        widget.statusOffer == 'รอการยืนยัน' ? confirmBtn():  Container()
       ],
     );
   }
@@ -659,20 +659,20 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
                         ),
                       ),
                       child: const Padding(
-                        padding: EdgeInsets.only(
-                            top: 5.0, right: 10.0, left: 10.0),
+                        padding:
+                            EdgeInsets.only(top: 5.0, right: 10.0, left: 10.0),
                         child: Center(
-                          child: Text(
-                            "ข้อเสนอของคุณไม่ถูกเลือก",
-                          )
-                          //     String statusPost = selectedPost!['statusPosts'];
-                          // String statusOffer = widget.statusOffer;
-                        ),
+                            child: Text(
+                          "ข้อเสนอของคุณไม่ถูกเลือก",
+                        )
+                            //     String statusPost = selectedPost!['statusPosts'];
+                            // String statusOffer = widget.statusOffer;
+                            ),
                       ),
                     ),
                   ),
                   const Padding(
-                    padding:  EdgeInsets.all(20.0),
+                    padding: EdgeInsets.all(20.0),
                     child: Text(
                       'ผลการแลกเปลี่ยน',
                       style: TextStyle(
@@ -716,7 +716,10 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
           ),
         ),
         const SizedBox(height: 10),
-        selectedPost!['statusPosts'] == 'รอการยืนยัน' && statusOffer == 'รอการยืนยัน' ? confirmBtn() : Container(),
+        selectedPost!['statusPosts'] == 'รอการยืนยัน' &&
+                statusOffer == 'รอการยืนยัน'
+            ? confirmBtn()
+            : Container(),
       ],
     );
   }
