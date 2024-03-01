@@ -297,6 +297,19 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
               color: Colors.white,
             ),
             onPressed: () async {
+              try {
+                DatabaseReference postRef1 = FirebaseDatabase.instance
+                    .ref()
+                    .child('offer')
+                    .child(widget.offer_uid.toString());
+
+                await postRef1.update({
+                  //post
+                  'statusOffers': "ปฎิเสธ",
+                });
+              } catch (e) {
+                // Handle error if necessary
+              }
               // Add your onPressed logic here
             },
             style: ElevatedButton.styleFrom(

@@ -922,6 +922,19 @@ class _HistoryPostState extends State<HistoryPost> {
               color: Colors.white,
             ),
             onPressed: () async {
+              try {
+                // อัปเดตสถานะของโพสต์เป็น "ยืนยัน"
+                DatabaseReference postRef1 =
+                FirebaseDatabase.instance.ref().child('postitem').child(postUid);
+
+                // อัปเดตสถานะของโพสต์เป็น "ยืนยัน"
+                await postRef1.update({
+                  'statusPosts': "ปฎิเสธ",
+                  'statusPosts_With_Offer_uid': '$AnsUidOffer',
+                });
+              } catch (e) {
+                // จัดการข้อผิดพลาดตามความเหมาะสม
+              }
               // Add your onPressed logic here
             },
             style: ElevatedButton.styleFrom(
