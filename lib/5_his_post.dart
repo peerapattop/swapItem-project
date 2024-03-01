@@ -37,6 +37,7 @@ class _HistoryPostState extends State<HistoryPost> {
   String AnsUidOffer = "";
   String uid = '';
   String postUid = "";
+  bool isFetchDataCalled = false;
 
   @override
   void initState() {
@@ -293,7 +294,7 @@ class _HistoryPostState extends State<HistoryPost> {
                           longitude = double.tryParse(
                               selectedOffer!['longitude'].toString());
                           checkPost = selectedOffer!['answerStatus'] ==
-                              'แลกเปลี่ยนสำเร็จ'
+                              'แลกเปลี่ยนสำเร็จ' || selectedOffer!['answerStatus'] == 'ล้มเหลว' || selectedOffer!['answerStatus'] == 'รอการยืนยัน'
                               ? true
                               : false;
                           return Padding(
@@ -1129,9 +1130,10 @@ class _HistoryPostState extends State<HistoryPost> {
       Ans = "ล้มเหลว"; //
     }
 
-    if (Ans == 'แลกเปลี่ยนสำเร็จ' || Ans == 'ล้มเหลว') {
-      fetchData();
-    }
+   if ((Ans == 'แลกเปลี่ยนสำเร็จ' || Ans == 'ล้มเหลว') && !isFetchDataCalled) {
+     fetchData();
+     isFetchDataCalled = true; // Set the flag to true after calling fetchData()
+   }
     return Ans;
   }
 }
