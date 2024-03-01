@@ -413,7 +413,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
                             padding: const EdgeInsets.only(
                                 top: 5.0, right: 10.0, left: 10.0),
                             child: Center(
-                              child:  selectedPost!['statusPosts'] == 'สามารถแลกเปลี่ยนได้' && widget.statusOffer == "ยังไม่ถูกเลือก" ? Text('กำลังเลือกข้อเสนอ') : Text(selectedPost!['statusPosts']),
+                              child:  selectedPost!['statusPosts'] == 'สามารถยื่นข้อเสนอได้' && widget.statusOffer == "ยังไม่ถูกเลือก" ? Text('กำลังเลือกข้อเสนอ') : Text(selectedPost!['statusPosts']),
                             ),
                           ),
                         ),
