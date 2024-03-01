@@ -606,7 +606,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
                             padding: const EdgeInsets.only(
                                 top: 5.0, right: 10.0, left: 10.0),
                             child: Center(
-                              child: Text('ปฏิเสษ'),
+                              child: Text('ปฏิเสธ'),
                             ),
                           ),
                         ),
@@ -649,7 +649,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0),
                     child: Container(
-                      width: 150,
+                      width: 200,
                       height: 50,
                       decoration: ShapeDecoration(
                         color: Colors.white,
@@ -658,12 +658,12 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
+                      child: const Padding(
+                        padding: EdgeInsets.only(
                             top: 5.0, right: 10.0, left: 10.0),
                         child: Center(
                           child: Text(
-                            "ถูกปฏิเสษ",
+                            "ข้อเสนอของคุณไม่ถูกเลือก",
                           )
                           //     String statusPost = selectedPost!['statusPosts'];
                           // String statusOffer = widget.statusOffer;
@@ -671,8 +671,8 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
+                  const Padding(
+                    padding:  EdgeInsets.all(20.0),
                     child: Text(
                       'ผลการแลกเปลี่ยน',
                       style: TextStyle(
