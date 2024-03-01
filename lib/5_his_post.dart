@@ -432,10 +432,6 @@ class _HistoryPostState extends State<HistoryPost> {
                                                     style: const TextStyle(
                                                         fontSize: 18),
                                                   ),
-                                                  buildtimeShow(
-                                                      context,
-                                                      selectedOffer![
-                                                          'timestamp'])
                                                 ],
                                               ),
                                             ),
@@ -576,7 +572,7 @@ class _HistoryPostState extends State<HistoryPost> {
 
           data.forEach((key, value) {
             username = value['username'];
-            AnsUidOffer = username = value['offer_uid'].toString();
+            AnsUidOffer =  value['offer_uid'].toString();
             statusOffers = value['statusOffers'].toString();
             offerNumber = value['offerNumber'].toString();
             date = value['date'].toString();
@@ -628,7 +624,7 @@ class _HistoryPostState extends State<HistoryPost> {
                         child: Row(
                           children: [
                             Text(
-                              username,
+                              ' $username',
                               style: const TextStyle(
                                   fontSize: 18, color: Colors.purple),
                             ),
