@@ -305,7 +305,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
 
                 await postRef1.update({
                   //post
-                  'statusOffers': "ปฎิเสธ",
+                  'statusOffers': "ปฏิเสธ",
                 });
               } catch (e) {
                 // Handle error if necessary
@@ -317,7 +317,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             ),
             label: const Text(
-              'ปฎิเสธการแลกเปลี่ยน',
+              'ปฏิเสธการแลกเปลี่ยน',
               style: TextStyle(color: Colors.white, fontSize: 16),
             ),
           ),
@@ -426,7 +426,11 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
                             padding: const EdgeInsets.only(
                                 top: 5.0, right: 10.0, left: 10.0),
                             child: Center(
-                              child:  selectedPost!['statusPosts'] == 'สามารถยื่นข้อเสนอได้' && widget.statusOffer == "ยังไม่ถูกเลือก" ? Text('กำลังเลือกข้อเสนอ') : Text(selectedPost!['statusPosts']),
+                              child: selectedPost!['statusPosts'] ==
+                                          'สามารถยื่นข้อเสนอได้' &&
+                                      widget.statusOffer == "ยังไม่ถูกเลือก"
+                                  ? Text('กำลังเลือกข้อเสนอ')
+                                  : Text(selectedPost!['statusPosts']),
                             ),
                           ),
                         ),
@@ -482,9 +486,10 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
                         padding: const EdgeInsets.only(
                             top: 5.0, right: 10.0, left: 10.0),
                         child: Center(
-                          child: buildStatus(
-                              selectedPost!['statusPosts'].toString(),
-                              widget.statusOffer.toString()),
+                          child: Text(
+                            buildStatus(selectedPost!['statusPosts'].toString(),
+                                widget.statusOffer.toString()),
+                          ),
                           //     String statusPost = selectedPost!['statusPosts'];
                           // String statusOffer = widget.statusOffer;
                         ),
@@ -536,7 +541,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
           ),
         ),
         const SizedBox(height: 10),
-        widget.statusOffer == 'รอการยืนยัน' ? confirmBtn():  Container()
+        widget.statusOffer == 'รอการยืนยัน' ? confirmBtn() : Container()
       ],
     );
   }
@@ -789,7 +794,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
     }
   }
 
-  Widget buildStatus(String statusPost, String statusOffer) {
+  String buildStatus(String statusPost, String statusOffer) {
     if (statusPost == "สามารถยื่นข้อเสนอได้" &&
         statusOffer == "ยังไม่ถูกเลือก") {
       Ans = "ยังไม่ถูกเลือก"; //
@@ -814,10 +819,10 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
       Ans = "ล้มเหลว"; //
     }
 
-    if (Ans == 'แลกเปลี่ยนสำเร็จ') {
+    if (Ans == 'แลกเปลี่ยนสำเร็จ' || Ans == 'ล้มเหลว') {
       fetchData();
     }
-    return Text(Ans);
+    return Ans;
   }
 
   String convertDateFormat(String inputDate) {

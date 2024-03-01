@@ -33,7 +33,7 @@ class _HistoryPostState extends State<HistoryPost> {
   List<String> imageOffer = [];
   late String offerConfirm;
   late bool checkPost;
-  String Ans = "";
+  String Ans = "juk";
   String AnsUidOffer = "";
   String uid = '';
   String postUid = "";
@@ -572,7 +572,7 @@ class _HistoryPostState extends State<HistoryPost> {
 
           data.forEach((key, value) {
             username = value['username'];
-            AnsUidOffer =  value['offer_uid'].toString();
+            AnsUidOffer = value['offer_uid'].toString();
             statusOffers = value['statusOffers'].toString();
             offerNumber = value['offerNumber'].toString();
             date = value['date'].toString();
@@ -838,10 +838,10 @@ class _HistoryPostState extends State<HistoryPost> {
                               padding: const EdgeInsets.only(
                                   top: 5.0, right: 10.0, left: 10.0),
                               child: Center(
-                                child: buildStatus(
-                                    selectedOffer!['statusPosts'],
+                                  child: Text(
+                                buildStatus(selectedOffer!['statusPosts'],
                                     statusOffers),
-                              ),
+                              )),
                             ),
                           ),
                         ),
@@ -924,12 +924,14 @@ class _HistoryPostState extends State<HistoryPost> {
             onPressed: () async {
               try {
                 // อัปเดตสถานะของโพสต์เป็น "ยืนยัน"
-                DatabaseReference postRef1 =
-                FirebaseDatabase.instance.ref().child('postitem').child(postUid);
+                DatabaseReference postRef1 = FirebaseDatabase.instance
+                    .ref()
+                    .child('postitem')
+                    .child(postUid);
 
                 // อัปเดตสถานะของโพสต์เป็น "ยืนยัน"
                 await postRef1.update({
-                  'statusPosts': "ปฎิเสธ",
+                  'statusPosts': "ปฏิเสธ",
                   'statusPosts_With_Offer_uid': '$AnsUidOffer',
                 });
               } catch (e) {
@@ -1090,7 +1092,7 @@ class _HistoryPostState extends State<HistoryPost> {
     return formattedDate; // คืนค่าวันที่ที่ถูกแปลง
   }
 
-  Widget buildStatus(String statusPost, String statusOffer) {
+  String buildStatus(String statusPost, String statusOffer) {
     if (statusPost == "รอการยืนยัน" && statusOffer == "รอการยืนยัน") {
       Ans = "รอการยืนยัน"; //
     } else if (statusPost == "ยืนยัน" && statusOffer == "รอการยืนยัน") {
@@ -1107,13 +1109,14 @@ class _HistoryPostState extends State<HistoryPost> {
       Ans = "ล้มเหลว"; //
     } else if (statusPost == "ปฏิเสธ" && statusOffer == "รอการยืนยัน") {
       Ans = "ล้มเหลว"; //
+      print(Ans);
     } else if (statusPost == "รอการยืนยัน" && statusOffer == "ปฏิเสธ") {
       Ans = "ล้มเหลว"; //
     }
 
-    if (Ans == 'แลกเปลี่ยนสำเร็จ') {
+    if (Ans == 'แลกเปลี่ยนสำเร็จ' || Ans == 'ล้มเหลว') {
       fetchData();
     }
-    return Text(Ans);
+    return Ans;
   }
 }
