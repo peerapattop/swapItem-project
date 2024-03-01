@@ -541,10 +541,27 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
           ),
         ),
         const SizedBox(height: 10),
-        widget.statusOffer == 'รอการยืนยัน' ? confirmBtn() : Container()
+        logicHid()
       ],
     );
   }
+
+  Widget logicHid() {
+    if (selectedPost!['statusPosts'] == 'รอการยืนยัน' ||
+        statusOffer == 'รอการยืนยัน') {
+      return confirmBtn();
+    }
+    if (selectedPost!['statusPosts'] == 'ยืนยัน' && statusOffer == 'รอการยืนยัน') {
+      return confirmBtn();
+    }
+    if (selectedPost!['statusPosts'] == 'ยืนยัน' && statusOffer == 'ยืนยัน') {
+      return Container();
+    } else {
+      // Handle other cases, if needed
+      return Container();
+    }
+  }
+
 
   Widget showConfirmBtn2() {
     return Column(
