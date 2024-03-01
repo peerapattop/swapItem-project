@@ -547,17 +547,12 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
   }
 
   Widget logicHid() {
-    if (selectedPost!['statusPosts'] == 'รอการยืนยัน' ||
-        statusOffer == 'รอการยืนยัน') {
+    if (statusOffer == 'รอการยืนยัน') {
       return confirmBtn();
     }
-    if (selectedPost!['statusPosts'] == 'ยืนยัน' && statusOffer == 'รอการยืนยัน') {
-      return confirmBtn();
-    }
-    if (selectedPost!['statusPosts'] == 'ยืนยัน' && statusOffer == 'ยืนยัน') {
+    if (statusOffer == 'ยืนยัน') {
       return Container();
     } else {
-      // Handle other cases, if needed
       return Container();
     }
   }
