@@ -523,7 +523,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
           ),
         ),
         const SizedBox(height: 10),
-        confirmBtn()
+        selectedPost!['statusPosts'] == 'รอการยืนยัน' && statusOffer == 'รอการยืนยัน' ? confirmBtn() : Container(),
       ],
     );
   }
@@ -716,7 +716,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
           ),
         ),
         const SizedBox(height: 10),
-        confirmBtn()
+        selectedPost!['statusPosts'] == 'รอการยืนยัน' && statusOffer == 'รอการยืนยัน' ? confirmBtn() : Container(),
       ],
     );
   }
