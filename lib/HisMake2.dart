@@ -297,19 +297,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
               color: Colors.white,
             ),
             onPressed: () async {
-              try {
-                DatabaseReference postRef1 = FirebaseDatabase.instance
-                    .ref()
-                    .child('offer')
-                    .child(widget.offer_uid.toString());
-
-                await postRef1.update({
-                  //post
-                  'statusOffers': "ปฏิเสธ",
-                });
-              } catch (e) {
-                // Handle error if necessary
-              }
+              Show_Confirmation_Dialog_Status_cancer(context);
               // Add your onPressed logic here
             },
             style: ElevatedButton.styleFrom(
@@ -751,6 +739,54 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
             ? confirmBtn()
             : Container(),
       ],
+    );
+  }
+
+  void Show_Confirmation_Dialog_Status_cancer(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('ยืนยันการตัดสินใจ'),
+          content: const Text(
+              '**คำเตือน** การปฏิเสธจะถือว่าเป็นการ แลกเปลี่ยนล้มเหลวทั้งสองฝ่าย'),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text(
+                'ยกเลิก',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () async {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: const Text(
+                'ยันยัน',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () async {
+                try {
+                  DatabaseReference postRef1 = FirebaseDatabase.instance
+                      .ref()
+                      .child('offer')
+                      .child(widget.offer_uid.toString());
+
+                  await postRef1.update({
+                    //post
+                    'statusOffers': "ปฏิเสธ",
+                  });
+                } catch (e) {
+                  // Handle error if necessary
+                }
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
