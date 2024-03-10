@@ -10,6 +10,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
+import 'package:swapitem/test555.dart';
 
 import 'postSuccess_page.dart';
 
@@ -52,6 +54,7 @@ class _NewPostState extends State<NewPost> {
   double? selectedLongitude;
   List<File> _images = [];
   final picker = ImagePicker();
+
   @override
   void initState() {
     super.initState();
@@ -619,6 +622,7 @@ class _NewPostState extends State<NewPost> {
                     const SizedBox(
                       height: 15,
                     ),
+
                     TextField(
                       controller: brand,
                       decoration: InputDecoration(
@@ -672,53 +676,75 @@ class _NewPostState extends State<NewPost> {
                       height: 15,
                     ),
                     Container(
-                      decoration: BoxDecoration(border: Border.all()),
-                      height: 300,
-                      width: double.infinity,
-                      child: Stack(
-                        children: [
-                          GoogleMap(
-                            myLocationEnabled: true,
-                            onMapCreated: (controller) {
-                              mapController = controller;
-                            },
-                            onTap: (LatLng latLng) {
-                              setState(() {
-                                selectedLatitude = latLng.latitude;
-                                selectedLongitude = latLng.longitude;
-                              });
-                            },
-                            markers: selectedLatitude != null
-                                ? {
-                                    Marker(
-                                      markerId: MarkerId('selected-location'),
-                                      position: LatLng(selectedLatitude!,
-                                          selectedLongitude!),
-                                      infoWindow: InfoWindow(
-                                          title: 'เลือกตำแหน่งที่ต้องการ'),
-                                    ),
-                                  }
-                                : {},
-                            initialCameraPosition: CameraPosition(
-                              target: LatLng(0, 0),
-                              zoom: 2,
-                            ),
-                          ),
-                          if (selectedLatitude != null)
-                            Positioned(
-                              top: 16,
-                              left: 16,
-                              child: Text(
-                                'ตำแหน่งคือ : ${selectedLatitude!}, ${selectedLongitude!}',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
+                        decoration: BoxDecoration(border: Border.all()),
+                        height: 555,
+                        width: double.infinity,
+                        child: OpenStreetMapSearchAndPick(
+                          buttonTextStyle: const TextStyle(
+                              fontSize: 18, fontStyle: FontStyle.normal),
+                          buttonColor: Colors.blue,
+                          buttonText: 'Set Current Location',
+                          onPicked: (pickedData) {
+                            print("kok");
+                            print(pickedData.latLong.latitude);
+                            print(pickedData.latLong.longitude);
+                            print(pickedData.address);
+                            print(pickedData.addressName);
+                            // double? selectedLatitude;
+                            // double? selectedLongitude;
+                            setState(() {
+                              selectedLatitude = pickedData.latLong.latitude;
+                              selectedLongitude = pickedData.latLong.longitude;
+                            });
+                          },
+                        )
+                        // child: Stack(
+                        //   children: [
+                        //     GoogleMap(
+                        //       myLocationEnabled: true,
+                        //       onMapCreated: (controller) {
+                        //         mapController = controller;
+                        //       },
+                        //       onTap: (LatLng latLng) {
+                        //         setState(() {
+                        //           selectedLatitude = latLng.latitude;
+                        //           selectedLongitude = latLng.longitude;
+                        //         });
+                        //       },
+                        //       markers: selectedLatitude != null
+                        //           ? {
+                        //               Marker(
+                        //                 markerId: MarkerId('selected-location'),
+                        //                 position: LatLng(selectedLatitude!,
+                        //                     selectedLongitude!),
+                        //                 infoWindow: InfoWindow(
+                        //                     title: 'เลือกตำแหน่งที่ต้องการ'),
+                        //               ),
+                        //             }
+                        //           : {},
+                        //       initialCameraPosition: CameraPosition(
+                        //         target: LatLng(0, 0),
+                        //         zoom: 2,
+                        //       ),
+                        //     ),
+                        //     if (selectedLatitude != null)
+                        //       Positioned(
+                        //         top: 16,
+                        //         left: 16,
+                        //         child: Text(
+                        //           'ตำแหน่งคือ : ${selectedLatitude!}, ${selectedLongitude!}',
+                        //           style: TextStyle(fontSize: 16),
+                        //         ),
+                        //       ),
+                        //   ],
+                        // ),
+                        ),
                     const SizedBox(
                       height: 10,
                     ),
+                    Text(latitude.toString()),
+                    Text(longitude.toString()),
+
                     Center(child: Image.asset('assets/images/swapIMG.png')),
                     const SizedBox(
                       height: 10,
