@@ -342,83 +342,81 @@ class _HomePageState extends State<HomePage> {
 
   Widget showDistance() {
     return Dialog(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          const SizedBox(height: 30),
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.search),
-              Text(
-                "ค้นหาโพสต์ตามระยะทาง",
-                style: TextStyle(fontSize: 20),
+      child: StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const SizedBox(height: 30),
+              const Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.search),
+                  Text(
+                    "ค้นหาโพสต์ตามระยะทาง",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Expanded(
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.near_me),
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                    ),
+                    label: const Text("ใกล้ฉัน"),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Column(
+                children: [
+                  Text(
+                    'ระยะห่าง: $_distance กิโลเมตร',
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  Slider(
+                    value: _distance,
+                    divisions: 10,
+                    max: 10.0,
+                    onChanged: (double value) {
+                      setState(() {
+                        _distance = value;
+                      });
+                    },
+                    semanticFormatterCallback: (double value) {
+                      return '${value.round()}'; // ให้ label เป็นค่าที่เลือกโดยตรง
+                    },
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const SizedBox(
+                    width: 100,
+                    child: Center(child: Text("ยืนยัน")),
+                  ),
+                ),
               ),
             ],
-          ),
-          // Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.end,
-          //     children: [
-          //       IconButton(
-          //         icon: const Icon(Icons.close),
-          //         onPressed: () {
-          //           Navigator.of(context).pop(); // ปิด Dialog
-          //         },
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Expanded(
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.near_me),
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
-                ),
-                label: const Text("ใกล้ฉัน"),
-              ),
-            ),
-          ),
-          Slider(
-            value: _distance,
-            divisions: 5,
-            max: 100.0,
-            label: _distance.round().toString(),
-            onChanged: (double value) {
-              setState(() {
-                _distance = value;
-              });
-            },
-            onChangeEnd: (double value) {
-              setState(() {
-                _distance = value;
-              });
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
-              ),
-              child: const SizedBox(
-                width: 100,
-                child: Center(child: Text("ยืนยัน")),
-              ),
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
