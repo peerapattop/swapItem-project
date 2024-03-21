@@ -44,7 +44,8 @@ class _GridView2State extends State<GridView2> {
             filteredData = dataMap.values.where((userData) {
               // เช็คว่าสถานะของโพสต์เป็น 'แลกเปลี่ยนสำเร็จ' หรือไม่
               bool isPostSuccess =
-                  userData['answerStatus'] == 'แลกเปลี่ยนสำเร็จ' || userData['answerStatus'] == 'ล้มเหลว';
+                  userData['answerStatus'] == 'แลกเปลี่ยนสำเร็จ' ||
+                      userData['answerStatus'] == 'ล้มเหลว';
               return !isPostSuccess &&
                   (widget.searchString == null ||
                       widget.searchString!.isEmpty ||
@@ -90,7 +91,7 @@ class _GridView2State extends State<GridView2> {
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 3 / 6.5,
+                      childAspectRatio: 3 / 7,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
                     ),
@@ -174,7 +175,8 @@ class _GridView2State extends State<GridView2> {
                               ),
                             ),
                             const Divider(),
-                            statusPost == 'รอการยืนยัน' || statusPost =='ยืนยัน'
+                            statusPost == 'รอการยืนยัน' ||
+                                    statusPost == 'ยืนยัน'
                                 ? const Center(
                                     child: Text('สถานะ: กำลังดำเนินการ'))
                                 : Center(
@@ -183,6 +185,15 @@ class _GridView2State extends State<GridView2> {
                                       style: const TextStyle(fontSize: 12),
                                     ),
                                   ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                SizedBox(width: 5),
+                                Icon(Icons.room_sharp , size: 20),
+                                SizedBox(width: 5),
+                                Center(child: Text('ห่างจากคุณ  1 กิโลเมตร')),
+                              ],
+                            ),
                             const SizedBox(height: 5),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -230,7 +241,7 @@ class _GridView2State extends State<GridView2> {
                       );
                     },
                   ),
-                  const SizedBox(height: 200),
+                  const SizedBox(height: 150),
                 ],
               ),
             );

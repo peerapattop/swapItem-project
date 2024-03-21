@@ -452,7 +452,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: handleSearch,
           ),
           IconButton(
-            icon: const Icon(Icons.map),
+            icon: const Icon(Icons.room_sharp),
             onPressed: () {
               showDialog(
                 context: context,
