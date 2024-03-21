@@ -365,7 +365,10 @@ class _HomePageState extends State<HomePage> {
                 child: Expanded(
                   child: ElevatedButton.icon(
                     icon: const Icon(Icons.near_me),
-                    onPressed: () {},
+                    onPressed: () {
+                      // showPostNearMe();
+                      Navigator.pop(context);
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
@@ -399,6 +402,22 @@ class _HomePageState extends State<HomePage> {
                   ),
 
                 ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Expanded(
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.chevron_right_outlined),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                    ),
+                    label: const Text("รีเซ็ท"),
+                  ),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
