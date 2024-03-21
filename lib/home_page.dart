@@ -378,24 +378,26 @@ class _HomePageState extends State<HomePage> {
               Column(
                 children: [
                   Text(
-                    'ระยะห่าง: $_distance กิโลเมตร',
+                    'ระยะห่างไม่เกิน: $_distance กิโลเมตร',
                     style: const TextStyle(
                       fontSize: 16,
                     ),
                   ),
                   Slider(
                     value: _distance,
-                    divisions: 10,
+                    min: 1.0, // กำหนดค่าต่ำสุดที่เลือกได้
                     max: 10.0,
                     onChanged: (double value) {
                       setState(() {
-                        _distance = value;
+                        _distance = value.roundToDouble(); // ปัดค่าเพื่อให้เป็นทศนิยม
                       });
                     },
+                    divisions: 10,
                     semanticFormatterCallback: (double value) {
                       return '${value.round()}'; // ให้ label เป็นค่าที่เลือกโดยตรง
                     },
                   ),
+
                 ],
               ),
               Padding(
