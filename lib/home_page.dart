@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   late DatabaseReference _userRef;
   String? _searchString;
   TextEditingController searchController = TextEditingController();
-  double _distance = 20;
+  double _distance = 5;
 
   @override
   void initState() {
