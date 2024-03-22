@@ -676,74 +676,32 @@ class _NewPostState extends State<NewPost> {
                       height: 15,
                     ),
                     Container(
-                        decoration: BoxDecoration(border: Border.all()),
-                        height: 555,
-                        width: double.infinity,
-                        child: OpenStreetMapSearchAndPick(
-                          buttonTextStyle: const TextStyle(
-                              fontSize: 18, fontStyle: FontStyle.normal),
-                          buttonColor: Colors.blue,
-                          buttonText: 'Set Current Location',
-                          onPicked: (pickedData) {
-                            print("kok");
-                            print(pickedData.latLong.latitude);
-                            print(pickedData.latLong.longitude);
-                            print(pickedData.address);
-                            print(pickedData.addressName);
-                            // double? selectedLatitude;
-                            // double? selectedLongitude;
-                            setState(() {
-                              selectedLatitude = pickedData.latLong.latitude;
-                              selectedLongitude = pickedData.latLong.longitude;
-                            });
-                          },
-                        )
-                        // child: Stack(
-                        //   children: [
-                        //     GoogleMap(
-                        //       myLocationEnabled: true,
-                        //       onMapCreated: (controller) {
-                        //         mapController = controller;
-                        //       },
-                        //       onTap: (LatLng latLng) {
-                        //         setState(() {
-                        //           selectedLatitude = latLng.latitude;
-                        //           selectedLongitude = latLng.longitude;
-                        //         });
-                        //       },
-                        //       markers: selectedLatitude != null
-                        //           ? {
-                        //               Marker(
-                        //                 markerId: MarkerId('selected-location'),
-                        //                 position: LatLng(selectedLatitude!,
-                        //                     selectedLongitude!),
-                        //                 infoWindow: InfoWindow(
-                        //                     title: 'เลือกตำแหน่งที่ต้องการ'),
-                        //               ),
-                        //             }
-                        //           : {},
-                        //       initialCameraPosition: CameraPosition(
-                        //         target: LatLng(0, 0),
-                        //         zoom: 2,
-                        //       ),
-                        //     ),
-                        //     if (selectedLatitude != null)
-                        //       Positioned(
-                        //         top: 16,
-                        //         left: 16,
-                        //         child: Text(
-                        //           'ตำแหน่งคือ : ${selectedLatitude!}, ${selectedLongitude!}',
-                        //           style: TextStyle(fontSize: 16),
-                        //         ),
-                        //       ),
-                        //   ],
-                        // ),
-                        ),
+                      decoration: BoxDecoration(border: Border.all()),
+                      height: 555,
+                      width: double.infinity,
+                      child: OpenStreetMapSearchAndPick(
+                        buttonTextStyle: const TextStyle(
+                            fontSize: 18, fontStyle: FontStyle.normal),
+                        buttonColor: Colors.blue,
+                        buttonText: 'เลือกจุดนัดการแลกเปลี่ยน',
+                        buttonWidth: 200, // Adjust the width here, for example
+                        onPicked: (pickedData) {
+                          print("kok");
+                          print(pickedData.latLong.latitude);
+                          print(pickedData.latLong.longitude);
+                          print(pickedData.address);
+                          print(pickedData.addressName);
+                          setState(() {
+                            selectedLatitude = pickedData.latLong.latitude;
+                            selectedLongitude = pickedData.latLong.longitude;
+                          });
+                        },
+                      ),
+                    ),
+
                     const SizedBox(
                       height: 10,
                     ),
-                    Text(latitude.toString()),
-                    Text(longitude.toString()),
 
                     Center(child: Image.asset('assets/images/swapIMG.png')),
                     const SizedBox(
@@ -933,7 +891,7 @@ class _NewPostState extends State<NewPost> {
     return formattedDate1[4];
   }
 
-  // Widget exampleUsage2() { กาก
+  // Widget exampleUsage2() {
   //   // สร้าง Timestamp จาก Firebase Firestore
   //   Timestamp firestoreTimestamp = Timestamp.now();
   //   DateTime dateTime = firestoreTimestamp.toDate();

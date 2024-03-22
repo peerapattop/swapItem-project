@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:swapitem/registerVip_page.dart';
 import 'package:swapitem/buildPost_page.dart';
 import 'package:swapitem/test555.dart';
+import 'package:swapitem/widget/GrideGps.dart';
 import 'package:swapitem/widget/grid_view.dart';
 import 'package:swapitem/notification_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,6 +22,8 @@ class _HomePageState extends State<HomePage> {
   String? _searchString;
   TextEditingController searchController = TextEditingController();
   double _distance = 5;
+  bool isFavorite = false;
+  bool gps_default = false;
 
   @override
   void initState() {
@@ -70,65 +73,63 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          actions: <Widget>[
-            IconButton(
-              icon: StreamBuilder<int>(
-                stream: getUnreadNotificationCountStream(),
-                builder: (context, snapshot) {
-                  int notificationCount = snapshot.data ?? 0;
-                  return Stack(
-                    children: <Widget>[
-                      const Icon(
-                        Icons.notifications,
-                        color: Colors.white,
-                      ),
-                      if (notificationCount > 0)
-                        Positioned(
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(1),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            constraints: const BoxConstraints(
-                              minWidth: 12,
-                              minHeight: 12,
-                            ),
-                            child: Text(
-                              notificationCount.toString(),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                    ],
-                  );
+          leading: IconButton(
+            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              setState(() {
+                isFavorite = !isFavorite;
+              });
+            },
+          ),
+          title: Row(
+            children: [
+              Expanded(
+                  child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: TextField(
+                  controller: searchController,
+                  decoration: const InputDecoration(
+                    hintText: 'ค้นหาสินค้า',
+                    border: InputBorder.none,
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _searchString = value;
+                    });
+                  },
+                ),
+              )),
+              IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  setState(() {
+                    searchController.clear();
+                    _searchString = '';
+                  });
                 },
               ),
-              onPressed: () async {
-                await markNotificationsAsRead();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NotificationD(),
-                  ),
-                );
-              },
-            ),
-          ],
-          toolbarHeight: 40,
-          centerTitle: true,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/image 40.png'),
-                fit: BoxFit.fill,
+              IconButton(
+                icon: Icon(Icons.star),
+                color: gps_default == false ? Colors.amberAccent : Colors.black,
+                // Change color based on gps_default state
+                onPressed: () {
+                  setState(() {
+                    gps_default =
+                        false; // Assuming gps_default is a boolean variable
+                  });
+                },
               ),
-            ),
+              IconButton(
+                icon: const Icon(Icons.room_sharp),
+                color: gps_default == true ? Colors.red : Colors.black,
+                onPressed: () {
+                  setState(() {
+                    gps_default = true;
+                  });
+                },
+              )
+            ],
           ),
         ),
         body: SingleChildScrollView(
@@ -157,10 +158,11 @@ class _HomePageState extends State<HomePage> {
 
                 return Column(
                   children: [
-                    buildUserProfileSection(
-                        dataUser, postCount, makeofferCount),
+                    isFavorite == true
+                        ? buildUserProfileSection(
+                            dataUser, postCount, makeofferCount)
+                        : SizedBox(),
                     const Divider(),
-                    searchItem(),
                     showItemSearch(),
                   ],
                 );
@@ -332,9 +334,11 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
         child: SizedBox(
-          height: 600,
+          height: 800,
           width: double.infinity,
-          child: GridView2(searchString: _searchString),
+          child: gps_default == false
+              ? GridView2(searchString: _searchString)
+              : GridGPS(),
         ),
       ),
     );
@@ -392,7 +396,8 @@ class _HomePageState extends State<HomePage> {
                     max: 10.0,
                     onChanged: (double value) {
                       setState(() {
-                        _distance = value.roundToDouble(); // ปัดค่าเพื่อให้เป็นทศนิยม
+                        _distance =
+                            value.roundToDouble(); // ปัดค่าเพื่อให้เป็นทศนิยม
                       });
                     },
                     divisions: 10,
@@ -400,7 +405,6 @@ class _HomePageState extends State<HomePage> {
                       return '${value.round()}'; // ให้ label เป็นค่าที่เลือกโดยตรง
                     },
                   ),
-
                 ],
               ),
               Padding(
@@ -409,6 +413,7 @@ class _HomePageState extends State<HomePage> {
                   child: ElevatedButton.icon(
                     icon: const Icon(Icons.chevron_right_outlined),
                     onPressed: () {
+                      showPostDefault();
                       Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
@@ -423,6 +428,9 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
                   onPressed: () {
+                    setState(() {
+                      gps_default = true;
+                    });
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
@@ -486,5 +494,9 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  Widget showPostDefault() {
+    return const GridView2();
   }
 }
