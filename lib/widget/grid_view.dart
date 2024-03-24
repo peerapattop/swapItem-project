@@ -42,17 +42,6 @@ class _GridView2State extends State<GridView2> {
     }
   }
 
-  double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-    const p = 0.017453292519943295; // Math.PI / 180
-    const R = 6371.0; // รัศมีของโลกในหน่วยกิโลเมตร
-    final c = 2 *
-        R *
-        asin(sqrt(pow(sin((lat2 - lat1) * p / 2), 2) +
-            cos(lat1 * p) *
-                cos(lat2 * p) *
-                pow(sin((lon2 - lon1) * p / 2), 2)));
-    return c;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,8 +139,7 @@ class _GridView2State extends State<GridView2> {
                       double postLat = double.parse(latitude);
                       double postLon = double.parse(longitude);
 
-                      double distance =
-                          calculateDistance(userLat, userLon, postLat, postLon);
+
 
                       List<String> imageUrls =
                           List<String>.from(userData['imageUrls'] ?? []);
@@ -231,18 +219,6 @@ class _GridView2State extends State<GridView2> {
                                     ),
                                   ),
                             const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                SizedBox(width: 5),
-                                Icon(Icons.room_sharp, size: 15),
-                                SizedBox(width: 5),
-                                Center(
-                                    child: Text(
-                                  'ห่างจากคุณ ${distance.toStringAsFixed(2)} กม.',
-                                  style: TextStyle(fontSize: 13.7),
-                                ))
-                              ],
-                            ),
                             const SizedBox(height: 5),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -290,7 +266,7 @@ class _GridView2State extends State<GridView2> {
                       );
                     },
                   ),
-                  const SizedBox(height: 300),
+                  const SizedBox(height: 340),
                 ],
               ),
             );
