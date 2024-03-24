@@ -270,7 +270,7 @@ class _GridGPSState extends State<GridGPS> {
                       );
                     },
                   ),
-                  const SizedBox(height: 300),
+                  const SizedBox(height: 340),
                 ],
               ),
             );
