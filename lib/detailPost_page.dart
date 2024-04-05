@@ -267,46 +267,42 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                               ),
                             ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 2, right: 15, top: 10, bottom: 10),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width -
-                                  17, // Subtract 17 to account for padding and margin
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 214, 214, 212),
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment
-                                    .start, // Align text to the left
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                              "ชื่อสิ่งของ : ${postData['item_name']}",
-                                              style: TextStyle(fontSize: 20)),
-                                          Text("หมวดหมู่ : ${postData['type']}",
-                                              style: TextStyle(fontSize: 20)),
-                                          Text("ยี่ห้อ : ${postData['brand']}",
-                                              style: TextStyle(fontSize: 20)),
-                                          Text("รุ่น : ${postData['model']}",
-                                              style: TextStyle(fontSize: 20)),
-                                          Text(
-                                              "รายละเอียด : ${postData['detail']}",
-                                              style: TextStyle(fontSize: 20)),
-                                        ],
-                                      ),
+                          SizedBox(height: 10),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 214, 214, 212),
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment
+                                  .start, // Align text to the left
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            "ชื่อสิ่งของ : ${postData['item_name']}",
+                                            style: TextStyle(fontSize: 20)),
+                                        Text("หมวดหมู่ : ${postData['type']}",
+                                            style: TextStyle(fontSize: 20)),
+                                        Text("ยี่ห้อ : ${postData['brand']}",
+                                            style: TextStyle(fontSize: 20)),
+                                        Text("รุ่น : ${postData['model']}",
+                                            style: TextStyle(fontSize: 20)),
+                                        Text(
+                                            "รายละเอียด : ${postData['detail']}",
+                                            style: TextStyle(fontSize: 20)),
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -320,55 +316,44 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                             ),
                           ),
                           const SizedBox(height: 10),
-                          Align(
-                            alignment: Alignment.center,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: MediaQuery.of(context).size.width -
-                                      17, // Subtract 17 to account for padding and margin
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 214, 214, 212),
-                                    borderRadius: BorderRadius.circular(12.0),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 214, 214, 212),
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(11.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'สิ่งของที่สนใจจะแลกเปลี่ยน',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.deepPurpleAccent),
                                   ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start, // Align text to the left
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(15.0),
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                  "ชื่อสิ่งของ : ${postData['item_name1']}",
-                                                  style:
-                                                      TextStyle(fontSize: 20)),
-                                              Text(
-                                                  "ยี่ห้อ : ${postData['brand1']}",
-                                                  style:
-                                                      TextStyle(fontSize: 20)),
-                                              Text(
-                                                  "รุ่น : ${postData['model1']}",
-                                                  style:
-                                                      TextStyle(fontSize: 20)),
-                                              Text(
-                                                  "รายละเอียด : ${postData['details1']}",
-                                                  style:
-                                                      TextStyle(fontSize: 20)),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                  Divider(
+                                    color: Colors.black87,
                                   ),
-                                ),
-                              ],
+                                  Text(
+                                    'ชื่อสิ่งของ : ${postData['item_name1']}',
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                  Text(
+                                    'ยี่ห้อ : ${postData['brand1']}',
+                                    style: const TextStyle(fontSize: 18),
+                                  ),
+                                  Text(
+                                    'รุ่น : ${postData['model1']}',
+                                    style: const TextStyle(fontSize: 18),
+                                  ),
+                                  Text(
+                                    'รายละเอียด : ${postData['details1']}',
+                                    style: const TextStyle(fontSize: 18),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           const SizedBox(height: 15),
@@ -415,35 +400,38 @@ class _ShowDetailAllState extends State<ShowDetailAll> {
                                     ),
                                   )
                                 : ElevatedButton(
-                              onPressed: () {
-                                String sendUid = postData['post_uid'];
-                                String username = postData['username'];
-                                String imageUser = postData['imageUser'];
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => MakeAnOffer(
-                                      postUid: sendUid,
-                                      username: username,
-                                      imageUser: imageUser,
-                                      uidUserpost: postData['uid'],
+                                    onPressed: () {
+                                      String sendUid = postData['post_uid'];
+                                      String username = postData['username'];
+                                      String imageUser = postData['imageUser'];
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => MakeAnOffer(
+                                            postUid: sendUid,
+                                            username: username,
+                                            imageUser: imageUser,
+                                            uidUserpost: postData['uid'],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.green),
+                                      minimumSize: MaterialStateProperty.all(
+                                          Size(double.infinity,
+                                              50)), // กำหนดความสูงของปุ่ม
+                                    ),
+                                    child: const Text(
+                                      "ยื่นข้อเสนอ",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
-                                );
-                              },
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(Colors.green),
-                                minimumSize: MaterialStateProperty.all(Size(double.infinity, 50)), // กำหนดความสูงของปุ่ม
-                              ),
-                              child: const Text(
-                                "ยื่นข้อเสนอ",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-
                           ),
                           const SizedBox(height: 10),
                         ],

@@ -406,92 +406,112 @@ class _HistoryPostState extends State<HistoryPost> {
                                           ],
                                         ),
                                         const SizedBox(height: 10),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 2,
-                                              right: 15,
-                                              top: 10,
-                                              bottom: 10),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                  255, 214, 214, 212),
-                                              borderRadius:
-                                                  BorderRadius.circular(12.0),
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(11.0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'ชื่อสิ่งของ : ' +
-                                                        selectedOffer![
-                                                            'item_name'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'หมวดหมู่ : ' +
-                                                        selectedOffer!['type'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'ยี่ห้อ : ' +
-                                                        selectedOffer!['brand'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'รุ่น : ' +
-                                                        selectedOffer!['model'],
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'รายละเอียด : ' +
-                                                        selectedOffer![
-                                                            'detail'],
-                                                    style: const TextStyle(
-                                                        fontSize: 18),
-                                                  ),
-                                                  const SizedBox(height: 10),
-                                                  Center(
-                                                      child: Image.asset(
-                                                    'assets/images/swap.png',
-                                                    width: 20,
-                                                  )),
-                                                  const SizedBox(height: 10),
-                                                  Text(
-                                                    'ชื่อสิ่งของ : ${selectedOffer!['item_name1']}',
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'ยี่ห้อ : ' +
-                                                        selectedOffer![
-                                                            'brand1'],
-                                                    style: const TextStyle(
-                                                        fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'รุ่น : ${selectedOffer!['model1']}',
-                                                    style: const TextStyle(
-                                                        fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    'รายละเอียด : ${selectedOffer!['details1']}',
-                                                    style: const TextStyle(
-                                                        fontSize: 18),
-                                                  ),
-                                                ],
-                                              ),
+                                        Container(
+                                          alignment: Alignment.topLeft,
+                                          decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                255, 214, 214, 212),
+                                            borderRadius:
+                                            BorderRadius.circular(12.0),
+                                          ),
+                                          child: Padding(
+                                            padding:
+                                                const EdgeInsets.all(11.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'ชื่อสิ่งของ : ' +
+                                                      selectedOffer![
+                                                          'item_name'],
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                ),
+                                                Text(
+                                                  'หมวดหมู่ : ' +
+                                                      selectedOffer!['type'],
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                ),
+                                                Text(
+                                                  'ยี่ห้อ : ' +
+                                                      selectedOffer!['brand'],
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                ),
+                                                Text(
+                                                  'รุ่น : ' +
+                                                      selectedOffer!['model'],
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                ),
+                                                Text(
+                                                  'รายละเอียด : ' +
+                                                      selectedOffer![
+                                                          'detail'],
+                                                  style: const TextStyle(
+                                                      fontSize: 18),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
+                                        const SizedBox(height: 10),
+                                        Center(
+                                            child: Image.asset(
+                                              'assets/images/swap.png',
+                                              width: 20,
+                                            )),
+                                        const SizedBox(height: 10),
+                                        Container(
+                                          alignment: Alignment.topLeft,
+                                          decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                255, 214, 214, 212),
+                                            borderRadius:
+                                            BorderRadius.circular(12.0),
+                                          ),
+                                          child: Padding(
+                                            padding:
+                                            const EdgeInsets.all(11.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'สิ่งของที่สนใจจะแลกเปลี่ยน',
+                                                  style:
+                                                  TextStyle(fontSize: 18,color: Colors.deepPurpleAccent),
+                                                ),
+                                                Divider(color: Colors.black87,),
+                                                Text(
+                                                  'ชื่อสิ่งของ : ${selectedOffer!['item_name1']}',
+                                                  style:
+                                                  TextStyle(fontSize: 18),
+                                                ),
+                                                Text(
+                                                  'ยี่ห้อ : ' +
+                                                      selectedOffer![
+                                                      'brand1'],
+                                                  style: const TextStyle(
+                                                      fontSize: 18),
+                                                ),
+                                                Text(
+                                                  'รุ่น : ${selectedOffer!['model1']}',
+                                                  style: const TextStyle(
+                                                      fontSize: 18),
+                                                ),
+                                                Text(
+                                                  'รายละเอียด : ${selectedOffer!['details1']}',
+                                                  style: const TextStyle(
+                                                      fontSize: 18),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
                                         Container(
                                           decoration: BoxDecoration(
                                               border: Border.all()),
