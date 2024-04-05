@@ -154,7 +154,7 @@ class _GridGPSState extends State<GridGPS> {
                                     if (isVip)
                                       Image.asset('assets/images/vip.png'),
                                     Text(
-                                      itemName,
+                                      itemName.length <= 16 ? itemName : itemName.substring(0, 16) + '...',
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
