@@ -28,6 +28,7 @@ class _offerCome2State extends State<offerCome2> {
   int? mySlideindex;
   List<String> image_post = [];
   late String statusOffer = 'รอการยืนยัน';
+
   @override
   void initState() {
     super.initState();
@@ -463,6 +464,7 @@ class _offerCome2State extends State<offerCome2> {
         //post
         'user_offer_id_confirm': selectedOffer?['offer_uid'],
         'statusPosts': "รอการยืนยัน",
+        'counterDelete': 'ไม่สามารถลบได้',
       });
       await offerRef.update({
         'statusOffers': "รอการยืนยัน",

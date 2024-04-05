@@ -338,7 +338,9 @@ class _HistoryPostState extends State<HistoryPost> {
                                       'แลกเปลี่ยนสำเร็จ' ||
                                   selectedOffer!['answerStatus'] == 'ล้มเหลว' ||
                                   selectedOffer!['answerStatus'] ==
-                                      'รอการยืนยัน'
+                                      'รอการยืนยัน' ||
+                                  selectedOffer!['counterDelete'] ==
+                                      'ไม่สามารถลบได้'
                               ? true
                               : false;
                           return Padding(
@@ -412,11 +414,10 @@ class _HistoryPostState extends State<HistoryPost> {
                                             color: const Color.fromARGB(
                                                 255, 214, 214, 212),
                                             borderRadius:
-                                            BorderRadius.circular(12.0),
+                                                BorderRadius.circular(12.0),
                                           ),
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.all(11.0),
+                                            padding: const EdgeInsets.all(11.0),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -448,8 +449,7 @@ class _HistoryPostState extends State<HistoryPost> {
                                                 ),
                                                 Text(
                                                   'รายละเอียด : ' +
-                                                      selectedOffer![
-                                                          'detail'],
+                                                      selectedOffer!['detail'],
                                                   style: const TextStyle(
                                                       fontSize: 18),
                                                 ),
@@ -460,9 +460,9 @@ class _HistoryPostState extends State<HistoryPost> {
                                         const SizedBox(height: 10),
                                         Center(
                                             child: Image.asset(
-                                              'assets/images/swap.png',
-                                              width: 20,
-                                            )),
+                                          'assets/images/swap.png',
+                                          width: 20,
+                                        )),
                                         const SizedBox(height: 10),
                                         Container(
                                           alignment: Alignment.topLeft,
@@ -470,30 +470,32 @@ class _HistoryPostState extends State<HistoryPost> {
                                             color: const Color.fromARGB(
                                                 255, 214, 214, 212),
                                             borderRadius:
-                                            BorderRadius.circular(12.0),
+                                                BorderRadius.circular(12.0),
                                           ),
                                           child: Padding(
-                                            padding:
-                                            const EdgeInsets.all(11.0),
+                                            padding: const EdgeInsets.all(11.0),
                                             child: Column(
                                               crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   'สิ่งของที่สนใจจะแลกเปลี่ยน',
-                                                  style:
-                                                  TextStyle(fontSize: 18,color: Colors.deepPurpleAccent),
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      color: Colors
+                                                          .deepPurpleAccent),
                                                 ),
-                                                Divider(color: Colors.black87,),
+                                                Divider(
+                                                  color: Colors.black87,
+                                                ),
                                                 Text(
                                                   'ชื่อสิ่งของ : ${selectedOffer!['item_name1']}',
                                                   style:
-                                                  TextStyle(fontSize: 18),
+                                                      TextStyle(fontSize: 18),
                                                 ),
                                                 Text(
                                                   'ยี่ห้อ : ' +
-                                                      selectedOffer![
-                                                      'brand1'],
+                                                      selectedOffer!['brand1'],
                                                   style: const TextStyle(
                                                       fontSize: 18),
                                                 ),
@@ -965,7 +967,9 @@ class _HistoryPostState extends State<HistoryPost> {
                 ),
               ),
               SizedBox(height: 10),
-              statusOffers == 'รอการยืนยัน' || statusOffers == 'ยืนยัน'  ? confirmBtn() : Container(),
+              statusOffers == 'รอการยืนยัน' || statusOffers == 'ยืนยัน'
+                  ? confirmBtn()
+                  : Container(),
               ...offerWidgets, // Spread the list of offerWidgets here
             ],
           );
@@ -988,56 +992,52 @@ class _HistoryPostState extends State<HistoryPost> {
   }
 
   Widget confirmBtn() {
-
-      if (selectedOffer!['statusPosts'] == 'รอการยืนยัน') {
-
-        return Row(
-          children: [
-            ElevatedButton.icon(
-              icon: const Icon(
-                Icons.close,
-                color: Colors.white,
-              ),
-              onPressed: () async {
-                Show_Confirmation_Dialog_Status_cancel(context);
-                // Add your onPressed logic here
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              ),
-              label: const Text(
-                'ปฎิเสธการแลกเปลี่ยน',
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
+    if (selectedOffer!['statusPosts'] == 'รอการยืนยัน') {
+      return Row(
+        children: [
+          ElevatedButton.icon(
+            icon: const Icon(
+              Icons.close,
+              color: Colors.white,
             ),
-            const SizedBox(width: 10),
-            ElevatedButton.icon(
-              icon: const Icon(
-                Icons.check,
-                color: Colors.white,
-              ),
-              onPressed: () async {
-                Show_Confirmation_Dialog_Status(
-                    context, selectedOffer!['post_uid']);
-                // Add your onPressed logic here
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-              ),
-              label: const Text(
-                'ยืนยันการแลกเปลี่ยน',
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
+            onPressed: () async {
+              Show_Confirmation_Dialog_Status_cancel(context);
+              // Add your onPressed logic here
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             ),
-          ],
-        );
-      }else{
-
-        return SizedBox.shrink();
-      }
-
+            label: const Text(
+              'ปฎิเสธการแลกเปลี่ยน',
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+          const SizedBox(width: 10),
+          ElevatedButton.icon(
+            icon: const Icon(
+              Icons.check,
+              color: Colors.white,
+            ),
+            onPressed: () async {
+              Show_Confirmation_Dialog_Status(
+                  context, selectedOffer!['post_uid']);
+              // Add your onPressed logic here
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+            ),
+            label: const Text(
+              'ยืนยันการแลกเปลี่ยน',
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return SizedBox.shrink();
+    }
   }
 
   Future<void> _performUpdateOffer() async {
