@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   String? _searchString;
   TextEditingController searchController = TextEditingController();
   double _distance = 5;
-  bool isFavorite = false;
+  bool isFavorite = true;
   bool gps_default = false;
 
   @override

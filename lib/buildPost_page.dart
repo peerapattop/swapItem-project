@@ -711,7 +711,7 @@ class _NewPostState extends State<NewPost> {
                       controller: item_name1,
                       decoration: InputDecoration(
                           label: Text(
-                            "ชื่อสิ่งของ",
+                            "ใส่ชื่อสิ่งของที่สนใจจะแลก",
                             style: TextStyle(fontSize: 20),
                           ),
                           border: OutlineInputBorder(),
