@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -5,12 +6,12 @@ class ProfileScreen extends StatefulWidget {
   final String username;
   final String id;
   final String imageUser;
-  final String creditPostSuccess;
-  final String creditOfferSuccess;
-  final String totalOffer;
-  final String totalPost;
+  late final String creditPostSuccess;
+  late final String creditOfferSuccess;
+  late final String totalOffer;
+  late final String totalPost;
 
-  const ProfileScreen({
+  ProfileScreen({
     Key? key,
     required this.username,
     required this.id,
@@ -26,7 +27,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  Map postData = {};
+
   @override
+  void initState() {
+    fetchUserData();
+  }
+
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -159,6 +166,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  void fetchUserData() {
+    FirebaseDatabase.instance
+        .ref('users/${widget.id}')
+        .once()
+        .then((databaseEvent) {
+      if (databaseEvent.snapshot.value != null) {
+        Map<String, dynamic> userData =
+            Map<String, dynamic>.from(databaseEvent.snapshot.value as Map);
+        String id = userData['id'];
+        String creditPostSuccess = userData['creditPostSuccess'].toString();
+        String creditOfferSuccess = userData['creditOfferSuccess'].toString();
+        String totalOffer = userData['totalOffer'].toString();
+        String totalPost = userData['totalPost'].toString();
+        widget.creditPostSuccess = creditPostSuccess;
+        widget.creditOfferSuccess = creditOfferSuccess;
+        widget.totalOffer = totalOffer;
+        widget.totalPost = totalPost;
+      } else {
+        print('ไม่พบข้อมูลผู้ใช้');
+      }
+    }).catchError((error) {
+      print('เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้: $error');
+    });
+  }
+
   Widget slideBar(int totalPost, int creditPostSuccess) {
     double percentage = creditPostSuccess / totalPost;
     double containerWidth = 300;
@@ -183,7 +215,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           Center(
             child: Text(
-              '${(percentage * 100)}%',
+              '${(percentage * 100).toStringAsFixed(2)}%', // แก้ไขตรงนี้
               style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,

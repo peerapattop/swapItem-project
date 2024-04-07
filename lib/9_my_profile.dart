@@ -41,6 +41,7 @@ class _ProfileState extends State<Profile> {
   int? totalPost;
 
   bool isTextFieldEnabled = false;
+
   @override
   void initState() {
     super.initState();
@@ -815,6 +816,9 @@ class _ProfileState extends State<Profile> {
 
   Widget slideBar(int totalPost, int creditPostSuccess) {
     double percentage = creditPostSuccess / totalPost;
+    if (percentage > 1) {
+      percentage = 1; // กำหนดให้เป็น 1 ถ้ามากกว่า 1
+    }
     double containerWidth = 300;
 
     return Container(
@@ -837,7 +841,7 @@ class _ProfileState extends State<Profile> {
           ),
           Center(
             child: Text(
-              '${(percentage * 100)}%',
+              '${(percentage * 100).toStringAsFixed(2)}%', // แก้ไขตรงนี้
               style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
@@ -848,6 +852,7 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
+
 
   Widget buttonShowCredit() {
     return ElevatedButton(
