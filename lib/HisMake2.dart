@@ -46,27 +46,27 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
   // Method to load offers based on post UID
   void _loadOffers() {
     _postRef.orderByChild('post_uid').equalTo(widget.postUid).onValue.listen(
-            (event) {
-          if (event.snapshot.value != null) {
-            Map<dynamic, dynamic> data =
+        (event) {
+      if (event.snapshot.value != null) {
+        Map<dynamic, dynamic> data =
             Map<dynamic, dynamic>.from(event.snapshot.value as Map);
 
-            data.forEach((key, value) {
-              if (true) {
-                postsList.add(value);
-              }
-            });
-
-            // Sort postsList by 'timestamp' in descending order
-            postsList.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
-
-            if (postsList.isNotEmpty) {
-              setState(() {
-                selectedPost = postsList.reversed.toList()[0];
-              });
-            }
+        data.forEach((key, value) {
+          if (true) {
+            postsList.add(value);
           }
-        }, onError: (error) {
+        });
+
+        // Sort postsList by 'timestamp' in descending order
+        postsList.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
+
+        if (postsList.isNotEmpty) {
+          setState(() {
+            selectedPost = postsList.reversed.toList()[0];
+          });
+        }
+      }
+    }, onError: (error) {
       print("Error fetching data: $error");
     });
   }
@@ -88,7 +88,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
     FirebaseDatabase.instance.ref('users/$uid').once().then((databaseEvent) {
       if (databaseEvent.snapshot.value != null) {
         Map<String, dynamic> userData =
-        Map<String, dynamic>.from(databaseEvent.snapshot.value as Map);
+            Map<String, dynamic>.from(databaseEvent.snapshot.value as Map);
         String id = userData['id'] ?? '';
         String imageUser = userData['image_user'];
         String username = userData['username'];
@@ -130,7 +130,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
           );
         } else if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
           Map<dynamic, dynamic> data =
-          Map<dynamic, dynamic>.from(snapshot.data!.snapshot.value as Map);
+              Map<dynamic, dynamic>.from(snapshot.data!.snapshot.value as Map);
           image_post = List<String>.from(selectedPost!['imageUrls']);
           print(selectedPost!['statusOffers']);
           return Column(
@@ -245,9 +245,9 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
                         const SizedBox(height: 10),
                         Center(
                             child: Image.asset(
-                              'assets/images/swap.png',
-                              width: 20,
-                            )),
+                          'assets/images/swap.png',
+                          width: 20,
+                        )),
                         const SizedBox(height: 10),
                         Text(
                           'ชื่อสิ่งของ : ${selectedPost!['item_name1']}',
@@ -271,7 +271,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
                 ),
               ),
               statusOffer == 'ยังไม่ถูกเลือก' &&
-                  selectedPost!['statusPosts'].toString() == 'รอการยืนยัน'
+                      selectedPost!['statusPosts'].toString() == 'รอการยืนยัน'
                   ? showConfirmBtn2()
                   : showConfirmBtn(),
               SizedBox(height: 10),
@@ -289,48 +289,78 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
   Widget confirmBtn() {
     if (selectedPost!['statusPosts'] == 'รอการยืนยัน' ||
         selectedPost!['statusPosts'] == 'ยืนยัน') {
-      return Row(
-        children: [
-          ElevatedButton.icon(
-            icon: const Icon(
-              Icons.close,
-              color: Colors.white,
+      return Container(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                  onPressed: () async {
+                    Show_Confirmation_Dialog_Status_cancer(context);
+                    // Add your onPressed logic here
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                  ),
+                  label: const Text(
+                    'ปฏิเสธการแลกเปลี่ยน',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  ),
+                  onPressed: () async {
+                    Show_Confirmation_Dialog_Status(
+                      context,
+                    );
+                    // Add your onPressed logic here
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                  ),
+                  label: const Text(
+                    'ยืนยันการแลกเปลี่ยน',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ],
             ),
-            onPressed: () async {
-              Show_Confirmation_Dialog_Status_cancer(context);
-              // Add your onPressed logic here
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            ),
-            label: const Text(
-              'ปฏิเสธการแลกเปลี่ยน',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-          ),
-          const SizedBox(width: 10),
-          ElevatedButton.icon(
-            icon: const Icon(
-              Icons.check,
-              color: Colors.white,
-            ),
-            onPressed: () async {
-              Show_Confirmation_Dialog_Status(
-                context,
-              );
-              // Add your onPressed logic here
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-            ),
-            label: const Text(
-              'ยืนยันการแลกเปลี่ยน',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-          ),
-        ],
+            SizedBox(height: 10),
+            Align(
+              alignment: Alignment.center,
+              child: ElevatedButton.icon(
+                icon: const Icon(
+                  Icons.warning,
+                  color: Colors.white,
+                ),
+                onPressed: () async {
+                  // Add your onPressed logic here
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.amber,
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                ),
+                label: Text(
+                  'อย่ากดยืนยัน หรือปฏิเสธจนกว่าจะได้เห็นสิ่งของ',
+                  style: TextStyle(color: Colors.black, fontSize: 16),
+                ),
+              ),
+            )
+
+          ],
+        ),
       );
     }
     return SizedBox.shrink();
@@ -386,7 +416,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
                       Expanded(
                         child: Padding(
                           padding:
-                          const EdgeInsets.only(left: 21.0, bottom: 10.0),
+                              const EdgeInsets.only(left: 21.0, bottom: 10.0),
                           child: Text(
                             'ผู้ยื่นข้อเสนอ',
                             style: TextStyle(fontSize: 18),
@@ -415,8 +445,8 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
                                 top: 5.0, right: 10.0, left: 10.0),
                             child: Center(
                               child: selectedPost!['statusPosts'] ==
-                                  'สามารถยื่นข้อเสนอได้' &&
-                                  widget.statusOffer == "ยังไม่ถูกเลือก"
+                                          'สามารถยื่นข้อเสนอได้' &&
+                                      widget.statusOffer == "ยังไม่ถูกเลือก"
                                   ? Text('กำลังเลือกข้อเสนอ')
                                   : Text(selectedPost!['statusPosts']),
                             ),
@@ -545,7 +575,6 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
     }
   }
 
-
   Widget showConfirmBtn2() {
     return Column(
       children: [
@@ -596,7 +625,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
                       Expanded(
                         child: Padding(
                           padding:
-                          const EdgeInsets.only(left: 21.0, bottom: 10.0),
+                              const EdgeInsets.only(left: 21.0, bottom: 10.0),
                           child: Text(
                             'ผู้ยื่นข้อเสนอ',
                             style: TextStyle(fontSize: 18),
@@ -678,14 +707,14 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
                       ),
                       child: const Padding(
                         padding:
-                        EdgeInsets.only(top: 5.0, right: 10.0, left: 10.0),
+                            EdgeInsets.only(top: 5.0, right: 10.0, left: 10.0),
                         child: Center(
                             child: Text(
-                              "ข้อเสนอของคุณไม่ถูกเลือก",
-                            )
-                          //     String statusPost = selectedPost!['statusPosts'];
-                          // String statusOffer = widget.statusOffer;
-                        ),
+                          "ข้อเสนอของคุณไม่ถูกเลือก",
+                        )
+                            //     String statusPost = selectedPost!['statusPosts'];
+                            // String statusOffer = widget.statusOffer;
+                            ),
                       ),
                     ),
                   ),
@@ -735,7 +764,7 @@ class _His_MakeOffer_2State extends State<His_MakeOffer_2> {
         ),
         const SizedBox(height: 10),
         selectedPost!['statusPosts'] == 'รอการยืนยัน' &&
-            statusOffer == 'รอการยืนยัน'
+                statusOffer == 'รอการยืนยัน'
             ? confirmBtn()
             : Container(),
       ],

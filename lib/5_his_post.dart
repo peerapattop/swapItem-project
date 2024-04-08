@@ -990,55 +990,86 @@ class _HistoryPostState extends State<HistoryPost> {
       },
     );
   }
-
   Widget confirmBtn() {
     if (selectedOffer!['statusPosts'] == 'รอการยืนยัน') {
-      return Row(
-        children: [
-          ElevatedButton.icon(
-            icon: const Icon(
-              Icons.close,
-              color: Colors.white,
+      return Container(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                  onPressed: () async {
+                    Show_Confirmation_Dialog_Status(
+                        context, selectedOffer!['post_uid']);
+                    // Add your onPressed logic here
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                  ),
+                  label: const Text(
+                    'ปฏิเสธการแลกเปลี่ยน',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  ),
+                  onPressed: () async {
+                    Show_Confirmation_Dialog_Status(
+                        context, selectedOffer!['post_uid']);
+                    // Add your onPressed logic here
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                  ),
+                  label: const Text(
+                    'ยืนยันการแลกเปลี่ยน',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ],
             ),
-            onPressed: () async {
-              Show_Confirmation_Dialog_Status_cancel(context);
-              // Add your onPressed logic here
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            ),
-            label: const Text(
-              'ปฎิเสธการแลกเปลี่ยน',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-          ),
-          const SizedBox(width: 10),
-          ElevatedButton.icon(
-            icon: const Icon(
-              Icons.check,
-              color: Colors.white,
-            ),
-            onPressed: () async {
-              Show_Confirmation_Dialog_Status(
-                  context, selectedOffer!['post_uid']);
-              // Add your onPressed logic here
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-            ),
-            label: const Text(
-              'ยืนยันการแลกเปลี่ยน',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-          ),
-        ],
+            SizedBox(height: 10),
+            Align(
+              alignment: Alignment.center,
+              child: ElevatedButton.icon(
+                icon: const Icon(
+                  Icons.warning,
+                  color: Colors.white,
+                ),
+                onPressed: () async {
+                  // Add your onPressed logic here
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.amber,
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                ),
+                label: Text(
+                  'อย่ากดยืนยัน หรือปฏิเสธจนกว่าจะได้เห็นสิ่งของ',
+                  style: TextStyle(color: Colors.black, fontSize: 16),
+                ),
+              ),
+            )
+
+          ],
+        ),
       );
     } else {
       return SizedBox.shrink();
     }
   }
+
 
   Future<void> _performUpdateOffer() async {
     try {
