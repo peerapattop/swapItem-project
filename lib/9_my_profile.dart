@@ -305,7 +305,7 @@ class _ProfileState extends State<Profile> {
                                       children: [
                                         const Text(
                                           'สถานะ : ',
-                                          style: TextStyle(fontSize: 21),
+                                          style: TextStyle(fontSize: 20),
                                         ),
                                         if (statusUser == 'ผู้ใช้พรีเมี่ยม')
                                           Image.asset(
@@ -331,7 +331,7 @@ class _ProfileState extends State<Profile> {
                                               Text(
                                                 ' $endTime น.',
                                                 style: const TextStyle(
-                                                    fontSize: 15),
+                                                    fontSize: 14),
                                               )
                                             ],
                                           )
