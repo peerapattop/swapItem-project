@@ -202,31 +202,34 @@ class _offerCome2State extends State<offerCome2> {
                       borderRadius: BorderRadius.circular(19),
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(11.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'ชื่อสิ่งของ : ' + selectedOffer!['nameitem1'],
-                          style: const TextStyle(fontSize: 19),
-                        ),
-                        Text(
-                          'ยี่ห้อ : ' + selectedOffer!['brand1'],
-                          style: const TextStyle(fontSize: 19),
-                        ),
-                        Text(
-                          'รุ่น : ' + selectedOffer!['model1'],
-                          style: const TextStyle(fontSize: 19),
-                        ),
-                        Text(
-                          'รายละเอียด : ' + selectedOffer!['detail1'],
-                          style: const TextStyle(fontSize: 19),
-                        ),
-                      ],
+                  child: SingleChildScrollView( // Wrap with SingleChildScrollView
+                    child: Padding(
+                      padding: const EdgeInsets.all(11.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'ชื่อสิ่งของ : ' + selectedOffer!['nameitem1'],
+                            style: const TextStyle(fontSize: 19),
+                          ),
+                          Text(
+                            'ยี่ห้อ : ' + selectedOffer!['brand1'],
+                            style: const TextStyle(fontSize: 19),
+                          ),
+                          Text(
+                            'รุ่น : ' + selectedOffer!['model1'],
+                            style: const TextStyle(fontSize: 19),
+                          ),
+                          Text(
+                            'รายละเอียด : ' + selectedOffer!['detail1'],
+                            style: const TextStyle(fontSize: 19),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
+SizedBox(height: 15,),
                 Row(
                   children: [
                     const SizedBox(width: 7),
