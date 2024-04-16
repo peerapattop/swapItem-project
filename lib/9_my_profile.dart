@@ -606,7 +606,7 @@ class _ProfileState extends State<Profile> {
                                 ),
                                 const SizedBox(width: 10),
                                 const Text(
-                                  'peerapatza401@gmail.com',
+                                  'swapitem@gmail.com',
                                   style: TextStyle(fontSize: 17),
                                 ),
                                 const SizedBox(width: 10),
