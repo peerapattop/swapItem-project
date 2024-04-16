@@ -228,6 +228,20 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  // void checkAndChangeStatus(Map<String, dynamic> userData) {
+  //   // ดึงเวลาปัจจุบัน
+  //   DateTime currentTime = DateTime.now();
+  //
+  //   // ดึงเวลาสิ้นสุดที่กำหนด
+  //   DateTime endTime = DateTime.parse(userData['endTime']);
+  //
+  //   // เปรียบเทียบเวลาปัจจุบันกับเวลาสิ้นสุด
+  //   if (currentTime.isAfter(endTime) || currentTime.isAtSameMomentAs(endTime)) {
+  //     // เปลี่ยนสถานะเป็น "ผู้ใช้ทั่วไป"
+  //     userData['status'] = 'ผู้ใช้ทั่วไป';
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -287,6 +301,8 @@ class _ProfileState extends State<Profile> {
                       totalPost = dataUser['totalPost'];
                       bool isPremiumUser =
                           (statusUser == 'ผู้ใช้พรีเมี่ยม') ? true : false;
+
+                      // checkAndChangeStatus(dataUser);
                       return Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
@@ -852,7 +868,6 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-
 
   Widget buttonShowCredit() {
     return ElevatedButton(
