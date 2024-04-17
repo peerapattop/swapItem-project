@@ -6,7 +6,6 @@ import 'dart:math' show asin, cos, pow, sin, sqrt;
 import 'package:geolocator/geolocator.dart';
 
 class GridGPS extends StatefulWidget {
-
   const GridGPS({Key? key}) : super(key: key);
 
   @override
@@ -80,6 +79,13 @@ class _GridGPSState extends State<GridGPS> {
           if (dataMap != null) {
             List<dynamic> filteredData = dataMap.values.toList();
 
+            filteredData = dataMap.values.where((userData) {
+              // Check if the post status is neither 'แลกเปลี่ยนสำเร็จ' nor 'ล้มเหลว'
+              bool isPostSuccess =
+                  userData['answerStatus'] != 'แลกเปลี่ยนสำเร็จ' &&
+                      userData['answerStatus'] != 'ล้มเหลว';
+              return isPostSuccess;
+            }).toList();
 
 
             filteredData.sort((a, b) {
@@ -108,7 +114,7 @@ class _GridGPSState extends State<GridGPS> {
                     physics: const NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.all(10),
                     gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio: 3 / 7,
                       crossAxisSpacing: 10,
@@ -131,10 +137,10 @@ class _GridGPSState extends State<GridGPS> {
                       double postLon = double.parse(longitude);
 
                       double distance =
-                      calculateDistance(userLat, userLon, postLat, postLon);
+                          calculateDistance(userLat, userLon, postLat, postLon);
 
                       List<String> imageUrls =
-                      List<String>.from(userData['imageUrls'] ?? []);
+                          List<String>.from(userData['imageUrls'] ?? []);
                       return Card(
                         clipBehavior: Clip.antiAlias,
                         shape: RoundedRectangleBorder(
@@ -154,7 +160,9 @@ class _GridGPSState extends State<GridGPS> {
                                     if (isVip)
                                       Image.asset('assets/images/vip.png'),
                                     Text(
-                                      itemName.length <= 16 ? itemName : itemName.substring(0, 16) + '...',
+                                      itemName.length <= 16
+                                          ? itemName
+                                          : itemName.substring(0, 16) + '...',
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -201,15 +209,15 @@ class _GridGPSState extends State<GridGPS> {
                             ),
                             const Divider(),
                             statusPost == 'รอการยืนยัน' ||
-                                statusPost == 'ยืนยัน'
+                                    statusPost == 'ยืนยัน'
                                 ? const Center(
-                                child: Text('สถานะ: กำลังดำเนินการ'))
+                                    child: Text('สถานะ: กำลังดำเนินการ'))
                                 : Center(
-                              child: Text(
-                                'สถานะ: $statusPost',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ),
+                                    child: Text(
+                                      'สถานะ: $statusPost',
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ),
                             const SizedBox(height: 10),
                             Row(
                               children: [
@@ -218,9 +226,9 @@ class _GridGPSState extends State<GridGPS> {
                                 SizedBox(width: 5),
                                 Center(
                                     child: Text(
-                                      'ห่างจากคุณ ${distance.toStringAsFixed(2)} กม.',
-                                      style: TextStyle(fontSize: 13.7),
-                                    ))
+                                  'ห่างจากคุณ ${distance.toStringAsFixed(2)} กม.',
+                                  style: TextStyle(fontSize: 13.7),
+                                ))
                               ],
                             ),
                             const SizedBox(height: 5),
@@ -228,42 +236,42 @@ class _GridGPSState extends State<GridGPS> {
                               padding: const EdgeInsets.all(8.0),
                               child: user?.uid != userUid
                                   ? ElevatedButton(
-                                onPressed: () {
-                                  Future.delayed(
-                                      const Duration(seconds: 1), () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ShowDetailAll(
-                                              postUid: postUid,
-                                              longti: longitude,
-                                              lati: latitude,
-                                              imageUser: imageUser,
-                                              statusPost: statusPost,
+                                      onPressed: () {
+                                        Future.delayed(
+                                            const Duration(seconds: 1), () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ShowDetailAll(
+                                                postUid: postUid,
+                                                longti: longitude,
+                                                lati: latitude,
+                                                imageUser: imageUser,
+                                                statusPost: statusPost,
+                                              ),
                                             ),
+                                          );
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            Theme.of(context).primaryColor,
+                                        foregroundColor: Colors.white,
                                       ),
-                                    );
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                  Theme.of(context).primaryColor,
-                                  foregroundColor: Colors.white,
-                                ),
-                                child: const Center(
-                                    child: Text('รายละเอียด')),
-                              )
+                                      child: const Center(
+                                          child: Text('รายละเอียด')),
+                                    )
                                   : const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Center(
-                                  child: Text(
-                                    'โพสต์ของฉัน',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Center(
+                                        child: Text(
+                                          'โพสต์ของฉัน',
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
                             ),
                           ],
                         ),
