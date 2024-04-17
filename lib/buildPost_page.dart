@@ -1,19 +1,19 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+import 'postSuccess_page.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+import 'package:swapitem/test555.dart';
 import 'package:location/location.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
-import 'package:swapitem/test555.dart';
 
-import 'postSuccess_page.dart';
 
 List<String> category = <String>[
   'เสื้อผ้า',
@@ -143,7 +143,7 @@ class _NewPostState extends State<NewPost> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            return AlertDialog(
+            return const AlertDialog(
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -179,21 +179,21 @@ class _NewPostState extends State<NewPost> {
           String username = datamap['username'];
           String email = datamap['email'];
           String imageUser = datamap['image_user'];
-          String status_user = datamap['status_user'];
+          String statusUser = datamap['status_user'];
           DatabaseReference itemRef =
               FirebaseDatabase.instance.ref().child('postitem').push();
           List<String> imageUrls = await uploadImages(images);
           String postNumber = generateRandomPostNumber();
-          updateTotalPost();
-          // Generate uid for the post
+          updateTotalPost(); //สร้าง uid สำหรับ post
           String? postUid = itemRef.key;
           String time =
-              "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
+              "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().
+              padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
           String date =
-              "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+              "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.
+              toString().padLeft(2, '0')}";
           Map userDataMap = {
             'timestamp': timeclick,
-            //'timestamp': ServerValue.timestamp,
             'statusPosts': "สามารถยื่นข้อเสนอได้",
             'imageUser': imageUser,
             'post_uid': postUid,
@@ -215,11 +215,11 @@ class _NewPostState extends State<NewPost> {
             "model1": model1.text.trim(),
             "details1": details1.text.trim(),
             'uid': uid,
-            'status_user': status_user,
+            'status_user': statusUser,
           };
-          await itemRef.set(userDataMap);
+          await itemRef.set(
+              userDataMap); // ปิด alert dialog หลังจากเพิ่มข้อมูลลงในฐานข้อมูลสำเร็จ
 
-          // Close the alert dialog after successfully adding data to the database
           Navigator.pop(context);
 
           Navigator.push(
@@ -258,7 +258,7 @@ class _NewPostState extends State<NewPost> {
         return true;
       } else {
         Duration remainingTime =
-            lastPostDate.add(Duration(days: 30)).difference(currentDate);
+            lastPostDate.add(const Duration(days: 30)).difference(currentDate);
 
         // Extract days, hours, minutes, and seconds from the remaining time
         int daysRemaining = remainingTime.inDays;
@@ -285,7 +285,7 @@ class _NewPostState extends State<NewPost> {
                 'https://cdn-icons-png.flaticon.com/128/9068/9068699.png',
                 width: 40,
               ),
-              Text(' ไม่สามารถโพสต์ได้'),
+              const Text(' ไม่สามารถโพสต์ได้'),
             ],
           ),
           content: Text(
@@ -478,7 +478,7 @@ class _NewPostState extends State<NewPost> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: Text("สร้างโพสต์"),
+        title: const Text("สร้างโพสต์"),
         toolbarHeight: 40,
         centerTitle: true,
         flexibleSpace: Container(
@@ -517,13 +517,13 @@ class _NewPostState extends State<NewPost> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       IconButton(
-                                        icon: Icon(Icons.camera_alt),
+                                        icon: const Icon(Icons.camera_alt),
                                         onPressed: _images.length < 5
                                             ? takePicture
                                             : null,
                                       ),
                                       IconButton(
-                                        icon: Icon(Icons.image),
+                                        icon: const Icon(Icons.image),
                                         onPressed: _images.length < 5
                                             ? chooseImages
                                             : null,
@@ -540,7 +540,7 @@ class _NewPostState extends State<NewPost> {
                                       top: 0,
                                       right: 0,
                                       child: IconButton(
-                                        icon: Icon(Icons.close),
+                                        icon: const Icon(Icons.close),
                                         onPressed: () => removeImage(index - 1),
                                       ),
                                     ),
@@ -552,7 +552,7 @@ class _NewPostState extends State<NewPost> {
                     ),
                     Text(
                       '${_images.length}/5',
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                     ),
                   ],
                 ),
@@ -566,12 +566,12 @@ class _NewPostState extends State<NewPost> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Divider(),
+                    const Divider(),
                     const SizedBox(
                       height: 10,
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5.0),
                         border: Border.all(
@@ -596,7 +596,7 @@ class _NewPostState extends State<NewPost> {
                               value: value,
                               child: Text(
                                 value,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16.0,
                                   color: Colors.black,
                                 ),
@@ -611,7 +611,7 @@ class _NewPostState extends State<NewPost> {
                     ),
                     TextField(
                       controller: item_name,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: "ชื่อสิ่งของ",
                         labelStyle: TextStyle(fontSize: 20),
                         border: OutlineInputBorder(),
@@ -625,7 +625,7 @@ class _NewPostState extends State<NewPost> {
 
                     TextField(
                       controller: brand,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         label: Text(
                           "ยี่ห้อ",
                           style: TextStyle(fontSize: 20),
@@ -639,7 +639,7 @@ class _NewPostState extends State<NewPost> {
                     ),
                     TextField(
                       controller: model,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           label: Text(
                             "รุ่น",
                             style: TextStyle(fontSize: 20),
@@ -652,7 +652,7 @@ class _NewPostState extends State<NewPost> {
                     ),
                     TextField(
                       controller: details,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           label: Text(
                             "รายละเอียด",
                             style: TextStyle(fontSize: 20),
@@ -663,7 +663,7 @@ class _NewPostState extends State<NewPost> {
                     const SizedBox(
                       height: 15,
                     ),
-                    Row(
+                    const Row(
                       children: [
                         Icon(Icons.location_pin),
                         Text(
@@ -684,7 +684,8 @@ class _NewPostState extends State<NewPost> {
                             fontSize: 18, fontStyle: FontStyle.normal),
                         buttonColor: Colors.blue,
                         buttonText: 'เลือกจุดนัดการแลกเปลี่ยน',
-                        buttonWidth: 200, // Adjust the width here, for example
+                        buttonWidth: 200,
+                        // Adjust the width here, for example
                         onPicked: (pickedData) {
                           print("kok");
                           print(pickedData.latLong.latitude);
@@ -709,7 +710,7 @@ class _NewPostState extends State<NewPost> {
                     ),
                     TextField(
                       controller: item_name1,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           label: Text(
                             "ใส่ชื่อสิ่งของที่สนใจจะแลก",
                             style: TextStyle(fontSize: 20),
@@ -724,7 +725,7 @@ class _NewPostState extends State<NewPost> {
                     ),
                     TextField(
                       controller: brand1,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           label: Text(
                             "ยี่ห้อ",
                             style: TextStyle(fontSize: 20),
@@ -734,12 +735,12 @@ class _NewPostState extends State<NewPost> {
                             Icons.tag,
                           )),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     TextField(
                       controller: model1,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           label: Text(
                             "รุ่น",
                             style: TextStyle(fontSize: 20),
@@ -749,12 +750,12 @@ class _NewPostState extends State<NewPost> {
                             Icons.tag,
                           )),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     TextField(
                       controller: details1,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           label: Text(
                             "รายละเอียด",
                             style: TextStyle(fontSize: 20),
@@ -802,24 +803,6 @@ class _NewPostState extends State<NewPost> {
     });
   }
 
-  // Widget expTime(String current, String endtime) {
-  //   DateTime currentTime = DateTime.parse(current);
-  //   DateTime expirationTime = DateTime.parse(endtime);
-  //   Duration difference = expirationTime.difference(currentTime);
-  //
-  //   return Container(
-  //     child: difference.inSeconds > 0
-  //         ? Text(
-  //       'Time left: ${difference.inDays} days, ${difference.inHours.remainder(24)} hours, ${difference.inMinutes.remainder(60)} minutes',
-  //       style: TextStyle(fontSize: 20),
-  //     )
-  //         : Text(
-  //       'Expired!',
-  //       style: TextStyle(fontSize: 20, color: Colors.red),
-  //     ),
-  //   );
-  // }
-
   Widget expTime(String current, String endtime) {
     DateTime currentTime = DateTime.parse(current);
     DateTime expirationTime = DateTime.parse(endtime);
@@ -827,7 +810,7 @@ class _NewPostState extends State<NewPost> {
 
     Stream<DateTime> timerStream() async* {
       while (difference.inSeconds > 0) {
-        await Future.delayed(Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
         yield DateTime.now();
       }
     }
@@ -839,14 +822,14 @@ class _NewPostState extends State<NewPost> {
           DateTime now = snapshot.data!;
           difference = expirationTime.difference(now);
           if (difference.inSeconds <= 0) {
-            return Text(
+            return const Text(
               'Expired!',
               style: TextStyle(fontSize: 20, color: Colors.red),
             );
           } else {
             return Text(
               'Time left: ${difference.inDays} days, ${difference.inHours.remainder(24)} hours, ${difference.inMinutes.remainder(60)} minutes',
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
             );
           }
         } else {
@@ -863,7 +846,7 @@ class _NewPostState extends State<NewPost> {
     print('ghjo');
     print(dateTime);
     // สร้างโซนเวลาของเอเชีย (Asia/Bangkok)
-    DateTime asiaTime = dateTime.toUtc().add(Duration(hours: 7));
+    DateTime asiaTime = dateTime.toUtc().add(const Duration(hours: 7));
 
     // สร้างรูปแบบการแสดงวันที่และเวลาภาษาไทย
     var formatter = DateFormat('EEEE, dd MMMM yyyy', 'th_TH');
@@ -880,7 +863,7 @@ class _NewPostState extends State<NewPost> {
     print('ghjo');
     print(dateTime);
     // สร้างโซนเวลาของเอเชีย (Asia/Bangkok)
-    DateTime asiaTime = dateTime.toUtc().add(Duration(hours: 7));
+    DateTime asiaTime = dateTime.toUtc().add(const Duration(hours: 7));
 
     // สร้างรูปแบบการแสดงวันที่และเวลาภาษาไทย
     var formatter = DateFormat('EEEE, dd MMMM yyyy HH:mm:ss', 'th_TH');
@@ -890,26 +873,6 @@ class _NewPostState extends State<NewPost> {
     // แสดงผลลัพธ์เป็น Widget Text
     return formattedDate1[4];
   }
-
-  // Widget exampleUsage2() {
-  //   // สร้าง Timestamp จาก Firebase Firestore
-  //   Timestamp firestoreTimestamp = Timestamp.now();
-  //   DateTime dateTime = firestoreTimestamp.toDate();
-  //
-  //   // แปลงเวลาไปยังโซนเวลาของเอเชีย (Asia/Bangkok)
-  //   DateTime asiaTime = dateTime.toLocal();
-  //
-  //   // สร้างรูปแบบการแสดงเวลา
-  //   DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
-  //   String formattedTime = formatter.format(asiaTime);
-  //
-  //   // แสดงผลลัพธ์เป็น Widget Text
-  //   return Text(
-  //     formattedTime,
-  //     // กําหนดขนาดตัวอักษร
-  //     style: TextStyle(fontSize: 16),
-  //   );
-  // }
 
   Future<void> fetchTimestampFromFirebase() async {
     FirebaseAuth auth = FirebaseAuth.instance;
