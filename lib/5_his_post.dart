@@ -77,7 +77,7 @@ class _HistoryPostState extends State<HistoryPost> {
     });
   }
 
-  void fetchData() async {
+  void fetchData(String Ans) async {
     try {
       await _postRef
           .child(selectedOffer!['post_uid'])
@@ -86,11 +86,7 @@ class _HistoryPostState extends State<HistoryPost> {
       updateCreditSuccess(uid, 'creditOfferSuccess');
 
       updateCreditSuccess(_user.uid, 'creditPostSuccess');
-      //updateCreditOfferSuccess(uid);
-      //updateCreditPostSuccess(_user.uid);
-    } catch (e) {
-      // Handle errors
-    }
+    } catch (e) {}
   }
 
   Future<void> updateCreditSuccess(String uid, String creditType) async {
@@ -990,6 +986,7 @@ class _HistoryPostState extends State<HistoryPost> {
       },
     );
   }
+
   Widget confirmBtn() {
     if (selectedOffer!['statusPosts'] == 'รอการยืนยัน') {
       return Container(
@@ -1031,7 +1028,7 @@ class _HistoryPostState extends State<HistoryPost> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     padding:
-                    const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                   ),
                   label: const Text(
                     'ยืนยันการแลกเปลี่ยน',
@@ -1053,7 +1050,8 @@ class _HistoryPostState extends State<HistoryPost> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.amber,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 ),
                 label: Text(
                   'อย่ากดยืนยัน หรือปฏิเสธจนกว่าจะได้เห็นสิ่งของ',
@@ -1061,7 +1059,6 @@ class _HistoryPostState extends State<HistoryPost> {
                 ),
               ),
             )
-
           ],
         ),
       );
@@ -1070,9 +1067,9 @@ class _HistoryPostState extends State<HistoryPost> {
     }
   }
 
-
   Future<void> _performUpdateOffer() async {
     try {
+      String postUid = selectedOffer!['post_uid'];
       // อัปเดตสถานะของโพสต์เป็น "ยืนยัน"
       DatabaseReference postRef1 =
           FirebaseDatabase.instance.ref().child('postitem').child(postUid);
@@ -1212,7 +1209,7 @@ class _HistoryPostState extends State<HistoryPost> {
     }
 
     if ((Ans == 'แลกเปลี่ยนสำเร็จ' || Ans == 'ล้มเหลว') && !isFetchDataCalled) {
-      fetchData();
+      fetchData(Ans);
       isFetchDataCalled =
           true; // Set the flag to true after calling fetchData()
     }

@@ -89,22 +89,12 @@ class _GridGPSState extends State<GridGPS> {
 
 
             filteredData.sort((a, b) {
-              String statusA = a['status_user'] ??
-                  ''; // Use an empty string if status is null
-              String statusB = b['status_user'] ??
-                  ''; // Use an empty string if status is null
+              double distanceA = calculateDistance(userLat, userLon, double.parse(a['latitude']), double.parse(a['longitude']));
+              double distanceB = calculateDistance(userLat, userLon, double.parse(b['latitude']), double.parse(b['longitude']));
 
-              // Prioritize 'ผู้ใช้พรีเมี่ยม' cards first
-              if (statusA == 'ผู้ใช้พรีเมี่ยม' &&
-                  statusB != 'ผู้ใช้พรีเมี่ยม') {
-                return -1; // Move card A (VIP) to the front
-              } else if (statusA != 'ผู้ใช้พรีเมี่ยม' &&
-                  statusB == 'ผู้ใช้พรีเมี่ยม') {
-                return 1; // Move card B (VIP) to the front
-              } else {
-                return 0; // No priority change for other cases
-              }
+              return distanceA.compareTo(distanceB);
             });
+
 
             return SingleChildScrollView(
               child: Column(
