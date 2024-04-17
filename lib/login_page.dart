@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                   Expanded(
                     child: Container(
                       width: screenWidth,
-                      height: 17,
+                      height: 20,
                       child: Image.asset(
                         'assets/images/toplogin.png',
                         fit: BoxFit.cover,
@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   Container(
                     width: 17,
-                    height: screenHight - 27,
+                    height: screenHight-20,
                     child: Image.asset(
                       'assets/images/llogin.png',
                       fit: BoxFit.cover,
@@ -235,7 +235,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Container(
                     width: 17,
-                    height: screenHight - 27,
+                    height: screenHight-20,
                     child: Image.asset(
                       'assets/images/llogin.png',
                       fit: BoxFit.cover,
@@ -249,7 +249,7 @@ class _LoginPageState extends State<LoginPage> {
                   Expanded(
                     child: Container(
                       width: screenWidth,
-                      height: 17,
+                      height: 20,
                       child: Image.asset(
                         'assets/images/toplogin.png',
                         fit: BoxFit.cover,
