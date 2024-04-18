@@ -342,12 +342,12 @@ class _ProfileState extends State<Profile> {
                                             children: [
                                               const Text(
                                                 'ใช้ได้ถึงวันที่ : ',
-                                                style: TextStyle(fontSize: 18),
+                                                style: TextStyle(fontSize: 17),
                                               ),
                                               Text(
-                                                ' $endTime น.',
+                                                '$endTime น.',
                                                 style: const TextStyle(
-                                                    fontSize: 14),
+                                                    fontSize: 13.5),
                                               )
                                             ],
                                           )
