@@ -14,7 +14,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 
-
 List<String> category = <String>[
   'กรุณาเลือกชนิดสิ่งของ',
   'เสื้อผ้าแฟชั่นผู้ชาย',
@@ -22,7 +21,7 @@ List<String> category = <String>[
   'กระเป๋า',
   'รองเท้าผู้ชาย',
   'รองเท้าผู้หญิง',
-  'นาฬิกาและแว่นตา'
+  'นาฬิกาและแว่นตา',
   'เครื่องใช้ในบ้าน',
   'มือถือและอุปกรณ์เสริม',
   'เครื่องใช้ไฟฟ้าภายในบ้าน',
@@ -195,11 +194,9 @@ class _NewPostState extends State<NewPost> {
           updateTotalPost(); //สร้าง uid สำหรับ post
           String? postUid = itemRef.key;
           String time =
-              "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().
-              padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
+              "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
           String date =
-              "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.
-              toString().padLeft(2, '0')}";
+              "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
           Map userDataMap = {
             'timestamp': timeclick,
             'statusPosts': "สามารถยื่นข้อเสนอได้",
@@ -225,8 +222,7 @@ class _NewPostState extends State<NewPost> {
             'uid': uid,
             'status_user': statusUser,
           };
-          await itemRef.set(
-              userDataMap); // ปิด alert dialog หลังจากเพิ่มข้อมูลลงในฐานข้อมูลสำเร็จ
+          await itemRef.set(userDataMap);
 
           Navigator.pop(context);
 
@@ -592,9 +588,11 @@ class _NewPostState extends State<NewPost> {
                         child: DropdownButton<String>(
                           value: dropdownValue,
                           onChanged: (String? newValue) {
-                            setState(() {
-                              dropdownValue = newValue!;
-                            });
+                            if (newValue != category.first) {
+                              setState(() {
+                                dropdownValue = newValue!;
+                              });
+                            }
                           },
                           underline:
                               Container(), // Remove the default underline
