@@ -345,12 +345,8 @@ class _NewPostState extends State<NewPost> {
 
     // Add input validation
     if (item_name.text.trim().isEmpty ||
-        brand.text.trim().isEmpty ||
-        model.text.trim().isEmpty ||
         details.text.trim().isEmpty ||
         item_name1.text.trim().isEmpty ||
-        brand1.text.trim().isEmpty ||
-        model1.text.trim().isEmpty ||
         details1.text.trim().isEmpty ||
         selectedLatitude == null ||
         selectedLongitude == null ||
@@ -618,69 +614,58 @@ class _NewPostState extends State<NewPost> {
                     TextField(
                       controller: item_name,
                       decoration: const InputDecoration(
-                        labelText: "ชื่อสิ่งของ",
-                        labelStyle: TextStyle(fontSize: 20),
+                        labelText: "ชื่อสิ่งของ*",
+                        labelStyle: TextStyle(fontSize: 18),
                         border: OutlineInputBorder(),
-                        prefixIcon:
-                            Icon(Icons.shopping_bag), // Add your desired icon
+                        prefixIcon: Icon(Icons.shopping_bag),
                       ),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-
+                    const SizedBox(height: 15),
                     TextField(
                       controller: brand,
                       decoration: const InputDecoration(
                         label: Text(
                           "ยี่ห้อ",
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(fontSize: 18),
                         ),
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.tag),
                       ),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     TextField(
                       controller: model,
                       decoration: const InputDecoration(
                           label: Text(
                             "รุ่น",
-                            style: TextStyle(fontSize: 20),
+                            style: TextStyle(fontSize: 18),
                           ),
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.tag)),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     TextField(
                       controller: details,
                       decoration: const InputDecoration(
-                          label: Text(
-                            "รายละเอียด",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.density_medium_sharp)),
+                        label: Text(
+                          "รายละเอียด*",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.density_medium_sharp),
+                      ),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     const Row(
                       children: [
                         Icon(Icons.location_pin),
                         Text(
-                          'สถานที่แลกเปลี่ยนสิ่งของ',
+                          'สถานที่แลกเปลี่ยนสิ่งของ*',
                           style: TextStyle(fontSize: 18),
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     Container(
                       decoration: BoxDecoration(border: Border.all()),
                       height: 555,
@@ -705,45 +690,37 @@ class _NewPostState extends State<NewPost> {
                         },
                       ),
                     ),
-
-                    const SizedBox(
-                      height: 10,
-                    ),
-
+                    const SizedBox(height: 10),
                     Center(child: Image.asset('assets/images/swapIMG.png')),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    const SizedBox(height: 10),
                     TextField(
                       controller: item_name1,
                       decoration: const InputDecoration(
-                          label: Text(
-                            "ใส่ชื่อสิ่งของที่สนใจจะแลก",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(
-                            Icons.shopping_bag,
-                          )),
+                        label: Text(
+                          "ชื่อสิ่งของที่สนใจจะแลกเปลี่ยน*",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(
+                          Icons.shopping_bag,
+                        ),
+                      ),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     TextField(
                       controller: brand1,
                       decoration: const InputDecoration(
-                          label: Text(
-                            "ยี่ห้อ",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(
-                            Icons.tag,
-                          )),
+                        label: Text(
+                          "ยี่ห้อ",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(
+                          Icons.tag,
+                        ),
+                      ),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     TextField(
                       controller: model1,
                       decoration: const InputDecoration(
@@ -756,18 +733,17 @@ class _NewPostState extends State<NewPost> {
                             Icons.tag,
                           )),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     TextField(
                       controller: details1,
                       decoration: const InputDecoration(
-                          label: Text(
-                            "รายละเอียด",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.density_medium_sharp)),
+                        label: Text(
+                          "รายละเอียด*",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.density_medium_sharp),
+                      ),
                     ),
                     // Text(exampleUsageTime()),
                     const SizedBox(height: 15),
