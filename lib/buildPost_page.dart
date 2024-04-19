@@ -676,13 +676,7 @@ class _NewPostState extends State<NewPost> {
                         buttonColor: Colors.blue,
                         buttonText: 'เลือกจุดนัดการแลกเปลี่ยน',
                         buttonWidth: 200,
-                        // Adjust the width here, for example
                         onPicked: (pickedData) {
-                          print("kok");
-                          print(pickedData.latLong.latitude);
-                          print(pickedData.latLong.longitude);
-                          print(pickedData.address);
-                          print(pickedData.addressName);
                           setState(() {
                             selectedLatitude = pickedData.latLong.latitude;
                             selectedLongitude = pickedData.latLong.longitude;
