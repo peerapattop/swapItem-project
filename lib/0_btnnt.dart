@@ -38,7 +38,7 @@ class _btnntState extends State<btnnt> {
       label: 'แชท',
     ),
     BottomNavigationBarItem(
-      icon: Icon(Icons.notification_add),
+      icon: Icon(Icons.notifications_active),
       label: 'แจ้งเตือน',
     ),
     BottomNavigationBarItem(
