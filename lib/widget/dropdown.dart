@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class MultiSelectableButtonList extends StatefulWidget {
-  const MultiSelectableButtonList({Key? key}) : super(key: key);
+  final String selectedItem;
+  const MultiSelectableButtonList({Key? key, required this.selectedItem})
+      : super(key: key);
 
   @override
   _MultiSelectableButtonListState createState() =>
@@ -23,37 +25,41 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
 
   @override
   Widget build(BuildContext context) {
+    String dataInType = widget.selectedItem;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Wrap(
-          children: [
-            for (String item in [
-              "ทัั้งหมด1",
-              "ทัั้งหมด2",
-              "ทัั้งหมด3",
-              "ทัั้งหมด4",
-              "ทัั้งหมด5",
-            ])
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
+        if (dataInType == 'เสื้อผ้าแฟชั่นผู้ชาย')
+          Wrap(
+            runSpacing: 10.0,
+            spacing: 10.0,
+            children: [
+              for (String item in [
+                "ทั้งหมด",
+                "เสื้อเชิ้ตผู้ชาย",
+                "เสื้อยืด",
+                "กางเกงขาสั้น",
+                "กางเกงขายาว",
+                "เสื้อโปโลผู้ชาย",
+                "ผ้ายีนส์",
+                "เสื้อนอกผู้ชาย",
+                "เครื่องแบบ",
+              ])
+                ElevatedButton(
                   onPressed: () {
                     toggleButton(item);
                   },
-                  style: ButtonStyle(
-                    backgroundColor: selectedButtons.contains(item)
-                        ? MaterialStateProperty.all<Color>(Colors.greenAccent)
-                        : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: selectedButtons.contains(item) ? Colors.cyan : null,
                   ),
-                  child: Text(item),
+                  child: Text(item,style: TextStyle(color: Colors.black),),
                 ),
-              ),
-          ],
-        ),
+
+            ],
+          ),
         const SizedBox(height: 16),
         Text(
-          'ปุ่มที่ถูกเลือก: ${selectedButtons.join(", ")}',
+          'ค้นหา: ${selectedButtons.join(", ")}',
           style: const TextStyle(fontSize: 16),
         ),
       ],

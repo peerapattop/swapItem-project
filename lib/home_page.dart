@@ -375,8 +375,8 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(selectedItem),
-          content: const SingleChildScrollView(
-            child: MultiSelectableButtonList(),
+          content:  SingleChildScrollView(
+            child: MultiSelectableButtonList(selectedItem:selectedItem),
           ),
           actions: <Widget>[
             TextButton(
