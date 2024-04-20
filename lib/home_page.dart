@@ -128,61 +128,7 @@ class _HomePageState extends State<HomePage> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return Dialog(
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          // กำหนดความกว้างให้เท่ากับ 80% ของหน้าจอ
-                          height: MediaQuery.of(context).size.height,
-                          // กำหนดความสูงให้เท่ากับ 80% ของหน้าจอ
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text("เลือกตัวเลือก"),
-                              ),
-                              Expanded(
-                                  child: Column(
-                                children: [
-                                  SingleChildScrollView(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Wrap(
-                                          children: [
-                                            for (String item in [
-                                              "อุปกรณ์อิเล็กทรอนิกส์",
-                                            ])
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  _showMyDialog();
-                                                },
-                                                style: ButtonStyle(
-                                                  backgroundColor: selectedButtons
-                                                          .contains(item)
-                                                      ? MaterialStateProperty
-                                                          .all<Color>(Colors
-                                                              .greenAccent)
-                                                      : null,
-                                                ),
-                                                child: Text(item),
-                                              ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 16),
-                                        Text(
-                                          'ปุ่มที่ถูกเลือก: ${selectedButtons.join(", ")}',
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              )),
-                            ],
-                          ),
-                        ),
-                      );
+                      return dataDialog();
                     },
                   );
                 },
@@ -421,19 +367,20 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-  Future<void> _showMyDialog() async {
+
+  Future<void> _showMyDialog(String selectedItem) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('AlertDialog Title'),
+          title:  Text(selectedItem),
           content: const SingleChildScrollView(
             child: MultiSelectableButtonList(),
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Approve'),
+              child: const Text('ยืนยัน'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -443,6 +390,7 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+
   Widget showDistance() {
     return Dialog(
       child: StatefulBuilder(
@@ -598,5 +546,65 @@ class _HomePageState extends State<HomePage> {
 
   Widget showPostDefault() {
     return const GridView2();
+  }
+
+  Widget dataDialog() {
+    return Dialog(
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const Padding(
+                padding:
+                    EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 5),
+                child: Text(
+                  "เลือกชนิดสิ่งของที่ต้องการ",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Wrap(
+                  spacing: 10.0,
+                  runSpacing: 10.0,
+                  children: [
+                    for (String item in [
+                      'เสื้อผ้าแฟชั่นผู้ชาย',
+                      'เสื้อผ้าแฟชั่นผู้หญิง',
+                      'กระเป๋า',
+                      'รองเท้าผู้ชาย',
+                      'รองเท้าผู้หญิง',
+                      'นาฬิกาและแว่นตา',
+                      'เครื่องใช้ในบ้าน',
+                      'มือถือและอุปกรณ์เสริม',
+                      'เครื่องใช้ไฟฟ้าภายในบ้าน',
+                      'กล้องและอุปกรณ์ถ่ายภาพ',
+                      'คอมพิวเตอร์และอุปกรณ์เสริม',
+                      'ของเล่น สินค้าแม่และเด็ก',
+                      'เครื่องเขียน หนังสือ และงานอดิเรก',
+                      'อุปกรณ์กีฬา',
+                      'อื่นๆ',
+                    ])
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green),
+                        onPressed: () {
+                          _showMyDialog(item);
+                        },
+                        child: Text(
+                          item,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

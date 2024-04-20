@@ -29,7 +29,7 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
         Wrap(
           children: [
             for (String item in [
-              "อุปกรณ์อิเล็กทรอนิกส์",
+              "ทัั้งหมด",
             ])
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -50,7 +50,7 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
         const SizedBox(height: 16),
         Text(
           'ปุ่มที่ถูกเลือก: ${selectedButtons.join(", ")}',
-          style: TextStyle(fontSize: 16),
+          style: const TextStyle(fontSize: 16),
         ),
       ],
     );
