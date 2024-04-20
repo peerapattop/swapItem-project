@@ -29,7 +29,11 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
         Wrap(
           children: [
             for (String item in [
-              "ทัั้งหมด",
+              "ทัั้งหมด1",
+              "ทัั้งหมด2",
+              "ทัั้งหมด3",
+              "ทัั้งหมด4",
+              "ทัั้งหมด5",
             ])
               Padding(
                 padding: const EdgeInsets.all(8.0),

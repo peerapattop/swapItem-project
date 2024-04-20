@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return dataDialog();
+                      return SingleChildScrollView(child: dataDialog());
                     },
                   );
                 },
@@ -374,7 +374,7 @@ class _HomePageState extends State<HomePage> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title:  Text(selectedItem),
+          title: Text(selectedItem),
           content: const SingleChildScrollView(
             child: MultiSelectableButtonList(),
           ),
@@ -550,60 +550,82 @@ class _HomePageState extends State<HomePage> {
 
   Widget dataDialog() {
     return Dialog(
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const Padding(
-                padding:
-                    EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 5),
-                child: Text(
-                  "เลือกชนิดสิ่งของที่ต้องการ",
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Wrap(
-                  spacing: 10.0,
-                  runSpacing: 10.0,
-                  children: [
-                    for (String item in [
-                      'เสื้อผ้าแฟชั่นผู้ชาย',
-                      'เสื้อผ้าแฟชั่นผู้หญิง',
-                      'กระเป๋า',
-                      'รองเท้าผู้ชาย',
-                      'รองเท้าผู้หญิง',
-                      'นาฬิกาและแว่นตา',
-                      'เครื่องใช้ในบ้าน',
-                      'มือถือและอุปกรณ์เสริม',
-                      'เครื่องใช้ไฟฟ้าภายในบ้าน',
-                      'กล้องและอุปกรณ์ถ่ายภาพ',
-                      'คอมพิวเตอร์และอุปกรณ์เสริม',
-                      'ของเล่น สินค้าแม่และเด็ก',
-                      'เครื่องเขียน หนังสือ และงานอดิเรก',
-                      'อุปกรณ์กีฬา',
-                      'อื่นๆ',
-                    ])
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green),
-                        onPressed: () {
-                          _showMyDialog(item);
-                        },
-                        child: Text(
-                          item,
-                          style: const TextStyle(color: Colors.white),
-                        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(
+                        top: 20, left: 20, right: 20, bottom: 5),
+                    child: Text(
+                      "เลือกชนิดสิ่งของที่ต้องการ",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 5, left: 20, right: 20, bottom: 5),
+                    child: Wrap(
+                      spacing: 10.0,
+                      runSpacing: 10.0,
+                      children: [
+                        for (String item in [
+                          'เสื้อผ้าแฟชั่นผู้ชาย',
+                          'เสื้อผ้าแฟชั่นผู้หญิง',
+                          'กระเป๋า',
+                          'รองเท้าผู้ชาย',
+                          'รองเท้าผู้หญิง',
+                          'นาฬิกาและแว่นตา',
+                          'เครื่องใช้ในบ้าน',
+                          'มือถือและอุปกรณ์เสริม',
+                          'เครื่องใช้ไฟฟ้าภายในบ้าน',
+                          'กล้องและอุปกรณ์ถ่ายภาพ',
+                          'คอมพิวเตอร์และอุปกรณ์เสริม',
+                          'ของเล่น สินค้าแม่และเด็ก',
+                          'เครื่องเขียน หนังสือ และงานอดิเรก',
+                          'อุปกรณ์กีฬา',
+                          'อื่นๆ',
+                        ])
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green),
+                            onPressed: () {
+                              _showMyDialog(item);
+                            },
+                            child: Text(
+                              item,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton.icon(
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.white,
                       ),
-                  ],
-                ),
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      label: const Text(
+                        'ปิด',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
