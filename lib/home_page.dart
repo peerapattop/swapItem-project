@@ -379,8 +379,12 @@ class _HomePageState extends State<HomePage> {
             child: MultiSelectableButtonList(selectedItem:selectedItem),
           ),
           actions: <Widget>[
-            TextButton(
-              child: const Text('ยืนยัน'),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueAccent
+              ),
+              icon: const Icon(Icons.search,color: Colors.white,),
+              label: const Text('ค้นหา',style: TextStyle(color: Colors.white),),
               onPressed: () {
                 Navigator.of(context).pop();
               },

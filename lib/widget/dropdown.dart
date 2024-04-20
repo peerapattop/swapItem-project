@@ -189,7 +189,7 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
                     backgroundColor:
                         selectedButtons.contains(item) ? Colors.cyan : null,
                   ),
-                  child: Text(item),
+                  child: Text(item,style: const TextStyle(color: Colors.black),),
                 ),
               ),
           ],
