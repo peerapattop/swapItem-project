@@ -4,6 +4,7 @@ import 'package:swapitem/registerVip_page.dart';
 import 'package:swapitem/buildPost_page.dart';
 import 'package:swapitem/test555.dart';
 import 'package:swapitem/widget/GrideGps.dart';
+import 'package:swapitem/widget/dropdown.dart';
 import 'package:swapitem/widget/grid_view.dart';
 import 'package:swapitem/notification_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,6 +25,18 @@ class _HomePageState extends State<HomePage> {
   double _distance = 5;
   bool isFavorite = true;
   bool gps_default = false;
+  List<String> list = <String>['One', 'Two', 'Three', 'Four'];
+  List<String> selectedButtons = [];
+
+  void toggleButton(String value) {
+    setState(() {
+      if (selectedButtons.contains(value)) {
+        selectedButtons.remove(value);
+      } else {
+        selectedButtons.add(value);
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -107,6 +120,71 @@ class _HomePageState extends State<HomePage> {
                     searchController.clear();
                     _searchString = '';
                   });
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.tune),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Dialog(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          // กำหนดความกว้างให้เท่ากับ 80% ของหน้าจอ
+                          height: MediaQuery.of(context).size.height,
+                          // กำหนดความสูงให้เท่ากับ 80% ของหน้าจอ
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text("เลือกตัวเลือก"),
+                              ),
+                              Expanded(
+                                  child: Column(
+                                children: [
+                                  SingleChildScrollView(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Wrap(
+                                          children: [
+                                            for (String item in [
+                                              "อุปกรณ์อิเล็กทรอนิกส์",
+                                            ])
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  _showMyDialog();
+                                                },
+                                                style: ButtonStyle(
+                                                  backgroundColor: selectedButtons
+                                                          .contains(item)
+                                                      ? MaterialStateProperty
+                                                          .all<Color>(Colors
+                                                              .greenAccent)
+                                                      : null,
+                                                ),
+                                                child: Text(item),
+                                              ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 16),
+                                        Text(
+                                          'ปุ่มที่ถูกเลือก: ${selectedButtons.join(", ")}',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              )),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
                 },
               ),
               IconButton(
@@ -343,7 +421,28 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('AlertDialog Title'),
+          content: const SingleChildScrollView(
+            child: MultiSelectableButtonList(),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Approve'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   Widget showDistance() {
     return Dialog(
       child: StatefulBuilder(
@@ -392,7 +491,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Slider(
                     value: _distance,
-                    min: 1.0, // กำหนดค่าต่ำสุดที่เลือกได้
+                    min: 1.0,
+                    // กำหนดค่าต่ำสุดที่เลือกได้
                     max: 10.0,
                     onChanged: (double value) {
                       setState(() {
