@@ -125,7 +125,7 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
         'กล้องแอคชั่น',
         'กล้องวงจรปิด',
         'เลนส์',
-        'มมโมรี่การ์ด',
+        'เมมโมรี่การ์ด',
         'อุปกรณ์เสริมกล้อง',
       ];
     } else if (dataInType == 'คอมพิวเตอร์และอุปกรณ์เสริม') {
@@ -133,8 +133,8 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
         'ทั้งหมด',
         'อุปกรณ์เสริมคอมพิวเตอร์',
         'แลปท๊อป',
-        'คอมพิวเตอร์ตั้งโต๊ะ'
-            'อุปกรณ์สำหรับเล่นเกม',
+        'คอมพิวเตอร์ตั้งโต๊ะ',
+        'อุปกรณ์สำหรับเล่นเกม',
         'ชิ้นส่วนคอมพิวเตอร์'
       ];
     } else if (dataInType == 'ของเล่น สินค้าแม่และเด็ก') {
@@ -155,7 +155,7 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
         'ทั้งหมด',
         'อุปกรณ์สำนักงาน',
         'อุปกรณ์เพื่อการบรรจุ',
-        ',อุปกรณ์เครื่องเขียน',
+        'อุปกรณ์เครื่องเขียน',
         'หนังสือ'
       ];
     } else if (dataInType == 'อุปกรณ์กีฬา') {
@@ -189,7 +189,10 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
                     backgroundColor:
                         selectedButtons.contains(item) ? Colors.cyan : null,
                   ),
-                  child: Text(item,style: const TextStyle(color: Colors.black),),
+                  child: Text(
+                    item,
+                    style: const TextStyle(color: Colors.black),
+                  ),
                 ),
               ),
           ],
