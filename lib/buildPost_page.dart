@@ -14,16 +14,23 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 
-
 List<String> category = <String>[
-  'เสื้อผ้า',
-  'รองเท้า',
-  'ของใช้ทั่วไป',
-  'อุปกรณ์อิเล็กทรอนิกส์',
-  'ของใช้ในบ้าน',
+  'กรุณาเลือกชนิดสิ่งของ',
+  'เสื้อผ้าแฟชั่นผู้ชาย',
+  'เสื้อผ้าแฟชั่นผู้หญิง',
+  'กระเป๋า',
+  'รองเท้าผู้ชาย',
+  'รองเท้าผู้หญิง',
+  'นาฬิกาและแว่นตา',
+  'เครื่องใช้ในบ้าน',
+  'มือถือและอุปกรณ์เสริม',
+  'เครื่องใช้ไฟฟ้าภายในบ้าน',
+  'กล้องและอุปกรณ์ถ่ายภาพ',
+  'คอมพิวเตอร์และอุปกรณ์เสริม',
+  'ของเล่น สินค้าแม่และเด็ก',
+  'เครื่องเขียน หนังสือ และงานอดิเรก',
   'อุปกรณ์กีฬา',
-  'เครื่องใช้ไฟฟ้า',
-  'ของเบ็ดเตล็ด',
+  'อื่นๆ',
 ];
 String dropdownValue = category.first;
 
@@ -187,11 +194,9 @@ class _NewPostState extends State<NewPost> {
           updateTotalPost(); //สร้าง uid สำหรับ post
           String? postUid = itemRef.key;
           String time =
-              "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().
-              padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
+              "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
           String date =
-              "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.
-              toString().padLeft(2, '0')}";
+              "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
           Map userDataMap = {
             'timestamp': timeclick,
             'statusPosts': "สามารถยื่นข้อเสนอได้",
@@ -207,18 +212,17 @@ class _NewPostState extends State<NewPost> {
             'date': exampleUsage(),
             'username': username,
             'item_name': item_name.text.trim(),
-            'brand': brand.text.trim(),
-            "model": model.text.trim(),
+            'brand': brand.text.trim().isNotEmpty ? brand.text.trim() : "-",
+            "model": model.text.trim().isNotEmpty ? model.text.trim() : "-",
             "detail": details.text.trim(),
             "item_name1": item_name1.text.trim(),
-            "brand1": brand1.text.trim(),
-            "model1": model1.text.trim(),
+            "brand1": brand1.text.trim().isNotEmpty ? brand1.text.trim() : "-",
+            "model1": model1.text.trim().isNotEmpty ? model1.text.trim() : "-",
             "details1": details1.text.trim(),
             'uid': uid,
             'status_user': statusUser,
           };
-          await itemRef.set(
-              userDataMap); // ปิด alert dialog หลังจากเพิ่มข้อมูลลงในฐานข้อมูลสำเร็จ
+          await itemRef.set(userDataMap);
 
           Navigator.pop(context);
 
@@ -341,12 +345,8 @@ class _NewPostState extends State<NewPost> {
 
     // Add input validation
     if (item_name.text.trim().isEmpty ||
-        brand.text.trim().isEmpty ||
-        model.text.trim().isEmpty ||
         details.text.trim().isEmpty ||
         item_name1.text.trim().isEmpty ||
-        brand1.text.trim().isEmpty ||
-        model1.text.trim().isEmpty ||
         details1.text.trim().isEmpty ||
         selectedLatitude == null ||
         selectedLongitude == null ||
@@ -584,9 +584,11 @@ class _NewPostState extends State<NewPost> {
                         child: DropdownButton<String>(
                           value: dropdownValue,
                           onChanged: (String? newValue) {
-                            setState(() {
-                              dropdownValue = newValue!;
-                            });
+                            if (newValue != category.first) {
+                              setState(() {
+                                dropdownValue = newValue!;
+                              });
+                            }
                           },
                           underline:
                               Container(), // Remove the default underline
@@ -612,69 +614,58 @@ class _NewPostState extends State<NewPost> {
                     TextField(
                       controller: item_name,
                       decoration: const InputDecoration(
-                        labelText: "ชื่อสิ่งของ",
-                        labelStyle: TextStyle(fontSize: 20),
+                        labelText: "ชื่อสิ่งของ*",
+                        labelStyle: TextStyle(fontSize: 18),
                         border: OutlineInputBorder(),
-                        prefixIcon:
-                            Icon(Icons.shopping_bag), // Add your desired icon
+                        prefixIcon: Icon(Icons.shopping_bag),
                       ),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-
+                    const SizedBox(height: 15),
                     TextField(
                       controller: brand,
                       decoration: const InputDecoration(
                         label: Text(
                           "ยี่ห้อ",
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(fontSize: 18),
                         ),
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.tag),
                       ),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     TextField(
                       controller: model,
                       decoration: const InputDecoration(
                           label: Text(
                             "รุ่น",
-                            style: TextStyle(fontSize: 20),
+                            style: TextStyle(fontSize: 18),
                           ),
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.tag)),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     TextField(
                       controller: details,
                       decoration: const InputDecoration(
-                          label: Text(
-                            "รายละเอียด",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.density_medium_sharp)),
+                        label: Text(
+                          "รายละเอียด*",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.density_medium_sharp),
+                      ),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     const Row(
                       children: [
                         Icon(Icons.location_pin),
                         Text(
-                          'สถานที่แลกเปลี่ยนสิ่งของ',
+                          'สถานที่แลกเปลี่ยนสิ่งของ*',
                           style: TextStyle(fontSize: 18),
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     Container(
                       decoration: BoxDecoration(border: Border.all()),
                       height: 555,
@@ -685,13 +676,7 @@ class _NewPostState extends State<NewPost> {
                         buttonColor: Colors.blue,
                         buttonText: 'เลือกจุดนัดการแลกเปลี่ยน',
                         buttonWidth: 200,
-                        // Adjust the width here, for example
                         onPicked: (pickedData) {
-                          print("kok");
-                          print(pickedData.latLong.latitude);
-                          print(pickedData.latLong.longitude);
-                          print(pickedData.address);
-                          print(pickedData.addressName);
                           setState(() {
                             selectedLatitude = pickedData.latLong.latitude;
                             selectedLongitude = pickedData.latLong.longitude;
@@ -699,45 +684,37 @@ class _NewPostState extends State<NewPost> {
                         },
                       ),
                     ),
-
-                    const SizedBox(
-                      height: 10,
-                    ),
-
+                    const SizedBox(height: 10),
                     Center(child: Image.asset('assets/images/swapIMG.png')),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    const SizedBox(height: 10),
                     TextField(
                       controller: item_name1,
                       decoration: const InputDecoration(
-                          label: Text(
-                            "ใส่ชื่อสิ่งของที่สนใจจะแลก",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(
-                            Icons.shopping_bag,
-                          )),
+                        label: Text(
+                          "ชื่อสิ่งของที่สนใจจะแลกเปลี่ยน*",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(
+                          Icons.shopping_bag,
+                        ),
+                      ),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     TextField(
                       controller: brand1,
                       decoration: const InputDecoration(
-                          label: Text(
-                            "ยี่ห้อ",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(
-                            Icons.tag,
-                          )),
+                        label: Text(
+                          "ยี่ห้อ",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(
+                          Icons.tag,
+                        ),
+                      ),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     TextField(
                       controller: model1,
                       decoration: const InputDecoration(
@@ -750,18 +727,17 @@ class _NewPostState extends State<NewPost> {
                             Icons.tag,
                           )),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     TextField(
                       controller: details1,
                       decoration: const InputDecoration(
-                          label: Text(
-                            "รายละเอียด",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.density_medium_sharp)),
+                        label: Text(
+                          "รายละเอียด*",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.density_medium_sharp),
+                      ),
                     ),
                     // Text(exampleUsageTime()),
                     const SizedBox(height: 15),

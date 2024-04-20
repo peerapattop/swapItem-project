@@ -29,14 +29,22 @@ class MakeAnOffer extends StatefulWidget {
 }
 
 List<String> category = <String>[
-  'เสื้อผ้า',
-  'รองเท้า',
-  'ของใช้ทั่วไป',
-  'อุปกรณ์อิเล็กทรอนิกส์',
-  'ของใช้ในบ้าน',
+  'กรุณาเลือกชนิดสิ่งของ',
+  'เสื้อผ้าแฟชั่นผู้ชาย',
+  'เสื้อผ้าแฟชั่นผู้หญิง',
+  'กระเป๋า',
+  'รองเท้าผู้ชาย',
+  'รองเท้าผู้หญิง',
+  'นาฬิกาและแว่นตา',
+  'เครื่องใช้ในบ้าน',
+  'มือถือและอุปกรณ์เสริม',
+  'เครื่องใช้ไฟฟ้าภายในบ้าน',
+  'กล้องและอุปกรณ์ถ่ายภาพ',
+  'คอมพิวเตอร์และอุปกรณ์เสริม',
+  'ของเล่น สินค้าแม่และเด็ก',
+  'เครื่องเขียน หนังสือ และงานอดิเรก',
   'อุปกรณ์กีฬา',
-  'เครื่องใช้ไฟฟ้า',
-  'ของเบ็ดเตล็ด',
+  'อื่นๆ',
 ];
 String dropdownValue = category.first;
 
@@ -177,9 +185,11 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                   child: DropdownButton<String>(
                     value: dropdownValue,
                     onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                      });
+                      if (newValue != category.first) {
+                        setState(() {
+                          dropdownValue = newValue!;
+                        });
+                      }
                     },
                     underline: Container(),
                     items:
@@ -201,36 +211,36 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                 TextField(
                   controller: _nameItem1,
                   decoration: const InputDecoration(
-                    labelText: 'ชื่อสิ่งของ',
+                    labelText: 'ชื่อสิ่งของ*',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.shopping_bag),
                   ),
                 ),
-                const SizedBox(height: 17),
+                const SizedBox(height: 18),
                 TextField(
                   controller: _brand1,
                   decoration: const InputDecoration(
                     labelText: 'ยี่ห้อ',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.branding_watermark),
+                    prefixIcon: Icon(Icons.tag),
                   ),
                 ),
-                const SizedBox(height: 17),
+                const SizedBox(height: 18),
                 TextField(
                   controller: _model1,
                   decoration: const InputDecoration(
                     labelText: 'รุ่น', // Label text
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.model_training),
+                    prefixIcon: Icon(Icons.tag),
                   ),
                 ),
                 const SizedBox(height: 17),
                 TextField(
                   controller: _detail1,
                   decoration: const InputDecoration(
-                    labelText: 'รายละเอียด', // Label text
+                    labelText: 'รายละเอียด*', // Label text
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.details),
+                    prefixIcon: Icon(Icons.density_medium_sharp),
                   ),
                   maxLines: null, // Allows for multi-line input
                 ),
@@ -310,8 +320,6 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     Completer<bool> completer = Completer<bool>();
 
     if (_nameItem1.text.isEmpty ||
-        _brand1.text.isEmpty ||
-        _model1.text.isEmpty ||
         _detail1.text.isEmpty ||
         _images.isEmpty) {
       showDialog(
