@@ -160,13 +160,11 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               IconButton(
-                icon: Icon(Icons.star),
+                icon: const Icon(Icons.star),
                 color: gps_default == false ? Colors.amberAccent : Colors.black,
-                // Change color based on gps_default state
                 onPressed: () {
                   setState(() {
-                    gps_default =
-                        false; // Assuming gps_default is a boolean variable
+                    gps_default = false;
                   });
                 },
               ),
