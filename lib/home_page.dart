@@ -123,6 +123,12 @@ class _HomePageState extends State<HomePage> {
                   setState(() {
                     searchController.clear();
                     _searchString = '';
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                          (route) => false,
+                    );
+
                   });
                 },
               ),
@@ -190,8 +196,6 @@ class _HomePageState extends State<HomePage> {
                         ? buildUserProfileSection(
                             dataUser, postCount, makeofferCount)
                         : SizedBox(),
-                    const Divider(),
-                    Text('dsada'),
                     const Divider(),
                     showItemSearch(),
                   ],
@@ -646,4 +650,37 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  // Widget searchWidget() {
+  //   return Row(
+  //     children: [
+  //       Padding(
+  //         padding: EdgeInsets.all(8.0),
+  //         child: Text(
+  //           'กำลังค้นหา : ${widget.filter} ทั้งหมด',
+  //           style: TextStyle(fontSize: 20),
+  //         ),
+  //       ),
+  //       const Spacer(),
+  //       Padding(
+  //         padding: const EdgeInsets.all(8.0),
+  //         child: ElevatedButton.icon(
+  //           style: ElevatedButton.styleFrom(backgroundColor: Colors.deepOrangeAccent),
+  //           icon: const Icon(
+  //             Icons.clear,
+  //             color: Colors.white,
+  //           ),
+  //           onPressed: () {
+  //             setState(() {
+  //             });
+  //           },
+  //           label: const Text(
+  //             'รีเซ็ท',
+  //             style: TextStyle(color: Colors.white),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 }
