@@ -272,8 +272,12 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     } else if (widget.selectedItem == "เครื่องประดับ") {
       newList = accessories;
     } else if (widget.selectedItem == "เครื่องใช้ในบ้าน") {
+      newList = homeObject;
+    }
+    else if (widget.selectedItem == "เครื่องใช้ไฟฟ้าภายในบ้าน") {
       newList = homeAppliances;
-    } else if (widget.selectedItem == "รองเท้าผู้หญิง") {
+    }
+    else if (widget.selectedItem == "รองเท้าผู้หญิง") {
       newList = womenShoes;
     } else if (widget.selectedItem == "รองเท้าผู้ชาย") {
       newList = menShoes;
