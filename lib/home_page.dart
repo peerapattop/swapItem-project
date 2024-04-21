@@ -54,6 +54,12 @@ class _HomePageState extends State<HomePage> {
     showLabels();
   }
 
+  void swapColor() {
+    if (gps_default == true) {
+      gps_default = false;
+    }
+  }
+
   void showLabels() {
     setState(() {
       if (widget.filter != null) {
@@ -162,9 +168,13 @@ class _HomePageState extends State<HomePage> {
               IconButton(
                 icon: const Icon(Icons.star),
                 color: gps_default == false ? Colors.amberAccent : Colors.black,
+                // Change color based on gps_default state
                 onPressed: () {
                   setState(() {
                     gps_default = false;
+                    _searchString = null;
+                    widget.filter?.clear();
+                    searchController.clear();
                   });
                 },
               ),
@@ -174,6 +184,9 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   setState(() {
                     gps_default = true;
+                    _searchString = null;
+                    widget.filter?.clear();
+                    searchController.clear();
                   });
                 },
               )
@@ -378,24 +391,26 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget showItemSearch() {
-    if (_searchString != null) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: SizedBox(
-            height: 800,
-            width: double.infinity,
-            child: GridView2(searchString: _searchString),
+    //ป่มของsearch
+
+    if (_searchString != null && gps_default == false  ) {
+      if (widget.filter == null && _searchString != null ) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+            child: SizedBox(
+              height: 800,
+              width: double.infinity,
+              child: GridView2(searchString: _searchString),
+            ),
           ),
-        ),
-      );
-    }
-    if (widget.filter != null) {
+        );
+      }
+    } else if (widget.filter != null) {
       String? filterString = widget.filter?.join(", ");
       if (filterString != null) {
         filterString = filterString.replaceAll(RegExp(r'[\[\]]'), '');
       }
-
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
@@ -406,19 +421,47 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       );
-    }
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SingleChildScrollView(
-        child: SizedBox(
-          height: 800,
-          width: double.infinity,
-          child: gps_default == false
-              ? GridView2(searchString: _searchString)
-              : GridGPS(),
+    } else if (_searchString == null &&
+        widget.filter == null &&
+        gps_default == false) {
+      return Padding(
+        padding: EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: 800,
+            width: double.infinity,
+            child: GridView2(),
+          ),
         ),
-      ),
-    );
+      );
+    } else if (_searchString == null &&
+        widget.filter == null &&
+        gps_default == true) {
+      return Padding(
+        padding: EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: 800,
+            width: double.infinity,
+            child: GridGPS(),
+          ),
+        ),
+      );
+    }else if (_searchString != null &&
+        widget.filter == null &&
+        gps_default == true) {
+      return Padding(
+        padding: EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: 800,
+            width: double.infinity,
+            child: GridView2(searchString: _searchString,)
+          ),
+        ),
+      );
+    }
+    return Text('d');
   }
 
   Future<void> _showMyDialog(BuildContext context, String selectedItem) async {
