@@ -30,20 +30,27 @@ class MakeAnOffer extends StatefulWidget {
 
 List<String> category = <String>[
   'กรุณาเลือกชนิดสิ่งของ',
-  'เสื้อผ้าแฟชั่นผู้ชาย',
-  'เสื้อผ้าแฟชั่นผู้หญิง',
-  'กระเป๋า',
-  'รองเท้าผู้ชาย',
-  'รองเท้าผู้หญิง',
-  'นาฬิกาและแว่นตา',
-  'เครื่องใช้ในบ้าน',
-  'มือถือและอุปกรณ์เสริม',
+  'เสื้อผ้าผู้ชาย',
+  'เสื้อผ้าผู้หญิง',
+  'เครื่องประดับ',
   'เครื่องใช้ไฟฟ้าภายในบ้าน',
-  'กล้องและอุปกรณ์ถ่ายภาพ',
+  'รองเท้าผู้หญิง',
+  'รองเท้าผู้ชาย',
+  'มือถือและอุปกรณ์เสริม',
+  'เสื้อผ้ามุสลิม',
+  'กระเป๋าเดินทาง',
+  'กระเป๋าผู้หญิง',
+  'กระเป๋าผู้ชาย',
+  'นาฬิกา',
+  'เครื่องเสียง',
+  'เกมและอุปกรณ์เสริม',
+  'กล้องและโดรน',
+  'เครื่องใช้ในบ้าน',
+  'กีฬาและกิจกรรมกลางแจ้ง',
+  'เครื่องเขียน',
+  'งานอดิเรกและของสะสม',
+  'หนังสือและนิตยสาร',
   'คอมพิวเตอร์และอุปกรณ์เสริม',
-  'ของเล่น สินค้าแม่และเด็ก',
-  'เครื่องเขียน หนังสือ และงานอดิเรก',
-  'อุปกรณ์กีฬา',
   'อื่นๆ',
 ];
 String dropdownValue = category.first;
@@ -58,8 +65,8 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
   DateTime now = DateTime.now();
   String? username;
   late int offerNumber;
-  String date1 ='';
-  String time1 ='';
+  String date1 = '';
+  String time1 = '';
 
   List<File> _images = [];
 
@@ -79,9 +86,9 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
       });
     }
 
-     date1 =
+    date1 =
         "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
-     time1 =
+    time1 =
         "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
     return SafeArea(
       child: Scaffold(
@@ -254,7 +261,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                     },
                     style: ButtonStyle(
                       backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.green),
+                          MaterialStateProperty.all<Color>(Colors.green),
                     ),
                     child: const Text(
                       "ยิ่นข้อเสนอ",
@@ -319,9 +326,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
   Future<bool> _showOfferConfirmationDialog() async {
     Completer<bool> completer = Completer<bool>();
 
-    if (_nameItem1.text.isEmpty ||
-        _detail1.text.isEmpty ||
-        _images.isEmpty) {
+    if (_nameItem1.text.isEmpty || _detail1.text.isEmpty || _images.isEmpty) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -460,9 +465,7 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
               'lastOfferDate': DateTime.now().toString(),
             });
           }
-        updateTotalOffer();
-
-
+          updateTotalOffer();
 
           String postUid = widget.postUid;
           String imageUser = widget.imageUser;
@@ -498,15 +501,13 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
 
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) =>
-                  MakeAnOfferSuccess(
-                    date: date1,
-                    time: time1,
-                    offerNumber: offerNumber,
-                  ),
+              builder: (context) => MakeAnOfferSuccess(
+                date: date1,
+                time: time1,
+                offerNumber: offerNumber,
+              ),
             ),
           );
-
         }
       }
     } catch (error) {
@@ -627,7 +628,6 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
     });
   }
 
-
   Future<void> showOfferErrorDialog(BuildContext context, int daysRemaining,
       int hoursRemaining, int minutesRemaining) async {
     showDialog(
@@ -640,7 +640,10 @@ class _MakeAnOfferState extends State<MakeAnOffer> {
                 'https://cdn-icons-png.flaticon.com/128/9068/9068699.png',
                 width: 40,
               ),
-              const Text(' ไม่สามารถยื่นข้อเสนอได้',style: TextStyle(fontSize: 20),),
+              const Text(
+                ' ไม่สามารถยื่นข้อเสนอได้',
+                style: TextStyle(fontSize: 20),
+              ),
             ],
           ),
           content: Text(
