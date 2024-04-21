@@ -482,7 +482,7 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
           children: [
             for (String item in newList)
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 4.0),
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
                 child: ElevatedButton(
                   onPressed: () {
                     toggleButton(item);
