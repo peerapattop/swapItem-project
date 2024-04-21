@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:swapitem/0_btnnt.dart';
 import 'package:swapitem/registerVip_page.dart';
 import 'package:swapitem/buildPost_page.dart';
 import 'package:swapitem/test555.dart';
@@ -120,15 +121,14 @@ class _HomePageState extends State<HomePage> {
               IconButton(
                 icon: const Icon(Icons.clear),
                 onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => btnnt()),
+                    (route) => false,
+                  );
                   setState(() {
                     searchController.clear();
                     _searchString = '';
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                          (route) => false,
-                    );
-
                   });
                 },
               ),
