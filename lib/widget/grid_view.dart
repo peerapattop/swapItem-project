@@ -74,31 +74,17 @@ class _GridView2State extends State<GridView2> {
               bool isPostSuccess =
                   userData['answerStatus'] == 'แลกเปลี่ยนสำเร็จ' ||
                       userData['answerStatus'] == 'ล้มเหลว';
-
-              String searchString = widget.searchString!.toLowerCase();
-              String itemName = userData['item_name'].toString().toLowerCase();
-              String type = userData['type'].toString().toLowerCase();
-
-              // ตรวจสอบคำค้นหาใน item_name
-              bool searchInItemName = itemName.contains(searchString);
-
-              // ตรวจสอบคำค้นหาใน type
-              bool searchInType = type.contains(searchString);
-
-              // ตรวจสอบคำค้นหาที่สลับกันระหว่าง item_name และ type
-              bool searchInBoth = (itemName + type).contains(searchString);
-
-              // ตรวจสอบคำค้นหาที่เรียงลำดับด้วยการใส่คำค้นหาลงไปข้างหน้าและข้างหลังของชื่อสินค้าและประเภท
-              bool searchInConcatenated = (itemName.startsWith(searchString) && type.endsWith(searchString)) ||
-                  (type.startsWith(searchString) && itemName.endsWith(searchString));
-
               return !isPostSuccess &&
                   (widget.searchString == null ||
                       widget.searchString!.isEmpty ||
-                      searchInItemName || // ค้นหาใน item_name
-                      searchInType || // ค้นหาใน type
-                      searchInBoth || // ค้นหาที่สลับกันระหว่าง item_name และ type
-                      searchInConcatenated); // ค้นหาที่เรียงลำดับด้วยการใส่คำค้นหาลงไปข้างหน้าและข้างหลังของชื่อสินค้าและประเภท
+                      userData['item_name']
+                          .toString()
+                          .toLowerCase()
+                          .contains(widget.searchString!.toLowerCase()) ||
+                      userData['type']
+                          .toString()
+                          .toLowerCase()
+                          .contains(widget.searchString!.toLowerCase()));
             }).toList();
 
             filteredData.sort((a, b) {
