@@ -392,7 +392,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () {
-                Navigator.of(context).pop();
+                print('ค้นหา ::: $selectedItem');
               },
             ),
           ],
