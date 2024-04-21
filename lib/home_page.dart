@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:swapitem/registerVip_page.dart';
 import 'package:swapitem/buildPost_page.dart';
 import 'package:swapitem/test555.dart';
@@ -379,8 +380,17 @@ class _HomePageState extends State<HomePage> {
             child: MultiSelectableButtonList(selectedItem: selectedItem),
           ),
           actions: <Widget>[
-            TextButton(
-              child: Text('ยืนยัน'),
+            ElevatedButton.icon(
+              icon: const Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
+              label: const Text(
+                'ค้นหา',
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -390,7 +400,6 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-
 
   Widget showDistance() {
     return Dialog(
@@ -598,7 +607,7 @@ class _HomePageState extends State<HomePage> {
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green),
                         onPressed: () {
-                          _showMyDialog(context,item);
+                          _showMyDialog(context, item);
                         },
                         child: Text(
                           item,
@@ -606,6 +615,17 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                   ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.close, color: Colors.white),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  label: const Text('ปิด',style: TextStyle(color: Colors.white),),
                 ),
               ),
             ],
