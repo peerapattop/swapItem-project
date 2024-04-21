@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class MultiSelectableButtonList extends StatefulWidget {
   final String selectedItem;
+
   const MultiSelectableButtonList({Key? key, required this.selectedItem})
       : super(key: key);
 
@@ -13,7 +14,6 @@ class MultiSelectableButtonList extends StatefulWidget {
 class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
   List<String> selectedButtons = [];
   List<String> menClothes = [
-    //เสื้อผ้าผู้ชาย
     "ทั้งหมด",
     "กางเกงยีนส์",
     "เสื้อฮู้ดดี้",
@@ -31,9 +31,8 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "ยูนิฟอร์ม",
     "อื่นๆ",
     "ถุงเท้า"
-  ];
+  ]; //เสื้อผ้าผู้ชาย
   List<String> womenClothes = [
-    //เสื้อผ้าผู้หญิง
     "ทั้งหมด",
     "เสื้อฮู้ดและ เสื้อสเวตเชิ้ต",
     "ชุดเซ็ต",
@@ -44,9 +43,8 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "ชุดแต่งกาย",
     "อื่นๆ",
     "ถุงเท้า และถุงน่อง"
-  ];
+  ]; //เสื้อผ้าผู้หญิง
   List<String> accessories = [
-    //เครื่องประดับ
     "ทั้งหมด",
     "แว่นตา",
     "เครื่องประดับผม",
@@ -64,7 +62,7 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "เข็มขัด",
     "เนคไท, หูกระต่าย",
     "อื่นๆ"
-  ];
+  ]; //เครื่องประดับ
   List<String> homeAppliances = [
     // "เครื่องใช้ไฟฟ้าภายในบ้าน",
     "ทั้งหมด",
@@ -78,9 +76,7 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "รีโมต คอนโทรล",
     "อื่นๆ"
   ];
-
   List<String> womenShoes = [
-    //"รองเท้าผู้หญิง",
     "ทั้งหมด",
     "รองเท้าบูท",
     "รองเท้าผ้าใบ",
@@ -90,10 +86,8 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "รองเท้าแตะ",
     "ผลิตภัณฑ์และอุปกรณ์เสริมสำหรับรองเท้า",
     "อื่นๆ"
-  ];
-
+  ]; //"รองเท้าผู้หญิง",
   List<String> menShoes = [
-    //"รองเท้าผู้ชาย",
     "ทั้งหมด",
     "รองเท้าบูท",
     "รองเท้าผ้าใบ",
@@ -103,9 +97,8 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "รองเท้าแตะ",
     "อุปกรณ์เสริมสำหรับรองเท้า",
     "อื่นๆ"
-  ];
+  ]; //"รองเท้าผู้ชาย",
   List<String> electronics = [
-    //มือถือและอุปกรณ์เสริม
     "ทั้งหมด",
     "ซิมการ์ด",
     "แท็บเล็ต",
@@ -114,9 +107,8 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "อุปกรณ์เสริม",
     "วิทยุสื่อสาร",
     "อื่นๆ"
-  ];
+  ]; //มือถือและอุปกรณ์เสริม
   List<String> muslimClothing = [
-    //เสื้อผ้ามุสลิม
     "ทั้งหมด",
     "เสื้อผ้ามุสลิมผู้หญิง",
     "เสื้อผ้ามุสลิมผู้ชาย",
@@ -124,17 +116,15 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "เสื้อชั้นนอก",
     "ชุดเซ็ต",
     "อื่นๆ"
-  ];
+  ]; //เสื้อผ้ามุสลิม
   List<String> travelGear = [
-    //"กระเป๋าเดินทาง",
     "ทั้งหมด",
     "กระเป๋าเดินทางล้อลาก",
     "กระเป๋าสำหรับเดินทาง",
     "อุปกรณ์เสริมสำหรับเดินทาง",
     "อื่นๆ"
-  ];
+  ]; //"กระเป๋าเดินทาง",
   List<String> womenBags = [
-    //"กระเป๋าผู้หญิง",
     "ทั้งหมด",
     "กระเป๋าเป้",
     "กระเป๋าคอมพิวเตอร์",
@@ -146,9 +136,8 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "กระเป๋าสตางค์",
     "อุปกรณ์เสริมกระเป๋า",
     "อื่นๆ"
-  ];
+  ]; //"กระเป๋าผู้หญิง",
   List<String> menBags = [
-    // "กระเป๋าผู้ชาย",
     "ทั้งหมด",
     "กระเป๋าเป้",
     "กระเป๋าคอมพิวเตอร์",
@@ -159,18 +148,16 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "กระเป๋าสะพายข้าง",
     "กระเป๋าสตางค์",
     "อื่นๆ"
-  ];
+  ]; // "กระเป๋าผู้ชาย",
   List<String> watches = [
-    // "นาฬิกา",
     "ทั้งหมด",
     "นาฬิกาผู้หญิง",
     "นาฬิกาผู้ชาย",
     "นาฬิกาคู่",
     "อุปกรณ์เสริมสำหรับนาฬิกา",
     "อื่นๆ"
-  ];
+  ]; // "นาฬิกา",
   List<String> audioEquipment = [
-    // "เครื่องเสียง",
     "ทั้งหมด",
     "หูฟัง",
     "เครื่องเล่นวิดีโอ, เสียง และเครื่องบันทึกเสียง",
@@ -179,19 +166,15 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "เครื่องเสียงภายในบ้าน",
     "สายเคเบิลและอุปกรณ์แปลงสัญญาณ",
     "อื่นๆ"
-  ];
-
+  ]; // "เครื่องเสียง",
   List<String> gamingEquipment = [
-    //"เกมและอุปกรณ์เสริม",
     "ทั้งหมด",
     "เครื่องเกม",
     "อุปกรณ์เสริมเกม",
     "แผ่นและตลับเกม",
     "อื่นๆ"
-  ];
-
+  ]; //"เกมและอุปกรณ์เสริม",
   List<String> camerasAndDrones = [
-    //"กล้องและโดรน",
     "ทั้งหมด",
     "กล้อง",
     "กล้องวงจรปิด",
@@ -202,9 +185,8 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "โดรน",
     "อุปกรณ์เสริมโดรน",
     "อื่นๆ"
-  ];
+  ]; //"กล้องและโดรน",
   List<String> homeObject = [
-    // "เครื่องใช้ในบ้าน",
     "ทั้งหมด",
     "เทียนหอม และน้ำมันหอมระเหย",
     "ห้องน้ำ",
@@ -223,18 +205,16 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "อุปกรณ์งานปาร์ตี้",
     "สินค้าเกี่ยวกับฮวงจุ้ยและศาสนา",
     "อื่นๆ"
-  ];
+  ]; // "เครื่องใช้ในบ้าน",
   List<String> outdoorSports = [
-    // "กีฬาและกิจกรรมกลางแจ้ง",
     "ทั้งหมด",
     "อุปกรณ์เล่นกีฬาและกิจกรรมกลางแจ้ง",
     "รองเท้ากีฬา",
     "เสื้อผ้ากีฬา",
     "อุปกรณ์เสริมสำหรับเล่นกีฬาและกิจกรรมกลางแจ้ง",
     "สินค้าอื่นๆ"
-  ];
+  ]; // "กีฬาและกิจกรรมกลางแจ้ง",
   List<String> stationery = [
-    // "เครื่องเขียน",
     "ทั้งหมด",
     "อุปกรณ์ห่อของขวัญ",
     "อุปกรณ์การเขียนและลบคำผิด",
@@ -243,9 +223,8 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "สมุดโน๊ตและกระดาษ",
     "จดหมายและซองจดหมาย",
     "สินค้าอื่นๆ"
-  ];
+  ]; // "เครื่องเขียน",
   List<String> hobbiesAndCollectibles = [
-    // "งานอดิเรกและของสะสม",
     "ทั้งหมด",
     "ของสะสม",
     "ของที่ระลึก",
@@ -256,17 +235,15 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "อัลบั้มรูป",
     "งานปัก",
     "อื่นๆ"
-  ];
+  ]; // "งานอดิเรกและของสะสม",
   List<String> booksAndMagazines = [
-    // "หนังสือและนิตยสาร",
     "ทั้งหมด",
     "นิตยสารและหนังสือพิมพ์",
     "หนังสือ",
     "หนังสืออิเล็กทรอนิกส์",
     "อื่นๆ"
-  ];
+  ]; // "หนังสือและนิตยสาร",
   List<String> computersAndAccessories = [
-    //"คอมพิวเตอร์และอุปกรณ์เสริม",
     "ทั้งหมด",
     "คอมพิวเตอร์แบบตั้งโต๊ะ",
     "หน้าจอคอมพิวเตอร์",
@@ -280,7 +257,59 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "คีย์บอร์ดและเมาส์",
     "แล็ปท็อป",
     "อื่น ๆ"
-  ];
+  ]; //"คอมพิวเตอร์และอุปกรณ์เสริม",
+  List<String> newList = [];
+  @override
+  initState() {
+    check();
+    super.initState();
+  }
+  void check() {
+    if (widget.selectedItem == "เสื้อผ้าผู้ชาย") {
+      newList = menClothes;
+    } else if (widget.selectedItem == "เสื้อผ้าผู้หญิง") {
+      newList = womenClothes;
+    } else if (widget.selectedItem == "เครื่องประดับ") {
+      newList = accessories;
+    } else if (widget.selectedItem == "เครื่องใช้ในบ้าน") {
+      newList = homeAppliances;
+    } else if (widget.selectedItem == "รองเท้าผู้หญิง") {
+      newList = womenShoes;
+    } else if (widget.selectedItem == "รองเท้าผู้ชาย") {
+      newList = menShoes;
+    } else if (widget.selectedItem == "มือถือและอุปกรณ์เสริม") {
+      newList = electronics;
+    } else if (widget.selectedItem == "เสื้อผ้ามุสลิม") {
+      newList = muslimClothing;
+    } else if (widget.selectedItem == "กระเป๋าเดินทาง") {
+      newList = travelGear;
+    } else if (widget.selectedItem == "กระเป๋าผู้หญิง") {
+      newList = womenBags;
+    } else if (widget.selectedItem == "กระเป๋าผู้ชาย") {
+      newList = menBags;
+    } else if (widget.selectedItem == "นาฬิกา") {
+      newList = watches;
+    } else if (widget.selectedItem == "เครื่องเสียง") {
+      newList = audioEquipment;
+    } else if (widget.selectedItem == "เกมและอุปกรณ์เสริม") {
+      newList = gamingEquipment;
+    } else if (widget.selectedItem == "กล้องและโดรน") {
+      newList = camerasAndDrones;
+    } else if (widget.selectedItem == "เครื่องใช้ในบ้าน") {
+      newList = homeObject;
+    } else if (widget.selectedItem == "กีฬาและกิจกรรมกลางแจ้ง") {
+      newList = outdoorSports;
+    } else if (widget.selectedItem == "เครื่องเขียน") {
+      newList = stationery;
+    } else if (widget.selectedItem == "งานอดิเรกและของสะสม") {
+      newList = hobbiesAndCollectibles;
+    } else if (widget.selectedItem == "หนังสือและนิตยสาร") {
+      newList = booksAndMagazines;
+    } else if (widget.selectedItem == "คอมพิวเตอร์และอุปกรณ์เสริม") {
+      newList = computersAndAccessories;
+    }
+  }
+
 
   void toggleButton(String value) {
     setState(() {
@@ -447,7 +476,7 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
         Wrap(
           spacing: 8.0, // ระยะห่างระหว่างปุ่ม
           children: [
-            for (String item in menClothes)
+            for (String item in newList)
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 4.0),
                 child: ElevatedButton(

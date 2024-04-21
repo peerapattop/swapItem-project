@@ -368,19 +368,19 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> _showMyDialog(String selectedItem) async {
+  Future<void> _showMyDialog(BuildContext context, String selectedItem) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(selectedItem),
-          content: const SingleChildScrollView(
-            child: MultiSelectableButtonList(selectedItem: "",),
+          content: SingleChildScrollView(
+            child: MultiSelectableButtonList(selectedItem: selectedItem),
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('ยืนยัน'),
+              child: Text('ยืนยัน'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -390,6 +390,7 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+
 
   Widget showDistance() {
     return Dialog(
@@ -588,7 +589,6 @@ class _HomePageState extends State<HomePage> {
                       "กระเป๋าเดินทาง",
                       "กระเป๋าผู้หญิง",
                       "กระเป๋าผู้ชาย",
-
                       "กีฬาและกิจกรรมกลางแจ้ง",
                       "เครื่องเขียน",
                       "งานอดิเรกและของสะสม",
@@ -598,7 +598,7 @@ class _HomePageState extends State<HomePage> {
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green),
                         onPressed: () {
-                          _showMyDialog(item);
+                          _showMyDialog(context,item);
                         },
                         child: Text(
                           item,
