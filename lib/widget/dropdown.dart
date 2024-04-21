@@ -318,10 +318,20 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
 
   void toggleButton(String value) {
     setState(() {
-      if (selectedButtons.contains(value)) {
-        selectedButtons.remove(value);
+      if (value == 'ทั้งหมด') {
+        if (!selectedButtons.contains('ทั้งหมด')) {
+          selectedButtons.clear();
+          selectedButtons.add('ทั้งหมด');
+        }
       } else {
-        selectedButtons.add(value);
+        if (selectedButtons.contains('ทั้งหมด')) {
+          selectedButtons.clear();
+        }
+        if (selectedButtons.contains(value)) {
+          selectedButtons.remove(value);
+        } else {
+          selectedButtons.add(value);
+        }
       }
     });
   }
@@ -502,30 +512,80 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
         ),
         const SizedBox(height: 16),
         Text(
-          'ค้นหา: ${selectedButtons.join(", ")}',
+          'ค้นหา: ${widget.selectedItem}  ${selectedButtons.join(", ")}',
           style: const TextStyle(fontSize: 16),
         ),
-        ElevatedButton.icon(
-          icon: const Icon(
-            Icons.search,
-            color: Colors.white,
-          ),
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
-          label: const Text(
-            'ค้นหา',
-            style: TextStyle(color: Colors.white),
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomePage(
-                  filter: selectedButtons,
-                ),
+        const SizedBox(height: 15),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text(
+                'ยกเลิก',
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
               ),
-            );
-          },
+            ),
+            const SizedBox(width: 10),
+            ElevatedButton.icon(
+              icon: const Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
+              label: const Text(
+                'ค้นหา',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                if (selectedButtons.isEmpty) {
+                  // ถ้าไม่มีการเลือกปุ่มใดเลย
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("แจ้งเตือน"),
+                        content: Text("กรุณาเลือกปุ่มก่อนค้นหา"),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text("ตกลง"),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else if (selectedButtons.length == 1 &&
+                    selectedButtons.contains("ทั้งหมด")) {
+                  // ถ้ามีเพียง "ทั้งหมด" เท่านั้นที่ถูกเลือก
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomePage(
+                        filter: [widget.selectedItem],
+                      ),
+                    ),
+                  );
+                } else {
+                  // ถ้ามีการเลือกคำอื่น ๆ นอกเหนือจาก "ทั้งหมด"
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomePage(
+                        filter: selectedButtons,
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
 
+          ],
         ),
       ],
     );

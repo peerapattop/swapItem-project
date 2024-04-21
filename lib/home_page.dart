@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                 child: TextField(
                   controller: searchController,
                   decoration: const InputDecoration(
-                    hintText: 'ค้นหาสินค้า',
+                    hintText: 'ค้นหาสิ่งของ',
                     border: InputBorder.none,
                   ),
                   onChanged: (value) {
@@ -370,7 +370,7 @@ class _HomePageState extends State<HomePage> {
           child: SizedBox(
             height: 800,
             width: double.infinity,
-            child: GridView2(searchString: filterString ),
+            child: GridView2(searchString: filterString),
           ),
         ),
       );
@@ -621,10 +621,13 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(2.0),
+                padding: const EdgeInsets.only(bottom: 10),
                 child: ElevatedButton.icon(
                   icon: const Icon(Icons.close, color: Colors.white),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    minimumSize: const Size(180, 40),
+                  ),
                   onPressed: () {
                     Navigator.pop(context);
                   },
