@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'notification_page.dart';
 
 class btnnt extends StatefulWidget {
-  const btnnt({super.key});
+  final List<String>? filter;
+  final String? searchString;
+  const btnnt({Key? key, this.searchString, this.filter}) : super(key: key);
 
   @override
   State<btnnt> createState() => _btnntState();
@@ -15,18 +17,21 @@ class btnnt extends StatefulWidget {
 
 class _btnntState extends State<btnnt> {
   int _selectedIndex = 0;
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomePage(),
-    ChatHomePage(),
-    NotificationD(),
-    Profile(),
-  ];
+  static List<Widget> _widgetOptions(BuildContext context, String? searchString, List<String>? filter) {
+    return [
+      HomePage(searchString: searchString, filter: filter),
+      ChatHomePage(),
+      NotificationD(),
+      Profile(),
+    ];
+  }
 
   static const List<BottomNavigationBarItem> _bottomNavBarItems = [
     BottomNavigationBarItem(
@@ -51,7 +56,7 @@ class _btnntState extends State<btnnt> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: _widgetOptions.elementAt(_selectedIndex),
+        body: _widgetOptions(context, widget.searchString, widget.filter).elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
           items: _bottomNavBarItems,
           currentIndex: _selectedIndex,
@@ -63,5 +68,6 @@ class _btnntState extends State<btnnt> {
     );
   }
 }
+
 
 

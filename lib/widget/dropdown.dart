@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swapitem/0_btnnt.dart';
 
 import '../home_page.dart';
 
@@ -571,7 +572,7 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => HomePage(
+                      builder: (context) => btnnt(
                         filter: [widget.selectedItem],
                       ),
                     ),
@@ -581,7 +582,7 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => HomePage(
+                      builder: (context) => btnnt(
                         filter: selectedButtons,
                       ),
                     ),

@@ -14,8 +14,9 @@ import 'package:firebase_database/firebase_database.dart';
 
 class HomePage extends StatefulWidget {
   final List<String>? filter;
+  final String? searchString;
 
-  const HomePage({Key? key, this.filter}) : super(key: key);
+  const HomePage({Key? key, this.filter, this.searchString}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -31,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   bool gps_default = false;
   List<String> list = <String>['One', 'Two', 'Three', 'Four'];
   List<String> selectedButtons = [];
+  String showLabel = "ค้นหาสิ่งของ";
 
   void toggleButton(String value) {
     setState(() {
@@ -45,9 +47,21 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
     _user = FirebaseAuth.instance.currentUser!;
     _userRef = FirebaseDatabase.instance.ref().child('users').child(_user.uid);
     print(widget.filter);
+    showLabels();
+  }
+
+  void showLabels() {
+    setState(() {
+      if (widget.filter != null) {
+        searchController.text = widget.filter.toString();
+      } else {
+        showLabel = "ค้นหาสิ่งของ";
+      }
+    });
   }
 
   void handleSearch() {
@@ -105,17 +119,19 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                   child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: TextField(
-                  controller: searchController,
-                  decoration: const InputDecoration(
-                    hintText: 'ค้นหาสิ่งของ',
-                    border: InputBorder.none,
+                child: GestureDetector(
+                  child: TextField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      hintText: showLabel,
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _searchString = value;
+                      });
+                    },
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      _searchString = value;
-                    });
-                  },
                 ),
               )),
               IconButton(
@@ -364,6 +380,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget showItemSearch() {
+    if (_searchString != null) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: 800,
+            width: double.infinity,
+            child: GridView2(searchString: _searchString),
+          ),
+        ),
+      );
+    }
     if (widget.filter != null) {
       String? filterString = widget.filter?.join(", ");
       if (filterString != null) {
@@ -651,36 +679,36 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Widget searchWidget() {
-  //   return Row(
-  //     children: [
-  //       Padding(
-  //         padding: EdgeInsets.all(8.0),
-  //         child: Text(
-  //           'กำลังค้นหา : ${widget.filter} ทั้งหมด',
-  //           style: TextStyle(fontSize: 20),
-  //         ),
-  //       ),
-  //       const Spacer(),
-  //       Padding(
-  //         padding: const EdgeInsets.all(8.0),
-  //         child: ElevatedButton.icon(
-  //           style: ElevatedButton.styleFrom(backgroundColor: Colors.deepOrangeAccent),
-  //           icon: const Icon(
-  //             Icons.clear,
-  //             color: Colors.white,
-  //           ),
-  //           onPressed: () {
-  //             setState(() {
-  //             });
-  //           },
-  //           label: const Text(
-  //             'รีเซ็ท',
-  //             style: TextStyle(color: Colors.white),
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
+// Widget searchWidget() {
+//   return Row(
+//     children: [
+//       Padding(
+//         padding: EdgeInsets.all(8.0),
+//         child: Text(
+//           'กำลังค้นหา : ${widget.filter} ทั้งหมด',
+//           style: TextStyle(fontSize: 20),
+//         ),
+//       ),
+//       const Spacer(),
+//       Padding(
+//         padding: const EdgeInsets.all(8.0),
+//         child: ElevatedButton.icon(
+//           style: ElevatedButton.styleFrom(backgroundColor: Colors.deepOrangeAccent),
+//           icon: const Icon(
+//             Icons.clear,
+//             color: Colors.white,
+//           ),
+//           onPressed: () {
+//             setState(() {
+//             });
+//           },
+//           label: const Text(
+//             'รีเซ็ท',
+//             style: TextStyle(color: Colors.white),
+//           ),
+//         ),
+//       ),
+//     ],
+//   );
+// }
 }
