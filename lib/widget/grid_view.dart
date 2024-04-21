@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 
 class GridView2 extends StatefulWidget {
   final String? searchString;
+
   const GridView2({Key? key, this.searchString}) : super(key: key);
 
   @override
@@ -42,7 +43,6 @@ class _GridView2State extends State<GridView2> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,21 +74,31 @@ class _GridView2State extends State<GridView2> {
               bool isPostSuccess =
                   userData['answerStatus'] == 'แลกเปลี่ยนสำเร็จ' ||
                       userData['answerStatus'] == 'ล้มเหลว';
+
+              String searchString = widget.searchString!.toLowerCase();
+              String itemName = userData['item_name'].toString().toLowerCase();
+              String type = userData['type'].toString().toLowerCase();
+
+              // ตรวจสอบคำค้นหาใน item_name
+              bool searchInItemName = itemName.contains(searchString);
+
+              // ตรวจสอบคำค้นหาใน type
+              bool searchInType = type.contains(searchString);
+
+              // ตรวจสอบคำค้นหาที่สลับกันระหว่าง item_name และ type
+              bool searchInBoth = (itemName + type).contains(searchString);
+
+              // ตรวจสอบคำค้นหาที่เรียงลำดับด้วยการใส่คำค้นหาลงไปข้างหน้าและข้างหลังของชื่อสินค้าและประเภท
+              bool searchInConcatenated = (itemName.startsWith(searchString) && type.endsWith(searchString)) ||
+                  (type.startsWith(searchString) && itemName.endsWith(searchString));
+
               return !isPostSuccess &&
                   (widget.searchString == null ||
                       widget.searchString!.isEmpty ||
-                      userData['item_name']
-                          .toString()
-                          .toLowerCase()
-                          .contains(widget.searchString!.toLowerCase()) ||
-                      userData['item_name1']
-                          .toString()
-                          .toLowerCase()
-                          .contains(widget.searchString!.toLowerCase()) ||
-                      userData['type']
-                          .toString()
-                          .toLowerCase()
-                          .contains(widget.searchString!.toLowerCase()));
+                      searchInItemName || // ค้นหาใน item_name
+                      searchInType || // ค้นหาใน type
+                      searchInBoth || // ค้นหาที่สลับกันระหว่าง item_name และ type
+                      searchInConcatenated); // ค้นหาที่เรียงลำดับด้วยการใส่คำค้นหาลงไปข้างหน้าและข้างหลังของชื่อสินค้าและประเภท
             }).toList();
 
             filteredData.sort((a, b) {
@@ -139,8 +149,6 @@ class _GridView2State extends State<GridView2> {
                       double postLat = double.parse(latitude);
                       double postLon = double.parse(longitude);
 
-
-
                       List<String> imageUrls =
                           List<String>.from(userData['imageUrls'] ?? []);
                       return Card(
@@ -162,13 +170,14 @@ class _GridView2State extends State<GridView2> {
                                     if (isVip)
                                       Image.asset('assets/images/vip.png'),
                                     Text(
-                                      itemName.length <= 16 ? itemName : itemName.substring(0, 16) + '...',
+                                      itemName.length <= 16
+                                          ? itemName
+                                          : itemName.substring(0, 16) + '...',
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-
                                   ],
                                 ),
                               ),

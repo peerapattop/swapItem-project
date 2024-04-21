@@ -12,7 +12,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final List<String>? filter;
+
+  const HomePage({Key? key, this.filter}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -44,6 +46,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _user = FirebaseAuth.instance.currentUser!;
     _userRef = FirebaseDatabase.instance.ref().child('users').child(_user.uid);
+    print(widget.filter);
   }
 
   void handleSearch() {
@@ -355,6 +358,23 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget showItemSearch() {
+    if (widget.filter != null) {
+      String? filterString = widget.filter?.join(", ");
+      if (filterString != null) {
+        filterString = filterString.replaceAll(RegExp(r'[\[\]]'), '');
+      }
+
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: 800,
+            width: double.infinity,
+            child: GridView2(searchString: filterString ),
+          ),
+        ),
+      );
+    }
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
@@ -379,23 +399,6 @@ class _HomePageState extends State<HomePage> {
           content: SingleChildScrollView(
             child: MultiSelectableButtonList(selectedItem: selectedItem),
           ),
-          actions: <Widget>[
-            ElevatedButton.icon(
-              icon: const Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
-              style:
-                  ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
-              label: const Text(
-                'ค้นหา',
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: () {
-                print('ค้นหา ::: $selectedItem');
-              },
-            ),
-          ],
         );
       },
     );
@@ -625,7 +628,10 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  label: const Text('ปิด',style: TextStyle(color: Colors.white),),
+                  label: const Text(
+                    'ปิด',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ],

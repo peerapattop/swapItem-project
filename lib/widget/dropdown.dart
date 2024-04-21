@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../home_page.dart';
+
 class MultiSelectableButtonList extends StatefulWidget {
   final String selectedItem;
 
@@ -259,11 +261,13 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "อื่น ๆ"
   ]; //"คอมพิวเตอร์และอุปกรณ์เสริม",
   List<String> newList = [];
+
   @override
   initState() {
     check();
     super.initState();
   }
+
   void check() {
     if (widget.selectedItem == "เสื้อผ้าผู้ชาย") {
       newList = menClothes;
@@ -273,11 +277,9 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
       newList = accessories;
     } else if (widget.selectedItem == "เครื่องใช้ในบ้าน") {
       newList = homeObject;
-    }
-    else if (widget.selectedItem == "เครื่องใช้ไฟฟ้าภายในบ้าน") {
+    } else if (widget.selectedItem == "เครื่องใช้ไฟฟ้าภายในบ้าน") {
       newList = homeAppliances;
-    }
-    else if (widget.selectedItem == "รองเท้าผู้หญิง") {
+    } else if (widget.selectedItem == "รองเท้าผู้หญิง") {
       newList = womenShoes;
     } else if (widget.selectedItem == "รองเท้าผู้ชาย") {
       newList = menShoes;
@@ -313,7 +315,6 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
       newList = computersAndAccessories;
     }
   }
-
 
   void toggleButton(String value) {
     setState(() {
@@ -503,6 +504,28 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
         Text(
           'ค้นหา: ${selectedButtons.join(", ")}',
           style: const TextStyle(fontSize: 16),
+        ),
+        ElevatedButton.icon(
+          icon: const Icon(
+            Icons.search,
+            color: Colors.white,
+          ),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
+          label: const Text(
+            'ค้นหา',
+            style: TextStyle(color: Colors.white),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(
+                  filter: selectedButtons,
+                ),
+              ),
+            );
+          },
+
         ),
       ],
     );
