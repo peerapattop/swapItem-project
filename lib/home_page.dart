@@ -376,7 +376,7 @@ class _HomePageState extends State<HomePage> {
         return AlertDialog(
           title: Text(selectedItem),
           content: const SingleChildScrollView(
-            child: MultiSelectableButtonList(),
+            child: MultiSelectableButtonList(selectedItem: "",),
           ),
           actions: <Widget>[
             TextButton(
@@ -588,6 +588,7 @@ class _HomePageState extends State<HomePage> {
                       "กระเป๋าเดินทาง",
                       "กระเป๋าผู้หญิง",
                       "กระเป๋าผู้ชาย",
+
                       "กีฬาและกิจกรรมกลางแจ้ง",
                       "เครื่องเขียน",
                       "งานอดิเรกและของสะสม",
