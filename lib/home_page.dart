@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:swapitem/0_btnnt.dart';
 import 'package:swapitem/registerVip_page.dart';
 import 'package:swapitem/buildPost_page.dart';
 import 'package:swapitem/test555.dart';
@@ -120,6 +121,11 @@ class _HomePageState extends State<HomePage> {
               IconButton(
                 icon: const Icon(Icons.clear),
                 onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => btnnt()),
+                    (route) => false,
+                  );
                   setState(() {
                     searchController.clear();
                     _searchString = '';
@@ -190,8 +196,6 @@ class _HomePageState extends State<HomePage> {
                         ? buildUserProfileSection(
                             dataUser, postCount, makeofferCount)
                         : SizedBox(),
-                    const Divider(),
-                    Text('dsada'),
                     const Divider(),
                     showItemSearch(),
                   ],
@@ -646,4 +650,37 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  // Widget searchWidget() {
+  //   return Row(
+  //     children: [
+  //       Padding(
+  //         padding: EdgeInsets.all(8.0),
+  //         child: Text(
+  //           'กำลังค้นหา : ${widget.filter} ทั้งหมด',
+  //           style: TextStyle(fontSize: 20),
+  //         ),
+  //       ),
+  //       const Spacer(),
+  //       Padding(
+  //         padding: const EdgeInsets.all(8.0),
+  //         child: ElevatedButton.icon(
+  //           style: ElevatedButton.styleFrom(backgroundColor: Colors.deepOrangeAccent),
+  //           icon: const Icon(
+  //             Icons.clear,
+  //             color: Colors.white,
+  //           ),
+  //           onPressed: () {
+  //             setState(() {
+  //             });
+  //           },
+  //           label: const Text(
+  //             'รีเซ็ท',
+  //             style: TextStyle(color: Colors.white),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 }
