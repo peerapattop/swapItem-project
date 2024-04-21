@@ -74,32 +74,31 @@ class _GridView2State extends State<GridView2> {
               bool isPostSuccess =
                   userData['answerStatus'] == 'แลกเปลี่ยนสำเร็จ' ||
                       userData['answerStatus'] == 'ล้มเหลว';
-              String itemName =
-              userData['item_name'].toString().toLowerCase().trim();
-              String type = userData['type'].toString().toLowerCase().trim();
 
+              String itemName = userData['item_name'].toString().toLowerCase().trim();
+              String type = userData['type'].toString().toLowerCase().trim();
               String textSum1 = itemName + type;
               String textSum2 = type + itemName;
 
-              List<String> searchWords = widget.searchString!.toLowerCase().split(" ");
-              bool containsAnyWord = false;
-              for (String word in searchWords) {
-                if (itemName.contains(word) || type.contains(word)) {
-                  containsAnyWord = true;
-                  break;
-                }
-              }
+              // ทำการลบช่องว่างระหว่างคำใน searchText และในข้อมูลเพื่อให้คำเหมือนกันกันเชื่อมต่อกัน
+              String searchText = widget.searchString?.toLowerCase().replaceAll(" ", "") ?? "";
+
+              // เช็คว่ามีคำเหมือนกันในชุดข้อมูลหรือไม่
+              bool containsSimilarWords = textSum1.contains(searchText) || textSum2.contains(searchText) || itemName.contains(searchText) || type.contains(searchText);
 
               return !isPostSuccess &&
                   (widget.searchString == null ||
                       widget.searchString!.isEmpty ||
-                      containsAnyWord ||
-                      textSum1.contains(widget.searchString!.toLowerCase().trim()) ||
-                      textSum2.contains(widget.searchString!.toLowerCase().trim()));
+                      itemName.contains(widget.searchString!.toLowerCase().trim()) ||
+                      type.contains(widget.searchString!.toLowerCase().trim()) ||
+                      containsSimilarWords);
             }).toList();
 
 
-            filteredData.sort((a, b) {
+
+
+
+          filteredData.sort((a, b) {
               String statusA = a['status_user'] ??
                   ''; // Use an empty string if status is null
               String statusB = b['status_user'] ??
