@@ -74,18 +74,30 @@ class _GridView2State extends State<GridView2> {
               bool isPostSuccess =
                   userData['answerStatus'] == 'แลกเปลี่ยนสำเร็จ' ||
                       userData['answerStatus'] == 'ล้มเหลว';
+              String itemName =
+              userData['item_name'].toString().toLowerCase().trim();
+              String type = userData['type'].toString().toLowerCase().trim();
+
+              String textSum1 = itemName + type;
+              String textSum2 = type + itemName;
+
+              List<String> searchWords = widget.searchString!.toLowerCase().split(" ");
+              bool containsAnyWord = false;
+              for (String word in searchWords) {
+                if (itemName.contains(word) || type.contains(word)) {
+                  containsAnyWord = true;
+                  break;
+                }
+              }
+
               return !isPostSuccess &&
                   (widget.searchString == null ||
                       widget.searchString!.isEmpty ||
-                      userData['item_name']
-                          .toString()
-                          .toLowerCase()
-                          .contains(widget.searchString!.toLowerCase()) ||
-                      userData['type']
-                          .toString()
-                          .toLowerCase()
-                          .contains(widget.searchString!.toLowerCase()));
+                      containsAnyWord ||
+                      textSum1.contains(widget.searchString!.toLowerCase().trim()) ||
+                      textSum2.contains(widget.searchString!.toLowerCase().trim()));
             }).toList();
+
 
             filteredData.sort((a, b) {
               String statusA = a['status_user'] ??
