@@ -260,6 +260,9 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "แล็ปท็อป",
     "อื่น ๆ"
   ]; //"คอมพิวเตอร์และอุปกรณ์เสริม",
+  List<String> any = [
+    'อื่นๆ'
+  ];
   List<String> newList = [];
 
   @override
@@ -313,6 +316,8 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
       newList = booksAndMagazines;
     } else if (widget.selectedItem == "คอมพิวเตอร์และอุปกรณ์เสริม") {
       newList = computersAndAccessories;
+    }else if( widget.selectedItem == 'อื่นๆ'){
+       newList = any;
     }
   }
 

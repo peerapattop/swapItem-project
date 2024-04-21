@@ -191,6 +191,8 @@ class _HomePageState extends State<HomePage> {
                             dataUser, postCount, makeofferCount)
                         : SizedBox(),
                     const Divider(),
+                    Text('dsada'),
+                    const Divider(),
                     showItemSearch(),
                   ],
                 );
@@ -605,6 +607,7 @@ class _HomePageState extends State<HomePage> {
                       "เครื่องเขียน",
                       "งานอดิเรกและของสะสม",
                       "หนังสือและนิตยสาร",
+                      'อื่นๆ'
                     ])
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
