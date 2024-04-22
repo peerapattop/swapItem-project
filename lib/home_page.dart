@@ -436,10 +436,7 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     } else if (widget.filter != null && gps_default == true) {
-      if (filterString != null) {
-        filterString = filterString.replaceAll(RegExp(r'[\[\]]'), '');
-      }
-      return Padding(
+          return Padding(
         padding: EdgeInsets.all(8.0),
         child: SingleChildScrollView(
           child: SizedBox(
@@ -449,7 +446,7 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     }
-    return Text('d');
+    return Text('ไม่มีข้อมูล');
   }
 
   Future<void> _showMyDialog(BuildContext context, String selectedItem) async {
