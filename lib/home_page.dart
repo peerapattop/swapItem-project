@@ -146,6 +146,7 @@ class _HomePageState extends State<HomePage> {
                   setState(() {
                     searchController.clear();
                     _searchString = '';
+                    widget.filter?.clear();
                   });
                 },
               ),
