@@ -387,7 +387,6 @@ class _HomePageState extends State<HomePage> {
     //ป่มของsearch
     String? filterString = widget.filter?.join(", ");
     if (_searchString != null && gps_default == false) {
-      if (widget.filter == null && _searchString != null) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
@@ -398,7 +397,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         );
-      }
+
     } else if (_searchString == null && gps_default == false) {
       return Padding(
         padding: EdgeInsets.all(8.0),
