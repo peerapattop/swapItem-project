@@ -44,11 +44,10 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
-
+  
   @override
   void initState() {
     super.initState();
-
     _user = FirebaseAuth.instance.currentUser!;
     _userRef = FirebaseDatabase.instance.ref().child('users').child(_user.uid);
     showLabels();
@@ -124,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                   child: TextField(
                     controller: searchController,
                     decoration: InputDecoration(
-                      hintText: showLabel.replaceAll(RegExp(r'[\[\]]'), ''),
+                      hintText: showLabel.replaceAll(RegExp(r'[\[\]]'), '') ,
                       border: InputBorder.none,
                     ),
                     onChanged: (value) {
@@ -436,6 +435,7 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     } else if (widget.filter != null && gps_default == true) {
+      print("gps fillter");
           return Padding(
         padding: EdgeInsets.all(8.0),
         child: SingleChildScrollView(
