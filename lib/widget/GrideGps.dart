@@ -87,10 +87,16 @@ class _GridGPSState extends State<GridGPS> {
             }).toList();
 
             // Filter data based on search query
-            if (widget.searchString != null && widget.searchString!.isNotEmpty) {
+            if (widget.searchString != null &&
+                widget.searchString!.isNotEmpty) {
               String searchText = widget.searchString!.toLowerCase();
               filteredData = filteredData.where((userData) {
-                String itemName = userData['item_name'].toString().toLowerCase();
+                String itemName = userData['item_name']
+                    .toString()
+                    .toLowerCase();
+                String itemName1 = userData['item_name1']
+                    .toString()
+                    .toLowerCase();
                 String type = userData['type'].toString().toLowerCase();
                 return itemName.contains(searchText) ||
                     type.contains(searchText);
@@ -98,8 +104,12 @@ class _GridGPSState extends State<GridGPS> {
             }
 
             filteredData.sort((a, b) {
-              double distanceA = calculateDistance(userLat, userLon, double.parse(a['latitude']), double.parse(a['longitude']));
-              double distanceB = calculateDistance(userLat, userLon, double.parse(b['latitude']), double.parse(b['longitude']));
+              double distanceA = calculateDistance(
+                  userLat, userLon, double.parse(a['latitude']),
+                  double.parse(a['longitude']));
+              double distanceB = calculateDistance(
+                  userLat, userLon, double.parse(b['latitude']),
+                  double.parse(b['longitude']));
               return distanceA.compareTo(distanceB);
             });
 
@@ -132,10 +142,13 @@ class _GridGPSState extends State<GridGPS> {
                       String textSum1 = itemName + type;
                       String textSum2 = type + itemName;
 
-                      String searchText = widget.searchString?.toLowerCase().replaceAll(" ", "") ?? "";
+                      String searchText = widget.searchString?.toLowerCase()
+                          .replaceAll(" ", "") ?? "";
 
-                      bool containsSimilarWords = textSum1.contains(searchText) || textSum2.contains(searchText) || itemName.contains(searchText) || type.contains(searchText);
-
+                      bool containsSimilarWords = textSum1.contains(
+                          searchText) || textSum2.contains(searchText) ||
+                          itemName.contains(searchText) ||
+                          type.contains(searchText);
 
 
                       double postLat = double.parse(latitude);
@@ -231,7 +244,8 @@ class _GridGPSState extends State<GridGPS> {
                                 SizedBox(width: 5),
                                 Center(
                                     child: Text(
-                                      'ห่างจากคุณ ${distance.toStringAsFixed(2)} กม.',
+                                      'ห่างจากคุณ ${distance.toStringAsFixed(
+                                          2)} กม.',
                                       style: TextStyle(fontSize: 13.7),
                                     ))
                               ],
@@ -260,7 +274,9 @@ class _GridGPSState extends State<GridGPS> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
-                                  Theme.of(context).primaryColor,
+                                  Theme
+                                      .of(context)
+                                      .primaryColor,
                                   foregroundColor: Colors.white,
                                 ),
                                 child: const Center(
@@ -296,5 +312,4 @@ class _GridGPSState extends State<GridGPS> {
       ),
     );
   }
-
 }
