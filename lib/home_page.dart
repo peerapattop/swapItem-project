@@ -138,11 +138,11 @@ class _HomePageState extends State<HomePage> {
               IconButton(
                 icon: const Icon(Icons.clear),
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => btnnt()),
-                    (route) => false,
-                  );
+                  // Navigator.pushAndRemoveUntil(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => btnnt()),
+                  //       (route) => false,
+                  // );
                   setState(() {
                     searchController.clear();
                     _searchString = '';
