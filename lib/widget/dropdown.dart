@@ -261,9 +261,7 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
     "แล็ปท็อป",
     "อื่น ๆ"
   ]; //"คอมพิวเตอร์และอุปกรณ์เสริม",
-  List<String> any = [
-    'อื่นๆ'
-  ];
+  List<String> any = ['อื่นๆ'];
   List<String> newList = [];
 
   @override
@@ -317,8 +315,8 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
       newList = booksAndMagazines;
     } else if (widget.selectedItem == "คอมพิวเตอร์และอุปกรณ์เสริม") {
       newList = computersAndAccessories;
-    }else if( widget.selectedItem == 'อื่นๆ'){
-       newList = any;
+    } else if (widget.selectedItem == 'อื่นๆ') {
+      newList = any;
     }
   }
 
@@ -541,7 +539,8 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
                 Icons.search,
                 color: Colors.white,
               ),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
               label: const Text(
                 'ค้นหา',
                 style: TextStyle(color: Colors.white),
@@ -569,28 +568,26 @@ class _MultiSelectableButtonListState extends State<MultiSelectableButtonList> {
                 } else if (selectedButtons.length == 1 &&
                     selectedButtons.contains("ทั้งหมด")) {
                   // ถ้ามีเพียง "ทั้งหมด" เท่านั้นที่ถูกเลือก
-                  Navigator.push(
+
+                  Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => btnnt(
-                        filter: [widget.selectedItem],
-                      ),
-                    ),
+                        builder: (context) =>
+                            btnnt(filter: [widget.selectedItem])),
+                    (route) => false,
                   );
                 } else {
                   // ถ้ามีการเลือกคำอื่น ๆ นอกเหนือจาก "ทั้งหมด"
-                  Navigator.push(
+
+                  Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => btnnt(
-                        filter: selectedButtons,
-                      ),
-                    ),
+                        builder: (context) => btnnt(filter: selectedButtons)),
+                    (route) => false,
                   );
                 }
               },
             ),
-
           ],
         ),
       ],

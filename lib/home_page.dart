@@ -34,6 +34,7 @@ class _HomePageState extends State<HomePage> {
   List<String> selectedButtons = [];
   String showLabel = "ค้นหาสิ่งของ";
 
+
   void toggleButton(String value) {
     setState(() {
       if (selectedButtons.contains(value)) {
@@ -101,6 +102,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -385,7 +387,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget showItemSearch() {
     //ป่มของsearch
-    String? filterString = widget.filter?.join(", ");
+    String filterString = widget.filter?.join(', ') ?? '';
     if (_searchString != null && gps_default == false) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
