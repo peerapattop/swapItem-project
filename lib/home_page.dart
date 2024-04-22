@@ -50,14 +50,7 @@ class _HomePageState extends State<HomePage> {
 
     _user = FirebaseAuth.instance.currentUser!;
     _userRef = FirebaseDatabase.instance.ref().child('users').child(_user.uid);
-    print(widget.filter);
     showLabels();
-  }
-
-  void swapColor() {
-    if (gps_default == true) {
-      gps_default = false;
-    }
   }
 
   void showLabels() {
@@ -392,9 +385,9 @@ class _HomePageState extends State<HomePage> {
 
   Widget showItemSearch() {
     //ป่มของsearch
-
-    if (_searchString != null && gps_default == false  ) {
-      if (widget.filter == null && _searchString != null ) {
+    String? filterString = widget.filter?.join(", ");
+    if (_searchString != null && gps_default == false) {
+      if (widget.filter == null && _searchString != null) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
@@ -407,7 +400,6 @@ class _HomePageState extends State<HomePage> {
         );
       }
     } else if (widget.filter != null) {
-      String? filterString = widget.filter?.join(", ");
       if (filterString != null) {
         filterString = filterString.replaceAll(RegExp(r'[\[\]]'), '');
       }
@@ -447,16 +439,30 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       );
-    }else if (_searchString != null &&
-        gps_default == true) {
+    } else if (_searchString != null && gps_default == true) {
       return Padding(
         padding: EdgeInsets.all(8.0),
         child: SingleChildScrollView(
           child: SizedBox(
-            height: 800,
-            width: double.infinity,
-            child: GridGPS(searchString: _searchString,)
-          ),
+              height: 800,
+              width: double.infinity,
+              child: GridGPS(
+                searchString: _searchString,
+              )),
+        ),
+      );
+    } else if (_searchString != null && widget.filter != null && gps_default == true) {
+      String? filterString = widget.filter?.join(", ");
+      if (filterString != null) {
+        filterString = filterString.replaceAll(RegExp(r'[\[\]]'), '');
+      }
+      return Padding(
+        padding: EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: SizedBox(
+              height: 800,
+              width: double.infinity,
+              child: GridGPS(searchString: filterString)),
         ),
       );
     }
