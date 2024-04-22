@@ -34,7 +34,6 @@ class _HomePageState extends State<HomePage> {
   List<String> selectedButtons = [];
   String showLabel = "ค้นหาสิ่งของ";
 
-
   void toggleButton(String value) {
     setState(() {
       if (selectedButtons.contains(value)) {
@@ -44,7 +43,7 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
-  
+
   @override
   void initState() {
     super.initState();
@@ -56,7 +55,8 @@ class _HomePageState extends State<HomePage> {
   void showLabels() {
     setState(() {
       if (widget.filter != null) {
-        searchController.text = widget.filter.toString().replaceAll(RegExp(r'[\[\]]'), '');
+        searchController.text =
+            widget.filter.toString().replaceAll(RegExp(r'[\[\]]'), '');
       } else {
         showLabel = "ค้นหาสิ่งของ";
       }
@@ -101,7 +101,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -123,7 +122,7 @@ class _HomePageState extends State<HomePage> {
                   child: TextField(
                     controller: searchController,
                     decoration: InputDecoration(
-                      hintText: showLabel.replaceAll(RegExp(r'[\[\]]'), '') ,
+                      hintText: showLabel.replaceAll(RegExp(r'[\[\]]'), ''),
                       border: InputBorder.none,
                     ),
                     onChanged: (value) {
@@ -389,17 +388,16 @@ class _HomePageState extends State<HomePage> {
     //ป่มของsearch
     String filterString = widget.filter?.join(', ') ?? '';
     if (_searchString != null && gps_default == false) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
-            child: SizedBox(
-              height: 800,
-              width: double.infinity,
-              child: GridView2(searchString: _searchString),
-            ),
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: 800,
+            width: double.infinity,
+            child: GridView2(searchString: _searchString),
           ),
-        );
-
+        ),
+      );
     } else if (_searchString == null && gps_default == false) {
       return Padding(
         padding: EdgeInsets.all(8.0),
@@ -411,7 +409,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       );
-    }  else if (_searchString == null && gps_default == true) {
+    } else if (_searchString == null && gps_default == true) {
       return Padding(
         padding: EdgeInsets.all(8.0),
         child: SingleChildScrollView(
@@ -436,7 +434,7 @@ class _HomePageState extends State<HomePage> {
       );
     } else if (widget.filter != null && gps_default == true) {
       print("gps fillter");
-          return Padding(
+      return Padding(
         padding: EdgeInsets.all(8.0),
         child: SingleChildScrollView(
           child: SizedBox(
