@@ -448,7 +448,6 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     }else if (_searchString != null &&
-        widget.filter == null &&
         gps_default == true) {
       return Padding(
         padding: EdgeInsets.all(8.0),
@@ -456,7 +455,7 @@ class _HomePageState extends State<HomePage> {
           child: SizedBox(
             height: 800,
             width: double.infinity,
-            child: GridView2(searchString: _searchString,)
+            child: GridGPS(searchString: _searchString,)
           ),
         ),
       );
