@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
   void showLabels() {
     setState(() {
       if (widget.filter != null) {
-        searchController.text = widget.filter.toString();
+        searchController.text = widget.filter.toString().replaceAll(RegExp(r'[\[\]]'), '');
       } else {
         showLabel = "ค้นหาสิ่งของ";
       }
@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                   child: TextField(
                     controller: searchController,
                     decoration: InputDecoration(
-                      hintText: showLabel,
+                      hintText: showLabel.replaceAll(RegExp(r'[\[\]]'), ''),
                       border: InputBorder.none,
                     ),
                     onChanged: (value) {
