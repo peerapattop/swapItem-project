@@ -387,6 +387,7 @@ class _HomePageState extends State<HomePage> {
   Widget showItemSearch() {
     //ป่มของsearch
     String filterString = widget.filter?.join(', ') ?? '';
+
     if (_searchString != null && gps_default == false) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
