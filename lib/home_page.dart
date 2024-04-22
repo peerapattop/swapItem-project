@@ -399,7 +399,7 @@ class _HomePageState extends State<HomePage> {
           ),
         );
       }
-    } else if (widget.filter != null && gps_default == false) {
+    } else if (widget.filter != null ) {
       if (filterString != null) {
         filterString = filterString.replaceAll(RegExp(r'[\[\]]'), '');
       }
@@ -451,7 +451,7 @@ class _HomePageState extends State<HomePage> {
               )),
         ),
       );
-    } else if ( widget.filter != null && gps_default == true) {
+    } else if (_searchString != null && widget.filter != null && gps_default == true) {
       String? filterString = widget.filter?.join(", ");
       if (filterString != null) {
         filterString = filterString.replaceAll(RegExp(r'[\[\]]'), '');
