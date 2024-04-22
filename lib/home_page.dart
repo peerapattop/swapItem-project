@@ -399,12 +399,9 @@ class _HomePageState extends State<HomePage> {
           ),
         );
       }
-    } else if (widget.filter != null ) {
-      if (filterString != null) {
-        filterString = filterString.replaceAll(RegExp(r'[\[\]]'), '');
-      }
+    } else if (_searchString == null && gps_default == false) {
       return Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(8.0),
         child: SingleChildScrollView(
           child: SizedBox(
             height: 800,
@@ -413,22 +410,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       );
-    } else if (_searchString == null &&
-        widget.filter == null &&
-        gps_default == false) {
-      return Padding(
-        padding: EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: SizedBox(
-            height: 800,
-            width: double.infinity,
-            child: GridView2(),
-          ),
-        ),
-      );
-    } else if (_searchString == null &&
-        widget.filter == null &&
-        gps_default == true) {
+    }  else if (_searchString == null && gps_default == true) {
       return Padding(
         padding: EdgeInsets.all(8.0),
         child: SingleChildScrollView(
@@ -451,8 +433,7 @@ class _HomePageState extends State<HomePage> {
               )),
         ),
       );
-    } else if (_searchString != null && widget.filter != null && gps_default == true) {
-      String? filterString = widget.filter?.join(", ");
+    } else if (widget.filter != null && gps_default == true) {
       if (filterString != null) {
         filterString = filterString.replaceAll(RegExp(r'[\[\]]'), '');
       }
