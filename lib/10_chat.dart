@@ -170,24 +170,7 @@ class _ChatHomePageState extends State<ChatHomePage> {
         },
       );
     } else {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(height: 100),
-          Image.network(
-            'https://cdn-icons-png.flaticon.com/128/610/610413.png',
-            width: 100,
-            height: 100,
-          ),
-          const SizedBox(height: 40),
-          const Text(
-            'กรุณาสร้างโพสต์หรือยื่นข้อเสนอเพื่อเริ่มต้นการแชท!!',
-            style: TextStyle(fontSize: 20),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      );
+      return Container();
 
     }
   }
