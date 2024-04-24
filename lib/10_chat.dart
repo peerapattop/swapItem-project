@@ -40,18 +40,26 @@ class _ChatHomePageState extends State<ChatHomePage> {
           return {'message': message, 'timestamp': timestampString};
         } else {
           // Handle case where there are no messages
-          return {'message': 'No messages', 'timestamp': DateTime.now().toString()};
+          return {
+            'message': 'No messages',
+            'timestamp': DateTime.now().toString()
+          };
         }
       } else {
         // Handle case where there are no messages
-        return {'message': 'No messages', 'timestamp': DateTime.now().toString()};
+        return {
+          'message': 'No messages',
+          'timestamp': DateTime.now().toString()
+        };
       }
     } catch (e) {
       // Handle error case
-      return {'message': 'Error loading data', 'timestamp': DateTime.now().toString()};
+      return {
+        'message': 'Error loading data',
+        'timestamp': DateTime.now().toString()
+      };
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -101,9 +109,11 @@ class _ChatHomePageState extends State<ChatHomePage> {
         });
   }
 
-  Widget _buildUserListItem(Map<String, dynamic> userData, BuildContext context) {
+  Widget _buildUserListItem(
+      Map<String, dynamic> userData, BuildContext context) {
     if (userData['uid'] != _auth.currentUser?.uid) {
-      String chatroomId = _chatService.getRoomId(_auth.currentUser!.uid, userData['uid']);
+      String chatroomId =
+          _chatService.getRoomId(_auth.currentUser!.uid, userData['uid']);
 
       return FutureBuilder<Map<String, dynamic>>(
         future: getLastMessage(chatroomId),
@@ -136,7 +146,8 @@ class _ChatHomePageState extends State<ChatHomePage> {
                     backgroundImage: NetworkImage(userData['image_user']),
                     radius: 30,
                   ),
-                  title: Text(userData['username'], style: const TextStyle(fontSize: 20)),
+                  title: Text(userData['username'],
+                      style: const TextStyle(fontSize: 20)),
                   subtitle: Row(
                     children: [
                       Expanded(
@@ -159,10 +170,27 @@ class _ChatHomePageState extends State<ChatHomePage> {
         },
       );
     } else {
-      return Container();
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(height: 100),
+          Image.network(
+            'https://cdn-icons-png.flaticon.com/128/610/610413.png',
+            width: 100,
+            height: 100,
+          ),
+          const SizedBox(height: 40),
+          const Text(
+            'กรุณาสร้างโพสต์หรือยื่นข้อเสนอเพื่อเริ่มต้นการแชท!!',
+            style: TextStyle(fontSize: 20),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
+
     }
   }
-
 
   String _formatTime(String timestamp) {
     // Remove the " น." suffix (with or without space before "น.")
