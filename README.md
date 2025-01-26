@@ -4,7 +4,8 @@
 
 ## 🎥 ตัวอย่างวิดีโอการใช้งาน
 
-![การทำงานของโปรเจกต์]<img src="https://github.com/peerapattop/swapItem/raw/main/assets/images/swapitem2.gif" width="300" />
+![]<img src="https://github.com/peerapattop/swapItem/raw/main/assets/images/swapitem2.gif" width="200" />
+![]<img src="https://github.com/peerapattop/swapItem/raw/main/assets/images/swapitem2.gif" width="200" />
 
 
 
