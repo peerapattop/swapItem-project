@@ -4,8 +4,10 @@
 
 ## 🎥 ตัวอย่างแอปพลิเคชัน
 
-<img src="https://github.com/peerapattop/swapItem/raw/main/assets/images/swapitem1.gif" width="200" />
-<img src="https://github.com/peerapattop/swapItem/raw/main/assets/images/swapitem2.gif" width="200" />
+<div style="display: flex; gap: 10px;">
+  <img src="https://github.com/peerapattop/swapItem/raw/main/assets/images/swapitem1.gif" width="200" />
+  <img src="https://github.com/peerapattop/swapItem/raw/main/assets/images/swapitem2.gif" width="200" />
+</div>
 
 
 
