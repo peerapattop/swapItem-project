@@ -4,6 +4,8 @@
 
 ## 🎥 ตัวอย่างวิดีโอการใช้งาน
 
+![การทำงานของโปรเจกต์](https://github.com/peerapattop/swapItem/raw/main/assets/images/swapitem2.gif)
+
 
 ## 📥 ดาวน์โหลดแอปพลิเคชัน
 https://drive.google.com/drive/folders/1ajXDVgmPZFpJSK1uo8ZY2E8wp6AjwdEG?usp=sharing
